@@ -1,16 +1,32 @@
 import React from "react";
-import { LinkContainer } from "react-router-bootstrap";
-import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import Header from "./Header";
+
+
+class Bloque_Calendario extends React.Component {
+  render() {
+    return (
+      <div className="centrar">
+        <div className="item_calendario" >Ver Semestre Otoño 2020</div>
+        <div className="item_calendario" >Ver Semestre Primavera 2020</div>
+        <div className="item_calendario" >Ver Semestre Primavera 2020</div>
+        <div className="item_calendario" >Ver Semestre Primavera 2020</div>
+      </div>
+    );
+  }
+}
+
 
 export default class Home extends React.Component {
 render() {
     return (
     <div>
-      <LinkContainer to="/login">
-        <Nav.Link><h5>Iniciar Sesión</h5></Nav.Link>
-      </LinkContainer>
+        <Header />
+        <div className="centrar">
+          <h1>Monitor de Carga de Controles</h1>
+          <p style={{marginTop: '66px',fontSize:'25px'}}>Bienvenido, el semestre actual es ...</p>
+        </div>
         <div>
-        <p>Hola</p>
+          <Bloque_Calendario />
         </div>
       </div>
     );

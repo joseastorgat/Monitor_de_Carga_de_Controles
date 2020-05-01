@@ -13,26 +13,52 @@
   color: white;
 }
 
+/* ========================== Home.js =============================== */
+
+.centrar{
+    margin-top: 66px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+
+.item_calendario{ 
+    background-color: #81cdff;
+    border: solid 1px #282c34;
+    color: white;
+    padding: 15px 32px;
+    width: 20vw;
+    margin: auto;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+/* ========================== Header.js =============================== */
+.color-nav {
+    background-color:#81cdff;
+    border-bottom: 1px solid #282c34;
+}
+
+
 /* ========================== Login.js =============================== */
 .form-header{
     text-align: center;
-    margin-bottom : 2rem;
 }
 
 .wrap {
-    min-height: 100vh;
-    font-family: 'Segoe UI', sans-serif;;
-    width: 100%;
-    height: 100%;
+    margin-top: -16px;
+    min-height: 91vh;
+    font-family: 'Segoe UI', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #fafafa;
-    margin: 5px;
+    background:  #fafafa;
     padding: 20px;
 }
+
 .form-button{
-    background: #007bff;
+    background: #81cdff;
     border: 1px solid #ddd;
     color: #ffffff;
     padding: 15px 32px;
