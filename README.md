@@ -1,29 +1,19 @@
-# README #
+Instalar yarn
+https://classic.yarnpkg.com/es-ES/docs/install/#windows-stable
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Luego realizar en carpeta frontend
+yarn add react-bootstrap bootstrap
+yarn add react-react-router-bootstrap
+yarn add react-router-dom
 
-### What is this repository for? ###
+Luego
+pip install -r requirements.txt
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+python manage.py makemigrations
+python manage.py migrate
 
-### How do I get set up? ###
+Correr frontend
+yarn start
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+Correr backend
+python manage.py runserver
