@@ -1,6 +1,7 @@
-react==16.13.1
-react-bootstrap==1.0.1
-react-dom==16.13.1
+# react==16.13.1
+# react-bootstrap==1.0.1
+# react-dom==16.13.1
+
 backcall==0.1.0
 decorator==4.4.0
 Django==2.2.8
