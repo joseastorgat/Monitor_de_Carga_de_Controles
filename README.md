@@ -8,13 +8,13 @@ yarn add react-router-dom
 npm install bootstrap
 
 Luego
-pip install -r requirements.txtm
-
+pip install -r requirements.txt
 python manage.py makemigrations
 python manage.py migrate
 
 Correr frontend
-yarn start
+Ir a carpeta frontend desde consola
+Poner yarn start
 Ir a http://localhost:3000/
 
 Correr backend
