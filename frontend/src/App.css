@@ -24,6 +24,9 @@
     border-color:  #81cdff;
 }
 
+div.row { 
+    margin-top: 16px;
+  }
 button{
     background-color:  #81cdff;
     border-color:  #81cdff;
@@ -41,6 +44,7 @@ button{
     justify-content: center;
     align-items: center;
     text-align: center;
+    display: center;
 }
 
 
@@ -128,23 +132,23 @@ button{
     justify-content: center;
     align-items: center;
     width:80vw;
-    height:370px;
     margin: 0 auto;
+    margin-bottom: 10px;
     border: 1px solid #ddd;
-    padding: 0;
+    padding: 40px 10px ;
     background: #ffffff;
     font-size: large;
 }
 
-.en-linea
-{
-    display: inline-block;
 
-}
-
-.outside
-{
+.cuadrado-form{
+    display:flex;
     text-align: center;
+    justify-content: center;
+    align-items: center;
+    width:40vw;
+    border: 1px solid #ddd;
+    background: #ffffff;
+    font-size: large;
+    padding: 40px 10px ;
 }
-
-
