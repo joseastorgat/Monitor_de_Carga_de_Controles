@@ -4,9 +4,11 @@ https://classic.yarnpkg.com/es-ES/docs/install/#windows-stable
 ## Luego realizar en carpeta frontend
 npm install
 npm install bootstrap
+npm install @primer/octicons-react --save
 yarn add react-bootstrap bootstrap
 yarn add react-react-router-bootstrap
 yarn add react-router-dom
+
 
 ## Luego en carpeta MCC externa
 ### Crear ambiente
