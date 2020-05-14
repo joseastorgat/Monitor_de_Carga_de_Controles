@@ -68,7 +68,7 @@ export default class nuevo_semestre extends React.Component {
                             <div class="cuadrado-form">
                             <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
                                         <input type="radio" id="replicar_semestre" name="semestre_opcion" class="custom-control-input" />
-                                         <label class="custom-control-label" htmlFor="replicar_semestre" >Subir desde archivo</label>
+                                         <label class="custom-control-label" htmlFor="replicar_semestre" >Clonar Semestre</label>
                                         <div class="col-sm-10" >
                                         <input type="text" className="form-control" name="semestre_replicado" placeholder="Primavera 2020" />
                                         </div>
