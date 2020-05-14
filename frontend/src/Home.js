@@ -1,5 +1,8 @@
 import React from "react";
+import { Route, Switch } from "react-router-dom";
 import Header from "./Header";
+import {lista_semestre, nuevo_semestre} from "./Semestre";
+
 
 
 class Bloque_Calendario extends React.Component {
@@ -28,6 +31,15 @@ render() {
         <div>
           <Bloque_Calendario />
         </div>
+      <div>
+        <Switch>
+          <Route exact path="/semestres" component={lista_semestre} />
+          <Route exact path="/semestres/nuevo_semestre" component={nuevo_semestre} />
+        </Switch>
+      </div>
+
+
+
       </div>
     );
   }
