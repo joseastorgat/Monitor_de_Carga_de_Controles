@@ -6,6 +6,11 @@ function LogoutButton() {
   function handleClick() {
     // Por hacer
   }
+  return (
+    <NavDropdown.Item onClick={() => handleClick()}>
+      Cerrar Sesión
+    </NavDropdown.Item>
+  );
 }
 
 class LogedInView extends React.Component {
@@ -18,7 +23,7 @@ class LogedInView extends React.Component {
         id="navbar-dropdown"
       >
         <NavDropdown.Header>Ir a</NavDropdown.Header>
-        <LinkContainer to="/semesters">
+        <LinkContainer to="/semestres">
           <NavDropdown.Item>Semestres</NavDropdown.Item>
         </LinkContainer>
         <NavDropdown.Divider />
@@ -52,7 +57,6 @@ export default class Header extends React.Component {
             <Nav>
             <LogedInView user="yo" />
             </Nav>
-            {/* <Nav>{user ? <LogedInView user={user} /> : <LogedOutView />}</Nav> */}
         </Navbar>
       );
     }

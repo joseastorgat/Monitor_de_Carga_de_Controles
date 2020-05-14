@@ -13,6 +13,27 @@
   color: white;
 }
 
+.btn.btn-primary{
+    color: #fff;
+    background-color:  #81cdff;
+    border-color:  #81cdff;
+}
+
+.btn.btn-primary:hover{
+    background-color:  #81cdff;
+    border-color:  #81cdff;
+}
+
+button{
+    background-color:  #81cdff;
+    border-color:  #81cdff;
+    color:white;
+    padding: 1px 10px;
+    border-radius:1050%;
+    border-color:transparent;
+    font-size:x-small;
+}
+
 /* ========================== Home.js =============================== */
 
 .centrar{
@@ -66,6 +87,7 @@
     height:10%;
     text-transform: uppercase;
     margin-top: 2rem;
+
 }
 .login-form{
     position: -webkit-sticky;
@@ -81,4 +103,48 @@
 .form-group{
     margin-bottom: 1rem;
     margin-top: 1rem;
+    text-align: center;
 }
+
+
+.titulo{ 
+    background-color: #81cdff;
+    border: solid 1px #282c34;
+    color: white;
+    padding: 15px 32px;
+    width: 80vw;
+    margin: auto;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+}
+
+
+
+/* ========================== Semestre.js =============================== */
+
+.semestre-form{
+    display: auto;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width:80vw;
+    height:370px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    padding: 0;
+    background: #ffffff;
+    font-size: large;
+}
+
+.en-linea
+{
+    display: inline-block;
+
+}
+
+.outside
+{
+    text-align: center;
+}
+
+
