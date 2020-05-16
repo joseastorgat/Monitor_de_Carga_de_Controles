@@ -3,21 +3,20 @@ import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   Inp
 import ViewTitle from "../ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../OptionButton";
-import { Gear, Trashcan, Unfold } from "@primer/octicons-react";
+import { Gear, Trashcan} from "@primer/octicons-react";
 
-export default class lista_semestre extends React.Component {
+export default class lista_ramos extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      semestres: [],
+      ramos: [],
       showModal: false,
-      semestrePorEliminar: null,
-      MostrarSemestres: [],
+      ramoPorEliminar: null,
+      MostrarRamos: [],
       search: ""
     };
 
-    this.deleteModalMsg = `¿Está seguro que desea eliminar el semestre?
-    Recuerde que esto borrara todos los cursos y evaluaciones asociadas.`;
+    this.deleteModalMsg = `¿Está seguro que desea eliminar el ramo?`;
   }
 
     render() {
@@ -33,7 +32,7 @@ export default class lista_semestre extends React.Component {
       return (
         <main>
           <Container>
-            <ViewTitle>Semestres</ViewTitle>
+            <ViewTitle>Ramos</ViewTitle>
             <Row className="mb-3">
               <Col>
 
@@ -41,23 +40,25 @@ export default class lista_semestre extends React.Component {
                   <InputGroup
                     value={this.state.search}
                     onChange={update_Search} >
-                    <FormControl type="text" placeholder="Buscar Semestre" className="mr-sm-2" />
+                    <FormControl type="text" placeholder="Buscar Ramo" className="mr-sm-2" />
                     <Button type="submit">Buscar</Button>
                   </InputGroup>
                 </Form>
 
               </Col>
               <Col xs="auto">
-                <Link to="/semestres/nuevo_semestre">
-                  <Button className="btn btn-primary">Nuevo Semestre</Button>
+                <Link to="/ramos/nuevo_ramo">
+                  <Button className="btn btn-primary">Nuevo Ramo</Button>
                 </Link>
               </Col>
             </Row>
 
-            <SemesterItem id="1" año="2020" semestre="Otoño" />
-            <SemesterItem id="2" año="2020" semestre="Primavera" />
-            <SemesterItem id="3" año="2019" semestre="Otoño" />
-            <SemesterItem id="4" año="2019" semestre="Primavera" />
+
+
+
+            <RamoItem key="1" id="1" semestre="5" codigo="CC3001" nombre="Algoritmo y Estructura de datos"  />
+            <RamoItem key="2" id="2" semestre="6" codigo="CC3002" nombre="Metodologías de Diseño y Programación"  />
+            <RamoItem key="3" id="3" semestre="6" codigo="CC3301" nombre="Programación de Software de Sistemas"  />
           </Container>
         </main>
       );
@@ -65,31 +66,30 @@ export default class lista_semestre extends React.Component {
   }
 
 
-  class SemesterItem extends React.Component {
+  class RamoItem extends React.Component {
     constructor(props) {
       super(props);
     }
 
     render() {
-      const año=this.props.año;
+      const nombre =this.props.nombre;
+      const codigo = this.props.codigo;
       const semestre= this.props.semestre;
-      const id= this.props.id;
-      console.log(año+ "" + semestre)
+      const id = this.props.id;
       return (
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
-                {año} {semestre}
+                {codigo}   {nombre}
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">
-                  <OptionButton  icon={Unfold}  description="Visualizar semestre"  onClick={() => alert("No implementado")} />
-  
-                  <Link to={`semestres/${año}/${semestre}/editar`}>
-                    <OptionButton icon={Gear} description="Modificar semestre" />
+                 
+                  <Link to={`ramos/${id}/editar`}>
+                  <OptionButton icon={Gear} description="Modificar ramo" />
                   </Link>
 
-                  <OptionButton   icon={Trashcan} description="Eliminar semestre"  onClick={() => alert("No implementado")}    last={true}  />
+                  <OptionButton   icon={Trashcan} description="Eliminar ramo"  onClick={() => alert("No implementado")}    last={true}  />
               </Col>
             </Row>
             </Alert>

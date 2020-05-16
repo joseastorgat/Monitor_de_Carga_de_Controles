@@ -26,6 +26,9 @@ class LogedInView extends React.Component {
         <LinkContainer to="/semestres">
           <NavDropdown.Item>Semestres</NavDropdown.Item>
         </LinkContainer>
+        <LinkContainer to="/ramos">
+          <NavDropdown.Item>Ramos</NavDropdown.Item>
+        </LinkContainer>
         <NavDropdown.Divider />
         <LinkContainer to="#" className="link-no-style">
           <LogoutButton />

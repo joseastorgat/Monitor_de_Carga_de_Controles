@@ -1,14 +1,13 @@
 import React from "react";
-import { Link, LinkContainer } from "react-router-bootstrap";
-import { Button ,Col} from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 
-export default class nuevo_semestre extends React.Component {
+export default class nuevo_curso extends React.Component {
     render() {
         return (
             <div>
                 <h4 className="titulo">Agregar semestre</h4>
                     <form className="" name="form">
-                        <div class="generic-form">
+                        <div class="semestre-form">
                             <div class="row">
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-4" >
@@ -16,8 +15,8 @@ export default class nuevo_semestre extends React.Component {
                                         <div class="col-sm-2" >
                                             <label >Año</label>
                                         </div>
-                                        <div class="col-sm-6" style={{textAlignLast:'center', textAlign:'center'}} >
-                                            <input type="number"  min="2019" max="2030" step="1" className="form-control" placeholder="2020" name="año"  />
+                                        <div class="col-sm-6" >
+                                            <input type="number"  min="2019" max="2030" step="1" className="form-control en-linea" name="año"  />
                                         </div>
                                     </div>
                                 </div>  
@@ -28,7 +27,7 @@ export default class nuevo_semestre extends React.Component {
                                             <label >Tipo</label>
                                         </div>
 
-                                    <div  class="custom-control custom-radio custom-control-inline" >
+                                    <div  class="custom-control custom-radio custom-control-inline">
                                         <input type="radio" id="otoño" name="tipo_semestre" class="custom-control-input" />
                                         <label class="custom-control-label" htmlFor="otoño">Otoño</label>
                                     </div>
@@ -47,7 +46,7 @@ export default class nuevo_semestre extends React.Component {
                                         <div class="col-md-2" >
                                         <label >Inicio</label>
                                         </div>
-                                        <div class="col-md-6" style={{textAlignLast:'center', textAlign:'center'}}>
+                                        <div class="col-md-6" >
                                         <input type="date" className="form-control" name="fecha_inicio"  />
                                         </div>
                                     </div>
@@ -57,34 +56,16 @@ export default class nuevo_semestre extends React.Component {
                                         <div class="col-md-2" >
                                             <label >Fin</label>
                                         </div>
-                                        <div class="col-md-6" style={{textAlignLast:'center', textAlign:'center'}}>
+                                        <div class="col-md-6" >
                                             <input type="date" className="form-control" name="fecha_fin"  />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="row" >
-                                <div class="col-md-2" ></div>
-                                <div class="col-md-4" >
-                                    <div class="row">
-                                        <div class="col-md-2" >
-                                            <label >Estado</label>
-                                        </div>
-                                        <div class="col-md-6" style={{textAlignLast:'center', textAlign:'center'}}>
-                                            <select className="form-control center" name="nombre_ramo" style={{textAlignLast:'center',textAlign:'center'}}  >
-                                                <option value="1">Por comenzar</option>
-                                                <option value="2">En curso</option>
-                                                <option value="3">Finalizado</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> 
                        </div> 
                         <div class="row" style={{textAlign:'center', justifyContent:'center'}}>
                             <div class="cuadrado-form">
-                            <div style={{textAlignLast:'center', textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
+                            <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
                                         <input type="radio" id="replicar_semestre" name="semestre_opcion" class="custom-control-input" />
                                          <label class="custom-control-label" htmlFor="replicar_semestre" >Clonar Semestre</label>
                                         <div class="col-sm-10" >

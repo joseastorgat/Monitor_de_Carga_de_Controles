@@ -5,14 +5,14 @@ import { Link } from "react-router-dom";
 import OptionButton from "../OptionButton";
 import { Gear, Trashcan, Unfold } from "@primer/octicons-react";
 
-export default class lista_semestre extends React.Component {
+export default class lista_cursos extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      semestres: [],
+      cursos: [],
       showModal: false,
-      semestrePorEliminar: null,
-      MostrarSemestres: [],
+      cursoPorEliminar: null,
+      MostrarCursos: [],
       search: ""
     };
 
@@ -33,7 +33,7 @@ export default class lista_semestre extends React.Component {
       return (
         <main>
           <Container>
-            <ViewTitle>Semestres</ViewTitle>
+            <ViewTitle>Cursos</ViewTitle>
             <Row className="mb-3">
               <Col>
 
@@ -41,23 +41,20 @@ export default class lista_semestre extends React.Component {
                   <InputGroup
                     value={this.state.search}
                     onChange={update_Search} >
-                    <FormControl type="text" placeholder="Buscar Semestre" className="mr-sm-2" />
+                    <FormControl type="text" placeholder="Buscar Curso" className="mr-sm-2" />
                     <Button type="submit">Buscar</Button>
                   </InputGroup>
                 </Form>
 
               </Col>
               <Col xs="auto">
-                <Link to="/semestres/nuevo_semestre">
-                  <Button className="btn btn-primary">Nuevo Semestre</Button>
+                <Link to="/cursos/nuevo_curso">
+                  <Button className="btn btn-primary">Nuevo Curso</Button>
                 </Link>
               </Col>
             </Row>
 
-            <SemesterItem id="1" año="2020" semestre="Otoño" />
-            <SemesterItem id="2" año="2020" semestre="Primavera" />
-            <SemesterItem id="3" año="2019" semestre="Otoño" />
-            <SemesterItem id="4" año="2019" semestre="Primavera" />
+            <SemesterItem year="2020" semester="Otoño" />
           </Container>
         </main>
       );
@@ -71,25 +68,21 @@ export default class lista_semestre extends React.Component {
     }
 
     render() {
-      const año=this.props.año;
-      const semestre= this.props.semestre;
-      const id= this.props.id;
-      console.log(año+ "" + semestre)
+      const year=this.props.year;
+      const semester= this.props.semester;
       return (
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
-                {año} {semestre}
+                {year}-{semester}
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">
-                  <OptionButton  icon={Unfold}  description="Visualizar semestre"  onClick={() => alert("No implementado")} />
+                  <OptionButton  icon={Unfold}  description="Visualizar curso"  onClick={() => alert("No implementado")} />
   
-                  <Link to={`semestres/${año}/${semestre}/editar`}>
-                    <OptionButton icon={Gear} description="Modificar semestre" />
-                  </Link>
-
-                  <OptionButton   icon={Trashcan} description="Eliminar semestre"  onClick={() => alert("No implementado")}    last={true}  />
+                  <OptionButton icon={Gear} description="Modificar curso" onClick={() => alert("No implementado")} />
+               
+                  <OptionButton   icon={Trashcan} description="Eliminar curso"  onClick={() => alert("No implementado")}    last={true}  />
               </Col>
             </Row>
             </Alert>
