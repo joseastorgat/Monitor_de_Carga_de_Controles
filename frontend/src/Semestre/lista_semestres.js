@@ -4,6 +4,7 @@ import ViewTitle from "../ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../OptionButton";
 import { Gear, Trashcan, Unfold } from "@primer/octicons-react";
+import { LinkContainer } from "react-router-bootstrap";
 
 export default class lista_semestre extends React.Component {
   constructor(props) {
@@ -59,6 +60,10 @@ export default class lista_semestre extends React.Component {
             <SemesterItem id="3" año="2019" semestre="otoño" />
             <SemesterItem id="4" año="2019" semestre="primavera" />
           </Container>
+
+          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
+                            <button >Volver</button>
+          </LinkContainer>
         </main>
       );
     }

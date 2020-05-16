@@ -4,6 +4,7 @@ import ViewTitle from "../ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../OptionButton";
 import { Gear, Trashcan} from "@primer/octicons-react";
+import { LinkContainer } from "react-router-bootstrap";
 
 export default class lista_ramos extends React.Component {
   constructor(props) {
@@ -60,6 +61,10 @@ export default class lista_ramos extends React.Component {
             <RamoItem key="2" id="2" semestre="6" codigo="CC3002" nombre="Metodologías de Diseño y Programación"  />
             <RamoItem key="3" id="3" semestre="6" codigo="CC3301" nombre="Programación de Software de Sistemas"  />
           </Container>
+          
+          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
+                            <button >Volver</button>
+          </LinkContainer>
         </main>
       );
     }

@@ -70,7 +70,7 @@ export default class editar_ramo extends React.Component {
                                         </div>
                                         <div class="col-sm-10" >
                                         {/* No pude centrarlo, hay un problema con prioridades de css de react */}
-                                            <select className="form-control center" name="nombre_ramo" style={{textAlignLast:'center',textAlign:'center'}}  >
+                                            <select className="form-control center" name="semestre_malla" style={{textAlignLast:'center',textAlign:'center'}}  >
                                                 <option value="5">Quinto</option>
                                                 <option value="6">Sexto</option>
                                                 <option value="7">Séptimo</option>
