@@ -1,10 +1,4 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
-import Header from "./Header";
-import {nuevo_semestre , lista_semestres,editar_semestre} from "./Semestre/index_semestre";
-import {nuevo_curso , lista_cursos} from "./Curso/index_curso";
-import {nuevo_ramo ,editar_ramo, lista_ramos} from "./Ramo/index_ramo";
-
 import { Link } from "react-router-dom";
 
 class Bloque extends React.Component {
@@ -17,14 +11,17 @@ class Bloque extends React.Component {
         </div>
         <div className="centrar">
             <Link to="/semestres">
-            <div className="rectangulo_azul" >Administrar Semestres</div>
+            <div className="rectangulo_azul" style={{ backgroundColor: "gray"}} >Administrar Semestres</div>
             </Link>
             <Link to="/ramos">
-            <div className="rectangulo_azul" >Administrar Ramos</div>
+            <div className="rectangulo_azul" style={{ backgroundColor: "gray"}}>Administrar Ramos</div>
             </Link>
-            <div className="rectangulo_azul" > Administrar Profesores</div>
-            <div className="rectangulo_azul" >Fechas Especiales</div>
+            <div className="rectangulo_azul" style={{ backgroundColor: "gray"}} > Administrar Profesores</div>
+            <div className="rectangulo_azul" style={{ backgroundColor: "gray"}}>Fechas Especiales</div>
         </div>
+        <Link  activeClassName=""  to="/" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
+            <button >Volver</button>
+         </Link>
       </div>
     );
   }

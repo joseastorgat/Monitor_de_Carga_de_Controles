@@ -55,7 +55,7 @@ export default class Header extends React.Component {
       return (
         <Navbar className="color-nav" variant="dark">
             <LinkContainer to="/">
-            <Navbar.Brand className="mr-auto"><h4 style={{color:'Black'}}>U-Calendar</h4></Navbar.Brand>
+            <Navbar.Brand className="mr-auto"><h4 style={{color:'White'}}>U-Calendar</h4></Navbar.Brand>
             </LinkContainer>
             <Nav>
             <LogedInView user="yo" />

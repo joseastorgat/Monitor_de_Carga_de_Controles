@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Header from "./Header";
-import {nuevo_semestre , lista_semestres,editar_semestre} from "./Semestre/index_semestre";
-import {nuevo_curso , lista_cursos} from "./Curso/index_curso";
+import {nuevo_semestre , lista_semestres,editar_semestre, ver_semestre} from "./Semestre/index_semestre";
+// import {nuevo_curso , lista_cursos} from "./Curso/index_curso";
 import {nuevo_ramo ,editar_ramo, lista_ramos} from "./Ramo/index_ramo";
 import administrar from "./Administrar";
 
@@ -22,7 +22,7 @@ class Bloque_Calendario extends React.Component {
         <div className="rectangulo_azul" >Ver Semestre Primavera 2020</div>
         <div className="rectangulo_azul" >Ver Semestre Primavera 2020</div>
         <Link to="/administrar">
-          <div className="rectangulo_azul" >Administrar</div>
+          <div className="rectangulo_azul" style={{ backgroundColor: "gray"}} >Administrar</div>
         </Link>
       </div>
       </div>
@@ -46,8 +46,8 @@ render() {
           {/* VISTAS DE SEMESTRE */}
           <Route exact path="/semestres" component={lista_semestres} />
           <Route exact path="/semestres/nuevo_semestre" component={nuevo_semestre} />
-          {/* <Route exact path="/semesters/:year/:semester" component={ver_semestre}           />*/}
-          <Route exact path="/semestres/:año/:semestre/editar" component={editar_semestre} />
+          <Route exact path="/semesters/:year/:semester" component={ver_semestre}           />
+          <Route exact path="/semestres/:ano/:semestre/editar" component={editar_semestre} />
 
           {/* VISTAS DE CURSO */}
           {/* <Route exact path="/semestres/:año/:semestre/nuevo_curso" component={nuevo_curso} />

@@ -54,10 +54,10 @@ export default class lista_semestre extends React.Component {
               </Col>
             </Row>
 
-            <SemesterItem id="1" año="2020" semestre="Otoño" />
-            <SemesterItem id="2" año="2020" semestre="Primavera" />
-            <SemesterItem id="3" año="2019" semestre="Otoño" />
-            <SemesterItem id="4" año="2019" semestre="Primavera" />
+            <SemesterItem id="1" año="2020" semestre="otoño" />
+            <SemesterItem id="2" año="2020" semestre="primavera" />
+            <SemesterItem id="3" año="2019" semestre="otoño" />
+            <SemesterItem id="4" año="2019" semestre="primavera" />
           </Container>
         </main>
       );
@@ -76,6 +76,7 @@ export default class lista_semestre extends React.Component {
       const id= this.props.id;
       console.log(año+ "" + semestre)
       return (
+        <Link to={`semestres/${año}/${semestre}`}>    
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
@@ -93,6 +94,7 @@ export default class lista_semestre extends React.Component {
               </Col>
             </Row>
             </Alert>
+            </Link>
       );
     }
   }

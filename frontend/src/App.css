@@ -32,7 +32,7 @@ button{
     background-color:  #81cdff;
     border-color:  #81cdff;
     color:white;
-    padding: 4px 10px;
+    padding: 6px 20px;
     border-radius: 8px;
     border-color:transparent;
     font-size:x-small;
@@ -51,7 +51,6 @@ button{
 
 .rectangulo_azul{ 
     background-color: #81cdff;
-    border: solid 1px #282c34;
     color: white;
     padding: 15px 32px;
     width: 20vw;
@@ -64,7 +63,6 @@ button{
 /* ========================== Header.js =============================== */
 .color-nav {
     background-color:#81cdff;
-    border-bottom: 1px solid #282c34;
 }
 
 

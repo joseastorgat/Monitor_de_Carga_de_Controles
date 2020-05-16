@@ -1,6 +1,5 @@
 import React from "react";
-import { Link, LinkContainer } from "react-router-bootstrap";
-import { Button ,Col} from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 
 export default class nuevo_semestre extends React.Component {
     render() {

@@ -1,6 +1,5 @@
 import React from "react";
-import { Link, LinkContainer } from "react-router-bootstrap";
-import { Button ,Col} from "react-bootstrap";
+import {LinkContainer } from "react-router-bootstrap";
 
 export default class editar_semestre extends React.Component {
     constructor(props) {
@@ -19,7 +18,7 @@ export default class editar_semestre extends React.Component {
     render() {
         return (
             <div>
-                <h4 className="titulo">Agregar semestre</h4>
+                <h4 className="titulo">Editar semestre</h4>
                     <form className="" name="form">
                         <div class="generic-form">
                             <div class="row">
@@ -76,6 +75,23 @@ export default class editar_semestre extends React.Component {
                                     </div>
                                 </div>
                             </div>
+                            <div class="row" >
+                                <div class="col-md-2" ></div>
+                                <div class="col-md-4" >
+                                    <div class="row">
+                                        <div class="col-md-2" >
+                                            <label >Estado</label>
+                                        </div>
+                                        <div class="col-md-6" style={{textAlignLast:'center', textAlign:'center'}}>
+                                            <select className="form-control center" name="nombre_ramo" style={{textAlignLast:'center',textAlign:'center'}}  >
+                                                <option value="1">Por comenzar</option>
+                                                <option value="2">En curso</option>
+                                                <option value="3">Finalizado</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
                        </div> 
                         <div class="row" style={{textAlign:'center', justifyContent:'center'}}>
                             <div class="cuadrado-form">
