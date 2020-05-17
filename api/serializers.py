@@ -1,37 +1,37 @@
 from rest_framework import serializers
 from .models import *
 
-class SemestreSerializers(serializers.ModelSerializer):
+class SemestreSerializer(serializers.ModelSerializer):
     class Meta:
         model=Semestre
         fields='__all__'
 
-class RamoSerializers(serializers.ModelSerializer):
+class RamoSerializer(serializers.ModelSerializer):
     class Meta:
         model=Ramo
         fields='__all__'
 
-class CursoSerializers(serializers.ModelSerializer):
+class CursoSerializer(serializers.ModelSerializer):
     class Meta:
         model=Curso
         fields='__all__'
 
-class ProfesorSerializers(serializers.ModelSerializer):
+class ProfesorSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Ramo
+        model=Profesor
         fields='__all__'
 
-class CalendarioSerializers(serializers.ModelSerializer):
+class CalendarioSerializer(serializers.ModelSerializer):
     class Meta:
         model=Calendario
         fields='__all__'
 
-class FechaSerializers(serializers.ModelSerializer):
+class FechaSerializer(serializers.ModelSerializer):
     class Meta:
         model=Fechas_especiales
         fields='__all__'
 
-class EvaluacionSerializers(serializers.ModelSerializer):
+class EvaluacionSerializer(serializers.ModelSerializer):
     class Meta:
         model=Evaluacion
         fields='__all__'

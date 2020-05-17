@@ -17,8 +17,22 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 
+from rest_framework import routers
+from api import views
+
+router = routers.DefaultRouter()
+
+router.register(r'semestres', views.SemestreViewSet)
+router.register(r'ramos', views.RamoViewSet)
+router.register(r'evaluaciones', views.EvaluationViewSet)
+router.register(r'cursos', views.CursoViewSet)
+router.register(r'profesores', views.ProfesorViewSet)
+router.register(r'calendario', views.CalendarioViewSet)
+router.register(r'fechas-especiales', views.FechasEspecialesViewSet)
+
 urlpatterns = [
+    path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
+    #path('api/', include('api.urls')),
     # path('', TemplateView.as_view(template_name='index.html'))
 ]
