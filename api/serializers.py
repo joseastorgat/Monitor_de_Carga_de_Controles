@@ -26,11 +26,6 @@ class CalendarioSerializers(serializers.ModelSerializer):
         model=Calendario
         fields='__all__'
 
-class MallaSerializers(serializers.ModelSerializer):
-    class Meta:
-        model=Malla
-        fields='__all__'
-
 class FechaSerializers(serializers.ModelSerializer):
     class Meta:
         model=Fechas_especiales
@@ -41,12 +36,12 @@ class EvaluacionSerializers(serializers.ModelSerializer):
         model=Evaluacion
         fields='__all__'
 
-class Calendario_CursoSerializers(serializers.ModelSerializer):
-    class Meta:
-        model=Calendario_Curso
-        fields='__all__'
+# class Calendario_CursoSerializers(serializers.ModelSerializer):
+#     class Meta:
+#         model=Calendario_Curso
+#         fields='__all__'
 
-class Curso_ProfesorSerializers(serializers.ModelSerializer):
-    class Meta:
-        model=Curso_Profesor
-        fields='__all__'
+# class Curso_ProfesorSerializers(serializers.ModelSerializer):
+#     class Meta:
+#         model=Curso_Profesor
+#         fields='__all__'
