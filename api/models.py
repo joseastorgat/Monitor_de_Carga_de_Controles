@@ -1,6 +1,6 @@
 from django.db import models
 
-# Create your models here.
+current_year = 2020
 
 class Profesor(models.Model):
     nombre=models.CharField(max_length=100)
@@ -18,15 +18,18 @@ class Semestre(models.Model):
         (2, "En ejecucion"),
         (3, "Por comenzar"),
     )
-    año=models.DateField()
+    año=models.IntegerField(default=current_year)
     inicio=models.DateField()
     fin=models.DateField()
-    tipo=models.IntegerField(choices=_PERIOD_TYPES)
-    #estado=models.BooleanField(defaul=False)
+    periodo=models.IntegerField(choices=_PERIOD_TYPES)
     estado=models.IntegerField(choices=_STATE_TYPES)
 
-class Malla(models.Model):
+    def __str__(self):
+        return "Semestre "+self._PERIOD_TYPES[self.periodo-1][1]+" "+str(self.año)
+
+class Ramo(models.Model):
     _SEMESTERS = (
+        (0, "Electivo"),
         (5, "Quinto"),
         (6, "Sexto"),
         (7, "Septimo"),
@@ -34,30 +37,26 @@ class Malla(models.Model):
         (9, "Noveno"),
         (10, "Decimo"),
     )
-    #Semestre=models.CharField(max_length=45)
-    n_Semestre=models.IntegerField(choices=_SEMESTERS)
-    id_ramo=models.ForeignKey('Ramo', on_delete=models.CASCADE)
-
-class Ramo(models.Model):
-    title=models.CharField(max_length=45)
+    name=models.CharField(max_length=45)
     codigo=models.CharField(max_length=45,default=0)
+    codigo_antiguo=models.CharField(max_length=45,default=0)
+    semestre_malla=models.IntegerField(choices=_SEMESTERS)
 
     def __str__(self):
-        return self.title
+        return self.name
 
 class Curso(models.Model):
-    ramo_asociado=models.ForeignKey('Ramo', on_delete=models.CASCADE)
-    semestre_asociado=models.ForeignKey('Semestre', on_delete=models.CASCADE)
+    ramo=models.ForeignKey(Ramo, on_delete=models.CASCADE)
+    semestre=models.ForeignKey(Semestre, on_delete=models.CASCADE)
     seccion=models.IntegerField(default=0)
     descripcion=models.CharField(max_length=45)
-## No se si en curso agregar al profesor o crear tabla profesor
+    profesor = models.ManyToManyField(Profesor)
 
 class Evaluacion(models.Model):
     fecha=models.DateField()
     tipo=models.CharField(max_length=45)
     titulo=models.CharField(max_length=45)
-    curso_asociado=models.ForeignKey('Curso', on_delete=models.CASCADE)
-
+    curso_asociado=models.ForeignKey(Curso, on_delete=models.CASCADE)
 
 class Fechas_especiales(models.Model):
     _FECHAS_TYPES = (
@@ -70,18 +69,10 @@ class Fechas_especiales(models.Model):
     nombre=models.CharField(max_length=45)
     tipo=  models.IntegerField(choices=_FECHAS_TYPES)
 
-class Curso_Profesor(models.Model):
-    profe=models.ForeignKey('Profesor', on_delete=models.CASCADE)
-    curso=models.ForeignKey('Curso', on_delete=models.CASCADE)
-
 class Calendario(models.Model):
     fecha_creacion=models.DateField()
     nombre=models.CharField(max_length=45)
     token=models.CharField(max_length=45)
     link=models.CharField(max_length=100)
-
-class Calendario_Curso(models.Model):
-    id_calendario=models.ForeignKey('Calendario', on_delete=models.CASCADE)
-    id_curso=models.ForeignKey('Curso', on_delete=models.CASCADE)
-    id_semestre=models.ForeignKey('Semestre', on_delete=models.CASCADE)
+    cursos = models.ManyToManyField(Curso)
 

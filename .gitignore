@@ -2,6 +2,7 @@
 
 *.pyc
 /backend/db.sqlite3
+db.sqlite3
 .DS_Store
 .env
 */settings/local.py
@@ -9,6 +10,7 @@
 /mediafiles/*
 */__pycache__/
 /.vscode/
+api/migrations/0001_initial.py
 
 # coverage result
 .coverage
@@ -48,3 +50,8 @@ spritesmith.scss
 
 # templated email
 tmp_email/
+
+
+#pycache
+/MCC/__pycache__/
+/api/__pycache__/
