@@ -48,3 +48,8 @@ spritesmith.scss
 
 # templated email
 tmp_email/
+
+
+#pycache
+/MCC/__pycache__/
+/api/__pycache__/
