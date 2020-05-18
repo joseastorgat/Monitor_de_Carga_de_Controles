@@ -2,8 +2,6 @@ import csv
 import datetime
 import pprint
 from collections import defaultdict
-import ipdb
-
 
 def parse_csv(file):
     """
