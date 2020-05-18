@@ -9,6 +9,7 @@ import { LinkContainer } from "react-router-bootstrap";
 export default class lista_ramos extends React.Component {
   constructor(props) {
     super(props);
+    this.handle_search = this.handle_search.bind(this);
     this.state = {
       ramos: [],
       showModal: false,
@@ -20,27 +21,52 @@ export default class lista_ramos extends React.Component {
     this.deleteModalMsg = `¿Está seguro que desea eliminar el ramo?`;
   }
 
-    render() {
-      const handle_search = e => {
-        e.preventDefault();
-        alert("No implementado, pero se busco "+ this.state.search)
-      }
 
-      const update_Search= e => {
-        this.state.search=e.target.value;
-      };
+  async fetchRamos() {
+    console.log("Fetching...")
+    let ramos = [];
+    await fetch(`http://127.0.0.1:8000/api/ramos/`)
+    .then(response => response.json())
+    .then(ramos =>
+      this.setState({
+        ramos: ramos,
+        MostrarRamos: ramos
+      })
+      )    
+    console.log(this.state.ramos)
+  }
 
-      return (
-        <main>
-          <Container>
-            <ViewTitle>Ramos</ViewTitle>
+  async componentDidMount() {
+    this.fetchRamos();
+  }
+
+  handle_search(){
+    const busqueda= this.state.search;
+    const ramos= this.state.ramos;
+    const ramos_buscados= ramos.filter(o=>
+      (o.name.toString()+" " + o.codigo.toString() ).includes(busqueda)
+    );
+    console.log("Buscados")
+    console.log(ramos_buscados)
+    this.setState({MostrarRamos: ramos_buscados});
+  }
+
+  update_Search(e){
+    this.setState({search: e.target.value});
+  }
+
+  render() {
+    return (
+      <main>
+        <Container>
+          <ViewTitle>Ramos</ViewTitle>
             <Row className="mb-3">
               <Col>
 
-                <Form inline className="mr-auto" onSubmit={handle_search} >
+                <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
                   <InputGroup
                     value={this.state.search}
-                    onChange={update_Search} >
+                    onChange={e => this.update_Search(e)} >
                     <FormControl type="text" placeholder="Buscar Ramo" className="mr-sm-2" />
                     <Button type="submit">Buscar</Button>
                   </InputGroup>
@@ -53,17 +79,21 @@ export default class lista_ramos extends React.Component {
                 </Link>
               </Col>
             </Row>
+            {this.state.MostrarRamos.map(ramo => (
+            <RamoItem
+              key={ramo.id}
+              semestre={ramo.semestre_malla}
+              codigo={ramo.codigo}
+              nombre={ramo.name}
+              codigo_antiguo={ramo.codigo_antiguo}
+              showModal={() => this.showModal(ramo)}
+            />
+          ))}
 
-
-
-
-            <RamoItem key="1" id="1" semestre="5" codigo="CC3001" nombre="Algoritmo y Estructura de datos"  />
-            <RamoItem key="2" id="2" semestre="6" codigo="CC3002" nombre="Metodologías de Diseño y Programación"  />
-            <RamoItem key="3" id="3" semestre="6" codigo="CC3301" nombre="Programación de Software de Sistemas"  />
           </Container>
           
           <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                            <button >Volver</button>
+            <button >Volver</button>
           </LinkContainer>
         </main>
       );

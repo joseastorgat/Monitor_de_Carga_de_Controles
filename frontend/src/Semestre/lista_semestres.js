@@ -9,6 +9,7 @@ import { LinkContainer } from "react-router-bootstrap";
 export default class lista_semestre extends React.Component {
   constructor(props) {
     super(props);
+    this.handle_search = this.handle_search.bind(this);
     this.state = {
       semestres: [],
       showModal: false,
@@ -21,16 +22,39 @@ export default class lista_semestre extends React.Component {
     Recuerde que esto borrara todos los cursos y evaluaciones asociadas.`;
   }
 
-    render() {
-      const handle_search = e => {
-        e.preventDefault();
-        alert("No implementado, pero se busco "+ this.state.search)
-      }
+  
+  async fetchSemestres() {
+    console.log("Fetching...")
+    await fetch(`http://127.0.0.1:8000/api/semestres/`)
+    .then(response => response.json())
+    .then(semestres =>
+      this.setState({
+        semestres: semestres,
+        MostrarSemestres: semestres
+      })
+      )    
+  }
 
-      const update_Search= e => {
-        this.state.search=e.target.value;
-      };
+  async componentDidMount() {
+    this.fetchSemestres();
+  }
 
+  handle_search(){
+    const busqueda= this.state.search;
+    const Semestres= this.state.semestres;
+    const Semestres_buscados= Semestres.filter(o=>
+      (o.año.toString()+" " + (o.periodo==1 ? ("Otoño") : ("Primavera"))).includes(busqueda)
+    );
+    console.log("Buscados")
+    console.log(Semestres_buscados)
+    this.setState({MostrarSemestres: Semestres_buscados});
+  }
+
+  update_Search(e){
+    this.setState({search: e.target.value});
+  }
+
+  render() {
       return (
         <main>
           <Container>
@@ -38,10 +62,10 @@ export default class lista_semestre extends React.Component {
             <Row className="mb-3">
               <Col>
 
-                <Form inline className="mr-auto" onSubmit={handle_search} >
+                <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
                   <InputGroup
                     value={this.state.search}
-                    onChange={update_Search} >
+                    onChange={e => this.update_Search(e)} >
                     <FormControl type="text" placeholder="Buscar Semestre" className="mr-sm-2" />
                     <Button type="submit">Buscar</Button>
                   </InputGroup>
@@ -55,14 +79,19 @@ export default class lista_semestre extends React.Component {
               </Col>
             </Row>
 
-            <SemesterItem id="1" año="2020" semestre="otoño" />
-            <SemesterItem id="2" año="2020" semestre="primavera" />
-            <SemesterItem id="3" año="2019" semestre="otoño" />
-            <SemesterItem id="4" año="2019" semestre="primavera" />
+            {this.state.MostrarSemestres.map(semestre => (
+            <SemesterItem
+              key={semestre.id}
+              año={semestre.año}
+              semestre={ semestre.periodo==1 ? ("Otoño") : ("Primavera")}
+              showModal={() => this.showModal(semestre)}
+            />
+          ))}
+
           </Container>
 
           <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                            <button >Volver</button>
+            <button >Volver</button>
           </LinkContainer>
         </main>
       );
@@ -79,7 +108,6 @@ export default class lista_semestre extends React.Component {
       const año=this.props.año;
       const semestre= this.props.semestre;
       const id= this.props.id;
-      console.log(año+ "" + semestre)
       return (
         <Link to={`semestres/${año}/${semestre}`}>    
         <Alert variant="secondary">

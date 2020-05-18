@@ -19,7 +19,7 @@ class Bloque extends React.Component {
             <div className="rectangulo_azul" style={{ backgroundColor: "gray"}} > Administrar Profesores</div>
             <div className="rectangulo_azul" style={{ backgroundColor: "gray"}}>Fechas Especiales</div>
         </div>
-        <Link  activeClassName=""  to="/" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
+        <Link   to="/" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
             <button >Volver</button>
          </Link>
       </div>

@@ -9,7 +9,7 @@ class OptionButton extends React.Component {
 
   render() {
     const marginRight = this.props.last ? "mr-0" : "mr-2";
-    console.log(this.props.on);
+    // console.log(this.props.on);
     const { onClick, icon } = this.props;
     return (
       <OverlayTrigger placement="top" overlay={this.renderTooltip()}>
