@@ -31,8 +31,9 @@ router.register(r'calendario', views.CalendarioViewSet)
 router.register(r'fechas-especiales', views.FechasEspecialesViewSet)
 
 urlpatterns = [
+    path('', include('accounts.urls')),
     path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
-    #path('api/', include('api.urls')),
     # path('', TemplateView.as_view(template_name='index.html'))
+    # path('api/', include('api.urls')),
 ]
