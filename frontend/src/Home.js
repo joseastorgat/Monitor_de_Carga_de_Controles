@@ -63,9 +63,9 @@ render() {
           <Route exact path="/ramos/:id/editar" component={editar_ramo} />
 
           {/* VISTAS DE EVALUACION */}
-          <Route exact path="/evaluaciones" component={lista_evaluaciones} />
-          <Route exact path="/evaluaciones/nueva_evaluacion" component={nueva_evaluacion} />
-          <Route exact path="/evaluaciones/:id/editar" component={editar_evaluacion} />
+          <Route exact path="/semestres/:ano/:semestre/:cod/:seccion/evaluaciones" component={lista_evaluaciones} />
+          <Route exact path="/semestres/:ano/:semestre/:cod/:seccion/evaluaciones/nueva_evaluacion" component={nueva_evaluacion} />
+          <Route exact path="/semestres/:ano/:semestre/:cod/:seccion/evaluaciones/:id/editar" component={editar_evaluacion} />
 
           {/* VISTAS DE PROFESOR */}
           <Route exact path="/profesores" component={lista_profesores} />
