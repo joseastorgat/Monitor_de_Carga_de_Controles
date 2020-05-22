@@ -16,9 +16,6 @@ class Bloque extends React.Component {
             <Link to="/ramos">
             <div className="rectangulo_azul" style={{ backgroundColor: "gray"}}>Administrar Ramos</div>
             </Link>
-            <Link to="/evaluaciones"> {/* Añadido temporalmente para visualizacion */}
-            <div className="rectangulo_azul" style={{ backgroundColor: "gray"}}>Administrar Evaluaciones</div>
-            </Link>
             <Link to="/profesores">
               <div className="rectangulo_azul" style={{ backgroundColor: "gray"}} > Administrar Profesores</div>
             </Link>
