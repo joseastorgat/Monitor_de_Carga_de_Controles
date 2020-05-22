@@ -24,7 +24,7 @@ export default class nueva_evaluacion extends React.Component {
                             </div>
                         </div>
                         <div class="generic-form border-0">
-                            <table class="table table-bordered">
+                            <table class="table table-condensed">
                             <thead>
                                 <tr>
                                 <th scope="col">Nombre</th>
