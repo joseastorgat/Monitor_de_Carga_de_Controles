@@ -1,28 +1,22 @@
 import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
-
-function LogoutButton() {
-  function handleClick() {
-    // Por hacer
-  }
-  return (
-    <NavDropdown.Item onClick={() => handleClick()}>
-      Cerrar Sesión
-    </NavDropdown.Item>
-  );
-}
+import { logout } from "./actions/auth"
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 class LogedInView extends React.Component {
   render() {
-    const { user } = this.props;
+    const { user, logout } = this.props;
+    console.log({user});
     return (
       <NavDropdown
         alignRight
-        title={user}
+        title={user ? `Bienvenido ${user.username}` : ''}
         id="navbar-dropdown"
       >
         <NavDropdown.Header>Ir a</NavDropdown.Header>
+        
         <LinkContainer to="/semestres">
           <NavDropdown.Item>Semestres</NavDropdown.Item>
         </LinkContainer>
@@ -30,8 +24,12 @@ class LogedInView extends React.Component {
           <NavDropdown.Item>Ramos</NavDropdown.Item>
         </LinkContainer>
         <NavDropdown.Divider />
-        <LinkContainer to="#" className="link-no-style">
-          <LogoutButton />
+
+        <LinkContainer to="/" className="link-no-style">
+        <NavDropdown.Item onClick={logout}>
+          Cerrar Sesión
+        </NavDropdown.Item>
+        
         </LinkContainer>
       </NavDropdown>
     );
@@ -48,19 +46,41 @@ class LogedOutView extends React.Component {
   }
 }
 
+class Header extends React.Component {
+  
+  static propTypes = {
+    auth: PropTypes.object.isRequired,
+    logout: PropTypes.func.isRequired,
+  };  
 
-export default class Header extends React.Component {
-    render() {
-      // const { user } = this.props;
-      return (
-        <Navbar className="color-nav" variant="dark">
-            <LinkContainer to="/">
-            <Navbar.Brand className="mr-auto"><h4 style={{color:'White'}}>U-Calendar</h4></Navbar.Brand>
-            </LinkContainer>
-            <Nav>
-            <LogedInView user="yo" />
-            </Nav>
-        </Navbar>
+    
+  render() {
+    const { isAuthenticated, user } = this.props.auth;
+    const { logout } = this.props;
+
+    console.log(this.props.auth.user);
+
+    const authLinks = (
+      <LogedInView user={user} logout={logout} />
+    );
+    const guestLinks = (
+      <LogedOutView />
+    );
+    return (
+      <Navbar className="color-nav" variant="dark">
+        <LinkContainer to="/">
+          <Navbar.Brand className="mr-auto"><h4 style={{color:'White'}}>U-Calendar</h4></Navbar.Brand>
+        </LinkContainer>    
+        <Nav>
+        {isAuthenticated ? authLinks : guestLinks}
+        </Nav>
+      </Navbar>
       );
     }
 }
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, { logout })(Header);
