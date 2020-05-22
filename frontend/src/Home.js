@@ -7,6 +7,7 @@ import {nuevo_ramo ,editar_ramo, lista_ramos} from "./Ramo/index_ramo";
 import administrar from "./Administrar";
 
 import {nueva_evaluacion, editar_evaluacion, lista_evaluaciones} from "./Evaluacion/index_evaluacion"
+import {nuevo_profesor, editar_profesor, lista_profesores} from "./Profesor/index_profesor"
 
 import { Link } from "react-router-dom";
 
@@ -65,6 +66,11 @@ render() {
           <Route exact path="/evaluaciones" component={lista_evaluaciones} />
           <Route exact path="/evaluaciones/nueva_evaluacion" component={nueva_evaluacion} />
           <Route exact path="/evaluaciones/:id/editar" component={editar_evaluacion} />
+
+          {/* VISTAS DE PROFESOR */}
+          <Route exact path="/profesores" component={lista_profesores} />
+          <Route exact path="/profesores/nuevo_profesor" component={nuevo_profesor} />
+          <Route exact path="/profesores/:id/editar" component={editar_profesor} />
         </Switch>
       </div>
 
