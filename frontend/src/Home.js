@@ -6,6 +6,8 @@ import {nuevo_curso , ver_curso, editar_curso} from "./Curso/index_curso";
 import {nuevo_ramo ,editar_ramo, lista_ramos} from "./Ramo/index_ramo";
 import administrar from "./Administrar";
 
+import {nueva_evaluacion, editar_evaluacion, lista_evaluaciones} from "./Evaluacion/index_evaluacion"
+
 import { Link } from "react-router-dom";
 
 class Bloque_Calendario extends React.Component {
@@ -58,6 +60,11 @@ render() {
           <Route exact path="/ramos" component={lista_ramos} />
           <Route exact path="/ramos/nuevo_ramo" component={nuevo_ramo} />
           <Route exact path="/ramos/:id/editar" component={editar_ramo} />
+
+          {/* VISTAS DE EVALUACION */}
+          <Route exact path="/evaluaciones" component={lista_evaluaciones} />
+          <Route exact path="/evaluaciones/nueva_evaluacion" component={nueva_evaluacion} />
+          <Route exact path="/evaluaciones/:id/editar" component={editar_evaluacion} />
         </Switch>
       </div>
 
