@@ -12,6 +12,7 @@ db.sqlite3
 /.vscode/
 *.code-workspace
 api/migrations/0001_initial.py
+/csv_data/
 
 # coverage result
 .coverage

@@ -1,0 +1,41 @@
+Año,2019,,,,,,,,,,,,,,,
+Periodo,2,,,,,,,,,,,,,,,
+Inicio,15/03/2019,,,,,,,,,,,,,,,
+Fin,15/07/2019,,,,,,,,,,,,,,,
+# Sem.,Curso,Secc.,Prof,Control 1,Control 2,Control 3,Control 4,Tarea 1,Tarea 2,Tarea 3,Tarea 4,Tarea 5,Tarea 6,Tarea 7,Tarea 8,Responsabilidades de Ayudantes y Auxiliares
+5° Sem.,CC3001: Algoritmos y Estruc. De Datos,1,J. Barbay,27/09/2019,15/11/2019,,,16/08/2019,06/09/2019,04/10/2019,25/10/2019,22/11/2019,,,,
+5° Sem.,CC3001: Algoritmos y Estruc. De Datos,2,P.Poblete,27/09/2019,15/11/2019,,,16/08/2019,06/09/2019,04/10/2019,25/10/2019,22/11/2019,,,,
+5° Sem.,CC3101: Matem. Discretas para la Comp.,1,G. Navarro,11/09/2019,16/10/2019,13/11/2019,,19/08/2019,23/09/2019,28/10/2019,,,,,,
+5° Sem.,CC3101: Matem. Discretas para la Comp.,2,F. Olmedo,12/09/2019,16/10/2019,13/11/2019,,19/08/2019,23/09/2019,28/10/2019,,,,,,"Responsabilidades de los auxiliares: 1) dictar de las clases auxiliares y preparar la hoja de ejercicios para esas clases, 2) proponer problemas para las tareas y redactar las pautas, 3) tomar los controles y el examen, y 4) atender las consultas de los estudiantes en el foro, por correo, etc.
+
+Responsabilidades de los ayudantes: 1) corregir las tareas, 2) corregir los controles y el examen. Se espera que las correcciones de tareas y controles se haga en un periodo máximo de dos semanas."
+5° Sem.,CC3501: Modelación y Computación Gráfica para Ingenieros,1,N.Hitschfeld,30/08/2019,11/10/2019,15/11/2019,,26/08/2019,8/10/2019,4/11/2019,11/11/2019,,,,,"Auxiliares:
+- Dictar clases auxiliares en formato de trabajo dirigido todas las semanas en conjunto con otro profesor auxiliar.
+- Se proporcionará material base con problemas y algunas soluciones que debe ser refinado y/o resuelto. Además, este material debe ser transcrito a formato Jupyter/Notebooks utilizando python, GLFW, OpenGL core profile, numpy, matplotlib, entre otros.
+- Proponer nuevos problemas para mejorar el material a utilizar.
+- Desarrollo de pautas guía para corregir evaluaciones. Debe ser facilitada a los ayudantes pocos días de tomada la evaluación.
+- Responder consultas de los estudiantes en clases auxiliares y en el foro.
+- Tomar evaluaciones y asistir a sesiones de presentaciones de alumnos.
+
+Ayudantes:
+- Corrección de 3 controles, 4 tareas computacionales y examen. Se espera que las correcciones de controles se hagan en un periodo máximo de dos semanas.
+- Responder consultas de los estudiantes en el foro.
+- Tomar evaluaciones y asistir a sesiones de presentaciones de alumnos.
+"
+6° Sem.,CC3002: Metod. De Diseño y Program.,1,A.Bergel,26/08/2019,11/10/2019,15/11/2019,,02/09/2019,18/10/2019,23/11/2019,,,,,,
+6° Sem.,CC3102: Teoría de la Computación,1,A.Hevia,12/09/2019,16/10/2019,14/11/2019,,27/08/2019,26/09/2019,17/10/2019,06/11/2019,21/11/2019,,,,
+6° Sem.,CC3301: Program. De Software y Sistem.,1,L.Mateu,30/08/2019,18/10/2019,15/11/2019,,,,,,,,,,
+6° Sem.,CC3201: Bases de Datos,1,C.Gutiérrez,13/09/2019,11/10/2019,08/11/2019,,30/08/2019,04/10/2019,30/10/2019,,,,,,
+7° Sem.,CC4101: Lenguajes de Programación,1,F. Olmedo,13/09/2019,15/11/2019,,,12/08/2019,23/09/2019,23/10/2019,,,,,,
+7° Sem.,CC4401: Ingeniería de Software,1,J.Simmonds,26/09/2019,14/11/2019,,,16/08/2019,26/08/2019,13/09/2019,28/10/2019,18/11/2019,,,,
+7° Sem.-Elec,CC5206: Introducción a la Mineria de Datos,2,B.Poblete/F.Bravo,30/08/2019,11/10/2019,22/11/2019,,12/08/2019,27/09/2019,18/10/2019,25/10/2019,,,,,
+7° Sem.-Elec,CC5206: Introducción a la Mineria de Datos,1,B.Poblete/F.Bravo,30/08/2019,11/10/2019,22/11/2019,,12/08/2019,27/09/2019,18/10/2019,25/10/2019,,,,,
+7° Sem.,CC4301: Arquitectura de Computadores,1,l.Mateu,28/08/2019,09/10/2019,13/11/2019,,16/08/2019,02/09/2019,11/10/2019,20/11/2019,,,,,
+8° Sem.,CC4102: Diseño y Análisis de Algoritmos,1,G.Navarro,09/09/2019,14/10/2019,11/11/2019,,23/09/2019,21/10/2019,18/11/2019,,,,,,
+8° Sem.,CC4302: Sistemas Operativos,1,L.Mateu,28/08/2019,09/10/2019,13/11/2019,,02/11/2019,11/10/2019,20/11/2019,,,,,,
+8° Sem.,CC4303: Redes,1,J.Piquer,30/08/2019,04/10/2019,15/11/2019,,,,,,,,,,
+9° Sem.,CC5401: Ingeniería de Software II,1,S.Ochoa,,,,,29/08/2019,,,,24/10/2019,14/11/2019,22/11/2019,,
+9° Sem.,IN3301: Evaluación de Proyecto,1,A.Kettlun,,,,,,,,,,,,,
+9° Sem.,IN3301: Evaluación de Proyecto,2,H.Vásquez,,,,,,,,,,,,,
+9° Sem.,IN3301: Evaluación de Proyecto,3,G.Concha/L.Tamblay,,,,,,,,,,,,,
+10° Sem.,CC5402: Proyecto de Software,1,C.Bastarrica,12/09/2019,17/10/2019,28/11/2019,,,,,,,,,,

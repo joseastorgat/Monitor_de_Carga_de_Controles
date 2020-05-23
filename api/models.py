@@ -39,7 +39,7 @@ class Ramo(models.Model):
     )
     name=models.CharField(max_length=45)
     codigo=models.CharField(max_length=45,default=0)
-    codigo_antiguo=models.CharField(max_length=45,default=0)
+    #codigo_antiguo=models.CharField(max_length=45,default=0)
     semestre_malla=models.IntegerField(choices=_SEMESTERS)
 
     def __str__(self):
@@ -49,14 +49,14 @@ class Curso(models.Model):
     ramo=models.ForeignKey(Ramo, on_delete=models.CASCADE)
     semestre=models.ForeignKey(Semestre, on_delete=models.CASCADE)
     seccion=models.IntegerField(default=0)
-    descripcion=models.CharField(max_length=45)
+    #descripcion=models.CharField(max_length=45)
     profesor = models.ManyToManyField(Profesor)
 
 class Evaluacion(models.Model):
     fecha=models.DateField()
     tipo=models.CharField(max_length=45)
     titulo=models.CharField(max_length=45)
-    curso_asociado=models.ForeignKey(Curso, on_delete=models.CASCADE)
+    curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
 
 class Fechas_especiales(models.Model):
     _FECHAS_TYPES = (
