@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 class LogedInView extends React.Component {
   render() {
     const { user, logout } = this.props;
-    console.log({user});
+    // console.log({user});
     return (
       <NavDropdown
         alignRight

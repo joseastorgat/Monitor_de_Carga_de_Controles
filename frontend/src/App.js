@@ -5,9 +5,13 @@ import LoginPage from "./auth/Login";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import store from './store';
 import { Provider } from 'react-redux';
-
+import { loadUser } from './actions/auth';
 
 class App extends React.Component {
+ 
+  componentDidMount() {
+    store.dispatch(loadUser());
+  } 
   render() {
     return (
       <Provider store={store}>
