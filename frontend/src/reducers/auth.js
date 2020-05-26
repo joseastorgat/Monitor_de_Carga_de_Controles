@@ -12,6 +12,7 @@ import {
     isAuthenticated: null,
     isLoading: false,
     user: null,
+    error: null,
   };
   
   export default function (state = initialState, action) {
@@ -20,12 +21,14 @@ import {
         return {
           ...state,
           isLoading: true,
+          error: null,
         };
       case USER_LOADED:
         return {
           ...state,
           isAuthenticated: true,
           isLoading: false,
+          error: null,
           user: action.payload,
         };
       case LOGIN_SUCCESS:
@@ -33,15 +36,28 @@ import {
         return {
           ...state,
           ...action.payload,
+          error: null,
           isAuthenticated: true,
           isLoading: false,
         };
-      case AUTH_ERROR:
+      
       case LOGIN_FAIL:
+        localStorage.removeItem('token');
+        return {
+          ...state,
+          error: action.payload,
+          token: null,
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+        };
+
+      case AUTH_ERROR:
       case LOGOUT_SUCCESS:
         localStorage.removeItem('token');
         return {
           ...state,
+          error: null,
           token: null,
           user: null,
           isAuthenticated: false,

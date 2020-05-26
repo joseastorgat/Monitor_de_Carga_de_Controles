@@ -15,7 +15,7 @@ export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
 
   axios
-    .get('/api/auth/user', tokenConfig(getState))
+    .get('http://127.0.0.1:8000/api/auth/user', tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: USER_LOADED,
@@ -23,7 +23,6 @@ export const loadUser = () => (dispatch, getState) => {
       });
     })
     .catch((err) => {
-      console.log(err.response.data);
       dispatch({
         type: AUTH_ERROR,
       });
@@ -51,9 +50,21 @@ export const login = (username, password) => (dispatch) => {
       });
     })
     .catch((err) => {
-      console.log("bad bad");
+
+      let payload = {};
+      if(err.response){
+        payload = {
+          'error_status': err.response.status,
+          'error_msg': err.response.data
+        }
+      }
+      else{
+        payload = err;
+      }
+
       dispatch({
         type: LOGIN_FAIL,
+        payload: payload,
       });
     });
 };
