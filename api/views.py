@@ -2,6 +2,8 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import permissions
+from rest_framework import status
 
 from api import serializers
 from .models import *
@@ -13,7 +15,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
     """
     queryset = Semestre.objects.all()
     serializer_class = SemestreSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 # @api_view(['GET'])
 # def apiOverview(request):
@@ -34,6 +36,7 @@ class EvaluationViewSet(viewsets.ModelViewSet):
     """
     queryset = Evaluacion.objects.all()
     serializer_class = EvaluacionSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class RamoViewSet(viewsets.ModelViewSet):
     """
@@ -41,6 +44,8 @@ class RamoViewSet(viewsets.ModelViewSet):
     """
     queryset = Ramo.objects.all()
     serializer_class = RamoSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
 
 class CursoViewSet(viewsets.ModelViewSet):
     """
@@ -48,6 +53,7 @@ class CursoViewSet(viewsets.ModelViewSet):
     """
     queryset = Curso.objects.all()
     serializer_class = CursoSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class ProfesorViewSet(viewsets.ModelViewSet):
     """
@@ -55,6 +61,7 @@ class ProfesorViewSet(viewsets.ModelViewSet):
     """
     queryset = Profesor.objects.all()
     serializer_class = ProfesorSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class CalendarioViewSet(viewsets.ModelViewSet):
     """
@@ -62,6 +69,7 @@ class CalendarioViewSet(viewsets.ModelViewSet):
     """
     queryset = Calendario.objects.all()
     serializer_class = CalendarioSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class FechasEspecialesViewSet(viewsets.ModelViewSet):
     """
@@ -69,5 +77,6 @@ class FechasEspecialesViewSet(viewsets.ModelViewSet):
     """
     queryset = Fechas_especiales.objects.all()
     serializer_class = FechaSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
