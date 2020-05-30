@@ -5,22 +5,24 @@ class Bloque extends React.Component {
   render() {
     return (
       <div>
-        <div className="centrar">
-          <h1>Monitor de Carga de Controles</h1>
-          <p style={{marginTop: '66px',fontSize:'25px'}}>Bienvenido, el semestre actual es ...</p>
+        <div className="centrar" style={{marginTop: '-6px'}}>
+          <h2 className="titulo" >Monitor de Carga de Controles</h2>
+          <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido, el semestre actual es ...</p>
         </div>
         <div className="centrar">
-            <Link to="/semestres">
-            <div className="rectangulo_azul" style={{ backgroundColor: "gray"}} >Administrar Semestres</div>
+            <Link to="/semestres" style={{ color: '#FFF' }}>
+            <div className="rectangulo_azul" style={{ backgroundColor: "#cecece"}} >Administrar Semestres</div>
             </Link>
-            <Link to="/ramos">
-            <div className="rectangulo_azul" style={{ backgroundColor: "gray"}}>Administrar Ramos</div>
+            <Link to="/ramos" style={{ color: '#FFF' }}>
+            <div className="rectangulo_azul" style={{ backgroundColor: "#cecece"}}>Administrar Ramos</div>
             </Link>
-            <div className="rectangulo_azul" style={{ backgroundColor: "gray"}} > Administrar Profesores</div>
-            <div className="rectangulo_azul" style={{ backgroundColor: "gray"}}>Fechas Especiales</div>
-        </div>
-        <Link   to="/" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-            <button >Volver</button>
+            <div className="rectangulo_azul" style={{ backgroundColor: "#cecece"}} > Administrar Profesores</div>
+            <Link to="/fechas_especiales" style={{ color: '#FFF' }}>
+            <div className="rectangulo_azul" style={{ backgroundColor: "#cecece"}}>Administrar Feriados</div>
+            </Link>
+        </div> 
+        <Link   to="/" className="float-left " style={{'marginLeft':"10vw"}}>
+            <button className="btn btn-primary" >Volver</button>
          </Link>
       </div>
     );

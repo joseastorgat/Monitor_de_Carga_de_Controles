@@ -133,7 +133,6 @@ export class lista_ramos extends React.Component {
               semestre={ramo.semestre_malla}
               codigo={ramo.codigo}
               nombre={ramo.name}
-              codigo_antiguo={ramo.codigo_antiguo}
               showModal={() => this.showModal(ramo)}
               handleDelete = {this.handleDelete}
             />
@@ -141,8 +140,8 @@ export class lista_ramos extends React.Component {
 
           </Container>
           
-          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-            <button >Volver</button>
+          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{'marginLeft':"10vw"}}>
+            <button className="btn btn-primary" >Volver</button>
           </LinkContainer>
         </main>
       );

@@ -10,6 +10,7 @@ import Header from "./Header";
 import {nuevo_semestre , lista_semestres,editar_semestre, ver_semestre} from "../semestre/index_semestre";
 import {nuevo_curso , ver_curso, editar_curso} from "../curso/index_curso";
 import {nuevo_ramo ,editar_ramo, lista_ramos} from "../ramo/index_ramo";
+import {nuevo_fecha,editar_fecha, lista_fechas} from "../fechas/index_fecha";
 
 
 class Bloque_Calendario extends React.Component {
@@ -22,18 +23,18 @@ class Bloque_Calendario extends React.Component {
     const { isAuthenticated} = this.props.auth;
     
     const authLinks = (
-      <Link to="/administrar">
-        <div className="rectangulo_azul" style={{ backgroundColor: "gray"}} >Administrar</div>
+      <Link to="/administrar" style={{ color: '#FFF' }}>
+        <div className="rectangulo_azul" style={{ backgroundColor: "#cecece"}} >Administrar</div>
       </Link>
     );
 
     return (
       <div>
-      <div className="centrar">
-          <h1>Monitor de Carga de Controles</h1>
-          <p style={{marginTop: '66px',fontSize:'25px'}}>Bienvenido, el semestre actual es ...</p>
+      <div className="centrar" style={{marginTop: '-6px'}}>
+          <h2 className="titulo">Monitor de Carga de Controles</h2>
+          <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido, el semestre actual es ...</p>
       </div>
-      <div className="centrar">
+      <div className="centrar" >
         <div className="rectangulo_azul" >Ver Semestre Otoño 2020</div>
         <div className="rectangulo_azul" >Ver Semestre Primavera 2020</div>
         
@@ -77,6 +78,12 @@ export default class Home extends React.Component {
           <PrivateRoute exact path="/ramos" component={lista_ramos} />
           <PrivateRoute exact path="/ramos/nuevo_ramo" component={nuevo_ramo} />
           <PrivateRoute exact path="/ramos/:id/editar" component={editar_ramo} />
+
+          {/* VISTAS DE FECHAS ESPECIALES */}
+          <PrivateRoute exact path="/fechas_especiales" component={lista_fechas} />
+          <PrivateRoute exact path="/fechas_especiales/nueva_fecha" component={nuevo_fecha} />
+          <PrivateRoute exact path="/fechas_especiales/:id/editar" component={editar_fecha} />
+
         </Switch>
       </div>
       </div>
