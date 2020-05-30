@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "../Header";
+import Header from "../home/Header";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { login } from "../actions/auth"

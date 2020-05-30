@@ -1,16 +1,15 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import Header from "./Header";
-import {nuevo_semestre , lista_semestres,editar_semestre, ver_semestre} from "./Semestre/index_semestre";
-import {nuevo_curso , ver_curso, editar_curso} from "./Curso/index_curso";
-import {nuevo_ramo ,editar_ramo, lista_ramos} from "./Ramo/index_ramo";
-import administrar from "./Administrar";
-
-import { Link } from "react-router-dom";
-import PrivateRoute from "./common/PrivateRoute"
+import PrivateRoute from "../common/PrivateRoute"
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import { Link } from "react-router-dom";
+import administrar from "./Administrar";
+import Header from "./Header";
+import {nuevo_semestre , lista_semestres,editar_semestre, ver_semestre} from "../semestre/index_semestre";
+import {nuevo_curso , ver_curso, editar_curso} from "../curso/index_curso";
+import {nuevo_ramo ,editar_ramo, lista_ramos} from "../ramo/index_ramo";
 
 
 class Bloque_Calendario extends React.Component {
@@ -18,8 +17,10 @@ class Bloque_Calendario extends React.Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
   };
+
   render() {
     const { isAuthenticated} = this.props.auth;
+    
     const authLinks = (
       <Link to="/administrar">
         <div className="rectangulo_azul" style={{ backgroundColor: "gray"}} >Administrar</div>
@@ -35,9 +36,6 @@ class Bloque_Calendario extends React.Component {
       <div className="centrar">
         <div className="rectangulo_azul" >Ver Semestre Otoño 2020</div>
         <div className="rectangulo_azul" >Ver Semestre Primavera 2020</div>
-        {
-        /* <div className="rectangulo_azul" >Ver Semestre Primavera 2020</div>
-        <div className="rectangulo_azul" >Ver Semestre Primavera 2020</div> */}
         
         {isAuthenticated ? authLinks: '' }
       </div>

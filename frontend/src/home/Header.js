@@ -1,7 +1,7 @@
 import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
-import { logout } from "./actions/auth"
+import { logout } from "../actions/auth"
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
