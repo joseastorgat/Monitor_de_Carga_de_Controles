@@ -9,13 +9,13 @@ export default class nuevo_semestre extends React.Component {
                     <form className="" name="form">
                         <div class="generic-form">
                             <div class="row">
-                                <div class="col-sm-2"></div>
-                                <div class="col-sm-4" >
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-5" >
                                     <div class="row">
                                         <div class="col-sm-2" >
                                             <label >Año</label>
                                         </div>
-                                        <div class="col-sm-6" style={{textAlignLast:'center', textAlign:'center'}} >
+                                        <div class="col-sm-10" style={{textAlignLast:'center', textAlign:'center'}} >
                                             <input type="number"  min="2019" max="2030" step="1" className="form-control" placeholder="2020" name="año"  />
                                         </div>
                                     </div>
@@ -40,37 +40,37 @@ export default class nuevo_semestre extends React.Component {
                             </div>
 
                             <div class="row" >
-                                <div class="col-md-2" ></div>
-                                <div class="col-md-4" >
+                                <div class="col-md-1" ></div>
+                                <div class="col-md-5" >
                                     <div class="row">
                                         <div class="col-md-2" >
                                         <label >Inicio</label>
                                         </div>
-                                        <div class="col-md-6" style={{textAlignLast:'center', textAlign:'center'}}>
+                                        <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
                                         <input type="date" className="form-control" name="fecha_inicio"  />
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4" >
+                                <div class="col-md-5" >
                                     <div class="row" style={{justifyContent: 'center'}}>
                                         <div class="col-md-2" >
                                             <label >Fin</label>
                                         </div>
-                                        <div class="col-md-6" style={{textAlignLast:'center', textAlign:'center'}}>
-                                            <input type="date" className="form-control" name="fecha_fin"  />
+                                        <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
+                                            <input type="date" className="form-control" name="fecha_fin" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row" >
-                                <div class="col-md-2" ></div>
-                                <div class="col-md-4" >
+                                <div class="col-md-1" ></div>
+                                <div class="col-md-5" >
                                     <div class="row">
                                         <div class="col-md-2" >
                                             <label >Estado</label>
                                         </div>
-                                        <div class="col-md-6" style={{textAlignLast:'center', textAlign:'center'}}>
+                                        <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
                                             <select className="form-control center" name="nombre_ramo" style={{textAlignLast:'center',textAlign:'center'}}  >
                                                 <option value="1">Por comenzar</option>
                                                 <option value="2">En curso</option>
@@ -103,12 +103,12 @@ export default class nuevo_semestre extends React.Component {
                         </div>
 
                         <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to="/semestres" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                            <button >Volver</button>
+                        <LinkContainer  activeClassName=""  to="/semestres" className="float-left " style={{ 'marginLeft':"10vw"}}>
+                            <button className="btn btn-primary" >Volver</button>
                         </LinkContainer>
 
-                        <LinkContainer activeClassName=""  to="/semestres" style={{width: '7%','marginRight':"14vw",borderRadius: '8px'}}>
-                            <button type="submit">Guardar</button>
+                        <LinkContainer activeClassName=""  to="/semestres" style={{'marginRight':"14vw"}}>
+                            <button className="btn btn-primary" type="submit">Guardar</button>
                         </LinkContainer>
                         </div>
                     </form>
