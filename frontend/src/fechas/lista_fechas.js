@@ -6,49 +6,49 @@ import OptionButton from "../common/OptionButton";
 import { Gear, Trashcan} from "@primer/octicons-react";
 import { LinkContainer } from "react-router-bootstrap";
 
-export default class lista_ramos extends React.Component {
+export default class lista_fechas extends React.Component {
   constructor(props) {
     super(props);
     this.handle_search = this.handle_search.bind(this);
     this.state = {
-      ramos: [],
+      fechas: [],
       showModal: false,
-      ramoPorEliminar: null,
-      MostrarRamos: [],
+      fechaPorEliminar: null,
+      MostrarFechas: [],
       search: ""
     };
 
-    this.deleteModalMsg = `¿Está seguro que desea eliminar el ramo?`;
+    this.deleteModalMsg = `¿Está seguro que desea eliminar la fecha?`;
   }
 
 
-  async fetchRamos() {
+  async fetchFechas() {
     console.log("Fetching...")
-    let ramos = [];
-    await fetch(`http://127.0.0.1:8000/api/ramos/`)
+    let fechas = [];
+    await fetch(`http://127.0.0.1:8000/api/fechas-especiales/`)
     .then(response => response.json())
-    .then(ramos =>
+    .then(fechas =>
       this.setState({
-        ramos: ramos,
-        MostrarRamos: ramos
+        fechas: fechas,
+        MostrarFechas: fechas
       })
       )    
-    console.log(this.state.ramos)
+    console.log(this.state.fechas)
   }
 
   async componentDidMount() {
-    this.fetchRamos();
+    this.fetchFechas();
   }
 
   handle_search(){
     const busqueda= this.state.search;
-    const ramos= this.state.ramos;
-    const ramos_buscados= ramos.filter(o=>
+    const fechas= this.state.fechas;
+    const fechas_buscados= fechas.filter(o=>
       (o.name.toString()+" " + o.codigo.toString() ).includes(busqueda)
     );
     console.log("Buscados")
-    console.log(ramos_buscados)
-    this.setState({MostrarRamos: ramos_buscados});
+    console.log(fechas_buscados)
+    this.setState({MostrarFechas: fechas_buscados});
   }
 
   update_Search(e){
@@ -59,7 +59,7 @@ export default class lista_ramos extends React.Component {
     return (
       <main>
         <Container>
-          <ViewTitle>Ramos</ViewTitle>
+          <ViewTitle>Feriados</ViewTitle>
             <Row className="mb-3">
               <Col>
 
@@ -67,25 +67,26 @@ export default class lista_ramos extends React.Component {
                   <InputGroup
                     value={this.state.search}
                     onChange={e => this.update_Search(e)} >
-                    <FormControl type="text" placeholder="Buscar Ramo" className="mr-sm-2" />
+                    <FormControl type="text" placeholder="Buscar Fecha" className="mr-sm-2" />
                     <Button type="submit">Buscar</Button>
                   </InputGroup>
                 </Form>
 
               </Col>
               <Col xs="auto">
-                <Link to="/ramos/nuevo_ramo">
-                  <Button className="btn btn-primary">Nuevo Ramo</Button>
+                <Link to="/fechas_especiales/nueva_fecha">
+                  <Button className="btn btn-primary">Nueva Fecha</Button>
                 </Link>
               </Col>
             </Row>
-            {this.state.MostrarRamos.map(ramo => (
-            <RamoItem
-              key={ramo.id}
-              semestre={ramo.semestre_malla}
-              codigo={ramo.codigo}
-              nombre={ramo.name}
-              showModal={() => this.showModal(ramo)}
+            {this.state.MostrarFechas.map(fecha => (
+            <FechaItem
+              key={fecha.id}
+              inicio={fecha.inicio}
+              fin={fecha.fin}
+              nombre={fecha.name}
+              tipo={fecha.tipo}
+              showModal={() => this.showModal(fecha)}
             />
           ))}
 
@@ -100,30 +101,31 @@ export default class lista_ramos extends React.Component {
   }
 
 
-  class RamoItem extends React.Component {
+  class FechaItem extends React.Component {
     constructor(props) {
       super(props);
     }
 
     render() {
       const nombre =this.props.nombre;
-      const codigo = this.props.codigo;
-      const semestre= this.props.semestre;
+      const inicio = this.props.inicio;
+      const fin= this.props.fin;
+      const tipo=this.props.tipo;
       const id = this.props.id;
       return (
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
-                {codigo}   {nombre}
+                {inicio} {fin}  {nombre}
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">
                  
-                  <Link to={`ramos/${id}/editar`}>
-                  <OptionButton icon={Gear} description="Modificar ramo" />
+                  <Link to={`fechas_especiales/${id}/editar`}>
+                  <OptionButton icon={Gear} description="Modificar fecha" />
                   </Link>
 
-                  <OptionButton   icon={Trashcan} description="Eliminar ramo"  onClick={() => alert("No implementado")}    last={true}  />
+                  <OptionButton   icon={Trashcan} description="Eliminar fecha"  onClick={() => alert("No implementado")}    last={true}  />
               </Col>
             </Row>
             </Alert>

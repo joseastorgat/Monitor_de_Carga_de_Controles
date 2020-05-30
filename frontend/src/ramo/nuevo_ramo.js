@@ -10,12 +10,12 @@ export default class nuevo_ramo extends React.Component {
                         <div class="generic-form">
                             <div class="row">
                                 <div class="col-sm-1"></div>
-                                <div class="col-sm-5" >
+                                <div class="col-sm-6" >
                                     <div class="row">
                                         <div class="col-sm-2" >
                                             <label >Ramo</label>
                                         </div>
-                                        <div class="col-sm-10" >
+                                        <div class="col-sm-9" >
                                             <input type="text" className="form-control" name="nombre_ramo" placeholder="Algoritmo y Estructura de Datos" style={{textAlignLast:'center'}} />
                                         </div>
                                     </div>
@@ -23,10 +23,10 @@ export default class nuevo_ramo extends React.Component {
 
                                 <div class="col-md-4">
                                     <div class="row" style={{justifyContent: 'center'}} >
-                                        <div class="col-md-2" >
+                                        <div class="col-md-3" >
                                             <label >Código</label>
                                         </div>
-                                        <div class="col-sm-10" >
+                                        <div class="col-sm-9" >
                                         <input type="text" className="form-control" name="codigo_ramo" placeholder="CC3001" style={{textAlignLast:'center'}}  />
                                         </div>
                                     
@@ -36,12 +36,12 @@ export default class nuevo_ramo extends React.Component {
 
                             <div class="row">
                                 <div class="col-sm-1"></div>
-                                <div class="col-sm-5" >
+                                <div class="col-sm-6" >
                                     <div class="row">
                                         <div class="col-sm-2" >
                                             <label >Semestre</label>
                                         </div>
-                                        <div class="col-sm-10" >
+                                        <div class="col-sm-9" >
                                         {/* No pude centrarlo, hay un problema con prioridades de css de react */}
                                             <select className="form-control center" name="semestre_malla" style={{textAlignLast:'center',textAlign:'center'}}  >
                                                 <option value="5">Quinto</option>
@@ -54,29 +54,18 @@ export default class nuevo_ramo extends React.Component {
                                         </div>
                                     </div>
                                 </div>  
-                                <div class="col-md-4">
-                                    <div class="row" style={{justifyContent: 'center'}} >
-                                        <div class="col-md-2" >
-                                            <label >Código Antiguo</label>
-                                        </div>
-                                        <div class="col-sm-10" >
-                                        <input type="text" className="form-control" name="codigo_ramo" placeholder="CC3001" style={{textAlignLast:'center'}}  />
-                                        </div>
-                                    
-                                    </div>
-                                </div>
                             </div>
 
                             
                     
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to="/ramos" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                            <button >Volver</button>
+                        <LinkContainer  activeClassName=""  to="/ramos" className="float-left " style={{ 'marginLeft':"10vw"}}>
+                            <button className="btn btn-primary" >Volver</button>
                         </LinkContainer>
 
-                        <LinkContainer activeClassName=""  to="/ramos" style={{width: '7%','marginRight':"14vw",borderRadius: '8px'}}>
-                            <button type="submit">Guardar</button>
+                        <LinkContainer activeClassName=""  to="/ramos" style={{'marginRight':"14vw"}}>
+                            <button className="btn btn-primary" type="submit">Guardar</button>
                         </LinkContainer>
                         </div>
                     </form>
