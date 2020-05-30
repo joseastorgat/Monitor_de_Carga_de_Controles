@@ -1,18 +1,27 @@
 import React from 'react';
-import './App.css';
-import Home from "./Home";
-import LoginPage from "./Login";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import store from './store';
+import { Provider } from 'react-redux';
+import { loadUser } from './actions/auth';
+import './App.css';
+import Home from "./home/Home";
+import LoginPage from "./home/Login";
 
 class App extends React.Component {
+ 
+  componentDidMount() {
+    store.dispatch(loadUser());
+  } 
   render() {
     return (
+      <Provider store={store}>
       <Router>
         <Switch>
           <Route path="/login" component={LoginPage} />
           <Route path="/" component={Home} />
         </Switch>
       </Router>
+      </Provider>
     );
   }
 }

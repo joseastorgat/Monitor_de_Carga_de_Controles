@@ -1,8 +1,8 @@
 import React from "react";
 import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
-import ViewTitle from "../ViewTitle";
+import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
-import OptionButton from "../OptionButton";
+import OptionButton from "../common/OptionButton";
 import { Gear, Trashcan} from "@primer/octicons-react";
 import { LinkContainer } from "react-router-bootstrap";
 
