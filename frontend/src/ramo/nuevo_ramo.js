@@ -55,8 +55,8 @@ export class nuevo_ramo extends React.Component {
         console.log(res);
         console.log("create ramo");
         this.setState({"ramo_created": true});
-      }). 
-      catch( (err) => {
+      })
+      .catch( (err) => {
         console.log(err);
         console.log("cant create ramo");
         alert("No se pudo crear ramo!");

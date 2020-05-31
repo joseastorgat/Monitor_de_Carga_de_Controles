@@ -37,8 +37,7 @@ export class lista_ramos extends React.Component {
   };
 
   async fetchRamos() {
-    console.log("Fetching...")
-    let ramos = [];
+    // console.log("Fetching...")
     await fetch(`http://127.0.0.1:8000/api/ramos/`)
     .then(response => response.json())
     .then(ramos =>
@@ -47,7 +46,7 @@ export class lista_ramos extends React.Component {
         MostrarRamos: ramos
       })
       )    
-    console.log(this.state.ramos)
+    // console.log(this.state.ramos)
   }
 
   async componentDidMount() {
@@ -71,7 +70,7 @@ export class lista_ramos extends React.Component {
 
 
   handleDelete = (e, i) => {
-    console.log(e);
+    
     let ramos = this.state.ramos;
     const nombre = ramos[i]["name"];
     const codigo = ramos[i]["codigo"];
@@ -90,12 +89,11 @@ export class lista_ramos extends React.Component {
 
     axios(options)
       .then( (res) => {
-        console.log(res);
         alert(`Ramo Elimnado ${nombre} - ${codigo}`);
         ramos.splice(i, 1);
         this.setState({ramos :ramos});
-      }). 
-      catch( (err) => {
+      })
+      .catch( (err) => {
         console.log(err);
         alert("[ERROR] No se puede eliminar el ramo! ");
       });
@@ -127,15 +125,16 @@ export class lista_ramos extends React.Component {
               </Col>
             </Row>
             {this.state.MostrarRamos.map((ramo, _index) => (
-            <RamoItem
-              index = {_index}
-              id={ramo.id}
-              semestre={ramo.semestre_malla}
-              codigo={ramo.codigo}
-              nombre={ramo.name}
-              showModal={() => this.showModal(ramo)}
-              handleDelete = {this.handleDelete}
-            />
+              <RamoItem
+                index = {_index}
+                key={ramo.id}
+                id={ramo.id}
+                semestre={ramo.semestre_malla}
+                codigo={ramo.codigo}
+                nombre={ramo.name}
+                showModal={() => this.showModal(ramo)}
+                handleDelete = {this.handleDelete}
+              />
           ))}
 
           </Container>
@@ -150,16 +149,11 @@ export class lista_ramos extends React.Component {
 
 
   class RamoItem extends React.Component {
-    constructor(props) {
-      super(props);
-    }
-
-
 
     render() {
       const nombre =this.props.nombre;
       const codigo = this.props.codigo;
-      const semestre= this.props.semestre;
+      // const semestre= this.props.semestre;
       const id = this.props.id;
       const handleDelete = this.props.handleDelete;
       const i = this.props.index;
@@ -173,8 +167,8 @@ export class lista_ramos extends React.Component {
               <Col className="text-center"></Col>
               <Col  xs="auto">
                  
-                  <Link to={`ramos/${id}/editar`}>
-                  <OptionButton icon={Gear} description="Modificar ramo" />
+                  <Link to={`/ramos/${id}/editar`}>
+                    <OptionButton icon={Gear} description="Modificar ramo" />
                   </Link>
 
                   <OptionButton   icon={Trashcan} description="Eliminar ramo"  onClick={e => handleDelete(id, i)}    last={true}  />
