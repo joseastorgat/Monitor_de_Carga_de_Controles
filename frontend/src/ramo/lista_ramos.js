@@ -6,7 +6,11 @@ import OptionButton from "../common/OptionButton";
 import { Gear, Trashcan} from "@primer/octicons-react";
 import { LinkContainer } from "react-router-bootstrap";
 
-export default class lista_ramos extends React.Component {
+import axios from "axios";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+export class lista_ramos extends React.Component {
   constructor(props) {
     super(props);
     this.handle_search = this.handle_search.bind(this);
@@ -20,11 +24,20 @@ export default class lista_ramos extends React.Component {
 
     this.deleteModalMsg = `¿Está seguro que desea eliminar el ramo?`;
   }
+  
+  static propTypes = {
+    auth: PropTypes.object.isRequired,
+  };
 
+  state = {
+    nombre_ramo: "",
+    codigo_ramo: "",
+    semestre_malla: "-1",
+    ramo_created: false,
+  };
 
   async fetchRamos() {
-    console.log("Fetching...")
-    let ramos = [];
+    // console.log("Fetching...")
     await fetch(`http://127.0.0.1:8000/api/ramos/`)
     .then(response => response.json())
     .then(ramos =>
@@ -33,7 +46,7 @@ export default class lista_ramos extends React.Component {
         MostrarRamos: ramos
       })
       )    
-    console.log(this.state.ramos)
+    // console.log(this.state.ramos)
   }
 
   async componentDidMount() {
@@ -54,6 +67,38 @@ export default class lista_ramos extends React.Component {
   update_Search(e){
     this.setState({search: e.target.value});
   }
+
+
+  handleDelete = (e, i) => {
+    
+    let ramos = this.state.ramos;
+    const nombre = ramos[i]["name"];
+    const codigo = ramos[i]["codigo"];
+    console.log("Eliminar: ", ramos[i]);
+
+    const url = `http://127.0.0.1:8000/api/ramos/${e}/`
+    let options = {
+      method: 'DELETE',
+      url: url,
+      headers: {
+    
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${this.props.auth.token}`
+      }
+  }
+
+    axios(options)
+      .then( (res) => {
+        alert(`Ramo Elimnado ${nombre} - ${codigo}`);
+        ramos.splice(i, 1);
+        this.setState({ramos :ramos});
+      })
+      .catch( (err) => {
+        console.log(err);
+        alert("[ERROR] No se puede eliminar el ramo! ");
+      });
+  }
+
 
   render() {
     return (
@@ -79,14 +124,17 @@ export default class lista_ramos extends React.Component {
                 </Link>
               </Col>
             </Row>
-            {this.state.MostrarRamos.map(ramo => (
-            <RamoItem
-              key={ramo.id}
-              semestre={ramo.semestre_malla}
-              codigo={ramo.codigo}
-              nombre={ramo.name}
-              showModal={() => this.showModal(ramo)}
-            />
+            {this.state.MostrarRamos.map((ramo, _index) => (
+              <RamoItem
+                index = {_index}
+                key={ramo.id}
+                id={ramo.id}
+                semestre={ramo.semestre_malla}
+                codigo={ramo.codigo}
+                nombre={ramo.name}
+                showModal={() => this.showModal(ramo)}
+                handleDelete = {this.handleDelete}
+              />
           ))}
 
           </Container>
@@ -101,15 +149,15 @@ export default class lista_ramos extends React.Component {
 
 
   class RamoItem extends React.Component {
-    constructor(props) {
-      super(props);
-    }
 
     render() {
       const nombre =this.props.nombre;
       const codigo = this.props.codigo;
-      const semestre= this.props.semestre;
+      // const semestre= this.props.semestre;
       const id = this.props.id;
+      const handleDelete = this.props.handleDelete;
+      const i = this.props.index;
+
       return (
         <Alert variant="secondary">
             <Row>
@@ -119,14 +167,22 @@ export default class lista_ramos extends React.Component {
               <Col className="text-center"></Col>
               <Col  xs="auto">
                  
-                  <Link to={`ramos/${id}/editar`}>
-                  <OptionButton icon={Gear} description="Modificar ramo" />
+                  <Link to={`/ramos/${id}/editar`}>
+                    <OptionButton icon={Gear} description="Modificar ramo" />
                   </Link>
 
-                  <OptionButton   icon={Trashcan} description="Eliminar ramo"  onClick={() => alert("No implementado")}    last={true}  />
+                  <OptionButton   icon={Trashcan} description="Eliminar ramo"  onClick={e => handleDelete(id, i)}    last={true}  />
               </Col>
             </Row>
             </Alert>
       );
     }
   }
+
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+  
+export default connect(mapStateToProps)(lista_ramos);
+  
