@@ -26,7 +26,7 @@ export default class editar_profesor extends React.Component {
                                             <label >Nombre</label>
                                         </div>
                                         <div class="col-sm-10" >
-                                            <input type="text" className="form-control" name="nombre" placeholder="Nicolas" style={{textAlignLast:'center'}} />
+                                            <input type="text" className="form-control" name="nombre" defaultValue="Sergio" style={{textAlignLast:'center'}} />
                                         </div>
                                     </div>
                                 </div>  
@@ -37,7 +37,7 @@ export default class editar_profesor extends React.Component {
                                             <label >Apellido</label>
                                         </div>
                                         <div class="col-sm-10" >
-                                        <input type="text" className="form-control" name="apellido" placeholder="Machuca" style={{textAlignLast:'center'}}  />
+                                        <input type="text" className="form-control" name="apellido" defaultValue="Ochoa" style={{textAlignLast:'center'}}  />
                                         </div>
                                     
                                     </div>
