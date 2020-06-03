@@ -10,7 +10,9 @@ db.sqlite3
 /mediafiles/*
 */__pycache__/
 /.vscode/
+*.code-workspace
 api/migrations/0001_initial.py
+/csv_data/
 
 # coverage result
 .coverage

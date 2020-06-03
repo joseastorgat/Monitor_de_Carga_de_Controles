@@ -1,8 +1,8 @@
 import React from "react";
 import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
-import ViewTitle from "../ViewTitle";
+import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
-import OptionButton from "../OptionButton";
+import OptionButton from "../common/OptionButton";
 import { Gear, Trashcan, Unfold } from "@primer/octicons-react";
 import { LinkContainer } from "react-router-bootstrap";
 
@@ -90,8 +90,8 @@ export default class lista_semestre extends React.Component {
 
           </Container>
 
-          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-            <button >Volver</button>
+          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{'marginLeft':"10vw"}}>
+            <button className="btn btn-primary" >Volver</button>
           </LinkContainer>
         </main>
       );

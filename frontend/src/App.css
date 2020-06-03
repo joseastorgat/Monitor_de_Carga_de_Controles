@@ -13,35 +13,15 @@
   color: white;
 }
 
-.btn.btn-primary{
-    color: #fff;
-    background-color:  #81cdff;
-    border-color:  #81cdff;
-}
-
-.btn.btn-primary:hover{
-    background-color:  #81cdff;
-    border-color:  #81cdff;
-}
-
 div.row { 
     margin-top: 16px;
-  }
-
-button{
-    background-color:  #81cdff;
-    border-color:  #81cdff;
-    color:white;
-    padding: 6px 20px;
-    border-radius: 8px;
-    border-color:transparent;
-    font-size:x-small;
 }
+
 
 /* ========================== Home.js =============================== */
 
 .centrar{
-    margin-top: 66px;
+    margin-top: 30px;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -50,7 +30,7 @@ button{
 
 
 .rectangulo_azul{ 
-    background-color: #81cdff;
+    background-color: #007BFF;
     color: white;
     padding: 15px 32px;
     width: 20vw;
@@ -62,7 +42,7 @@ button{
 
 /* ========================== Header.js =============================== */
 .color-nav {
-    background-color:#81cdff;
+    background-color:#007BFF;
 }
 
 
@@ -83,7 +63,7 @@ button{
 }
 
 .form-button{
-    background: #81cdff;
+    background-color:#007BFF;
     border: 1px solid #ddd;
     color: #ffffff;
     padding: 15px 32px;
@@ -112,8 +92,8 @@ button{
 
 
 .titulo{ 
-    background-color: #81cdff;
-    border: solid 1px #282c34;
+    background-color: #cecece;
+    border: solid 1px #ddd;
     color: white;
     padding: 15px 32px;
     width: 80vw;
