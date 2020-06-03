@@ -73,7 +73,7 @@ export default class lista_profesores extends React.Component {
                   <InputGroup
                     value={this.state.search}
                     onChange={update_Search} >
-                    <FormControl type="text" placeholder="Buscar Evaluación" className="mr-sm-2" />
+                    <FormControl type="text" placeholder="Buscar Profesor" className="mr-sm-2" />
                     <Button type="submit">Buscar</Button>
                   </InputGroup>
                 </Form>
@@ -94,8 +94,8 @@ export default class lista_profesores extends React.Component {
 
 
 
-            <ProfesorItem key="1" nombre="Nicolas Machuca"  />
-            <ProfesorItem key="2" nombre="Hola"  />
+            <ProfesorItem key="1" nombre="Jérémy Barbay"  />
+            <ProfesorItem key="2" nombre="Sergio Ochoa"  />
           </Container>
           
           <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
