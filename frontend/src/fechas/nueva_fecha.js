@@ -29,13 +29,11 @@ export class nueva_fecha extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
         console.log("submit");
-        alert(this.state.fin_fecha)
         this.create_fecha();
     }
 
     create_fecha() {  
         console.log("post fecha ...")
-        
         const url = "http://127.0.0.1:8000/api/fechas-especiales/"
         let options = {
           method: 'POST',
@@ -43,14 +41,14 @@ export class nueva_fecha extends React.Component {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Token ${this.props.auth.token}`
-          },
+        },
           data: {
             "nombre": this.state.nombre_fecha,
             "tipo":this.state.tipo_fecha,
             "inicio": this.state.inicio_fecha,
             "fin": this.state.fin_fecha
+           }
         }
-      }
         
         axios(options)
           .then( (res) => {

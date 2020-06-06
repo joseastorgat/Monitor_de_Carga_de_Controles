@@ -52,7 +52,7 @@ export class lista_fechas extends React.Component {
     const busqueda= this.state.search;
     const fechas= this.state.fechas;
     const fechas_buscados= fechas.filter(o=>
-      (o.name.toString()+" " + o.codigo.toString() ).includes(busqueda)
+      (o.nombre.toString()+" " + o.tipo.toString() ).includes(busqueda)
     );
     console.log("Buscados")
     console.log(fechas_buscados)
@@ -76,7 +76,6 @@ export class lista_fechas extends React.Component {
     }
     axios(options)
       .then( (res) => {
-        alert(`Fecha Eliminada ${this.state.showModal.nombre} `);
         this.setState({
           showModal: false,
           fechaPorEliminar: null
@@ -134,6 +133,7 @@ export class lista_fechas extends React.Component {
             {this.state.MostrarFechas.map(fecha => (
             <FechaItem
               key={fecha.id}
+              id={fecha.id}
               inicio={fecha.inicio}
               fin={fecha.fin}
               nombre={fecha.nombre}
@@ -172,7 +172,7 @@ export class lista_fechas extends React.Component {
               <Col className="text-center"></Col>
               <Col  xs="auto">
                  
-                  <Link to={`fechas_especiales/${id}/editar`}>
+                  <Link to={`/fechas_especiales/${id}/editar`}>
                   <OptionButton icon={Gear} description="Modificar fecha" />
                   </Link>
 
