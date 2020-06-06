@@ -45,11 +45,11 @@ export default class editar_profesor extends React.Component {
                             </div>                    
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to="/profesores" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
+                        <LinkContainer  activeClassName=""  to="/profesores" className="float-left btn btn-primary" style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
                             <button >Volver</button>
                         </LinkContainer>
 
-                        <LinkContainer activeClassName=""  to="/profesores" style={{width: '7%','marginRight':"14vw",borderRadius: '8px'}}>
+                        <LinkContainer activeClassName=""  to="/profesores" className="btn btn-primary" style={{width: '7%','marginRight':"14vw",borderRadius: '8px'}}>
                             <button type="submit">Guardar</button>
                         </LinkContainer>
                         </div>
