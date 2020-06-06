@@ -91,9 +91,9 @@ export class nueva_fecha extends React.Component {
                                             <label >Tipo</label>
                                         </div>
                     
-                                        <div class="col-sm-10" >
+                                        <div class="col-sm-10 centrado" >
                                         {/* No pude centrarlo, hay un problema con prioridades de css de react */}
-                                            <select className="form-control center"  onChange={this.onChange} name="tipo_fecha" style={{textAlignLast:'center',textAlign:'center'}}  >
+                                            <select className="form-control"  onChange={this.onChange} name="tipo_fecha" style={{textAlignLast:'center',textAlign:'center'}}  >
                                                 <option value="1">Feriado</option>
                                                 <option value="2">Vacaciones de Invierno</option>
                                                 <option value="3">Semana Olimpica</option>

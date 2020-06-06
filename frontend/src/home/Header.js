@@ -28,12 +28,10 @@ class LogedInView extends React.Component {
         </LinkContainer>
         <NavDropdown.Divider />
 
-        <LinkContainer to="/" className="link-no-style">
-        <NavDropdown.Item onClick={logout}>
-          Cerrar Sesión
-        </NavDropdown.Item>
-        
+        <LinkContainer to="/" activeClassName="" >
+          <NavDropdown.Item onClick={logout}>  Cerrar Sesión  </NavDropdown.Item>
         </LinkContainer>
+
       </NavDropdown>
     );
   }
