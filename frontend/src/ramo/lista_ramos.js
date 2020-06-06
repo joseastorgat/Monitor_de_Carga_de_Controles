@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import { Gear, Trashcan} from "@primer/octicons-react";
 import { LinkContainer } from "react-router-bootstrap";
-
+import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -68,41 +68,52 @@ export class lista_ramos extends React.Component {
     this.setState({search: e.target.value});
   }
 
-
-  handleDelete = (e, i) => {
-    
-    let ramos = this.state.ramos;
-    const nombre = ramos[i]["name"];
-    const codigo = ramos[i]["codigo"];
-    console.log("Eliminar: ", ramos[i]);
-
+  async handleDelete() {
+    let e = this.state.ramoPorEliminar.id
     const url = `http://127.0.0.1:8000/api/ramos/${e}/`
     let options = {
       method: 'DELETE',
       url: url,
       headers: {
-    
         'Content-Type': 'application/json',
         'Authorization': `Token ${this.props.auth.token}`
       }
-  }
-
+    }
     axios(options)
       .then( (res) => {
-        alert(`Ramo Elimnado ${nombre} - ${codigo}`);
-        ramos.splice(i, 1);
-        this.setState({ramos :ramos});
+        this.setState({
+          showModal: false,
+          ramoPorEliminar: null
+        });
+        this.fetchRamos();
       })
       .catch( (err) => {
         console.log(err);
-        alert("[ERROR] No se puede eliminar el ramo! ");
+        alert("[ERROR] No se pudo eliminar la fecha! ");
+        this.setState({
+          showModal: false,
+          ramoPorEliminar: null
+        });
       });
   }
 
+  showModal(ramo) {
+    this.setState({ showModal: true, ramoPorEliminar: ramo });
+  }
+
+  handleCancel() {
+    this.setState({ showModal: false, ramoPorEliminar: null });
+  }
 
   render() {
     return (
       <main>
+      <DeleteModal
+          msg={this.deleteModalMsg}
+          show={this.state.showModal}
+          handleCancel={() => this.handleCancel()}
+          handleDelete={() => this.handleDelete()}
+        />
         <Container>
           <ViewTitle>Ramos</ViewTitle>
             <Row className="mb-3">
@@ -124,16 +135,14 @@ export class lista_ramos extends React.Component {
                 </Link>
               </Col>
             </Row>
-            {this.state.MostrarRamos.map((ramo, _index) => (
+            {this.state.MostrarRamos.map(ramo => (
               <RamoItem
-                index = {_index}
                 key={ramo.id}
                 id={ramo.id}
                 semestre={ramo.semestre_malla}
                 codigo={ramo.codigo}
                 nombre={ramo.name}
                 showModal={() => this.showModal(ramo)}
-                handleDelete = {this.handleDelete}
               />
           ))}
 
@@ -153,11 +162,7 @@ export class lista_ramos extends React.Component {
     render() {
       const nombre =this.props.nombre;
       const codigo = this.props.codigo;
-      // const semestre= this.props.semestre;
       const id = this.props.id;
-      const handleDelete = this.props.handleDelete;
-      const i = this.props.index;
-
       return (
         <Alert variant="secondary">
             <Row>
@@ -171,7 +176,7 @@ export class lista_ramos extends React.Component {
                     <OptionButton icon={Gear} description="Modificar ramo" />
                   </Link>
 
-                  <OptionButton   icon={Trashcan} description="Eliminar ramo"  onClick={e => handleDelete(id, i)}    last={true}  />
+                  <OptionButton   icon={Trashcan} description="Eliminar ramo"  onClick={() => this.props.showModal()}    last={true}  />
               </Col>
             </Row>
             </Alert>
