@@ -11,8 +11,8 @@ import {nuevo_semestre , lista_semestres,editar_semestre, ver_semestre} from "..
 import {nuevo_curso , ver_curso, editar_curso} from "../curso/index_curso";
 import {nuevo_ramo ,editar_ramo, lista_ramos} from "../ramo/index_ramo";
 import {nuevo_fecha,editar_fecha, lista_fechas} from "../fechas/index_fecha";
-import {evaluaciones} from "../evaluacion/index_evaluacion"
-import {nuevo_profesor, editar_profesor, lista_profesores} from "../profesor/index_profesor"
+import {evaluaciones} from "../evaluacion/index_evaluacion";
+import {nuevo_profesor, editar_profesor, lista_profesores} from "../profesor/index_profesor";
 
 
 class Bloque_Calendario extends React.Component {
