@@ -5,26 +5,72 @@ import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import {Gear, Trashcan} from "@primer/octicons-react";
 
-export default class nueva_evaluacion extends React.Component {
+export default class evaluaciones extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          evaluaciones: [],
+          curso: null,
+          showModal: false,
+          evaluacionPorEliminar: null,
+          MostrarEvaluaciones: [],
+        //   search: ""
+        };
+        this.deleteModalMsg = '¿Está seguro que desea eliminar la evaluacion?';
+    }
+    async fetchEvaluaciones() {
+        console.log("Fetching...")
+        // let profesores = [];
+        await fetch(`http://127.0.0.1:8000/api/evaluaciones/`)
+        .then(response => response.json())
+        .then(evaluaciones =>
+          this.setState({
+            evaluaciones: evaluaciones,
+            MostrarEvaluaciones: evaluaciones
+          })
+          )    
+        console.log(this.state.evaluaciones)
+    }
+
+    
+    // async fetchCursos() {
+    //     const query = new URLSearchParams(this.props.location.search);
+    //     var anno = this.props.match.params.ano
+    //     var semestre = this.props.match.params.semestre
+    //     var cod = this.props.match.params.cod
+    //     var seccion = this.props.match.params.seccion
+    //     console.log("Fetching...")
+    //     // let profesores = [];
+    //     await fetch(`http://127.0.0.1:8000/api/cursos/`)
+    //     .then(response => response.json())
+    //     .then(cursos =>
+    //       this.setState({
+    //         evaluaciones: cursos.filter(o=>
+    //             o.),
+    //       })
+    //       )    
+    //     console.log(this.state.evaluaciones)
+    // }
+    async componentDidMount() {
+    this.fetchEvaluaciones();
+    }
     render() {
-        const query = new URLSearchParams(this.props.location.search);
-        var anno = this.props.match.params.ano
-        var semestre = this.props.match.params.semestre
-        var cod = this.props.match.params.cod
-        var seccion = this.props.match.params.seccion
         return (
             <div>
                 <h4 className="titulo">Evaluaciones</h4>
                     <form className="" name="form">
                         <div class="generic-form border-0">  
-                            <div class="col-sm-5 " >
+                            <div class="col-sm-7" >
                                 <div class="row">
                                     <div class="col-sm-2" >
                                         <label >Curso</label>
                                     </div>
-                                    <div class="col-sm-10" >
-                                        <input type="text" className="form-control" name="nombre_curso" placeholder="CC3001-1 Otoño 2020"  style={{textAlignLast:'center'}} readOnly="readonly"/>
+                                    <div class="col-sm-5" >
+                                        <input type="text" className="form-control" name="nombre_curso" placeholder="CC3001-1 Otoño 2020"   style={{textAlignLast:'center'}} readOnly="readonly"/>
                                     </div>
+                                        <LinkContainer  activeClassName=""  to="#nueva_evaluacion" className="float-left col-sm-3"  style={{width: '7%', 'marginLeft':"3vw",borderRadius: '8px'}}>
+                                            <button className="btn btn-primary" >Agregar Evaluacion</button>
+                                        </LinkContainer>
                                 </div>
                             </div>
                         </div>
@@ -38,14 +84,23 @@ export default class nueva_evaluacion extends React.Component {
                                 <th scope="col"></th>
                                 </tr>
                             </thead>
+                                {this.state.MostrarEvaluaciones.map(evaluacion => (
+                                    <EvaluacionItem
+                                    key={evaluacion.id}
+                                    fecha={evaluacion.fecha}
+                                    id_curso={evaluacion.curso}
+                                    tipo={evaluacion.tipo}
+                                    titulo={evaluacion.titulo}
+                                    />
+                                ))}
                             {/* <tbody> */}
-                                <EvaluacionItem key="1" id="1" fecha="02-05-2020" id_curso="CC3301" tipo="Tarea" titulo="Tarea 1"  />
-                                <EvaluacionItem key="2" id="2" fecha="02-06-2020"id_curso="CC3301" tipo="Tarea" titulo="Tarea 2"  />
-                                <EvaluacionItem key="3" id="3" fecha="15-05-2020"id_curso="CC3301" tipo="Control" titulo="Control 1"  />
+                                {/* <EvaluacionItem key="1" id="1" fecha="02-05-2020" id_curso="CC3301" tipo="Tarea" titulo="Tarea 1"  />
+                                <EvaluacionItem key="2" id="2" fecha="02-06-2020" id_curso="CC3301" tipo="Tarea" titulo="Tarea 2"  />
+                                <EvaluacionItem key="3" id="3" fecha="15-05-2020" id_curso="CC3301" tipo="Control" titulo="Control 1"  /> */}
                             {/* </tbody> */}
                             </table>
                         </div>
-                        <div class="generic-form">  
+                        <div class="generic-form" id="nueva_evaluacion">  
                             <div class="row">
                             <div class="col-sm-1"></div>        
                                 <div class="col-sm-5">
@@ -90,12 +145,13 @@ export default class nueva_evaluacion extends React.Component {
                                 </div>  
                             </div>
                             <div class="row">
-                                <div class="col-sm-1"></div>
-                                <div class="col-sm-12" >
-                                <LinkContainer  activeClassName=""  to="./evaluaciones" className="float-right btn btn-secondary" style={{width: '7%','marginRight':"14vw",borderRadius: '8px'}}>
-                                    <button> Borrar</button>
+                                <LinkContainer activeClassName=""  className="float-left btn btn-primary col-sm-1" to="./evaluaciones" style={{width: '7%','marginLeft':"14vw",borderRadius: '8px'}}>
+                                    <button type="submit">Guardar</button>
                                 </LinkContainer>
-                                </div>  
+                                <div class="col-sm-5"></div>
+                                <LinkContainer  activeClassName=""  to="./evaluaciones" className="float-right btn btn-secondary col-sm-1" style={{width: '7%','marginRight':"14vw",borderRadius: '8px'}}>
+                                    <button> Cancelar</button>
+                                </LinkContainer>
                             </div>
 
 
@@ -103,24 +159,10 @@ export default class nueva_evaluacion extends React.Component {
                     
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
-                            <div class="row">
-                            <div class="col">
-                                <LinkContainer  activeClassName=""  to="./evaluaciones" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                                    <button>Agregar</button>
-                                </LinkContainer>
-                            </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
                                 <LinkContainer  activeClassName=""  to="../" className="float-left" style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                                    <button >Volver</button>
+                                    <button className="btn btn-primary">Volver</button>
                                 </LinkContainer>
 
-                                <LinkContainer activeClassName=""  className="float-center" to="./evaluaciones" style={{width: '7%','marginRight':"14vw",borderRadius: '8px'}}>
-                                    <button type="submit">Guardar</button>
-                                </LinkContainer>
-                                </div>
-                            </div>
                         </div>
                     </form>
             </div>
