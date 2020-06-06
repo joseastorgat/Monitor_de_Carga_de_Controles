@@ -60,9 +60,12 @@ class Evaluacion(models.Model):
 
 class Fechas_especiales(models.Model):
     _FECHAS_TYPES = (
-        (1, "Feriados"),
-        (2, "Vacaciones"),
-        (3, "Otros"),
+        (1, "Feriado"),
+        (2, "Vacaciones de Invierno"),
+        (3, "Semana Olimpica"),
+        (4," Semana de Vacaciones"),
+        (5,"Otros")
+
     )
     inicio = models.DateField()
     fin = models.DateField()
