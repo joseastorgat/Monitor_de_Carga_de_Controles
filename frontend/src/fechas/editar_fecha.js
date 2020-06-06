@@ -1,12 +1,92 @@
 import React from "react";
 import {LinkContainer } from "react-router-bootstrap";
+import axios from "axios";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Redirect } from 'react-router-dom';
 
-export default class editar_fecha extends React.Component {
+export class editar_fecha extends React.Component {
+    static propTypes={
+        auth: PropTypes.object.isRequired,
+    };
+
+    state={
+        id:"",
+        nombre_fecha: "",
+        tipo_fecha: "",
+        inicio_fecha: "",
+        fin_fecha:"",
+        fecha_modified: false,
+    }
+
+    onChange = e => {
+        this.setState({
+          [e.target.name]: 
+          e.target.value
+        })
+    };
+
+    handleSubmit = e => {
+        e.preventDefault();
+        console.log("submit");
+        this.update_fecha();
+    }
+
+    async componentDidMount () {  
+        const id  = this.props.match.params.id;
+        axios.get(`http://127.0.0.1:8000/api/fechas-especiales/${id}/`)
+          .then( (res) => { 
+            this.setState({
+                id: res.data.id,
+                nombre_fecha: res.data.nombre,
+                tipo_fecha: res.data.tipo,
+                inicio_fecha: res.data.inicio,
+                fin_fecha:res.data.fin,
+            })
+        })
+      }
+
+    update_fecha() {  
+        console.log("post fecha ...")
+        const url = `http://127.0.0.1:8000/api/fechas-especiales/${this.state.id}/`
+        let options = {
+            method: 'PATCH',
+            url: url,
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${this.props.auth.token}`
+        },
+            data: {
+                "nombre": this.state.nombre_fecha,
+                "tipo":this.state.tipo_fecha,
+                "inicio": this.state.inicio_fecha,
+                "fin": this.state.fin_fecha
+            }
+        }
+        
+        axios(options)
+          .then( (res) => {
+            console.log(res);
+            console.log("update fecha");
+            this.setState({"fecha_modified": true});
+          })
+          .catch( (err) => {
+            console.log(err);
+            console.log("cant update fecha");
+            alert("No se pudo actualizar fecha!");
+          });
+      }
+
+
     render() {
+        if (this.state.fecha_modified) {
+            return <Redirect to="/fechas_especiales/" />;
+        }
+        const id= this.props.match.params.id;
         return (
             <div>
-                <h4 className="titulo">Editar fecha</h4>
-                <form className="" name="form">
+                <h4 className="titulo">Editar fecha {id}</h4>
+                <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
                             <div class="row">
                                 <div class="col-sm-1"></div>
@@ -16,7 +96,7 @@ export default class editar_fecha extends React.Component {
                                             <label >Nombre</label>
                                         </div>
                                         <div class="col-sm-10" >
-                                            <input type="text" className="form-control" name="nombre_fecha" placeholder="Feriado 1 mayo" style={{textAlignLast:'center'}} />
+                                            <input type="text" className="form-control" name="nombre_fecha" value={this.state.nombre_fecha} onChange={this.onChange} placeholder="Feriado 1 mayo" style={{textAlignLast:'center'}} />
                                         </div>
                                     </div>
                                 </div>  
@@ -29,12 +109,12 @@ export default class editar_fecha extends React.Component {
                     
                                         <div class="col-sm-10" >
                                         {/* No pude centrarlo, hay un problema con prioridades de css de react */}
-                                            <select className="form-control center" name="tipo_fecha" style={{textAlignLast:'center',textAlign:'center'}}  >
-                                                <option value="5">Feriado</option>
-                                                <option value="6">Vacaciones de Invierno</option>
-                                                <option value="7">Semana Olimpica</option>
-                                                <option value="8">Semana de Vacaciones</option>
-                                                <option value="8">Otro</option>
+                                            <select className="form-control center" name="tipo_fecha" onChange={this.onChange} value={this.state.tipo_fecha}  style={{textAlignLast:'center',textAlign:'center'}}  >
+                                                <option value="1">Feriado</option>
+                                                <option value="2">Vacaciones de Invierno</option>
+                                                <option value="3">Semana Olimpica</option>
+                                                <option value="4">Semana de Vacaciones</option>
+                                                <option value="5">Otro</option>
                                             </select>
                                         </div>
                                     </div>
@@ -50,7 +130,7 @@ export default class editar_fecha extends React.Component {
                                         <label >Inicio</label>
                                         </div>
                                         <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                        <input type="date" className="form-control" name="fecha_inicio"  />
+                                        <input type="date" className="form-control" name="inicio_fecha" onChange={this.onChange} value={this.state.inicio_fecha}   />
                                         </div>
                                     </div>
                                 </div>
@@ -60,7 +140,7 @@ export default class editar_fecha extends React.Component {
                                             <label >Fin</label>
                                         </div>
                                         <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                            <input type="date" className="form-control" name="fecha_fin"  />
+                                            <input type="date" className="form-control" name="fin_fecha" onChange={this.onChange} value={this.state.fin_fecha}  />
                                         </div>
                                     </div>
                                 </div>
@@ -74,12 +154,18 @@ export default class editar_fecha extends React.Component {
                             <button className="btn btn-primary" >Volver</button>
                         </LinkContainer>
 
-                        <LinkContainer activeClassName=""  to="/fechas_especiales" style={{'marginRight':"14vw"}}>
+                        {/* <LinkContainer activeClassName=""  to="/fechas_especiales" style={{'marginRight':"14vw"}}> */}
                             <button className="btn btn-primary" type="submit">Guardar</button>
-                        </LinkContainer>
+                        {/* </LinkContainer> */}
                         </div>
                     </form>
             </div>
         );
       } 
 }
+
+const mapStateToProps = (state) => ({
+    auth: state.auth
+});
+
+export default connect(mapStateToProps)(editar_fecha);
