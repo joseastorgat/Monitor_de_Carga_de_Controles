@@ -2,7 +2,7 @@ import React from "react";
 import {LinkContainer } from "react-router-bootstrap";
 import {   Alert, Button,   Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import OptionButton from "../OptionButton";
+import OptionButton from "../common/OptionButton";
 import {Gear, Trashcan} from "@primer/octicons-react";
 
 export default class editar_evaluacion extends React.Component {
