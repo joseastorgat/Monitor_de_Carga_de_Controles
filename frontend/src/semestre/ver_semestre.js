@@ -127,8 +127,8 @@ export default class ver_semestre extends React.Component {
           </Container>
 
           
-          <LinkContainer  activeClassName=""  to="/semestres" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                            <button >Volver</button>
+          <LinkContainer  to="/semestres" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
+                            <button className="btn btn-primary" >Volver</button>
           </LinkContainer>
         </main>
         );

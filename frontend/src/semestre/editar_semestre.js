@@ -1,21 +1,106 @@
 import React from "react";
 import {LinkContainer } from "react-router-bootstrap";
+import axios from "axios";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Redirect } from 'react-router-dom';
 
-export default class editar_semestre extends React.Component {
+export class editar_semestre extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            semestre: {
-              año: "",
-              tipo: "",
-
-            }
-          };
-        const { year, semester } = this.props.match.params;
     }
+
+    static propTypes={
+        auth: PropTypes.object.isRequired,
+    };
+
+    state={
+        id:"",
+        año_semestre: "",
+        periodo_semestre: "",
+        inicio_semestre: "",
+        fin_semestre:"",
+        estado_semestre:"",
+        forma_creacion_semestre:0,
+        semestre_modified: false,
+    }
+
+    async componentDidMount () {  
+        const {año,periodo}=this.props.match.params
+
+        // const semestre_especifico= Semestres.filter(o=>
+        //   (o.año.toString()+" " + (o.periodo==1 ? ("Otoño") : ("Primavera"))).includes(busqueda)
+        // );
+        // console.log("Buscados")
+        // console.log(Semestres_buscados)
+        // this.setState({MostrarSemestres: Semestres_buscados});
+        console.log(this.props.match.params)
+        // console.log(this.props)
+        const id  = this.props.id;
+
+        axios.get(`http://127.0.0.1:8000/api/semestres/${id}/`)
+          .then( (res) => { 
+            this.setState({
+                id: res.data.id,
+                año_semestre: res.data.año,
+                periodo_semestre: res.data.periodo,
+                inicio_semestre: res.data.inicio,
+                fin_semestre: res.data.fin,
+                estado_semestre: res.data.estado,
+            })
+        })
+      }
+
+    onChange = e => {
+        this.setState({
+          [e.target.name]: 
+          e.target.value
+        })
+    };
+
+    handleSubmit = e => {
+        e.preventDefault();
+        console.log("submit");
+        this.update_semestre();
+    }
+
+    update_semestre() {  
+        console.log("post semestre ...")
+        const url = `http://127.0.0.1:8000/api/semestres/${this.state.id}/`
+        let options = {
+            method: 'PATCH',
+            url: url,
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${this.props.auth.token}`
+        },
+        data: {
+            "año": parseInt(this.state.año_semestre),
+            "estado": parseInt(this.state.estado_semestre),
+            "periodo": parseInt(this.state.periodo_semestre),
+            "inicio":this.state.inicio_semestre,
+            "fin": this.state.fin_semestre
+           }
+        }
+        
+        axios(options)
+          .then( (res) => {
+            console.log(res);
+            console.log("update semestre");
+            this.setState({"semestre_modified": true});
+          })
+          .catch( (err) => {
+            console.log(err);
+            console.log("cant update semestre");
+            alert("No se pudo actualizar semestre!");
+          });
+      }
     
 
     render() {
+        if (this.state.semestre_modified) {
+            return <Redirect to="/semestres" />;
+        }
         return (
             <div>
                 <h4 className="titulo">Editar semestre</h4>
@@ -29,7 +114,7 @@ export default class editar_semestre extends React.Component {
                                             <label >Año</label>
                                         </div>
                                         <div class="col-sm-10" style={{textAlignLast:'center', textAlign:'center'}} >
-                                            <input type="number"  min="2019" max="2030" step="1" className="form-control" placeholder="2020" name="año"  />
+                                            <input type="number"  min="2019" max="2030" step="1" className="form-control" placeholder="2020" name="año_semestre" value={this.state.año_semestre} onChange={this.onChange}  />
                                         </div>
                                     </div>
                                 </div>  
@@ -41,11 +126,11 @@ export default class editar_semestre extends React.Component {
                                         </div>
 
                                     <div  class="custom-control custom-radio custom-control-inline" >
-                                        <input type="radio" id="otoño" name="tipo_semestre" class="custom-control-input" />
+                                        <input type="radio" id="otoño" name="periodo_semestre" value="1" onChange={this.onChange} class="custom-control-input" />
                                         <label class="custom-control-label" htmlFor="otoño">Otoño</label>
                                     </div>
                                     <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                        <input type="radio" id="primavera" name="tipo_semestre" class="custom-control-input" />
+                                        <input type="radio" id="primavera" name="perido_semestre" value="2" onChange={this.onChange} class="custom-control-input" />
                                         <label class="custom-control-label" htmlFor="primavera" >Primavera</label>
                                     </div>
                                     </div>
@@ -60,7 +145,7 @@ export default class editar_semestre extends React.Component {
                                         <label >Inicio</label>
                                         </div>
                                         <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                        <input type="date" className="form-control" name="fecha_inicio"  />
+                                        <input type="date" className="form-control" name="inicio_semestre" onChange={this.onChange} value={this.state.inicio_semestre}/>
                                         </div>
                                     </div>
                                 </div>
@@ -70,7 +155,7 @@ export default class editar_semestre extends React.Component {
                                             <label >Fin</label>
                                         </div>
                                         <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                            <input type="date" className="form-control" name="fecha_fin"  />
+                                            <input type="date" className="form-control" name="fin_semestre" onChange={this.onChange} value={this.state.fin_semestre}  />
                                         </div>
                                     </div>
                                 </div>
@@ -83,7 +168,7 @@ export default class editar_semestre extends React.Component {
                                             <label >Estado</label>
                                         </div>
                                         <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                            <select className="form-control center" name="nombre_ramo" style={{textAlignLast:'center',textAlign:'center'}}  >
+                                            <select className="form-control center" name="estado_semestre" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
                                                 <option value="1">Por comenzar</option>
                                                 <option value="2">En curso</option>
                                                 <option value="3">Finalizado</option>
@@ -93,7 +178,7 @@ export default class editar_semestre extends React.Component {
                                 </div>
                             </div> 
                        </div> 
-                        <div class="row" style={{textAlign:'center', justifyContent:'center'}}>
+                        {/* <div class="row" style={{textAlign:'center', justifyContent:'center'}}>
                             <div class="cuadrado-form">
                             <div style={{textAlignLast:'center', textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
                                         <input type="radio" id="replicar_semestre" name="semestre_opcion" class="custom-control-input" />
@@ -112,19 +197,24 @@ export default class editar_semestre extends React.Component {
                                         </div>
                                     </div>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div class="form-group" style={{'marginTop':"4rem"}}>
                         <LinkContainer  activeClassName=""  to="/semestres" className="float-left " style={{ 'marginLeft':"10vw"}}>
                             <button className="btn btn-primary" >Volver</button>
                         </LinkContainer>
 
-                        <LinkContainer activeClassName=""  to="/semestres" style={{'marginRight':"14vw"}}>
+                        {/* <LinkContainer activeClassName=""  to="/semestres" style={{'marginRight':"14vw"}}> */}
                             <button className="btn btn-primary" type="submit">Guardar</button>
-                        </LinkContainer>
+                        {/* </LinkContainer> */}
                         </div>
                     </form>
             </div>
         );
       } 
 }
+const mapStateToProps = (state) => ({
+    auth: state.auth
+});
+   
+export default connect(mapStateToProps)(editar_semestre);

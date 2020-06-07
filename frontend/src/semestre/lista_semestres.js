@@ -82,6 +82,7 @@ export default class lista_semestre extends React.Component {
             {this.state.MostrarSemestres.map(semestre => (
             <SemesterItem
               key={semestre.id}
+              id={semestre.id}
               año={semestre.año}
               semestre={ semestre.periodo==1 ? ("Otoño") : ("Primavera")}
               showModal={() => this.showModal(semestre)}
@@ -109,7 +110,7 @@ export default class lista_semestre extends React.Component {
       const semestre= this.props.semestre;
       const id= this.props.id;
       return (
-        <Link to={`semestres/${año}/${semestre}`}>    
+        <Link to={`semestres/${año}/${semestre}`} >    
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
@@ -119,7 +120,7 @@ export default class lista_semestre extends React.Component {
               <Col  xs="auto">
                   <OptionButton  icon={Unfold}  description="Visualizar semestre"  onClick={() => alert("No implementado")} />
   
-                  <Link to={`semestres/${año}/${semestre}/editar`}>
+                  <Link to={`semestres/${año}/${semestre}/editar`} >
                     <OptionButton icon={Gear} description="Modificar semestre" />
                   </Link>
 
