@@ -36,7 +36,10 @@ class CursoItem extends React.Component {
                 <p className="mb-0">Sección {this.props.seccion}</p>
               </Col>
               <Col xs="auto">
-                <Link to={`./${this.info.codigo}/${this.info.seccion}/evaluaciones`}>
+
+                {/*Temporal : Cambiar Primavera por el correspondiente al semestre que se esta revisando
+                */ }
+                <Link to={`Primavera/${this.info.codigo}/${this.info.seccion}/evaluaciones`}>
                   <OptionButton
                     icon={File}
                     description={this.descriptions.evals}
