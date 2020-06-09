@@ -81,7 +81,7 @@ export default class lista_semestre extends React.Component {
 
             {this.state.MostrarSemestres.map(semestre => (
             <SemesterItem
-              key={semestre.id}
+              id={semestre.id}
               año={semestre.año}
               semestre={ semestre.periodo==1 ? ("Otoño") : ("Primavera")}
               showModal={() => this.showModal(semestre)}
@@ -107,9 +107,9 @@ export default class lista_semestre extends React.Component {
     render() {
       const año=this.props.año;
       const semestre= this.props.semestre;
-      const id= this.props.id;
+      const key= this.props.id;
       return (
-        <Link to={`semestres/${año}/${semestre}`}>    
+        <Link to={`semestres/${año}/${semestre}?id=${key}`}>    
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
