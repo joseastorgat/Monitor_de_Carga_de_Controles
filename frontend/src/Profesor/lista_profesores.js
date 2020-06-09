@@ -10,7 +10,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-export default class lista_profesores extends React.Component {
+export class lista_profesores extends React.Component {
   constructor(props) {
     super(props);
     this.handle_search = this.handle_search.bind(this);
@@ -24,6 +24,13 @@ export default class lista_profesores extends React.Component {
 
     this.deleteModalMsg = '¿Está seguro que desea eliminar el Profesor?';
   }
+  static propTypes = {
+    auth: PropTypes.object.isRequired,
+  };
+
+  state = {
+    nombre: "",
+  };
 
   async fetchProfesores() {
     console.log("Fetching...")
@@ -36,7 +43,6 @@ export default class lista_profesores extends React.Component {
         MostrarProfesores: profesores
       })
       )    
-    console.log(this.state.profesores)
   }
 
   async componentDidMount() {
@@ -56,6 +62,34 @@ export default class lista_profesores extends React.Component {
 
   update_Search(e){
     this.setState({search: e.target.value});
+  }
+  handleDelete = (e, i) => {
+    
+    let profesores = this.state.profesores;
+    const nombre = profesores[i]["nombre"];
+    console.log("Eliminar: ", profesores[i]);
+
+    const url = `http://127.0.0.1:8000/api/profesores/${e}/`
+    let options = {
+      method: 'DELETE',
+      url: url,
+      headers: {
+    
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${this.props.auth.token}`
+      }
+    }
+
+    axios(options)
+      .then( (res) => {
+        alert(`Profesor Eliminado ${nombre}`);
+        profesores.splice(i, 1);
+        this.setState({profesores :profesores});
+      })
+      .catch( (err) => {
+        console.log(err);
+        alert("[ERROR] No se puede eliminar el profesor! ");
+      });
   }
     render() {
       return (
@@ -81,10 +115,14 @@ export default class lista_profesores extends React.Component {
                 </Link>
               </Col>
             </Row>
-              {this.state.MostrarProfesores.map(profesor => (
+              {this.state.MostrarProfesores.map((profesor, _index) => (
                   <ProfesorItem
+                  index = {_index}
+                  key={profesor.id}
                   id={profesor.id}
                   nombre={profesor.nombre}
+                  showModal={() => this.showModal(profesor)}
+                  handleDelete={this.handleDelete}
                   />
               ))}
           </Container>
@@ -106,6 +144,8 @@ export default class lista_profesores extends React.Component {
     render() {
       const id = this.props.id
       const nombre =this.props.nombre;
+      const handleDelete = this.props.handleDelete
+      const i = this.props.index
       return (
         <Alert variant="secondary">
             <Row>
@@ -115,14 +155,21 @@ export default class lista_profesores extends React.Component {
               <Col className="text-center"></Col>
               <Col  xs="auto">
                  
-                  <Link to={`profesores/${id}/editar`}>
+                  <Link to={`./profesores/${id}/editar`}>
                   <OptionButton icon={Gear} description="Modificar profesor"/>
                   </Link>
 
-                  <OptionButton   icon={Trashcan} description="Eliminar profesor"  onClick={() => alert("No implementado")}    last={true}  />
+                  <OptionButton   icon={Trashcan} description="Eliminar profesor"  onClick={e => handleDelete(id, i)}    last={true}  />
               </Col>
             </Row>
             </Alert>
       );
     }
   }
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+  
+export default connect(mapStateToProps)(lista_profesores);
+    
