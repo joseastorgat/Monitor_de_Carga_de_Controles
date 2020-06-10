@@ -110,6 +110,7 @@ export default class lista_semestre extends React.Component {
       const key= this.props.id;
       return (
         <Link to={`semestres/${año}/${semestre}?id=${key}`}>    
+
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
@@ -119,7 +120,7 @@ export default class lista_semestre extends React.Component {
               <Col  xs="auto">
                   <OptionButton  icon={Unfold}  description="Visualizar semestre"  onClick={() => alert("No implementado")} />
   
-                  <Link to={`semestres/${año}/${semestre}/editar`}>
+                  <Link to={`semestres/${año}/${semestre}/editar`} >
                     <OptionButton icon={Gear} description="Modificar semestre" />
                   </Link>
 

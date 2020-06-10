@@ -2,7 +2,7 @@ import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 
 import { Redirect } from 'react-router-dom';
-import axios from 'axios';
+import axios from "axios";
 import { connect } from "react-redux";
 
 export class editar_profesor extends React.Component {
