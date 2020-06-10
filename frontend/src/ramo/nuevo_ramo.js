@@ -14,7 +14,7 @@ export class nuevo_ramo extends React.Component {
   state = {
     nombre_ramo: "",
     codigo_ramo: "",
-    semestre_malla: "-1",
+    semestre_malla: "5",
     ramo_created: false,
   };
 
@@ -108,7 +108,7 @@ export class nuevo_ramo extends React.Component {
                               <div class="col-sm-9" >
                               {/* No pude centrarlo, hay un problema con prioridades de css de react */}
                                   <select className="form-control center" name="semestre_malla" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
-                                      <option value="5">Quinto</option>
+                                      <option value="5" selected>Quinto</option>
                                       <option value="6">Sexto</option>
                                       <option value="7">Séptimo</option>
                                       <option value="8">Octavo</option>
@@ -124,11 +124,11 @@ export class nuevo_ramo extends React.Component {
 
               <div class="form-group" style={{'marginTop':"4rem"}}>
               <LinkContainer  activeClassName=""  to="/ramos" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                  <button className="btn btn-primary" >Volver</button>
+                  <button className="btn btn-primary" type="button">Volver</button>
               </LinkContainer>
 
               {/* <LinkContainer activeClassName=""  to="/ramos" style={{'marginRight':"14vw"}}> */}
-                  <button className="btn btn-primary" type="submit">Guardar</button>
+                  <button className="btn btn-primary" type="submit">Guardar Ramo</button>
               {/* </LinkContainer> */}
               </div>
           </form>
