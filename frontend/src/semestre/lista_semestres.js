@@ -109,7 +109,11 @@ export default class lista_semestre extends React.Component {
       const semestre= this.props.semestre;
       const key= this.props.id;
       return (
+<<<<<<< HEAD
         <Link to={`semestres/${año}/${semestre}?id=${key}`} >    
+=======
+        <Link to={`semestres/${año}/${semestre}?id=${key}`}>    
+>>>>>>> 425f9b37df428d6bee77c7f368f504c2a2f22e3d
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
