@@ -15,7 +15,7 @@ class LogedInView extends React.Component {
         title={user ? `Bienvenido ${user.username}` : ''}
         id="navbar-dropdown"
       >
-        <NavDropdown.Header>Ir a</NavDropdown.Header>
+        <NavDropdown.Header>Ir a administrar</NavDropdown.Header>
         
         <LinkContainer to="/semestres">
           <NavDropdown.Item>Semestres</NavDropdown.Item>
@@ -25,6 +25,9 @@ class LogedInView extends React.Component {
         </LinkContainer>
         <LinkContainer to="/fechas_especiales">
           <NavDropdown.Item>Feriados</NavDropdown.Item>
+        </LinkContainer>
+        <LinkContainer to="/profesores">
+          <NavDropdown.Item>Profesores</NavDropdown.Item>
         </LinkContainer>
         <NavDropdown.Divider />
 
