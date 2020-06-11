@@ -13,7 +13,7 @@ export class nueva_fecha extends React.Component {
 
     state={
         nombre_fecha: "",
-        tipo_fecha: "",
+        tipo_fecha: "1",
         inicio_fecha: "",
         fin_fecha:"",
         fecha_created: false,
@@ -94,7 +94,7 @@ export class nueva_fecha extends React.Component {
                                         <div class="col-sm-10 centrado" >
                                         {/* No pude centrarlo, hay un problema con prioridades de css de react */}
                                             <select className="form-control"  onChange={this.onChange} name="tipo_fecha" style={{textAlignLast:'center',textAlign:'center'}}  >
-                                                <option value="1">Feriado</option>
+                                                <option value="1" selected>Feriado</option>
                                                 <option value="2">Vacaciones de Invierno</option>
                                                 <option value="3">Semana Olimpica</option>
                                                 <option value="4">Semana de Vacaciones</option>

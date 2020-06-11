@@ -44,7 +44,7 @@ export class nuevo_ramo extends React.Component {
         'Authorization': `Token ${this.props.auth.token}`
       },
       data: {
-        "name": this.state.nombre_ramo,
+        "nombre": this.state.nombre_ramo,
         "codigo": this.state.codigo_ramo,
         "semestre_malla": this.state.semestre_malla
     }

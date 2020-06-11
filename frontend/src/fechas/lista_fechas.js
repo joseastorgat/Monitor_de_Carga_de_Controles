@@ -167,7 +167,8 @@ export class lista_fechas extends React.Component {
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
-               {nombre} {inicio} {fin}  
+              <h6> {nombre}  </h6> 
+               <p > <span style={{'font-weight': "500"}} >Inicio: </span>{inicio} <span style={{'font-weight': "500"}}>   Fin: </span>{fin} </p>
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">

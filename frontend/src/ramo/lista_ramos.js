@@ -57,7 +57,7 @@ export class lista_ramos extends React.Component {
     const busqueda= this.state.search;
     const ramos= this.state.ramos;
     const ramos_buscados= ramos.filter(o=>
-      (o.name.toString()+" " + o.codigo.toString() ).includes(busqueda)
+      (o.nombre.toString()+" " + o.codigo.toString() ).includes(busqueda)
     );
     console.log("Buscados")
     console.log(ramos_buscados)
@@ -69,7 +69,8 @@ export class lista_ramos extends React.Component {
   }
 
   async handleDelete() {
-    let e = this.state.ramoPorEliminar.id
+    let e = this.state.ramoPorEliminar.codigo
+    console.log(e)
     const url = `http://127.0.0.1:8000/api/ramos/${e}/`
     let options = {
       method: 'DELETE',
@@ -137,11 +138,11 @@ export class lista_ramos extends React.Component {
             </Row>
             {this.state.MostrarRamos.map(ramo => (
               <RamoItem
-                key={ramo.id}
-                id={ramo.id}
+                key={ramo.codigo}
+                id={ramo.codigo}
                 semestre={ramo.semestre_malla}
                 codigo={ramo.codigo}
-                nombre={ramo.name}
+                nombre={ramo.nombre}
                 showModal={() => this.showModal(ramo)}
               />
           ))}
@@ -167,7 +168,7 @@ export class lista_ramos extends React.Component {
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
-                {codigo}   {nombre}
+              <span style={{'font-weight': "500"}} >{codigo} </span>  {nombre}
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">
