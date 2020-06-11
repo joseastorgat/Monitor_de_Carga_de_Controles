@@ -81,7 +81,7 @@ export class nuevo_ramo extends React.Component {
                                   <label >Ramo</label>
                               </div>
                               <div class="col-sm-9" >
-                                  <input type="text" className="form-control" name="nombre_ramo" onChange={this.onChange} placeholder="Algoritmo y Estructura de Datos" style={{textAlignLast:'center'}} />
+                                  <input type="text" className="form-control" name="nombre_ramo" onChange={this.onChange} placeholder="Ingrese Nombre Ramo" style={{textAlignLast:'center'}} />
                               </div>
                           </div>
                       </div>  
@@ -92,7 +92,7 @@ export class nuevo_ramo extends React.Component {
                                   <label >Código</label>
                               </div>
                               <div class="col-sm-9" >
-                              <input type="text" className="form-control" name="codigo_ramo" onChange={this.onChange} placeholder="CC3001" style={{textAlignLast:'center'}}  />
+                              <input type="text" className="form-control" name="codigo_ramo" onChange={this.onChange} placeholder="Ingrese Código CCXXXX" style={{textAlignLast:'center'}}  />
                               </div>                          
                           </div>
                       </div>
