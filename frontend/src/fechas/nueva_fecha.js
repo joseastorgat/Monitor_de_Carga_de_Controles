@@ -142,7 +142,7 @@ export class nueva_fecha extends React.Component {
                         </LinkContainer>
 
                         {/* <LinkContainer activeClassName=""  to="/fechas_especiales" style={{'marginRight':"14vw"}}> */}
-                            <button className="btn btn-primary" type="submit">Guardar</button>
+                            <button className="btn btn-primary" type="submit">Guardar Fecha</button>
                         {/* </LinkContainer> */}
                         </div>
                     </form>

@@ -15,7 +15,7 @@ export class nuevo_semestre extends React.Component {
         periodo_semestre: "",
         inicio_semestre: "",
         fin_semestre:"",
-        estado_semestre:"",
+        estado_semestre:"1",
         forma_creacion_semestre:0,
         semestre_created: false,
     }
@@ -138,7 +138,7 @@ export class nuevo_semestre extends React.Component {
                                         </div>
                                         <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
                                             <select className="form-control center" name="estado_semestre" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
-                                                <option value="1">Por comenzar</option>
+                                                <option value="1" selected>Por comenzar</option>
                                                 <option value="2">En curso</option>
                                                 <option value="3">Finalizado</option>
                                             </select>
@@ -174,7 +174,7 @@ export class nuevo_semestre extends React.Component {
                         </LinkContainer>
 
                         {/* <LinkContainer activeClassName=""  to="/semestres" style={{'marginRight':"14vw"}}> */}
-                            <button className="btn btn-primary" type="submit">Guardar</button>
+                            <button className="btn btn-primary" type="submit">Guardar Semestre</button>
                         {/* </LinkContainer> */}
                         </div>
                     </form>

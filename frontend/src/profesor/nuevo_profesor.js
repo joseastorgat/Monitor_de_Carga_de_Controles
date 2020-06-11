@@ -107,7 +107,7 @@ create_profesor() {
 													<button >Volver</button>
 											</LinkContainer>
 
-												<button className="btn btn-primary" type="submit">Guardar</button>
+												<button className="btn btn-primary" type="submit">Guardar Profesor</button>
 
 											</div>
 									</form>
