@@ -28,7 +28,7 @@ def limpiar():
         semester = parse_csv(file)
     sem = Semestre.objects.create(año=semester['year'], inicio=semester['start'] , fin=semester['finish'] , periodo=semester['period'], estado=3)
     for curso in semester["cursos"]:
-        ramo, ramo_created = Ramo.objects.get_or_create(name=curso['nombre_ramo'], codigo=curso['codigo'], semestre_malla=curso['semestre_malla'])
+        ramo, ramo_created = Ramo.objects.get_or_create(nombre=curso['nombre_ramo'], codigo=curso['codigo'], semestre_malla=curso['semestre_malla'])
         print(ramo)
         curso_inst = Curso.objects.create(ramo=ramo, semestre=sem, seccion=curso['seccion'])
         for profe in curso['profesor']:

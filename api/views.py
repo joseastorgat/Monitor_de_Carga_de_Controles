@@ -1,13 +1,19 @@
-from django.shortcuts import render
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework import status
 
-from api import serializers
-from .models import *
-from .serializers import *
+from .models import Semestre, Ramo, Curso, Profesor, Calendario,\
+                    Fechas_especiales, Evaluacion
+from api.serializers import SemestreSerializer, RamoSerializer,\
+        CursoSerializer, ProfesorSerializer, CalendarioSerializer,\
+        FechaSerializer, EvaluacionSerializer
+
+from rest_framework.views import APIView
+from django.http import Http404
+from rest_framework.decorators import action
+from rest_framework.request import Request
+
 
 class SemestreViewSet(viewsets.ModelViewSet):
     """
@@ -17,18 +23,45 @@ class SemestreViewSet(viewsets.ModelViewSet):
     serializer_class = SemestreSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-# @api_view(['GET'])
-# def apiOverview(request):
-#     api_urls={
-#         'Lista de ramos' : '/lista-ramos/'
-#     }
-#     return Response(api_urls)
+    @action(detail=True, methods=['get'],
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def cursos(self, request, pk=None):
+        # print(request.query_params)
+        cursos = Curso.objects.filter(semestre=pk)
+        serializer = CursoSerializer(cursos, many=True)
+        return Response(serializer.data)
 
-# @api_view(['GET'])
-# def RamoList(request):
-#     Ramos = Ramo.objects.all()
-#     serializer= RamoSerializer(Ramos, many=True)
-#     return Response(serializer.data)
+    def get_queryset(self):
+        if self.request.query_params:
+            params = self.request.query_params
+            try:
+                semestre = self.apply_filters(params, model_class=Semestre)
+                return semestre
+            except Exception:
+                pass
+        return super().get_queryset()
+    
+    def apply_filters(self, params, model_class):
+        model = model_class.objects
+        for i, ftr in enumerate(params.items()):
+            print(ftr)
+            model = model.filter(ftr)
+        return model.filter()
+
+
+    # @action(detail=False, methods=['get'],
+    #         permission_classes=[permissions.IsAuthenticatedOrReadOnly],
+    #         url_path='')
+    # def por_año(self, request, pk):
+    #     '''
+    #     Semestres por fecha
+    #     '''
+    #     print(request.query_params)
+    #     # usar los params para calcular la fecha
+    #     cursos = Curso.objects.filter(semestre__año=pk)
+    #     serializer = CursoSerializer(cursos, many=True)
+    #     return Response(serializer.data)
+
 
 class EvaluationViewSet(viewsets.ModelViewSet):
     """
@@ -38,6 +71,7 @@ class EvaluationViewSet(viewsets.ModelViewSet):
     serializer_class = EvaluacionSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+
 class RamoViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Ramos to be viewed or edited.
@@ -45,6 +79,13 @@ class RamoViewSet(viewsets.ModelViewSet):
     queryset = Ramo.objects.all()
     serializer_class = RamoSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=True, methods=['get'],
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def cursos(self, request, pk=None):
+        cursos = Curso.objects.filter(ramo=pk)
+        serializer = CursoSerializer(cursos, many=True)
+        return Response(serializer.data)
 
 
 class CursoViewSet(viewsets.ModelViewSet):
@@ -55,6 +96,42 @@ class CursoViewSet(viewsets.ModelViewSet):
     serializer_class = CursoSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    @action(detail=True, methods=['get'],
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def evaluaciones(self, request, pk=None):
+        cursos = Evaluacion.objects.filter(curso=pk)
+        serializer = EvaluacionSerializer(cursos, many=True)
+        return Response(serializer.data)
+
+    def get_queryset(self):
+        if self.request.query_params:
+            params = self.request.query_params
+            try:
+                cursos = self.apply_filters(params, model_class=Curso)
+                return cursos
+            except Exception:
+                pass
+        return super().get_queryset()
+
+    def apply_filters(self, params, model_class):
+        model = model_class.objects
+        for i, ftr in enumerate(params.items()):
+            print(ftr)
+            if 'semestre' in ftr:
+                key, value = ftr
+                ftr = ('semestre__año', value)
+            elif 'periodo' in ftr:
+                key, value = ftr
+                # Otoño = 1, Primavera=2
+                value = value.lower()
+                value = 1 if value == "otoño" else (2 if value == "primavera" else 0)
+                if value == 0:
+                    raise Exception
+                ftr = ('semestre__periodo', value)
+            model = model.filter(ftr)
+        return model.filter()
+
+
 class ProfesorViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Profes to be viewed or edited.
@@ -62,6 +139,8 @@ class ProfesorViewSet(viewsets.ModelViewSet):
     queryset = Profesor.objects.all()
     serializer_class = ProfesorSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    lookup_field = 'pk'
+
 
 class CalendarioViewSet(viewsets.ModelViewSet):
     """
@@ -71,6 +150,7 @@ class CalendarioViewSet(viewsets.ModelViewSet):
     serializer_class = CalendarioSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+
 class FechasEspecialesViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Fechas especiales to be viewed or edited.
@@ -78,5 +158,3 @@ class FechasEspecialesViewSet(viewsets.ModelViewSet):
     queryset = Fechas_especiales.objects.all()
     serializer_class = FechaSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-
