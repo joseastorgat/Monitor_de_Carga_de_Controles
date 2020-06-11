@@ -1,9 +1,12 @@
 import React from "react";
 import {LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
+import {Form} from "react-bootstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
+import DatePicker from "react-datepicker";
+// import Calendar from 'react-input-calendar'
 
 export class nueva_fecha extends React.Component {
 
@@ -114,7 +117,7 @@ export class nueva_fecha extends React.Component {
                                         <label >Inicio</label>
                                         </div>
                                         <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                        <input type="date" onChange={this.onChange} className="form-control" name="inicio_fecha"  />
+                                            <input type="date" onChange={this.onChange} className="form-control" name="inicio_fecha"  required pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}"/>
                                         </div>
                                     </div>
                                 </div>

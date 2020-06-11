@@ -160,8 +160,10 @@ export class lista_fechas extends React.Component {
 
     render() {
       const nombre =this.props.nombre;
-      const inicio = this.props.inicio;
-      const fin= this.props.fin;
+      const fec_i=this.props.inicio.split("-")
+      const inicio= fec_i[2]+"-"+fec_i[1]+"-"+fec_i[0]
+      const fec_f=this.props.fin.split("-")
+      const fin= fec_f[2]+"-"+fec_f[1]+"-"+fec_f[0]
       const id = this.props.id;
       return (
         <Alert variant="secondary">
