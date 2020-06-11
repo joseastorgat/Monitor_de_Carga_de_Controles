@@ -138,7 +138,7 @@ export class nueva_fecha extends React.Component {
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
                         <LinkContainer  activeClassName=""  to="/fechas_especiales" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                            <button className="btn btn-primary" >Volver</button>
+                            <button className="btn btn-primary" >Volver a Fechas</button>
                         </LinkContainer>
 
                         {/* <LinkContainer activeClassName=""  to="/fechas_especiales" style={{'marginRight':"14vw"}}> */}

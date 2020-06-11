@@ -91,7 +91,7 @@ export default class lista_semestre extends React.Component {
           </Container>
 
           <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{'marginLeft':"10vw"}}>
-            <button className="btn btn-primary" >Volver</button>
+            <button className="btn btn-primary" >Volver a Administrar</button>
           </LinkContainer>
         </main>
       );

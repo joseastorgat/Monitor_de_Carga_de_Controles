@@ -150,7 +150,7 @@ export class lista_ramos extends React.Component {
           </Container>
           
           <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{'marginLeft':"10vw"}}>
-            <button className="btn btn-primary" >Volver</button>
+            <button className="btn btn-primary" >Volver a Administrar</button>
           </LinkContainer>
         </main>
       );

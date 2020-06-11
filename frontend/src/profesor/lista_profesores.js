@@ -143,8 +143,8 @@ export class lista_profesores extends React.Component {
               ))}
           </Container>
           
-          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                            <button className="btn btn-primary"> Volver</button>
+          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{'marginLeft':"10vw"}}>
+                            <button className="btn btn-primary"> Volver a Administrar</button>
           </LinkContainer>
         </main>
       );

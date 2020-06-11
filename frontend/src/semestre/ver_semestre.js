@@ -10,7 +10,9 @@ import { File,  Gear, Trashcan} from "@primer/octicons-react";
 class CursoItem extends React.Component {
     constructor(props) {
       super(props);
-
+      this.state={
+        semestre:null,
+      };
       this.info = {
         nombre: this.props.nombre,
         seccion: this.props.seccion,
@@ -82,23 +84,35 @@ export default class ver_semestre extends React.Component {
   }
   
   async fetchCursos() {
-    const query = new URLSearchParams(this.props.location.search);
-    console.log("Fetching...")
-    console.log(query.get('id'))
-    var id = query.get('id')
+    const { ano, semestre } = this.props.match.params;
+    const se= (semestre=="Otoño" ? 1 : 2)
+    console.log("Fetching Semestre...")
+    await fetch(`http://127.0.0.1:8000/api/semestres/?año=${ano}&periodo=${se}`)
+    .then(response => response.json())
+    .then(semestre =>
+      this.setState({
+        semestre: semestre,
+      }))     
+    console.log(this.state.semestre)
+    let id="0";
+    this.state.semestre.map(semestre => (
+        id=semestre.id
+    ))
+    console.log(id)
     // let profesores = [];
-    await fetch(`http://127.0.0.1:8000/api/cursos/`)
+    await fetch(`http://127.0.0.1:8000/api/semestres/${id}/cursos`)
     .then(response => response.json())
     .then(cursos =>
       this.setState({
-        cursos: cursos.filter(o => o.semestre == id),
-        MostrarCursos: cursos.filter(o => o.semestre == id)
+        cursos: cursos,
+        MostrarCursos: cursos
       })
       )    
     console.log(this.state.profesores)
   }
 
   async componentDidMount() {
+
     this.fetchCursos();
   }
   render(){
@@ -147,16 +161,12 @@ export default class ver_semestre extends React.Component {
                 codigo={curso.ramo}
                 
                 />
-            ))}
-            <CursoItem id="1" nombre="Algoritmo y Estructura de Datos" codigo="CC3001" seccion="1" />
-            <CursoItem id="2" nombre="Metodologías de Diseño y Programación" codigo="CC3002" seccion="1" />
-            <CursoItem id="3" nombre="Programación de Software de Sistemas" codigo="CC3301" seccion="1" />
-            
+            ))}  
 
           </Container>
 
-          <LinkContainer  to="/semestres" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                            <button className="btn btn-primary" >Volver</button>
+          <LinkContainer  to="/semestres" className="float-left " style={{'marginLeft':"10vw"}}>
+              <button className="btn btn-primary" >Volver a Semestres</button>
           </LinkContainer>
         </main>
         );
