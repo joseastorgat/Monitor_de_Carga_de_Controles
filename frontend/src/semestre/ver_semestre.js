@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import OptionButton from "../common/OptionButton";
 import { File,  Gear, Trashcan} from "@primer/octicons-react";
-
+import axios from "axios";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 class CursoItem extends React.Component {
     constructor(props) {
@@ -70,7 +72,7 @@ class CursoItem extends React.Component {
   }
   
 
-export default class ver_semestre extends React.Component {
+export class ver_semestre extends React.Component {
   constructor(props) {
     super(props);
 
@@ -82,37 +84,24 @@ export default class ver_semestre extends React.Component {
       search: ""
     };
   }
+  static propTypes={
+    auth: PropTypes.object.isRequired,
+};
   
   async fetchCursos() {
     const { ano, semestre } = this.props.match.params;
-    const se= (semestre=="Otoño" ? 1 : 2)
-    console.log("Fetching Semestre...")
-    await fetch(`http://127.0.0.1:8000/api/semestres/?año=${ano}&periodo=${se}`)
-    .then(response => response.json())
-    .then(semestre =>
-      this.setState({
-        semestre: semestre,
-      }))     
-    console.log(this.state.semestre)
-    let id="0";
-    this.state.semestre.map(semestre => (
-        id=semestre.id
-    ))
-    console.log(id)
-    // let profesores = [];
-    await fetch(`http://127.0.0.1:8000/api/semestres/${id}/cursos`)
+    const periodo= (semestre=="Otoño" ? "otoño" : "primavera")
+    await fetch(`http://127.0.0.1:8000/api/cursos/?semestre=${ano}&periodo=${periodo}`)
     .then(response => response.json())
     .then(cursos =>
-      this.setState({
+        this.setState({
         cursos: cursos,
         MostrarCursos: cursos
-      })
-      )    
-    console.log(this.state.profesores)
+        })
+    )    
   }
 
   async componentDidMount() {
-
     this.fetchCursos();
   }
   render(){
@@ -159,7 +148,6 @@ export default class ver_semestre extends React.Component {
                 nombre={curso.ramo}
                 seccion={curso.seccion}
                 codigo={curso.ramo}
-                
                 />
             ))}  
 
@@ -172,3 +160,8 @@ export default class ver_semestre extends React.Component {
         );
     }
 }
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+ 
+export default connect(mapStateToProps)(ver_semestre);
