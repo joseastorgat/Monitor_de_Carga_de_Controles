@@ -19,6 +19,9 @@ import { extendMoment } from 'moment-range';
 import 'moment/locale/es';
 
 
+const moment = extendMoment(Moment);
+moment.locale("es");
+
 
 
 // A group inside the sidebar 
@@ -158,6 +161,20 @@ export default class Calendar extends React.Component {
   constructor(props) {
     super(props);
         
+    const range = moment.range('2020-04-27', '2020-07-29');
+    this.weeks = [];
+
+    for (let week of range.by('week')) {
+      this.weeks.push(week);
+    }
+
+    this.weeks = this.weeks.map( (week) =>  {
+        let week_format = [];
+        for (let i=0; i<7; i++){
+          week_format.push(week.weekday(i).format("DD-MM"));
+        }
+        return week_format;
+      })
 
     this.state = {
       year: 2020,
@@ -166,8 +183,14 @@ export default class Calendar extends React.Component {
       groups: []
     };
     this.pathNames = ["Calendario"];
+
     this.handleChange.bind(this);
   }
+
+  // updateCalendar(){
+  //   document.getElementById("30-06").style.backgroundColor = "red";
+  // }
+
 
 
   handleChange(i, target) {
@@ -223,9 +246,7 @@ export default class Calendar extends React.Component {
 
   render() {
     const { courses, groups } = this.state;
-    // const events = courses
-      // .filter(course => course.checked)
-      // .flatMap(course => this.createEvents(course));
+
     return (
       <Container>
 
@@ -241,6 +262,34 @@ export default class Calendar extends React.Component {
 
 
           <Col lg={8}>
+          <div className="calendar">
+            <div className="week">
+              <div className="day"> Sem </div>
+              <div className="day"> Lun </div>
+              <div className="day"> Mar </div>
+              <div className="day"> Mie </div>
+              <div className="day"> Jue </div>
+              <div className="day"> Vie </div>
+              <div className="day"> Sab </div>
+              <div className="day"> Dom </div>
+    
+            </div>
+
+
+            { this.weeks.map( (week, i) => (
+              // <div> <h4> Semana {i}</h4>
+              
+              <div className="week" key={i}>
+                <div className="day"> {i+1} </div>
+                {  week.map((day, di ) => (
+                    <div className="day" key={di} id={day}> {day  || "\u00a0" } </div> )) 
+                }
+              </div>
+            ))
+            } 
+            
+          </div>
+
             
           </Col>
         </Row>

@@ -1,0 +1,132 @@
+
+.week {
+
+}
+.day {
+  display: inline-block;
+  width: 12%;
+  height: 2em;
+  padding: 2em 0;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.year-selection {
+  padding: 2em 0;
+
+}
+.year-selection label {
+  margin-left: 1em;
+  margin-right: 0.25em;
+}
+
+.calendar {
+  min-height: 600px;
+  max-height: 600px;
+}
+
+.accordion-container {
+  width: 100%;
+}
+
+.accordion-card-header {
+  padding: .4rem 1rem !important;
+  width: 100%;
+}
+
+.card-header-checkbox {
+  display: inline-block;
+}
+
+.card-header-checkbox .form-check {
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.card-header-checkbox .form-check input {
+  margin: 0;
+  z-index: 2;
+}
+
+.card-header-checkbox .form-check label {
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.svg-container svg {
+  vertical-align: unset !important;
+  height: 100%;
+}
+
+.card-body-checkbox {
+  display: inline-block;
+}
+
+.card-body-checkbox .form-check {
+  padding: 0;
+  display: flex;
+  align-items: top;
+}
+
+.card-body-checkbox .form-check input {
+  margin: 0;
+  z-index: 2;
+}
+
+.card-body-checkbox .form-check label {
+  padding-left: 1.5rem;
+  position: relative;
+  top: -0.5rem;
+}
+
+.card-body {
+  padding: .75rem 1rem 0.1rem 1rem !important;
+}
+
+
+.card-header-btn {
+  display: flex !important;
+  justify-content: center;
+  position: absolute;
+  width: 20px;
+  right: 0px;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  z-index: 1;
+}
+
+.card-header-btn:focus {
+  box-shadow: none !important;
+}
+
+.svg-container {
+  
+}
+
+.example {
+  font-size: 14px;
+  padding: 0 40px;
+  min-height: calc(100vh - 100px);
+  min-height: max-content;
+  height: calc(100vh - 100px);
+  width: 100%;
+  margin: auto;
+
+  &,
+  & > * {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rbc-calendar {
+    flex: 1;
+    min-height: 580px;
+  }
+}
+
+.examples {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+} 
