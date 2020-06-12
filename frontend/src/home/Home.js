@@ -13,7 +13,7 @@ import {nuevo_ramo ,editar_ramo, lista_ramos} from "../ramo/index_ramo";
 import {nuevo_fecha,editar_fecha, lista_fechas} from "../fechas/index_fecha";
 import {evaluaciones} from "../evaluacion/index_evaluacion";
 import {nuevo_profesor, editar_profesor, lista_profesores} from "../profesor/index_profesor";
-
+import Calendar from "../heatmap/Calendar";
 
 class Bloque_Calendario extends React.Component {
   
@@ -37,7 +37,10 @@ class Bloque_Calendario extends React.Component {
           <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido, el semestre actual es ...</p>
       </div>
       <div className="centrar" >
+        <Link to="/calendar" >
         <div className="rectangulo_azul" >Ver Semestre Otoño 2020</div>
+        </Link>
+        
         <div className="rectangulo_azul" >Ver Semestre Primavera 2020</div>
         
         {isAuthenticated ? authLinks: '' }
@@ -61,6 +64,9 @@ export default class Home extends React.Component {
       <div>
         <Switch>
           <Route exact path="/" component={Bloque_Calendario_con} />
+
+          <Route exact path="/calendar" component={Calendar} />
+
 
           {/* VISTAS DE ADMINISTRAR */}
           <PrivateRoute exact path="/administrar" component={administrar} />
