@@ -5,12 +5,16 @@ import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import OptionButton from "../common/OptionButton";
 import { File,  Gear, Trashcan} from "@primer/octicons-react";
-
+import axios from "axios";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 class CursoItem extends React.Component {
     constructor(props) {
       super(props);
-
+      this.state={
+        semestre:null,
+      };
       this.info = {
         nombre: this.props.nombre,
         seccion: this.props.seccion,
@@ -68,7 +72,7 @@ class CursoItem extends React.Component {
   }
   
 
-export default class ver_semestre extends React.Component {
+export class ver_semestre extends React.Component {
   constructor(props) {
     super(props);
 
@@ -80,22 +84,21 @@ export default class ver_semestre extends React.Component {
       search: ""
     };
   }
+  static propTypes={
+    auth: PropTypes.object.isRequired,
+};
   
   async fetchCursos() {
-    const query = new URLSearchParams(this.props.location.search);
-    console.log("Fetching...")
-    console.log(query.get('id'))
-    var id = query.get('id')
-    // let profesores = [];
-    await fetch(`http://127.0.0.1:8000/api/cursos/`)
+    const { ano, semestre } = this.props.match.params;
+    const periodo= (semestre=="Otoño" ? "otoño" : "primavera")
+    await fetch(`http://127.0.0.1:8000/api/cursos/?semestre=${ano}&periodo=${periodo}`)
     .then(response => response.json())
     .then(cursos =>
-      this.setState({
-        cursos: cursos.filter(o => o.semestre == id),
-        MostrarCursos: cursos.filter(o => o.semestre == id)
-      })
-      )    
-    console.log(this.state.profesores)
+        this.setState({
+        cursos: cursos,
+        MostrarCursos: cursos
+        })
+    )    
   }
 
   async componentDidMount() {
@@ -145,20 +148,20 @@ export default class ver_semestre extends React.Component {
                 nombre={curso.ramo}
                 seccion={curso.seccion}
                 codigo={curso.ramo}
-                
                 />
-            ))}
-            <CursoItem id="1" nombre="Algoritmo y Estructura de Datos" codigo="CC3001" seccion="1" />
-            <CursoItem id="2" nombre="Metodologías de Diseño y Programación" codigo="CC3002" seccion="1" />
-            <CursoItem id="3" nombre="Programación de Software de Sistemas" codigo="CC3301" seccion="1" />
-            
+            ))}  
 
           </Container>
 
-          <LinkContainer  to="/semestres" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                            <button className="btn btn-primary" >Volver</button>
+          <LinkContainer  to="/semestres" className="float-left " style={{'marginLeft':"10vw"}}>
+              <button className="btn btn-primary" >Volver a Semestres</button>
           </LinkContainer>
         </main>
         );
     }
 }
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+ 
+export default connect(mapStateToProps)(ver_semestre);
