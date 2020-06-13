@@ -145,7 +145,7 @@ class CursoViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'],
             permission_classes=[permissions.IsAuthenticatedOrReadOnly])
-    def mas_detalle(self, request):
+    def detalle(self, request):
         cursos = self.get_queryset()
         print(cursos)
         serializer = CursoDetailSerializer(cursos, many=True)

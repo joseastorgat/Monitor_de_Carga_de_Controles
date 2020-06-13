@@ -7,7 +7,7 @@ Lista de endpoints disponibles:
 /api/cursos/< pk_curso >/evaluaciones
 /api/ramos/< codigo_ramo >/cursos
 /api/cursos/?semestre=<año>&periodo=<otoño o primavera>
-/api/cursos/mas_detalle/?key=value...
+/api/cursos/detalle/?key=value...
 ~~~
 
 nota 1:
