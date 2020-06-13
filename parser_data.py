@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import csv
 import datetime
 import pprint
@@ -50,7 +51,7 @@ def parse_csv(file):
         if not row[1].startswith("CC"):
             continue
         course = defaultdict(list)
-        course["semestre_malla"] = int(row[0].split("°")[0])
+        course["semestre_malla"] = int(row[0].split("°")[0].replace('Â', ""))
         course["codigo"] = row[1].split(":")[0].strip()
         course["nombre_ramo"] = row[1].split(":")[1].strip()
         course["seccion"] = int(row[2])

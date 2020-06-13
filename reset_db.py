@@ -2,8 +2,9 @@ import os
 from os import remove
 from os import path as p
 from django.core.management import execute_from_command_line
+from pathlib import Path
+from parser_data import parse_csv
 
-from parser import parse_csv
 
 def limpiar():
     paths = [
