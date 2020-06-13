@@ -18,6 +18,7 @@ export class nuevo_profesor extends React.Component {
 			auth: PropTypes.object.isRequired,
 	};
 
+	
 	onChange = e => {
 			this.setState({
 				[e.target.name]: 
@@ -103,11 +104,11 @@ create_profesor() {
 													</div>                    
 											</div>
 											<div class="form-group" style={{'marginTop':"4rem"}}>
-											<LinkContainer  activeClassName=""  to="/profesores" className="float-left btn btn-primary" style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-													<button >Volver</button>
+											<LinkContainer  activeClassName=""  to="/profesores" className="float-left btn btn-primary" style={{'marginLeft':"10vw"}}>
+													<button >Volver a Profesores</button>
 											</LinkContainer>
 
-												<button className="btn btn-primary" type="submit">Guardar</button>
+												<button className="btn btn-primary" type="submit">Guardar Profesor</button>
 
 											</div>
 									</form>
