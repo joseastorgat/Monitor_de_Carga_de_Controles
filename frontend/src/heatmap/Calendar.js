@@ -18,6 +18,8 @@ import Moment, { weekdays } from 'moment';
 import { extendMoment } from 'moment-range';
 import 'moment/locale/es';
 
+import axios from "axios"; //from "axios";
+
 
 const moment = extendMoment(Moment);
 moment.locale("es");
@@ -159,37 +161,29 @@ class Sidebar extends React.Component {
 
 export default class Calendar extends React.Component {
   constructor(props) {
+    
     super(props);
-        
-    const range = moment.range('2020-04-27', '2020-07-29');
-    this.weeks = [];
-
-    for (let week of range.by('week')) {
-      this.weeks.push(week);
-    }
-
-    this.weeks = this.weeks.map( (week) =>  {
-        let week_format = [];
-        for (let i=0; i<7; i++){
-          week_format.push(week.weekday(i).format("DD-MM"));
-        }
-        return week_format;
-      })
-
+    console.log("Componente cargado");
+    
     this.state = {
+      found: true,
       year: 2020,
       semester: 1,
+      inicio: "",
+      fin: "",
       courses: [],
       groups: []
-    };
-    this.pathNames = ["Calendario"];
-
+    
+    }
+    
+    this.weeks = [];
     this.handleChange.bind(this);
   }
 
   // updateCalendar(){
   //   document.getElementById("30-06").style.backgroundColor = "red";
   // }
+
 
 
 
@@ -213,8 +207,39 @@ export default class Calendar extends React.Component {
   }
 
   async componentDidMount() {
+  
+    const anho = this.props.match.params.anho;
+    const periodo = this.props.match.params.periodo;
     
+    let res = await axios.get(`http://127.0.0.1:8000/api/semestres/?año=${anho}&periodo=${periodo}`);
+
+    if(res.status != 200 || res.data.length != 1){
+      console.log("semestre raro");
+      this.setState( {"found": false });
+    }
+
+    else{
+      this.setState({"inicio": res.data[0].inicio, "fin": res.data[0].fin})
+    }
+
+    if(this.state.found){
+      const range = moment.range(this.state.inicio, this.state.fin);
+      this.weeks = [];
+
+      for (let week of range.by('week')) {
+        this.weeks.push(week);
+      }
+
+      this.weeks = this.weeks.map( (week) =>  {
+          let week_format = [];
+          for (let i=0; i<7; i++){
+            week_format.push(week.weekday(i).format("DD-MM"));
+          }
+          return week_format;
+        })
+
       const { year, semester } = this.state;
+      
       const coursesPre = await fetch(
         `http://127.0.0.1:8000/api/semestres/${this.state.semester}/cursos/`
       ).then(res => res.json());
@@ -241,12 +266,20 @@ export default class Calendar extends React.Component {
 
       console.log(groups);
       this.setState({ courses: courses, groups: groups });
-
+    }
   }
 
   render() {
     const { courses, groups } = this.state;
 
+    if(!this.state.found){
+
+      return (
+        <h1>Año / Semestre no válido </h1> 
+      );
+
+    }
+    
     return (
       <Container>
 

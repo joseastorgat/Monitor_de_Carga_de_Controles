@@ -37,12 +37,12 @@ class Bloque_Calendario extends React.Component {
           <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido, el semestre actual es ...</p>
       </div>
       <div className="centrar" >
-        <Link to="/calendar" >
+        <Link to="/calendar/2019/1/" >
         <div className="rectangulo_azul" >Ver Semestre Otoño 2020</div>
         </Link>
-        
+        <Link to="/calendar/2019/2/" >
         <div className="rectangulo_azul" >Ver Semestre Primavera 2020</div>
-        
+        </Link>
         {isAuthenticated ? authLinks: '' }
       </div>
       </div>
@@ -64,9 +64,7 @@ export default class Home extends React.Component {
       <div>
         <Switch>
           <Route exact path="/" component={Bloque_Calendario_con} />
-
-          <Route exact path="/calendar" component={Calendar} />
-
+          <Route exact path="/calendar/:anho/:periodo" component={Calendar} />
 
           {/* VISTAS DE ADMINISTRAR */}
           <PrivateRoute exact path="/administrar" component={administrar} />
