@@ -1,3 +1,6 @@
+## Instalar NodeJS
+https://nodejs.org/es/download/
+
 ## Instalar yarn
 https://classic.yarnpkg.com/es-ES/docs/install/#windows-stable
 
@@ -6,7 +9,7 @@ https://classic.yarnpkg.com/es-ES/docs/install/#windows-stable
 - npm install bootstrap
 - npm install @primer/octicons-react --save
 - yarn add react-bootstrap bootstrap
-- yarn add react-react-router-bootstrap
+- yarn add react-router-bootstrap
 - yarn add react-router-dom
 
 
@@ -28,3 +31,7 @@ Ir a carpeta frontend desde consola
 ## Correr backend
 python manage.py runserver
 - Ir a http://127.0.0.1:8000/api/
+
+### Algunos detalles en Windows
+Si no es posible realizar activate y solicita cambiar la política de ejecución, aquí está la solución:
+https://stackoverflow.com/questions/18713086/virtualenv-wont-activate-on-windows
