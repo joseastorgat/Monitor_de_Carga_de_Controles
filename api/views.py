@@ -7,7 +7,7 @@ from .models import Semestre, Ramo, Curso, Profesor, Calendario,\
                     Fechas_especiales, Evaluacion
 from api.serializers import SemestreSerializer, RamoSerializer,\
         CursoSerializer, ProfesorSerializer, CalendarioSerializer,\
-        FechaSerializer, EvaluacionSerializer
+        FechaSerializer, EvaluacionSerializer, CursoDetailSerializer
 
 from rest_framework.views import APIView
 from django.http import Http404
@@ -100,7 +100,9 @@ class CursoViewSet(viewsets.ModelViewSet):
             permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def evaluaciones(self, request, pk=None):
         cursos = Evaluacion.objects.filter(curso=pk)
+        print(cursos)
         serializer = EvaluacionSerializer(cursos, many=True)
+        print(serializer.data)
         return Response(serializer.data)
 
     def get_queryset(self):
@@ -130,6 +132,25 @@ class CursoViewSet(viewsets.ModelViewSet):
                 ftr = ('semestre__periodo', value)
             model = model.filter(ftr)
         return model.filter()
+
+    # def retrieve(self, request, pk, *args, **kwargs):
+    #     # instance = self.get_object()
+    #     instance = Curso.objects.filter(id=pk).get()
+    #     print(pk)
+    #     print(instance)
+
+    #     serializer = self.get_serializer(instance)
+    #     # serializer = CursoDetailSerializer(instance)
+    #     return Response(serializer.data)
+
+    @action(detail=False, methods=['get'],
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def detalle(self, request):
+        cursos = self.get_queryset()
+        print(cursos)
+        serializer = CursoDetailSerializer(cursos, many=True)
+        print(serializer.data)
+        return Response(serializer.data)
 
 
 class ProfesorViewSet(viewsets.ModelViewSet):
