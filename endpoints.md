@@ -1,12 +1,13 @@
 Lista de endpoints disponibles:
 
 ~~~
-/api/cursos/?key=value&key2=value2&....
-/api/semestres/?key=value&key2=value2&....
-/api/semestres/< pk_semestre>/cursos
-/api/cursos/< pk_curso >/evaluaciones
-/api/ramos/< codigo_ramo >/cursos
-/api/cursos/?semestre=<año>&periodo=<otoño o primavera>
+/api/cursos/?key=value&key2=value2&..../
+/api/semestres/?key=value&key2=value2&..../
+/api/semestres/< pk_semestre>/cursos/
+/api/cursos/< pk_curso >/evaluaciones/
+/api/ramos/< codigo_ramo >/cursos/
+/api/cursos/?semestre=<año>&periodo=<otoño o primavera>/
+/api/cursos/detalle/?key=value.../
 ~~~
 
 nota 1:

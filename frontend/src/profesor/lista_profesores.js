@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import {Gear, Trashcan} from "@primer/octicons-react";
 import {LinkContainer } from "react-router-bootstrap";
-
+import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -17,7 +17,7 @@ export class lista_profesores extends React.Component {
     this.state = {
       profesores: [],
       showModal: false,
-      evaluacionPorEliminar: null,
+      profesorPorEliminar: null,
       MostrarProfesores: [],
       search: ""
     };
@@ -63,37 +63,55 @@ export class lista_profesores extends React.Component {
   update_Search(e){
     this.setState({search: e.target.value});
   }
-  handleDelete = (e, i) => {
-    
-    let profesores = this.state.profesores;
-    const nombre = profesores[i]["nombre"];
-    console.log("Eliminar: ", profesores[i]);
 
+  showModal(profesor) {
+    this.setState({ showModal: true, profesorPorEliminar: profesor });
+  }
+
+  handleCancel() {
+    this.setState({ showModal: false, ramoPorEliminar: null });
+  }
+
+  async handleDelete() {
+    let e = this.state.profesorPorEliminar.id
+    console.log(e)
     const url = `http://127.0.0.1:8000/api/profesores/${e}/`
     let options = {
       method: 'DELETE',
       url: url,
       headers: {
-    
         'Content-Type': 'application/json',
         'Authorization': `Token ${this.props.auth.token}`
       }
     }
-
     axios(options)
       .then( (res) => {
-        alert(`Profesor Eliminado ${nombre}`);
-        profesores.splice(i, 1);
-        this.setState({profesores :profesores});
+        this.setState({
+          showModal: false,
+          profesorPorEliminar: null
+        });
+        this.fetchProfesores();
       })
       .catch( (err) => {
         console.log(err);
-        alert("[ERROR] No se puede eliminar el profesor! ");
+        alert("[ERROR] No se pudo eliminar el profesor! ");
+        this.setState({
+          showModal: false,
+          profesorPorEliminar: null
+        });
       });
   }
+
+
     render() {
       return (
         <main>
+          <DeleteModal
+            msg={this.deleteModalMsg}
+            show={this.state.showModal}
+            handleCancel={() => this.handleCancel()}
+            handleDelete={() => this.handleDelete()}
+        />
           <Container>
             <ViewTitle>Profesores</ViewTitle>
             <Row className="mb-3">
@@ -115,20 +133,18 @@ export class lista_profesores extends React.Component {
                 </Link>
               </Col>
             </Row>
-              {this.state.MostrarProfesores.map((profesor, _index) => (
+              {this.state.MostrarProfesores.map(profesor => (
                   <ProfesorItem
-                  index = {_index}
                   key={profesor.id}
                   id={profesor.id}
                   nombre={profesor.nombre}
                   showModal={() => this.showModal(profesor)}
-                  handleDelete={this.handleDelete}
                   />
               ))}
           </Container>
           
-          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                            <button className="btn btn-primary"> Volver</button>
+          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{'marginLeft':"10vw"}}>
+                            <button className="btn btn-primary"> Volver a Administrar</button>
           </LinkContainer>
         </main>
       );
@@ -144,8 +160,6 @@ export class lista_profesores extends React.Component {
     render() {
       const id = this.props.id
       const nombre =this.props.nombre;
-      const handleDelete = this.props.handleDelete
-      const i = this.props.index
       return (
         <Alert variant="secondary">
             <Row>
@@ -159,7 +173,7 @@ export class lista_profesores extends React.Component {
                   <OptionButton icon={Gear} description="Modificar profesor"/>
                   </Link>
 
-                  <OptionButton   icon={Trashcan} description="Eliminar profesor"  onClick={e => handleDelete(id, i)}    last={true}  />
+                  <OptionButton   icon={Trashcan} description="Eliminar profesor"  onClick={() => this.props.showModal()}    last={true}   />
               </Col>
             </Row>
             </Alert>

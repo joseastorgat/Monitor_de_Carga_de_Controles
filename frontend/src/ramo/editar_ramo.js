@@ -16,12 +16,13 @@ export class editar_ramo extends React.Component {
 
   async componentDidMount () {  
     const id  = this.props.match.params.id;
+    console.log(id)
 
     axios.get(`http://127.0.0.1:8000/api/ramos/${id}/`)
       .then( (res) => { 
         this.setState({
-            id: res.data.id,
-            nombre_ramo: res.data.name,
+            id: res.data.codigo,
+            nombre_ramo: res.data.nombre,
             codigo_ramo: res.data.codigo,
             semestre_malla: res.data.semestre_malla
         })
@@ -53,7 +54,7 @@ export class editar_ramo extends React.Component {
         'Authorization': `Token ${this.props.auth.token}`
       },
       data: {
-        "name": this.state.nombre_ramo,
+        "nombre": this.state.nombre_ramo,
         "codigo": this.state.codigo_ramo,
         "semestre_malla": this.state.semestre_malla
     }

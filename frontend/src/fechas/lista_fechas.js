@@ -145,7 +145,7 @@ export class lista_fechas extends React.Component {
           </Container>
           
           <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{'marginLeft':"10vw"}}>
-            <button className="btn btn-primary" >Volver</button>
+            <button className="btn btn-primary" >Volver a Administrar</button>
           </LinkContainer>
         </main>
       );
@@ -160,14 +160,17 @@ export class lista_fechas extends React.Component {
 
     render() {
       const nombre =this.props.nombre;
-      const inicio = this.props.inicio;
-      const fin= this.props.fin;
+      const fec_i=this.props.inicio.split("-")
+      const inicio= fec_i[2]+"-"+fec_i[1]+"-"+fec_i[0]
+      const fec_f=this.props.fin.split("-")
+      const fin= fec_f[2]+"-"+fec_f[1]+"-"+fec_f[0]
       const id = this.props.id;
       return (
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
-               {nombre} {inicio} {fin}  
+              <h6> {nombre}  </h6> 
+               <p > <span style={{'font-weight': "500"}} >Inicio: </span>{inicio} <span style={{'font-weight': "500"}}>   Fin: </span>{fin} </p>
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">

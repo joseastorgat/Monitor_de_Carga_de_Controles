@@ -21,6 +21,13 @@ class CursoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CursoDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Curso
+        fields = '__all__'
+        depth = 1
+
+
 class ProfesorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profesor

@@ -44,7 +44,7 @@ export class nuevo_ramo extends React.Component {
         'Authorization': `Token ${this.props.auth.token}`
       },
       data: {
-        "name": this.state.nombre_ramo,
+        "nombre": this.state.nombre_ramo,
         "codigo": this.state.codigo_ramo,
         "semestre_malla": this.state.semestre_malla
     }
@@ -124,7 +124,7 @@ export class nuevo_ramo extends React.Component {
 
               <div class="form-group" style={{'marginTop':"4rem"}}>
               <LinkContainer  activeClassName=""  to="/ramos" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                  <button className="btn btn-primary" type="button">Volver</button>
+                  <button className="btn btn-primary" type="button">Volver a Ramos</button>
               </LinkContainer>
 
               {/* <LinkContainer activeClassName=""  to="/ramos" style={{'marginRight':"14vw"}}> */}
