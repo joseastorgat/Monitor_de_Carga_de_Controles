@@ -261,7 +261,7 @@ export class evaluaciones extends React.Component {
                                     <label >Titulo</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="text" className="form-control" name="titulo" ref={this.inputTitulo} defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
+                                    <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                 </div>
                             </div>
                         </div>
@@ -271,7 +271,7 @@ export class evaluaciones extends React.Component {
                                     <label >Fecha</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="date" className="form-control" name="fecha"  ref={this.inputFecha} defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
+                                    <input type="date" className="form-control" name="fecha"  defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
                                 </div>
                             </div>
                         </div>
@@ -285,11 +285,11 @@ export class evaluaciones extends React.Component {
                                 </div>
     
                                 <div class="custom-control custom-radio custom-control-inline"  >
-                                    <input type="radio" id="control" name="tipo" value="Control" ref={this.inputTipoControl} class="custom-control-input" onChange={this.onChange}/>
+                                    <input type="radio" id="control" name="tipo" value="Control"  class="custom-control-input" onChange={this.onChange}/>
                                     <label class="custom-control-label" htmlFor="control">Control</label>
                                 </div>
                                 <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                    <input type="radio" id="tarea" name="tipo" value="Tarea" ref={this.inputTipoTarea} class="custom-control-input" onChange={this.onChange}/>
+                                    <input type="radio" id="tarea" name="tipo" value="Tarea"  class="custom-control-input" onChange={this.onChange}/>
                                     <label class="custom-control-label" htmlFor="tarea" >Tarea</label>
                                 </div>
                             </div>
@@ -320,7 +320,7 @@ export class evaluaciones extends React.Component {
                                     <label >Titulo</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="text" className="form-control" name="titulo" ref={this.inputTitulo} defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
+                                    <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                 </div>
                             </div>
                         </div>
@@ -330,7 +330,7 @@ export class evaluaciones extends React.Component {
                                     <label >Fecha</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="date" className="form-control" name="fecha" ref={this.inputFecha}defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange} />
+                                    <input type="date" className="form-control" name="fecha" defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                 </div>
                             </div>
                         </div>
@@ -344,11 +344,11 @@ export class evaluaciones extends React.Component {
                                 </div>
     
                                 <div class="custom-control custom-radio custom-control-inline"  >
-                                    <input type="radio" id="control" value="Control" name="tipo" ref={this.inputTipoControl} class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
+                                    <input type="radio" id="control" value="Control" name="tipo"  class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
                                     <label class="custom-control-label" htmlFor="control">Control</label>
                                 </div>
                                 <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                    <input type="radio" id="tarea" value="Tarea" name="tipo" ref={this.inputTipoControl} class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
+                                    <input type="radio" id="tarea" value="Tarea" name="tipo"  class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
                                     <label class="custom-control-label" htmlFor="tarea" >Tarea</label>
                                 </div>
                             </div>
