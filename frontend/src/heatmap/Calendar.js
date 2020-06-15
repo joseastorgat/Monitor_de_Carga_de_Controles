@@ -19,12 +19,11 @@ import { extendMoment } from 'moment-range';
 import 'moment/locale/es';
 
 import axios from "axios"; //from "axios";
+import { evaluaciones } from "../evaluacion/evaluaciones";
 
 
 const moment = extendMoment(Moment);
 moment.locale("es");
-
-
 
 // A group inside the sidebar 
 class SidebarGroup extends React.Component {
@@ -61,26 +60,38 @@ class SidebarGroup extends React.Component {
   }
 
   componentDidMount() {
+
     const { nsemester, courses } = this.props;
     const this_courses = [];
-    console.log(courses);
+    
     courses.map(course =>
       course.ramo_semestre === nsemester  ? this_courses.push(course) : null
     );
-    console.log(this_courses);
+
     this.setState({ courses: this_courses });
   }
 
-  handleChange() {
+  handleChangeGroup() {
     const { handleChange, courses } = this.props;
     this.setState({ checked: !this.state.checked });
-    this.state.courses.map(course =>
-      handleChange(courses.indexOf(course), !this.state.checked)
-    );
+     
+    handleChange(this.state.courses.map(course => courses.indexOf(course)), !this.state.checked);
+
+  }
+
+  handleChangeSingle(course_index) {
+    
+    const { handleChange} = this.props;
+    console.log(this.state.courses);
+
+    if(this.state.checked){
+      this.setState({ checked: false });
+    }
+    handleChange([course_index]);
   }
 
   render() {
-    const { handleChange, handleAccordion, nsemester, courses } = this.props;
+    const {handleAccordion, nsemester, courses } = this.props;
     return (
       <div className="accordion-container">
         <Card>
@@ -99,7 +110,8 @@ class SidebarGroup extends React.Component {
           <Card.Header bg="light" className="accordion-card-header">
             <div className="card-header-checkbox">
               <Form.Check
-                onChange={() => this.handleChange()}
+                checked={this.state.checked}
+                onChange={() => this.handleChangeGroup()}
                 label={this.getVariant(nsemester)}
               />
             </div>
@@ -110,7 +122,7 @@ class SidebarGroup extends React.Component {
               {this.state.courses.map((course, i) => (
                 <SidebarElement
                   key={i}
-                  onChange={() => handleChange(courses.indexOf(course))}
+                  onChange={() => this.handleChangeSingle(courses.indexOf(course))}
                   title={`${course.ramo}-${course.seccion} ${course.ramo_nombre}`}
                   checked={course.checked}
                 />
@@ -163,37 +175,56 @@ export default class Calendar extends React.Component {
   constructor(props) {
     
     super(props);
-    console.log("Componente cargado");
     
     this.state = {
       found: true,
-      year: 2020,
-      semester: 1,
+      semestre_id: -1,
+      año: this.props.match.params.anho,
+      periodo: this.props.match.params.periodo,
       inicio: "",
       fin: "",
       courses: [],
-      groups: []
-    
+      groups: [],
+      evaluaciones: [],
+      evaluaciones_a_mostrar: [],
+      dias: [],
     }
     
     this.weeks = [];
     this.handleChange.bind(this);
   }
 
-  // updateCalendar(){
-  //   document.getElementById("30-06").style.backgroundColor = "red";
-  // }
 
+  handleChange(checks, target) {
 
+    const courses = this.state.courses.slice();
+    const evaluaciones = this.state.evaluaciones.slice();
+    let evaluaciones_a_mostrar = this.state.evaluaciones_a_mostrar.slice();
+    console.log(checks);
 
+    checks.forEach(i => {
+    
+      courses[i].checked = target !== undefined ? target : !courses[i].checked;
+  
+      if(courses[i].checked){
+        console.log(i);
+        const evaluaciones_curso = evaluaciones.filter( evaluacion => evaluacion.curso == courses[i].id);
+        evaluaciones_a_mostrar = evaluaciones_a_mostrar.concat(evaluaciones_curso);
+      }
+      else{
+        console.log("filtrando curso");
+        console.log(i);
+        evaluaciones_a_mostrar = evaluaciones_a_mostrar.filter(evaluacion => evaluacion.curso !== courses[i].id);
+        console.log(evaluaciones_a_mostrar);
+      }
 
-  handleChange(i, target) {
-    const courses = this.state.courses.slice(); // ver tutorial de react
-    courses[i].checked = target !== undefined ? target : !courses[i].checked;
-    this.setState({ courses: courses });
-    console.log(this.state.courses);
-    // this.updateCalendar();
+    });
+
+    const dias = evaluaciones_a_mostrar.map(evaluacion => evaluacion.fecha);
+
+    this.setState({ courses: courses, evaluaciones_a_mostrar: evaluaciones_a_mostrar, dias: dias});
   }
+
 
   handleAccordion(i) {
     const groups = this.state.groups.map(group =>
@@ -208,21 +239,20 @@ export default class Calendar extends React.Component {
 
   async componentDidMount() {
   
-    const anho = this.props.match.params.anho;
-    const periodo = this.props.match.params.periodo;
-    
-    let res = await axios.get(`http://127.0.0.1:8000/api/semestres/?año=${anho}&periodo=${periodo}`);
+    const {año, periodo} = this.state;
+    let res = await axios.get(`http://127.0.0.1:8000/api/semestres/?año=${año}&periodo=${periodo}`);
 
-    if(res.status != 200 || res.data.length != 1){
-      console.log("semestre raro");
+    if(res.status !== 200 || res.data.length !== 1){
       this.setState( {"found": false });
     }
 
     else{
-      this.setState({"inicio": res.data[0].inicio, "fin": res.data[0].fin})
+      this.setState({"inicio": res.data[0].inicio, "fin": res.data[0].fin, "semestre_id": res.data[0].id})
     }
 
     if(this.state.found){
+      
+      // generación de calendario
       const range = moment.range(this.state.inicio, this.state.fin);
       this.weeks = [];
 
@@ -233,30 +263,34 @@ export default class Calendar extends React.Component {
       this.weeks = this.weeks.map( (week) =>  {
           let week_format = [];
           for (let i=0; i<7; i++){
-            week_format.push(week.weekday(i).format("DD-MM"));
+            week_format.push(week.weekday(i).format("YYYY-MM-DD"));
           }
           return week_format;
         })
 
       const { year, semester } = this.state;
       
+
+      // obtener cursos
       const coursesPre = await fetch(
-        `http://127.0.0.1:8000/api/semestres/${this.state.semester}/cursos/`
-      ).then(res => res.json());
+        `http://127.0.0.1:8000/api/semestres/${this.state.semestre_id}/cursos/`
+        ).then(res => res.json());
+
+      // console.log(coursesPre)
 
       let courses = [];
+      
+
       for(let course in coursesPre){
-        console.log(course);
+        // console.log(course);
         const ramo = await fetch(
           `http://127.0.0.1:8000/api/ramos/${coursesPre[course].ramo}/`
         ).then(res => res.json())
         
         // console.log(ramo);
         courses.push({ ...coursesPre[course], checked:false, ramo_nombre:ramo.nombre, ramo_semestre:ramo.semestre_malla });
-
       }
-      // const courses = coursesPre.map(course => ({ ...course, checked: false }));
-      console.log(courses);
+      courses = courses.map(course => ({ ...course, checked: false }));
       var groups = [];
       
       courses.map(course =>
@@ -264,14 +298,21 @@ export default class Calendar extends React.Component {
       );
       groups = groups.map(group => ({ number: group, icon: ChevronRight }));
 
+      console.log(courses);
       console.log(groups);
-      this.setState({ courses: courses, groups: groups });
+      
+      const evaluaciones = await fetch(
+        `http://127.0.0.1:8000/api/evaluaciones/`
+      ).then(res => res.json());
+
+      // console.log(evaluaciones);
+      this.setState({ courses: courses, groups: groups, evaluaciones: evaluaciones});
     }
   }
 
   render() {
     const { courses, groups } = this.state;
-
+    console.log("rendering");
     if(!this.state.found){
 
       return (
@@ -314,11 +355,20 @@ export default class Calendar extends React.Component {
               
               <div className="week" key={i}>
                 <div className="day"> {i+1} </div>
-                {  week.map((day, di ) => (
-                    <div className="day" key={di} id={day}> {day  || "\u00a0" } </div> )) 
+                
+                {  week.map((day, di ) => {
+                    
+                    if(this.state.dias.indexOf(day)>-1){
+                      return <div className="day" key={di} id={day} style={{backgroundColor: "red"}}> {day  || "\u00a0" } </div> 
+                    } 
+                    else{
+                      return <div className="day" key={di} id={day}> {day  || "\u00a0" } </div> 
+                    }
+                
+                  })
                 }
               </div>
-            ))
+              ))
             } 
             
           </div>
