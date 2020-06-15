@@ -4,7 +4,7 @@ import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import OptionButton from "../common/OptionButton";
-import { File,  Gear, Trashcan} from "@primer/octicons-react";
+import { File,  Pencil, Trashcan} from "@primer/octicons-react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -30,7 +30,7 @@ class CursoItem extends React.Component {
   
     render() {
       return (
-        <Link style={{ textDecoration: "none" }} to="">
+        <Link style={{ textDecoration: "none" }} to={`${this.info.codigo}/${this.info.seccion}/evaluaciones`}>
           <Alert variant="primary">
             <Row>
               <Col>
@@ -52,7 +52,7 @@ class CursoItem extends React.Component {
                 </Link>
                 <Link to="#">
                   <OptionButton
-                    icon={Gear}
+                    icon={Pencil}
                     description={this.descriptions.edit}
                   />
                 </Link>

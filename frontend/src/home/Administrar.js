@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 class Bloque extends React.Component {
   render() {
@@ -9,19 +10,27 @@ class Bloque extends React.Component {
           <h2 className="titulo" >Monitor de Carga de Controles</h2>
           <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido, el semestre actual es ...</p>
         </div>
-        <div className="centrar">
+        <div className="centrar_button" >
+            <div style={{display:'block',textAlign: 'center'}}>
             <Link to="/semestres" style={{ color: '#FFF' }}>
-            <div className="rectangulo_azul" style={{ backgroundColor: "#cecece"}} >Administrar Semestres</div>
+            <Button className="rectangulo_azul_admin" >  Administrar Semestres</Button>
             </Link>
+            </div>
+            <div style={{display:'block',textAlign: 'center'}}>
             <Link to="/ramos" style={{ color: '#FFF' }}>
-            <div className="rectangulo_azul" style={{ backgroundColor: "#cecece"}}>Administrar Ramos</div>
+            <Button className="rectangulo_azul_admin" >  Administrar Ramos</Button>
             </Link>
+            </div>
+            <div style={{display:'block',textAlign: 'center'}}>
             <Link to="/profesores" style={{ color: '#FFF' }}>
-            <div className="rectangulo_azul" style={{ backgroundColor: "#cecece"}} > Administrar Profesores</div>
+            <Button  className="rectangulo_azul_admin">   Administrar Profesores</Button>
             </Link>
+            </div>
+            <div style={{display:'block',textAlign: 'center'}}>
             <Link to="/fechas_especiales" style={{ color: '#FFF' }}>
-            <div className="rectangulo_azul" style={{ backgroundColor: "#cecece"}}>Administrar Feriados</div>
+            <Button className="rectangulo_azul_admin" >  Administrar Feriados</Button>
             </Link>
+            </div>
         </div> 
         <Link   to="/" className="float-left " style={{'marginLeft':"10vw"}}>
             <button className="btn btn-primary" >Volver</button>
