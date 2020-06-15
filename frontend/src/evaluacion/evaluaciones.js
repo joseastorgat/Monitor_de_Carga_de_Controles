@@ -65,9 +65,9 @@ export class evaluaciones extends React.Component {
             tipo: "",
             titulo: ""
         })
+        this.form.reset()
     }
     handleSubmit = e => {
-        const query = new URLSearchParams(this.props.location.search);
         e.preventDefault();
         console.log("submit");
         if(this.state.editar_index >= 0){
@@ -107,7 +107,6 @@ export class evaluaciones extends React.Component {
         // window.location.href = "evaluaciones?editar=" + id
     }
     async fetchEvaluaciones() {
-        const query = new URLSearchParams(this.props.location.search);
         console.log("Fetching...")
         const params= this.props.match.params
         var curso = await fetch(`http://127.0.0.1:8000/api/cursos/?semestre=${params.ano}&periodo=${params.semestre}&ramo=${params.cod}&seccion=${params.seccion}`)
@@ -119,8 +118,6 @@ export class evaluaciones extends React.Component {
             this.setState({
             evaluaciones: evaluaciones,
             MostrarEvaluaciones: evaluaciones,
-            evaluacionPorEditar: query.get("editar") ? evaluaciones.find(o =>
-                o.id == query.get("editar")) : null
           })
         )
     }
@@ -128,7 +125,6 @@ export class evaluaciones extends React.Component {
     update_evaluacion() {  
         console.log("post evaluacion ...")
         const url = `http://127.0.0.1:8000/api/evaluaciones/${this.state.id}/`
-        console.log(url)
         let options = {
           method: 'PATCH',
           url: url,
@@ -253,8 +249,6 @@ export class evaluaciones extends React.Component {
         }
     }
     createFormRender(){
-        console.log("nueva")
-        console.log(this.state)
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                 <div class="generic-form" ref={this.divToFocus}>  
@@ -314,7 +308,6 @@ export class evaluaciones extends React.Component {
     }
     updateFormRender(){
         var ev = this.state.evaluaciones[this.state.editar_index];
-        console.log("editar")
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                 <div class="generic-form" ref={this.divToFocus}>  
