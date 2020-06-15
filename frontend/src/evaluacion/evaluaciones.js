@@ -14,15 +14,22 @@ export class evaluaciones extends React.Component {
         super(props);
         this.state = {
             evaluaciones: [],
-            curso: null,
+            curso: {
+                id: "",
+                seccion: "",
+                ramo: "",
+                semestre: "",
+                profesor: ""
+            },
             showModal: false,
             evaluacionPorEliminar: null,
+            editar_index: -1,
+            form_focus: false,
 
             id: "",
             fecha: "",
             tipo: "",
             titulo: "",
-            curso: "-1",
             
             evaluacion_modified: false,
             evaluacion_created: false,
@@ -31,8 +38,13 @@ export class evaluaciones extends React.Component {
         //   search: ""
         };
         this.deleteModalMsg = '¿Está seguro que desea eliminar la evaluacion?';
+
+        this.form = null
+
         this.divToFocus = React.createRef() //para focusear la caja de creacion de nueva evaluacion
     }
+
+
 
     onChange = e => {
         this.setState({
@@ -42,49 +54,77 @@ export class evaluaciones extends React.Component {
         console.log(this.state)
     };
 
+    onClickCancel = e => {
+        e.preventDefault();
+
+        this.setState({
+            editar_index: -1,
+            form_focus: true,
+            id: "",
+            fecha: "",
+            tipo: "",
+            titulo: ""
+        })
+        this.form.reset()
+    }
     handleSubmit = e => {
-        const query = new URLSearchParams(this.props.location.search);
         e.preventDefault();
         console.log("submit");
-        if(query.get("editar")){
+        if(this.state.editar_index >= 0){
             this.update_evaluacion();
         }
         else{
             this.create_evaluacion()
         }
-        
     }
 
     //Scroll para nueva evaluacion
     handleClickNuevaEvaluacion = (e) => {
-        e.preventDefault()
-        
-        window.location.href = "evaluaciones?nueva=1"
+        e.preventDefault();
+        this.setState({
+            editar_index: -1,
+            form_focus: true,
+
+            id: "",
+            fecha: "",
+            tipo: "",
+            titulo: ""
+        })
+        this.form.reset()
     }
-    handleClickEditarEvaluacion = (id) => {
+    handleClickEditarEvaluacion = (i) => {
         // e.preventDefault()
-        window.location.href = "evaluaciones?editar=" + id
+        this.setState({
+            editar_index: i,
+            form_focus: true,
+
+            id: this.state.evaluaciones[i].id,
+            fecha: this.state.evaluaciones[i].fecha,
+            tipo: this.state.evaluaciones[i].tipo,
+            titulo: this.state.evaluaciones[i].titulo
+        })
+        this.form.reset()
+        // window.location.href = "evaluaciones?editar=" + id
     }
     async fetchEvaluaciones() {
-        const query = new URLSearchParams(this.props.location.search);
         console.log("Fetching...")
-        await fetch(`http://127.0.0.1:8000/api/evaluaciones/`)
+        const params= this.props.match.params
+        var curso = await fetch(`http://127.0.0.1:8000/api/cursos/?semestre=${params.ano}&periodo=${params.semestre}&ramo=${params.cod}&seccion=${params.seccion}`)
+        .then(response => response.json())
+        this.state.curso = curso[0]
+        await fetch(`http://127.0.0.1:8000/api/cursos/${this.state.curso.id}/evaluaciones/`)
         .then(response => response.json())
         .then(evaluaciones =>
             this.setState({
             evaluaciones: evaluaciones,
             MostrarEvaluaciones: evaluaciones,
-            evaluacionPorEditar: query.get("editar") ? evaluaciones.find(o =>
-                o.id == query.get("editar")) : null
           })
         )
     }
 
     update_evaluacion() {  
         console.log("post evaluacion ...")
-        console.log(this.state)
         const url = `http://127.0.0.1:8000/api/evaluaciones/${this.state.id}/`
-        console.log(url)
         let options = {
           method: 'PATCH',
           url: url,
@@ -96,15 +136,21 @@ export class evaluaciones extends React.Component {
             "fecha": this.state.fecha,
             "tipo": this.state.tipo,
             "titulo": this.state.titulo,
-            "curso": this.state.curso
+            "curso": this.state.curso.id
             }
         }
+        console.log(options)
         axios(options)
         .then( (res) => {
             console.log(res);
             console.log("evaluacion updated");
-            this.setState({"evaluacion_modified": true});
-            window.location.reload(false);
+            let evaluaciones = this.state.evaluaciones
+            evaluaciones[this.state.editar_index] = res.data
+            this.setState({
+                evaluacion_modified: true,
+                evaluaciones: evaluaciones
+            });
+            // window.location.reload(false);
         })
         .catch( (err) => {
             console.log(err);
@@ -145,13 +191,12 @@ export class evaluaciones extends React.Component {
 
     create_evaluacion() {  
         console.log("post evaluaciones ...")
-        console.log(this.state)
+        var evaluaciones = this.state.evaluaciones
         const url = "http://127.0.0.1:8000/api/evaluaciones/"
         let options = {
           method: 'POST',
           url: url,
           headers: {
-        
             'Content-Type': 'application/json',
             'Authorization': `Token ${this.props.auth.token}`
           },
@@ -160,14 +205,19 @@ export class evaluaciones extends React.Component {
             "fecha": this.state.fecha,
             "tipo": this.state.tipo,
             "titulo": this.state.titulo,
-            "curso": this.state.curso
+            "curso": this.state.curso.id
         }
       }
       axios(options)
       .then( (res) => {
         console.log(res);
         console.log("create evaluacion");
-        this.setState({"evaluacion_created": true});
+        evaluaciones.push(res.data)
+        this.setState(
+            {
+                evaluacion_created: true,
+                evaluaciones: evaluaciones
+            });
       })
       .catch( (err) => {
         console.log(err);
@@ -175,12 +225,10 @@ export class evaluaciones extends React.Component {
         alert("[ERROR] No se pudo crear la evaluacion!");
       });
     }
+
     async componentDidMount() {
         this.fetchEvaluaciones();
-        const query = new URLSearchParams(this.props.location.search);
-        var id = query.get('editar')
-        console.log("DCJSJjd")
-        console.log(id)
+        var id = this.state.id
         axios.get(`http://127.0.0.1:8000/api/evaluaciones/${id}/`)
         .then( (res) => { 
             this.setState({
@@ -188,15 +236,12 @@ export class evaluaciones extends React.Component {
                 id: res.data.id,
                 titulo: res.data.titulo,
                 fecha: res.data.fecha,
-                curso: res.data.curso,
                 tipo: res.data.tipo
             })
-        })
-        
+        })      
     }
     async componentDidUpdate(){
-        const query = new URLSearchParams(this.props.location.search);
-        if(this.divToFocus.current && query.get("nueva") == 1 || query.get("editar")){
+        if(this.divToFocus.current && this.state.form_focus){
             this.divToFocus.current.scrollIntoView({
                 behavior: "auto" ,
                 // block: "nearest"
@@ -205,7 +250,7 @@ export class evaluaciones extends React.Component {
     }
     createFormRender(){
         return (
-            <form className="" name="form" onSubmit={this.handleSubmit}> 
+            <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                 <div class="generic-form" ref={this.divToFocus}>  
                     <h4>Nueva Evaluacion</h4>
                     <div class="row">
@@ -216,7 +261,7 @@ export class evaluaciones extends React.Component {
                                     <label >Titulo</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="text" className="form-control" name="titulo"  style={{textAlignLast:'center'}} onChange={this.onChange} />
+                                    <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                 </div>
                             </div>
                         </div>
@@ -226,7 +271,7 @@ export class evaluaciones extends React.Component {
                                     <label >Fecha</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="date" className="form-control" name="fecha"  style={{textAlignLast:'center'}} onChange={this.onChange}/>
+                                    <input type="date" className="form-control" name="fecha"  defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
                                 </div>
                             </div>
                         </div>
@@ -240,11 +285,11 @@ export class evaluaciones extends React.Component {
                                 </div>
     
                                 <div class="custom-control custom-radio custom-control-inline"  >
-                                    <input type="radio" id="control" name="tipo" value="Control" class="custom-control-input" onChange={this.onChange}/>
+                                    <input type="radio" id="control" name="tipo" value="Control"  class="custom-control-input" onChange={this.onChange}/>
                                     <label class="custom-control-label" htmlFor="control">Control</label>
                                 </div>
                                 <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                    <input type="radio" id="tarea" name="tipo" value="Tarea" class="custom-control-input" onChange={this.onChange}/>
+                                    <input type="radio" id="tarea" name="tipo" value="Tarea"  class="custom-control-input" onChange={this.onChange}/>
                                     <label class="custom-control-label" htmlFor="tarea" >Tarea</label>
                                 </div>
                             </div>
@@ -255,18 +300,16 @@ export class evaluaciones extends React.Component {
  
                         <button type="submit" className="float-left btn btn-primary col-sm-1">Guardar</button>
                         <div class="col-sm-5"></div>
-                        <LinkContainer  activeClassName=""  to="./evaluaciones" className="float-right btn btn-secondary col-sm-1" style={{width: '7%','marginRight':"14vw",borderRadius: '8px'}}>
-                            <button> Cancelar</button>
-                        </LinkContainer>
+                        <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
                     </div>
                 </div>
             </form>
         )
     }
     updateFormRender(){
-        var ev = this.state.evaluacionPorEditar;
+        var ev = this.state.evaluaciones[this.state.editar_index];
         return (
-            <form className="" name="form" onSubmit={this.handleSubmit}> 
+            <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                 <div class="generic-form" ref={this.divToFocus}>  
                     <h4>Editar {ev.tipo}: {ev.titulo}</h4>
                     <div class="row">
@@ -277,7 +320,7 @@ export class evaluaciones extends React.Component {
                                     <label >Titulo</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="text" className="form-control" name="titulo" defaultValue={ev.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
+                                    <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                 </div>
                             </div>
                         </div>
@@ -287,7 +330,7 @@ export class evaluaciones extends React.Component {
                                     <label >Fecha</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="date" className="form-control" name="fecha" defaultValue={ev.fecha} style={{textAlignLast:'center'}} onChange={this.onChange} />
+                                    <input type="date" className="form-control" name="fecha" defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                 </div>
                             </div>
                         </div>
@@ -301,11 +344,11 @@ export class evaluaciones extends React.Component {
                                 </div>
     
                                 <div class="custom-control custom-radio custom-control-inline"  >
-                                    <input type="radio" id="control" value="Control" name="tipo" class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
+                                    <input type="radio" id="control" value="Control" name="tipo"  class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
                                     <label class="custom-control-label" htmlFor="control">Control</label>
                                 </div>
                                 <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                    <input type="radio" id="tarea" value="Tarea" name="tipo" class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
+                                    <input type="radio" id="tarea" value="Tarea" name="tipo"  class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
                                     <label class="custom-control-label" htmlFor="tarea" >Tarea</label>
                                 </div>
                             </div>
@@ -314,12 +357,11 @@ export class evaluaciones extends React.Component {
                     <div class="row">
                         <div class="col-sm-2"></div>
                         {/* <LinkContainer activeClassName="" type="submit"  className="float-left btn btn-primary col-sm-2" to="./evaluaciones" style={{width: '7%','marginLeft':"14vw",borderRadius: '8px'}}> */}
-                            <button href="./evaluaciones" className="btn btn-primary col-sm-2" type="submit">Actualizar Evaluacion</button>
+                            <button className="btn btn-primary col-sm-2" type="submit">Actualizar Evaluacion</button>
                         {/* </LinkContainer> */}
                         <div class="col-sm-4"></div>
-                        <LinkContainer  activeClassName=""  to="./evaluaciones" className="float-right btn btn-secondary col-sm-1" style={{width: '7%','marginRight':"14vw",borderRadius: '8px'}}>
-                            <button> Cancelar</button>
-                        </LinkContainer>
+                        <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
+
                     </div>
                 </div>
             </form>
@@ -339,7 +381,7 @@ export class evaluaciones extends React.Component {
                                     <label >Curso</label>
                                 </div>
                                 <div class="col-sm-5" >
-                                    <input type="text" className="form-control" name="nombre_curso" placeholder="CC3001-1 Otoño 2020"   style={{textAlignLast:'center'}} readOnly="readonly"/>
+                                    <input type="text" className="form-control" name="nombre_curso" placeholder={this.state.curso.ramo + "-" + this.state.curso.seccion}  style={{textAlignLast:'center'}} readOnly="readonly"/>
                                 </div>
                                     <LinkContainer  activeClassName=""  to="#" onClick={this.handleClickNuevaEvaluacion} className="float-left col-sm-3"  style={{width: '7%', 'marginLeft':"3vw",borderRadius: '8px'}}>
                                         <button  className="btn btn-primary" >Agregar Evaluacion</button>
@@ -380,7 +422,7 @@ export class evaluaciones extends React.Component {
                     </div>
                     
                     
-                    {this.state.evaluacionPorEditar ? this.updateFormRender() : this.createFormRender()}
+                    {this.state.editar_index >= 0 ? this.updateFormRender() : this.createFormRender()}
                     
                     <div class="form-group" style={{'marginTop':"4rem"}}>
                             <LinkContainer  activeClassName=""  to="../../" className="float-left" style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
@@ -416,7 +458,7 @@ class EvaluacionItem extends React.Component {
             <th scope="col">{fecha}</th>
             <th scope="col">{tipo}</th>
             <th scope="col">
-                <Link onClick={e => handleUpdate(id)}>
+                <Link onClick={e => handleUpdate(i)}>
                     <OptionButton icon={Gear} description="Modificar evaluacion" />
                 </Link>
                 <OptionButton   icon={Trashcan} description="Eliminar evaluacion"  onClick={e => handleDelete(id, i)}    last={true}  />

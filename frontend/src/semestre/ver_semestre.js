@@ -43,7 +43,7 @@ class CursoItem extends React.Component {
 
                 {/*Temporal : Cambiar Primavera por el correspondiente al semestre que se esta revisando
                 */ }
-                <Link to={`Primavera/${this.info.codigo}/${this.info.seccion}/evaluaciones`}>
+                <Link to={`${this.info.codigo}/${this.info.seccion}/evaluaciones`}>
                   <OptionButton
                     icon={File}
                     description={this.descriptions.evals}
