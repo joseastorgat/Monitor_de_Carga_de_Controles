@@ -3,7 +3,7 @@ import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   Inp
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import {Gear, Trashcan} from "@primer/octicons-react";
+import {Pencil, Trashcan} from "@primer/octicons-react";
 import {LinkContainer } from "react-router-bootstrap";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
@@ -170,7 +170,7 @@ export class lista_profesores extends React.Component {
               <Col  xs="auto">
                  
                   <Link to={`./profesores/${id}/editar`}>
-                  <OptionButton icon={Gear} description="Modificar profesor"/>
+                  <OptionButton icon={Pencil} description="Modificar profesor"/>
                   </Link>
 
                   <OptionButton   icon={Trashcan} description="Eliminar profesor"  onClick={() => this.props.showModal()}    last={true}   />

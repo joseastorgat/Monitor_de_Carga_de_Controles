@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import PrivateRoute from "../common/PrivateRoute"
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
+import { BsGearFill} from 'react-icons/bs';
 import { Link } from "react-router-dom";
 import administrar from "./Administrar";
 import Header from "./Header";
@@ -13,6 +13,7 @@ import {nuevo_ramo ,editar_ramo, lista_ramos} from "../ramo/index_ramo";
 import {nuevo_fecha,editar_fecha, lista_fechas} from "../fechas/index_fecha";
 import {evaluaciones} from "../evaluacion/index_evaluacion";
 import {nuevo_profesor, editar_profesor, lista_profesores} from "../profesor/index_profesor";
+import { Button } from "react-bootstrap";
 
 
 class Bloque_Calendario extends React.Component {
@@ -26,7 +27,11 @@ class Bloque_Calendario extends React.Component {
     
     const authLinks = (
       <Link to="/administrar" style={{ color: '#FFF' }}>
-        <div className="rectangulo_azul" style={{ backgroundColor: "#cecece"}} >Administrar</div>
+      <Button renderAs="button" className="rectangulo_azul" style={{ backgroundColor: "#0E71DE"}}>  
+        <span className="col-sm-1"></span>  Administrar
+          <span className="col-sm-1"></span>
+          <BsGearFill size="35" />
+      </Button> 
       </Link>
     );
 
@@ -37,8 +42,8 @@ class Bloque_Calendario extends React.Component {
           <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido, el semestre actual es ...</p>
       </div>
       <div className="centrar" >
-        <div className="rectangulo_azul" >Ver Semestre Otoño 2020</div>
-        <div className="rectangulo_azul" >Ver Semestre Primavera 2020</div>
+        <button className="rectangulo_azul" >Ver Semestre Otoño 2020</button>
+        <button className="rectangulo_azul" >Ver Semestre Otoño 2020</button>
         
         {isAuthenticated ? authLinks: '' }
       </div>

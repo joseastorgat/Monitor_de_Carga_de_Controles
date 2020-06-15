@@ -1,12 +1,9 @@
 import React from "react";
 import {LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
-import {Form} from "react-bootstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
-import DatePicker from "react-datepicker";
-// import Calendar from 'react-input-calendar'
 
 export class nueva_fecha extends React.Component {
 
