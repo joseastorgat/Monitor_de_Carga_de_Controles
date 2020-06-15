@@ -43,7 +43,7 @@ export default class lista_semestre extends React.Component {
     const busqueda= this.state.search;
     const Semestres= this.state.semestres;
     const Semestres_buscados= Semestres.filter(o=>
-      (o.año.toString()+" " + (o.periodo==1 ? ("Otoño") : ("Primavera"))).includes(busqueda)
+      (o.año.toString()+" " + (o.periodo===1 ? ("Otoño") : ("Primavera"))).includes(busqueda)
     );
     console.log("Buscados")
     console.log(Semestres_buscados)
@@ -108,7 +108,7 @@ export default class lista_semestre extends React.Component {
       const año=this.props.año;
       const semestre= this.props.semestre;
       return (
-        <Link to={`semestres/${año}/${semestre}`}>    
+        <Link to={`semestres/${año}/${semestre}/`}>    
 
         <Alert variant="secondary">
             <Row>

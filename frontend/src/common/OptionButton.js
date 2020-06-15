@@ -12,12 +12,12 @@ class OptionButton extends React.Component {
     // console.log(this.props.on);
     const { onClick, icon } = this.props;
     function color_assigment(a) {
-      if (a=='Pencil'){
+      if (a==='Pencil'){
         return "warning" }
-      else if (a=="Trashcan"){
+      else if (a==="Trashcan"){
         return "danger"
       }
-      else if(a=="Calendar"){
+      else if(a==="Calendar"){
         return "success"
       }
       else{

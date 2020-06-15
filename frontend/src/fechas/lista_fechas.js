@@ -32,7 +32,6 @@ export class lista_fechas extends React.Component {
 
   async fetchFechas() {
     console.log("Fetching...")
-    let fechas = [];
     await fetch(`http://127.0.0.1:8000/api/fechas-especiales/`)
     .then(response => response.json())
     .then(fechas =>
