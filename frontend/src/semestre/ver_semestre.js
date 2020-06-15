@@ -104,6 +104,7 @@ export class ver_semestre extends React.Component {
   async componentDidMount() {
     this.fetchCursos();
   }
+
   render(){
     const handle_search = e => {
       e.preventDefault();
@@ -137,7 +138,7 @@ export class ver_semestre extends React.Component {
               <Button >Exportar Semestre</Button>
             </Col>
               <Col xs="auto">
-                <Link to={path + "/nuevo_curso"}>
+                <Link to={path + "nuevo_curso"}>
                   <Button className="btn btn-primary">Nuevo Curso</Button>
                 </Link>
               </Col>
@@ -145,7 +146,7 @@ export class ver_semestre extends React.Component {
             {this.state.MostrarCursos.map(curso => (
                 <CursoItem
                 key={curso.id}
-                nombre={curso.ramo}
+                nombre={curso.id}
                 seccion={curso.seccion}
                 codigo={curso.ramo}
                 />
