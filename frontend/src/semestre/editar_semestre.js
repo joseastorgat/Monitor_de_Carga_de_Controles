@@ -6,14 +6,6 @@ import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
 
 export class editar_semestre extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    static propTypes={
-        auth: PropTypes.object.isRequired,
-    };
-
     state={
         id:"",
         año_semestre: "",
@@ -23,31 +15,35 @@ export class editar_semestre extends React.Component {
         estado_semestre:"",
         forma_creacion_semestre:0,
         semestre_modified: false,
+        semestre:[]
     }
+    static propTypes={
+        auth: PropTypes.object.isRequired,
+    };
 
     async componentDidMount () {  
-        const {año,periodo}=this.props.match.params
-
-        // const semestre_especifico= Semestres.filter(o=>
-        //   (o.año.toString()+" " + (o.periodo==1 ? ("Otoño") : ("Primavera"))).includes(busqueda)
-        // );
-        // console.log("Buscados")
-        // console.log(Semestres_buscados)
-        // this.setState({MostrarSemestres: Semestres_buscados});
-        console.log(this.props.match.params)
-        // console.log(this.props)
-        const id  = this.props.id;
-
-        axios.get(`http://127.0.0.1:8000/api/semestres/${id}/`)
-          .then( (res) => { 
+        const { ano, semestre } = this.props.match.params;
+        this.paths = `/semestres/${ano}/${semestre}`;
+        const se= (semestre==="Otoño" ? 1 : 2)
+        console.log("Fetching Semestre...")
+        await fetch(`http://127.0.0.1:8000/api/semestres/?año=${ano}&periodo=${se}`)
+        .then( res=> res.json())
+        .then( res => {
             this.setState({
-                id: res.data.id,
-                año_semestre: res.data.año,
-                periodo_semestre: res.data.periodo,
-                inicio_semestre: res.data.inicio,
-                fin_semestre: res.data.fin,
-                estado_semestre: res.data.estado,
+                id: res[0].id,
+                año_semestre: res[0].año,
+                periodo_semestre: res[0].periodo,
+                inicio_semestre: res[0].inicio,
+                fin_semestre: res[0].fin,
+                estado_semestre: res[0].estado,
             })
+            if (res[0].periodo===1){
+                document.getElementById("otoño").checked = true;
+            }
+            else{
+                document.getElementById("primavera").checked = true;
+            }
+            
         })
       }
 
@@ -61,7 +57,7 @@ export class editar_semestre extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
         console.log("submit");
-        this.update_semestre();
+        this.update_semestre()
     }
 
     update_semestre() {  
@@ -88,8 +84,10 @@ export class editar_semestre extends React.Component {
             console.log(res);
             console.log("update semestre");
             this.setState({"semestre_modified": true});
+
           })
           .catch( (err) => {
+            alert("ERROR")
             console.log(err);
             console.log("cant update semestre");
             alert("No se pudo actualizar semestre!");
@@ -104,7 +102,7 @@ export class editar_semestre extends React.Component {
         return (
             <div>
                 <h4 className="titulo">Editar semestre</h4>
-                    <form className="" name="form">
+                    <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
                             <div class="row">
                                 <div class="col-sm-1"></div>
@@ -130,7 +128,7 @@ export class editar_semestre extends React.Component {
                                         <label class="custom-control-label" htmlFor="otoño">Otoño</label>
                                     </div>
                                     <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                        <input type="radio" id="primavera" name="perido_semestre" value="2" onChange={this.onChange} class="custom-control-input" />
+                                        <input type="radio" id="primavera" name="periodo_semestre" value="2" onChange={this.onChange} class="custom-control-input" />
                                         <label class="custom-control-label" htmlFor="primavera" >Primavera</label>
                                     </div>
                                     </div>
@@ -168,7 +166,7 @@ export class editar_semestre extends React.Component {
                                             <label >Estado</label>
                                         </div>
                                         <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                            <select className="form-control center" name="estado_semestre" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
+                                            <select className="form-control center" value={this.state.estado_semestre} name="estado_semestre" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
                                                 <option value="1">Por comenzar</option>
                                                 <option value="2">En curso</option>
                                                 <option value="3">Finalizado</option>
