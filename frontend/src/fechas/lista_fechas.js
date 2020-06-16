@@ -3,7 +3,7 @@ import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   Inp
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import { Gear, Trashcan} from "@primer/octicons-react";
+import { Pencil, Trashcan} from "@primer/octicons-react";
 import { LinkContainer } from "react-router-bootstrap";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
@@ -32,7 +32,6 @@ export class lista_fechas extends React.Component {
 
   async fetchFechas() {
     console.log("Fetching...")
-    let fechas = [];
     await fetch(`http://127.0.0.1:8000/api/fechas-especiales/`)
     .then(response => response.json())
     .then(fechas =>
@@ -176,7 +175,7 @@ export class lista_fechas extends React.Component {
               <Col  xs="auto">
                  
                   <Link to={`/fechas_especiales/${id}/editar`}>
-                  <OptionButton icon={Gear} description="Modificar fecha" />
+                  <OptionButton icon={Pencil} description="Modificar fecha" />
                   </Link>
 
                   <OptionButton

@@ -1,7 +1,5 @@
 import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
-
-import { Redirect } from 'react-router-dom';
 import axios from "axios";
 import { connect } from "react-redux";
 
@@ -15,7 +13,6 @@ export class editar_profesor extends React.Component {
 
     async componentDidMount () {  
         const id  = this.props.match.params.id;
-    
         axios.get(`http://127.0.0.1:8000/api/profesores/${id}/`)
           .then( (res) => { 
             this.setState({

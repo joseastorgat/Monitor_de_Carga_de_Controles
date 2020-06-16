@@ -23,7 +23,7 @@ export class nuevo_curso extends React.Component {
           };
     
         const { ano, semestre } = this.props.match.params;
-        this.paths = `/semestres/${ano}/${semestre}`;
+        this.paths = `/semestres/${ano}/${semestre}/`;
     }
 
     static propTypes={
