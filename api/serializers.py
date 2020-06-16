@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Semestre, Ramo, Curso, Profesor, Calendario,\
-    Fechas_especiales, Evaluacion
+    Fechas_especiales, Evaluacion, Semana
 
 
 class SemestreSerializer(serializers.ModelSerializer):
@@ -57,9 +57,31 @@ class FechaSerializer(serializers.ModelSerializer):
 
 
 class EvaluacionSerializer(serializers.ModelSerializer):
+    semana = serializers.SerializerMethodField(read_only=True)
+    dia = serializers.SerializerMethodField(read_only=True)
+
+    def get_semana_obj(self, obj):
+        current = obj.fecha
+        semana = Semana.objects.filter(inicio__lte=current)
+        semana = semana.filter(fin__gte=current)
+        return semana
+
+    def get_semana(self, obj):
+        semana = self.get_semana_obj(obj)
+        if semana:
+            semana = semana.get()
+            return semana.numero
+        return None
+
+    def get_dia(self, obj):
+        fecha = obj.fecha
+        return fecha.weekday()
+    
     class Meta:
         model = Evaluacion
-        fields = '__all__'
+        fields = ['id', 'fecha', 'tipo', 'titulo', 'curso', 'semana', 'dia']
+
+
 
 # class Calendario_CursoSerializers(serializers.ModelSerializer):
 #     class Meta:
