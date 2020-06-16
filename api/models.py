@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 año_actual = 2020
 
@@ -29,6 +30,51 @@ class Semestre(models.Model):
     def __str__(self):
         return "Semestre "+self._PERIODOS[self.periodo-1][1]+" " +\
             str(self.año)
+
+    def save(self, *args, **kwargs):
+        super(Semestre, self).save(*args, **kwargs)
+        semanas = {}
+        one_day = datetime.timedelta(days=1)
+        current = self.inicio
+        dia_inicio = self.inicio
+        counter = 0
+        week_counter = 1
+        while current <= self.fin:
+            print(current)
+            if current.weekday() == 6:
+                key = (dia_inicio, current)
+                dia_inicio = current+one_day
+                semanas[key] = week_counter
+                week_counter += 1
+            current += one_day
+            counter += 1
+        for s in semanas:
+            if self.semana_valida(s):
+                print(f'semana {semanas[s]} es válida!')
+                inicio, fin = s
+                Semana.objects.create(
+                    numero=semanas[s], semestre=self, inicio=inicio, fin=fin)
+        print('guardando semestre! :D',
+              f'{counter} días en semestre, dia inicio {dia_inicio}')
+        print(semanas)
+        return 
+
+    def semana_valida(self, semana_tuple):
+        dia_inicio, dia_fin = semana_tuple
+        dias_lectivos = [0, 1, 2, 3, 4]
+        # procesar semana con fechas especiales
+        current = dia_inicio
+        one_day = datetime.timedelta(days=1)
+        while current <= dia_inicio:
+            dia_semana = current.weekday()
+            fecha = Fechas_especiales.objects.filter(inicio__gte=current)
+            fecha = fecha.filter(fin__lte=current)
+            if len(fecha):
+                dias_lectivos.remove(dia_semana)
+            current += one_day
+        if dias_lectivos:
+            return True
+        return False
 
 
 class Ramo(models.Model):
@@ -85,3 +131,10 @@ class Calendario(models.Model):
     token = models.CharField(max_length=45)
     # link = models.CharField(max_length=100)
     cursos = models.ManyToManyField(Curso)
+
+
+class Semana(models.Model):
+    numero = models.IntegerField()
+    semestre = models.ForeignKey(Semestre, on_delete=models.CASCADE)
+    inicio = models.DateField()
+    fin = models.DateField()
