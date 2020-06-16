@@ -2,7 +2,8 @@ import React from "react";
 import {LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import {Gear, Trashcan} from "@primer/octicons-react";
+import {Pencil, Trashcan} from "@primer/octicons-react";
+import DeleteModal from "../common/DeleteModal";
 
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -23,6 +24,7 @@ export class evaluaciones extends React.Component {
             showModal: false,
             evaluacionPorEliminar: null,
             editar_index: -1,
+            eliminar_index: -1,
             form_focus: false,
 
             id: "",
@@ -159,11 +161,14 @@ export class evaluaciones extends React.Component {
     }
 
 
-    handleDelete = (e, i) => {
-    
-        let evaluaciones = this.state.evaluaciones;
-        const titulo = evaluaciones[i]["titulo"];
-        const tipo = evaluaciones[i]["tipo"];
+    async handleDelete() {
+        let evaluacion = this.state.evaluacionPorEliminar
+        let e = evaluacion.id
+        let evaluaciones = this.state.evaluaciones
+        let i = this.state.eliminar_index
+        console.log(i)
+        const titulo = evaluacion.titulo;
+        const tipo = evaluacion.tipo;
         console.log("Eliminar: ", evaluaciones[i]);
     
         const url = `http://127.0.0.1:8000/api/evaluaciones/${e}/`
@@ -178,9 +183,13 @@ export class evaluaciones extends React.Component {
       }
       axios(options)
       .then( (res) => {
-        alert(`Evaluacion Eliminada ${titulo} - ${tipo}`);
+        // alert(`Evaluacion Eliminada ${titulo} - ${tipo}`);
         evaluaciones.splice(i, 1);
-        this.setState({evaluaciones :evaluaciones});
+        this.setState({
+            evaluaciones :evaluaciones,
+            eliminar_index: -1,
+            showModal: false
+        });
       })
       .catch( (err) => {
         console.log(err);
@@ -247,6 +256,15 @@ export class evaluaciones extends React.Component {
             })
         }
     }
+
+    showModal(evaluacion, index) {
+        this.setState({ showModal: true, evaluacionPorEliminar: evaluacion, eliminar_index: index });
+    }
+    
+    handleCancel() {
+        this.setState({ showModal: false, ramoPorEliminar: null });
+    }
+
     createFormRender(){
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
@@ -369,8 +387,14 @@ export class evaluaciones extends React.Component {
     
     
     render() {
-        return [(
-
+        return (
+            <main>
+            <DeleteModal
+                msg={this.deleteModalMsg}
+                show={this.state.showModal}
+                handleCancel={() => this.handleCancel()}
+                handleDelete={() => this.handleDelete()}
+            />
             <div>
                 <h4 className="titulo">Evaluaciones</h4>
                     <div class="generic-form border-0">  
@@ -407,7 +431,7 @@ export class evaluaciones extends React.Component {
                                 id_curso={evaluacion.curso}
                                 tipo={evaluacion.tipo}
                                 titulo={evaluacion.titulo}
-                                showModal={() => this.showModal(evaluacion)}
+                                showModal={() => this.showModal(evaluacion, _index)}
                                 handleDelete = {this.handleDelete}
                                 handleUpdate = {this.handleClickEditarEvaluacion}
                                 />
@@ -430,7 +454,8 @@ export class evaluaciones extends React.Component {
 
                     </div>
             </div>
-        )];
+            </main>
+        );
     }
 }
 
@@ -458,9 +483,9 @@ class EvaluacionItem extends React.Component {
             <th scope="col">{tipo}</th>
             <th scope="col">
                 <Link onClick={e => handleUpdate(i)}>
-                    <OptionButton icon={Gear} description="Modificar evaluacion" />
+                    <OptionButton icon={Pencil} description="Modificar evaluacion" />
                 </Link>
-                <OptionButton   icon={Trashcan} description="Eliminar evaluacion"  onClick={e => handleDelete(id, i)}    last={true}  />
+                <OptionButton   icon={Trashcan} description="Eliminar evaluacion"  onClick={() => this.props.showModal()}    last={true}  />
             </th>
             </tr>
         </thead>
