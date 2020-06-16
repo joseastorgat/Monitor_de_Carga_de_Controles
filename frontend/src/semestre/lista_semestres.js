@@ -2,11 +2,15 @@ import React from "react";
 import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
+import DeleteModal from "../common/DeleteModal";
 import OptionButton from "../common/OptionButton";
 import { Pencil, Trashcan, Calendar } from "@primer/octicons-react";
 import { LinkContainer } from "react-router-bootstrap";
+import axios from "axios";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-export default class lista_semestre extends React.Component {
+export class lista_semestre extends React.Component {
   constructor(props) {
     super(props);
     this.handle_search = this.handle_search.bind(this);
@@ -22,7 +26,10 @@ export default class lista_semestre extends React.Component {
     Recuerde que esto borrara todos los cursos y evaluaciones asociadas.`;
   }
 
-  
+  static propTypes = {
+    auth: PropTypes.object.isRequired,
+  };
+
   async fetchSemestres() {
     console.log("Fetching...")
     await fetch(`http://127.0.0.1:8000/api/semestres/`)
@@ -49,14 +56,28 @@ export default class lista_semestre extends React.Component {
     console.log(Semestres_buscados)
     this.setState({MostrarSemestres: Semestres_buscados});
   }
-
+  
   update_Search(e){
     this.setState({search: e.target.value});
+  }
+
+  showModal(semestre) {
+    this.setState({ showModal: true, semestrePorEliminar: semestre });
+  }
+
+  handleCancel() {
+    this.setState({ showModal: false, semestrePorEliminar: null });
   }
 
   render() {
       return (
         <main>
+        <DeleteModal
+          msg={this.deleteModalMsg}
+          show={this.state.showModal}
+          handleCancel={() => this.handleCancel()}
+          handleDelete={() => this.handleDelete()}
+        />
           <Container>
             <ViewTitle>Semestres</ViewTitle>
             <Row className="mb-3">
@@ -108,13 +129,13 @@ export default class lista_semestre extends React.Component {
       const año=this.props.año;
       const semestre= this.props.semestre;
       return (
-        <Link to={`semestres/${año}/${semestre}/`}>    
-
         <Alert variant="secondary">
             <Row>
+            <Link to={`semestres/${año}/${semestre}/`}>   
               <Col xs="auto">
                 {año} {semestre}
               </Col>
+              </Link>
               <Col className="text-center"></Col>
               <Col  xs="auto">
                   <OptionButton  icon={Calendar}  description="Visualizar semestre"  onClick={() => alert("No implementado")} />
@@ -123,11 +144,16 @@ export default class lista_semestre extends React.Component {
                     <OptionButton icon={Pencil} description="Modificar semestre" />
                   </Link>
 
-                  <OptionButton   icon={Trashcan} description="Eliminar semestre"  onClick={() => alert("No implementado")}    last={true}  />
+                  <OptionButton   icon={Trashcan} description="Eliminar semestre"  onClick={() => this.props.showModal()}    last={true}  />
               </Col>
             </Row>
             </Alert>
-            </Link>
+            
       );
     }
   }
+const mapStateToProps = (state) => ({
+  auth: state.auth
+}); 
+
+export default connect(mapStateToProps)(lista_semestre);
