@@ -263,7 +263,7 @@ export default class Calendar extends React.Component {
       this.weeks = this.weeks.map( (week) =>  {
           let week_format = [];
           for (let i=0; i<7; i++){
-            week_format.push(week.weekday(i).format("DD-MM"));
+            week_format.push(week.weekday(i).format("YYYY-MM-DD"));
           }
           return week_format;
         })
@@ -290,6 +290,13 @@ export default class Calendar extends React.Component {
         // console.log(ramo);
         courses.push({ ...coursesPre[course], checked:false, ramo_nombre:ramo.nombre, ramo_semestre:ramo.semestre_malla });
       }
+      courses.sort((a, b) => {
+        if (a.ramo_semestre< b.ramo_semestre)
+          return -1;
+        if (a.ramo_semestre > b.ramo_semestre)
+          return 1;
+        return 0;
+      })
       courses = courses.map(course => ({ ...course, checked: false }));
       var groups = [];
       
@@ -309,8 +316,27 @@ export default class Calendar extends React.Component {
       this.setState({ courses: courses, groups: groups, evaluaciones: evaluaciones});
     }
   }
+  
+  encontrar_mes(arreglo_semana){
+    let mes=0
+    mes=arreglo_semana[arreglo_semana.length-1].split("-")[1]
+    if (mes==="01") return "Enero"
+    else if (mes==="02") return "Febrero"
+    else if (mes==="03") return "Marzo"
+    else if (mes==="04") return "Abril"
+    else if (mes==="05") return "Mayo"
+    else if(mes==="06") return "Junio"
+    else if(mes==="07") return "Julio"
+    else if(mes==="08") return "Agosto"
+    else if(mes==="09") return "Septiembre"
+    else if(mes==="10") return "Octubre"
+    else if(mes==="11") return "Noviembre"
+    else return "Diciembre"
+  }
 
   render() {
+    console.log(this.state)
+    
     const { courses, groups } = this.state;
     console.log("rendering");
     if(!this.state.found){
@@ -338,31 +364,31 @@ export default class Calendar extends React.Component {
           <div className="calendar">
           <h4 style={{textAlign:'center'}}>Heatmap Semestre {this.state.año} {this.state.periodo===1 ? "Otoño": "Primavera"} </h4>
             <div className="week">
-              <div className="day-header"> Mes </div>
-              <div className="day-header"> Semana </div>
-              <div className="day-header"> Lun </div>
-              <div className="day-header"> Mar </div>
-              <div className="day-header"> Mie </div>
-              <div className="day-header"> Jue </div>
-              <div className="day-header"> Vie </div>
-              <div className="day-header"> Sab </div>
-              <div className="day-header"> Dom </div>
+              <div className="day-header"> <h5>Mes</h5> </div>
+              <div className="day-header"> <h5>Semana</h5> </div>
+              <div className="day-header"> <h5>Lun</h5> </div>
+              <div className="day-header"> <h5>Mar</h5> </div>
+              <div className="day-header"> <h5>Mie </h5></div>
+              <div className="day-header"> <h5>Jue</h5> </div>
+              <div className="day-header"> <h5>Vie</h5> </div>
+              <div className="day-header"> <h5>Sab </h5></div>
+              <div className="day-header"> <h5>Dom</h5> </div>
             </div>
 
             { this.weeks.map( (week, i) => (
               // <div> <h4> Semana {i}</h4>
               
               <div className="week" key={i}>
-              <div className="day-header"> {i+1} agosto</div>
+              <div className="day-header"> <h6>{ this.encontrar_mes(week)}</h6></div>
                 <div className="day-header">{i+1} </div>
       
                 {  week.map((day, di ) => {
                     
                     if(this.state.dias.indexOf(day)>-1){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "red"}}> {day  || "\u00a0" } </div> 
+                      return <div className="day" key={di} id={day} style={{backgroundColor: "red"}}> {day.split("-")[2] || "\u00a0" } {console.log(this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day))}</div> 
                     } 
                     else{
-                      return <div className="day" key={di} id={day}> {day  || "\u00a0" } </div> 
+                      return <div className="day" key={di} id={day}> {day.split("-")[2] || "\u00a0" } {console.log((this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day)))}</div> 
                     }
                 
                   })
