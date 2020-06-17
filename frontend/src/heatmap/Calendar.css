@@ -31,6 +31,8 @@
 }
 
 .calendar {
+  max-width: 700px;
+  min-width: 400px;
   min-height: 600px;
   max-height: 600px;
 }
@@ -137,6 +139,52 @@
 
 .examples {
   position: relative;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 } 
+
+
+.leyenda{
+  width: 13em;
+  border: 1px solid #dddddd;
+  border-radius: 15px;
+  text-align: center;
+}
+
+table.leyenda{
+  border-radius: 15px;
+}
+
+.cuadrado {
+  display: flex;
+  width:20vh;
+  max-width:20px;
+  height:20vh;
+  max-height:20px;
+  position:relative;
+  border: 1px solid #dddddd;
+}
+
+.espacio{
+  width:4vh;
+}
+
+/* .right {
+  padding-top: 10px;
+  padding-left: 10px;
+  margin-left: 10px;
+  position: relative;
+  float: left;
+  width: 45%;
+  height: auto;
+}
+
+.left {
+  padding-left: 10px;
+  padding-top: 10px;
+  margin-left: 57px;
+  float: left;
+  position: relative;
+  width: 45%;
+  height: auto;
+} */

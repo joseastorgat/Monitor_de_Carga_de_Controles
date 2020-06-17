@@ -346,12 +346,12 @@ export default class Calendar extends React.Component {
       );
 
     }
+    else{
     
     return (
       <Container>
-
-        <Row>
-          <Col lg={4}>
+        <Row >
+          <Col lg={3}>
             <Sidebar
               groups={groups}
               courses={courses}
@@ -360,35 +360,54 @@ export default class Calendar extends React.Component {
             />
           </Col>
 
-          <Col lg={8}>
+          <Col >
           <div className="calendar">
-          <h4 style={{textAlign:'center'}}>Heatmap Semestre {this.state.año} {this.state.periodo===1 ? "Otoño": "Primavera"} </h4>
-            <div className="week">
-              <div className="day-header"> <h5>Mes</h5> </div>
-              <div className="day-header"> <h5>Semana</h5> </div>
-              <div className="day-header"> <h5>Lun</h5> </div>
-              <div className="day-header"> <h5>Mar</h5> </div>
-              <div className="day-header"> <h5>Mie </h5></div>
-              <div className="day-header"> <h5>Jue</h5> </div>
-              <div className="day-header"> <h5>Vie</h5> </div>
-              <div className="day-header"> <h5>Sab </h5></div>
-              <div className="day-header"> <h5>Dom</h5> </div>
-            </div>
-
+          <Container >
+          <h4 style={{textAlign:'justify'}}>Heatmap Semestre {this.state.año} {this.state.periodo===1 ? "Otoño": "Primavera"} </h4>
+          <div style={{display:"flex"}}> 
+            <div>
+              <div className="week">
+                <div className="day-header"> <h6>Mes</h6> </div>
+                <div className="day-header"> <h6>Semana</h6> </div>
+                <div className="day-header"> <h6>Lunes</h6> </div>
+                <div className="day-header"> <h6>Martes</h6> </div>
+                <div className="day-header"> <h6>Miércoles </h6></div>
+                <div className="day-header"> <h6>Jueves</h6> </div>
+                <div className="day-header"> <h6>Viernes</h6> </div>
+                <div className="day-header"> <h6>Sábado </h6></div>
+                <div className="day-header"> <h6>Domingo</h6> </div>
+              </div>
+          
             { this.weeks.map( (week, i) => (
               // <div> <h4> Semana {i}</h4>
               
               <div className="week" key={i}>
               <div className="day-header"> <h6>{ this.encontrar_mes(week)}</h6></div>
-                <div className="day-header">{i+1} </div>
+                <div className="day-header">S{i+1} </div>
       
                 {  week.map((day, di ) => {
-                    
-                    if(this.state.dias.indexOf(day)>-1){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "red"}}> {day.split("-")[2] || "\u00a0" } {console.log(this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day))}</div> 
+                    const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day).length
+                    if(evaluaciones_del_dia==1){
+                      return <div className="day" key={di} id={day} style={{backgroundColor: "#FEFD71"}}> {day.split("-")[2] || "\u00a0" } </div> 
+                    }
+                    else if(evaluaciones_del_dia==2){
+                      return <div className="day" key={di} id={day} style={{backgroundColor: "#FDBC5F"}}> {day.split("-")[2] || "\u00a0" } </div> 
                     } 
+                    else if(evaluaciones_del_dia==3){
+                      return <div className="day" key={di} id={day} style={{backgroundColor: "#F9680A"}}> {day.split("-")[2] || "\u00a0" } </div> 
+                    } 
+                    else if(evaluaciones_del_dia==4){
+                      return <div className="day" key={di} id={day} style={{backgroundColor: "#FF0000"}}> {day.split("-")[2] || "\u00a0" } </div> 
+                    } 
+                    else if(evaluaciones_del_dia>4){
+                      return <div className="day" key={di} id={day} style={{backgroundColor: "#800000"}}> {day.split("-")[2] || "\u00a0" } </div> 
+                    } 
+
+                    /* else if (this.state.dias.indexOf(day)>1){
+                      return <div className="day" key={di} id={day} style={{backgroundColor: "green"}}> {day.split("-")[2] || "\u00a0" } {console.log(this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day))}</div> 
+                    }  */
                     else{
-                      return <div className="day" key={di} id={day}> {day.split("-")[2] || "\u00a0" } {console.log((this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day)))}</div> 
+                      return <div className="day" key={di} id={day}> {day.split("-")[2] || "\u00a0" } </div> 
                     }
                 
                   })
@@ -396,11 +415,41 @@ export default class Calendar extends React.Component {
               </div>
               ))
             } 
-          </div>            
+          </div>
+          <Col className="text-center"></Col>
+          <Col className="mb-2 " >
+             <table className="leyenda">
+              <tr style={{background:"#007BFF"}}>
+               <h3> Leyenda</h3>
+              </tr>
+              <tr style={{display:'flex'}}>
+               <span className="espacio" ></span> <span class="cuadrado" style={{background:"#FEFD71"}}></span>1 Evaluacion
+              </tr>
+              <tr style={{display:'flex'}}>
+                <span className="espacio"></span><div class="cuadrado" style={{background:"#FDBC5F"}}></div>2 Evaluaciones
+              </tr>
+              <tr style={{display:'flex'}}>
+                <span className="espacio"></span><div class="cuadrado" style={{background:"#F9680A"}}></div>3 Evaluaciones
+              </tr>
+              <tr style={{display:'flex'}}>
+                <span className="espacio"></span> <div class="cuadrado" style={{background:"#FF0000"}}></div>4 Evaluaciones
+              </tr>
+              <tr style={{display:'flex'}}>
+                <span className="espacio"></span> <div class="cuadrado" style={{background:"#800000"}}></div>Más de 4 Evaluaciones
+              </tr>
+            </table>
+  
+            </Col>
+          </div>  
+          </Container>
+          </div>  
+
           </Col>
+
         </Row>
       </Container>
     );
   }
+}
 }
 
