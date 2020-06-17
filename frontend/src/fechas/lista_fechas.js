@@ -36,13 +36,7 @@ export class lista_fechas extends React.Component {
     .then(response => response.json())
     .then(fechas =>
       this.setState({
-        fechas: fechas.sort((a, b) => {
-          if (a.inicio< b.inicio)
-            return -1;
-          if (a.inicio > b.inicio)
-            return 1;
-          return 0;
-        }),
+        fechas: fechas,
         MostrarFechas: fechas
       })
       )    
