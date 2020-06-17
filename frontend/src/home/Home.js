@@ -27,15 +27,15 @@ class Bloque_Calendario extends React.Component {
   render() {
     const { isAuthenticated} = this.props.auth;
     
-    const authLinks = (
-      <Link to="/administrar" style={{ color: '#FFF' }}>
-      <Button renderAs="button" className="rectangulo_azul" style={{ backgroundColor: "#0E71DE"}}>  
-        <span className="col-sm-1"></span>  Administrar
-          <span className="col-sm-1"></span>
-          <BsGearFill size="35" />
-      </Button> 
-      </Link>
-    );
+    // const authLinks = (
+    //   // <Link to="/administrar" style={{ color: '#FFF' }}>
+    //   // <Button renderAs="button" className="rectangulo_azul" style={{ backgroundColor: "#0E71DE"}}>  
+    //   //   <span className="col-sm-1"></span>  Administrar
+    //   //     <span className="col-sm-1"></span>
+    //   //     <BsGearFill size="35" />
+    //   // </Button> 
+    //   // </Link>
+    // );
 
     return (
     <main>
@@ -52,7 +52,7 @@ class Bloque_Calendario extends React.Component {
           <Link to="/calendar/2019/2/" >
             <button className="rectangulo_azul" >Ver Semestre Otoño 2020</button>
           </Link>
-          {isAuthenticated ? authLinks: '' }
+          {/* {isAuthenticated ? authLinks: '' } */}
         </div>
       </div>
      </Container>

@@ -167,3 +167,13 @@ footer {
     bottom:0;
     right:0;
 }
+
+.inactive {
+    color:white;
+    text-decoration: none;
+}
+
+.active {
+    color: yellow;
+    text-decoration: none;
+  }
