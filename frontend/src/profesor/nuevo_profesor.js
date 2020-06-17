@@ -85,7 +85,7 @@ create_profesor() {
 																					<label >Nombre</label>
 																			</div>
 																			<div class="col-sm-10" >
-																					<input type="text" className="form-control" name="nombre" onChange={this.onChange} style={{textAlignLast:'center'}} />
+																					<input required type="text" className="form-control" name="nombre" onChange={this.onChange} style={{textAlignLast:'center'}} />
 																			</div>
 																	</div>
 															</div>  
@@ -96,7 +96,7 @@ create_profesor() {
 																					<label >Apellido</label>
 																			</div>
 																			<div class="col-sm-10" >
-																			<input type="text" className="form-control" name="apellido" onChange={this.onChange} style={{textAlignLast:'center'}}  />
+																			<input required type="text" className="form-control" name="apellido" onChange={this.onChange} style={{textAlignLast:'center'}}  />
 																			</div>
 																	
 																	</div>

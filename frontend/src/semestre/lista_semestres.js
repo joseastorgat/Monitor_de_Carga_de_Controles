@@ -29,7 +29,13 @@ export default class lista_semestre extends React.Component {
     .then(response => response.json())
     .then(semestres =>
       this.setState({
-        semestres: semestres,
+        semestres: semestres.sort((a, b) => {
+          if (a.año < b.año)
+            return -1;
+          if (a.año> b.año)
+            return 1;
+          return 0;
+        }),
         MostrarSemestres: semestres
       })
       )    
