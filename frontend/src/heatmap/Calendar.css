@@ -1,14 +1,24 @@
 
 .week {
-
+  display: inline-flex;
+  width: 100%;
 }
 .day {
-  display: inline-block;
+  display:inline-block;
   width: 12%;
   height: 2em;
   padding: 2em 0;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   text-align: center;
+}
+.day-header {
+  display:inline-block;
+  width: 12%;
+  height: 2em;
+  padding: 2em 0;
+  border: 1px solid #ddd;
+  text-align: center;
+  background-color: #ccc;
 }
 
 .year-selection {

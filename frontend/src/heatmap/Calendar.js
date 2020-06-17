@@ -263,7 +263,7 @@ export default class Calendar extends React.Component {
       this.weeks = this.weeks.map( (week) =>  {
           let week_format = [];
           for (let i=0; i<7; i++){
-            week_format.push(week.weekday(i).format("YYYY-MM-DD"));
+            week_format.push(week.weekday(i).format("DD-MM"));
           }
           return week_format;
         })
@@ -334,28 +334,28 @@ export default class Calendar extends React.Component {
             />
           </Col>
 
-
           <Col lg={8}>
           <div className="calendar">
+          <h4 style={{textAlign:'center'}}>Heatmap Semestre {this.state.año} {this.state.periodo===1 ? "Otoño": "Primavera"} </h4>
             <div className="week">
-              <div className="day"> Sem </div>
-              <div className="day"> Lun </div>
-              <div className="day"> Mar </div>
-              <div className="day"> Mie </div>
-              <div className="day"> Jue </div>
-              <div className="day"> Vie </div>
-              <div className="day"> Sab </div>
-              <div className="day"> Dom </div>
-    
+              <div className="day-header"> Mes </div>
+              <div className="day-header"> Semana </div>
+              <div className="day-header"> Lun </div>
+              <div className="day-header"> Mar </div>
+              <div className="day-header"> Mie </div>
+              <div className="day-header"> Jue </div>
+              <div className="day-header"> Vie </div>
+              <div className="day-header"> Sab </div>
+              <div className="day-header"> Dom </div>
             </div>
-
 
             { this.weeks.map( (week, i) => (
               // <div> <h4> Semana {i}</h4>
               
               <div className="week" key={i}>
-                <div className="day"> {i+1} </div>
-                
+              <div className="day-header"> {i+1} agosto</div>
+                <div className="day-header">{i+1} </div>
+      
                 {  week.map((day, di ) => {
                     
                     if(this.state.dias.indexOf(day)>-1){
@@ -370,10 +370,7 @@ export default class Calendar extends React.Component {
               </div>
               ))
             } 
-            
-          </div>
-
-            
+          </div>            
           </Col>
         </Row>
       </Container>

@@ -3,7 +3,7 @@ import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   Inp
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import { Gear, Trashcan, Unfold } from "@primer/octicons-react";
+import { Pencil, Trashcan, Calendar } from "@primer/octicons-react";
 import { LinkContainer } from "react-router-bootstrap";
 
 export default class lista_semestre extends React.Component {
@@ -43,7 +43,7 @@ export default class lista_semestre extends React.Component {
     const busqueda= this.state.search;
     const Semestres= this.state.semestres;
     const Semestres_buscados= Semestres.filter(o=>
-      (o.año.toString()+" " + (o.periodo==1 ? ("Otoño") : ("Primavera"))).includes(busqueda)
+      (o.año.toString()+" " + (o.periodo===1 ? ("Otoño") : ("Primavera"))).includes(busqueda)
     );
     console.log("Buscados")
     console.log(Semestres_buscados)
@@ -107,8 +107,9 @@ export default class lista_semestre extends React.Component {
     render() {
       const año=this.props.año;
       const semestre= this.props.semestre;
+      const id_periodo=(semestre==="Otoño" ? 1 : 2)
       return (
-        <Link to={`semestres/${año}/${semestre}`}>    
+        <Link to={`semestres/${año}/${semestre}/`}>    
 
         <Alert variant="secondary">
             <Row>
@@ -117,10 +118,11 @@ export default class lista_semestre extends React.Component {
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">
-                  <OptionButton  icon={Unfold}  description="Visualizar semestre"  onClick={() => alert("No implementado")} />
-  
+                  <Link to={`/calendar/${año}/${id_periodo}/`} >
+                    <OptionButton  icon={Calendar}  description="Visualizar semestre" />
+                  </Link>
                   <Link to={`semestres/${año}/${semestre}/editar`} >
-                    <OptionButton icon={Gear} description="Modificar semestre" />
+                    <OptionButton icon={Pencil} description="Modificar semestre" />
                   </Link>
 
                   <OptionButton   icon={Trashcan} description="Eliminar semestre"  onClick={() => alert("No implementado")}    last={true}  />

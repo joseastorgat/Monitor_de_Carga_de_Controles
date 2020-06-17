@@ -28,8 +28,9 @@ div.row {
 }
 
 
-.rectangulo_azul{ 
-    background-color: #007BFF;
+.rectangulo_azul{
+    display: block;
+    background-color: #81B2E8;
     color: white;
     padding: 15px 32px;
     width: 20vw;
@@ -37,7 +38,28 @@ div.row {
     margin-bottom: 1rem;
     margin-top: 1rem;
     border-radius: 8px;
+    border-color: white;
 }
+
+.rectangulo_azul_admin{
+    display: block;
+    background-color: #0E71DE;
+    color: white;
+    padding: 15px 32px;
+    width: 20vw;
+    margin: auto;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    border-radius: 8px;
+    border-color: white;
+}
+
+.centrar_button{
+    justify-content: center;
+    margin:30px auto;
+    align-items: center; 
+}
+
 
 /* ========================== Header.js =============================== */
 .color-nav {
@@ -91,7 +113,7 @@ div.row {
 
 
 .titulo{ 
-    background-color: #cecece;
+    background-color: #858383;
     border: solid 1px #ddd;
     color: white;
     padding: 15px 32px;

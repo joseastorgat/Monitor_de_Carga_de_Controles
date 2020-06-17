@@ -3,7 +3,7 @@ import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   Inp
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import { Gear, Trashcan} from "@primer/octicons-react";
+import { Pencil, Trashcan} from "@primer/octicons-react";
 import { LinkContainer } from "react-router-bootstrap";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
@@ -42,7 +42,13 @@ export class lista_ramos extends React.Component {
     .then(response => response.json())
     .then(ramos =>
       this.setState({
-        ramos: ramos,
+        ramos: ramos.sort((a, b) => {
+          if (a.semestre_malla < b.semestre_malla)
+            return -1;
+          if (a.semestre_malla > b.semestre_malla)
+            return 1;
+          return 0;
+        }),
         MostrarRamos: ramos
       })
       )    
@@ -163,18 +169,20 @@ export class lista_ramos extends React.Component {
     render() {
       const nombre =this.props.nombre;
       const codigo = this.props.codigo;
+      const semestre = this.props.semestre;
       const id = this.props.id;
       return (
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
               <span style={{'font-weight': "500"}} >{codigo} </span>  {nombre}
+              <p>Semestre {semestre}</p>
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">
                  
                   <Link to={`/ramos/${id}/editar`}>
-                    <OptionButton icon={Gear} description="Modificar ramo" />
+                    <OptionButton icon={Pencil} description="Modificar ramo" />
                   </Link>
 
                   <OptionButton   icon={Trashcan} description="Eliminar ramo"  onClick={() => this.props.showModal()}    last={true}  />
