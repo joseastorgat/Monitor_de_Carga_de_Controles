@@ -91,7 +91,7 @@ export class ver_semestre extends React.Component {
   async fetchCursos() {
     const { ano, semestre } = this.props.match.params;
     const periodo= (semestre=="Otoño" ? "otoño" : "primavera")
-    await fetch(`http://127.0.0.1:8000/api/cursos/?semestre=${ano}&periodo=${periodo}`)
+    await fetch(`http://127.0.0.1:8000/api/cursos/detalle/?semestre=${ano}&periodo=${periodo}`)
     .then(response => response.json())
     .then(cursos =>
         this.setState({
@@ -147,9 +147,10 @@ export class ver_semestre extends React.Component {
             {this.state.MostrarCursos.map(curso => (
                 <CursoItem
                 key={curso.id}
-                nombre={curso.id}
+                nombre={curso.ramo.nombre}
                 seccion={curso.seccion}
-                codigo={curso.ramo}
+                codigo={curso.ramo.codigo}
+                semestre_malla={curso.ramo.semestre_malla}
                 />
             ))}  
 
