@@ -42,7 +42,13 @@ export class lista_ramos extends React.Component {
     .then(response => response.json())
     .then(ramos =>
       this.setState({
-        ramos: ramos,
+        ramos: ramos.sort((a, b) => {
+          if (a.semestre_malla < b.semestre_malla)
+            return -1;
+          if (a.semestre_malla > b.semestre_malla)
+            return 1;
+          return 0;
+        }),
         MostrarRamos: ramos
       })
       )    

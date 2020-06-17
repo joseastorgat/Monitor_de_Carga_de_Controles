@@ -82,7 +82,7 @@ export class nuevo_semestre extends React.Component {
                                             <label >Año</label>
                                         </div>
                                         <div class="col-sm-10" style={{textAlignLast:'center', textAlign:'center'}} >
-                                            <input type="number"  min="2019" max="2030" step="1" className="form-control" placeholder="2020" name="año_semestre" onChange={this.onChange}  />
+                                            <input type="number" required min="2019" max="2030" step="1" className="form-control" placeholder="2020" name="año_semestre" onChange={this.onChange}  />
                                         </div>
                                     </div>
                                 </div>  
@@ -94,7 +94,7 @@ export class nuevo_semestre extends React.Component {
                                         </div>
 
                                     <div  class="custom-control custom-radio custom-control-inline"  >
-                                        <input type="radio" id="otoño" name="periodo_semestre" value="1" onChange={this.onChange} class="custom-control-input" />
+                                        <input required type="radio" id="otoño" name="periodo_semestre" value="1" onChange={this.onChange} class="custom-control-input" />
                                         <label class="custom-control-label" htmlFor="otoño" >Otoño</label>
                                     </div>
                                     <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
@@ -113,7 +113,7 @@ export class nuevo_semestre extends React.Component {
                                         <label >Inicio</label>
                                         </div>
                                         <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                        <input type="date" className="form-control" name="inicio_semestre" onChange={this.onChange} />
+                                        <input required type="date" className="form-control" name="inicio_semestre" onChange={this.onChange} />
                                         </div>
                                     </div>
                                 </div>
@@ -123,7 +123,7 @@ export class nuevo_semestre extends React.Component {
                                             <label >Fin</label>
                                         </div>
                                         <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                            <input type="date" className="form-control" name="fin_semestre" onChange={this.onChange} />
+                                            <input required type="date" className="form-control" name="fin_semestre" onChange={this.onChange} />
                                         </div>
                                     </div>
                                 </div>
@@ -137,7 +137,7 @@ export class nuevo_semestre extends React.Component {
                                             <label >Estado</label>
                                         </div>
                                         <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                            <select className="form-control center" name="estado_semestre" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
+                                            <select required className="form-control center" name="estado_semestre" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
                                                 <option value="1" selected>Por comenzar</option>
                                                 <option value="2">En curso</option>
                                                 <option value="3">Finalizado</option>
