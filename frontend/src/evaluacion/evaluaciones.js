@@ -3,7 +3,7 @@ import {LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import {Gear, Trashcan} from "@primer/octicons-react";
-
+import {  Container} from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -370,7 +370,7 @@ export class evaluaciones extends React.Component {
     
     render() {
         return [(
-
+            <Container>
             <div>
                 <h4 className="titulo">Evaluaciones</h4>
                     <div class="generic-form border-0">  
@@ -423,13 +423,14 @@ export class evaluaciones extends React.Component {
                     
                     {this.state.editar_index >= 0 ? this.updateFormRender() : this.createFormRender()}
                     
-                    <div class="form-group" style={{'marginTop':"4rem"}}>
-                            <LinkContainer  activeClassName=""  to="../../" className="float-left" style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                                <button className="btn btn-primary">Volver</button>
+                    <Container style={{marginBottom:"8vw",marginTop:"2vw"}}>
+                            <LinkContainer  activeClassName=""  to="../../" className="float-left" >
+                                <button className="btn btn-primary">Volver a Cursos</button>
                             </LinkContainer>
 
-                    </div>
+                   </Container>
             </div>
+            </Container>
         )];
     }
 }

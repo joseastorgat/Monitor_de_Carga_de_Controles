@@ -15,6 +15,8 @@ import {evaluaciones} from "../evaluacion/index_evaluacion";
 import {nuevo_profesor, editar_profesor, lista_profesores} from "../profesor/index_profesor";
 import Calendar from "../heatmap/Calendar";
 import { Button } from "react-bootstrap";
+import FooterPage from "./Footer";
+import {  Container } from "react-bootstrap";
 
 class Bloque_Calendario extends React.Component {
   
@@ -36,12 +38,14 @@ class Bloque_Calendario extends React.Component {
     );
 
     return (
+    <main>
+      <Container >
       <div>
-        <div className="centrar" style={{marginTop: '-6px'}}>
+        <div className="centrar">
             <h2 className="titulo">Monitor de Carga de Controles</h2>
             <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido, el semestre actual es ...</p>
         </div>
-        <div className="centrar" >
+        <div className="centrar">
           <Link to="/calendar/2019/1/" >
             <button className="rectangulo_azul" >Ver Semestre Otoño 2020</button>
           </Link>
@@ -51,6 +55,8 @@ class Bloque_Calendario extends React.Component {
           {isAuthenticated ? authLinks: '' }
         </div>
       </div>
+     </Container>
+     </main>
     );
   }
 }
@@ -105,6 +111,7 @@ export default class Home extends React.Component {
 
         </Switch>
       </div>
+      <FooterPage ></FooterPage>
       </div>
     );
   }

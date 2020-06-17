@@ -71,7 +71,7 @@ class Header extends React.Component {
       <LogedOutView />
     );
     return (
-      <Navbar className="color-nav" variant="dark">
+      <Navbar className="navbar sticky-top color-nav" variant="dark">
         <LinkContainer to="/">
           <Navbar.Brand className="mr-auto"><h4 style={{color:'White'}}>U-Calendar</h4></Navbar.Brand>
         </LinkContainer>    
