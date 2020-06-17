@@ -28,7 +28,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
     def cursos(self, request, pk=None):
         # print(request.query_params)
         cursos = Curso.objects.filter(semestre=pk)
-        serializer = CursoSerializer(cursos, many=True)
+        serializer = CursoDetailSerializer(cursos, many=True)
         return Response(serializer.data)
 
     def get_queryset(self):

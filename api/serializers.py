@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Semestre, Ramo, Curso, Profesor, Calendario,\
-                    Fechas_especiales, Evaluacion
+    Fechas_especiales, Evaluacion
 
 
 class SemestreSerializer(serializers.ModelSerializer):
@@ -21,17 +21,27 @@ class CursoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CursoDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Curso
-        fields = '__all__'
-        depth = 1
-
-
 class ProfesorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profesor
         fields = '__all__'
+
+
+class CursoDetailSerializer(serializers.ModelSerializer):
+    nombre = serializers.SerializerMethodField(read_only=True)
+    semestre_malla = serializers.SerializerMethodField(read_only=True)
+    profesor = serializers.SlugRelatedField(queryset=Profesor.objects.all(),
+                                            slug_field='nombre', many=True)
+
+    def get_semestre_malla(self, obj):
+        return obj.ramo.semestre_malla
+
+    def get_nombre(self, obj):
+        return obj.ramo.nombre
+
+    class Meta:
+        model = Curso
+        fields = ['id', 'ramo', 'nombre', 'semestre_malla', 'profesor', ]
 
 
 class CalendarioSerializer(serializers.ModelSerializer):
