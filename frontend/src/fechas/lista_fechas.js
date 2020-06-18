@@ -57,7 +57,7 @@ export class lista_fechas extends React.Component {
     const busqueda= this.state.search;
     const fechas= this.state.fechas;
     const fechas_buscados= fechas.filter(o=>
-      (o.nombre.toString()+" " + o.tipo.toString() ).includes(busqueda)
+      (o.nombre.toString()+" " + o.tipo.toString() + " "+ o.inicio.toString()+ " "+ o.fin.toString() ).includes(busqueda)
     );
     console.log("Buscados")
     console.log(fechas_buscados)
@@ -149,10 +149,7 @@ export class lista_fechas extends React.Component {
           ))}
 
           </Container>
-          
-          <LinkContainer  activeClassName=""  to="/administrar" >
-            <button className="btn btn-secondary" >Volver a Administrar</button>
-          </LinkContainer>
+      
           </Container>
         </main>
       );

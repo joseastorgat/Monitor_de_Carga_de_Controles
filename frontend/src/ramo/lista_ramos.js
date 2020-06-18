@@ -63,7 +63,7 @@ export class lista_ramos extends React.Component {
     const busqueda= this.state.search;
     const ramos= this.state.ramos;
     const ramos_buscados= ramos.filter(o=>
-      (o.nombre.toString()+" " + o.codigo.toString() ).includes(busqueda)
+      (o.nombre.toString()+" " + o.codigo.toString()+" "+ "Semestre "+o.semestre_malla.toString() ).includes(busqueda)
     );
     console.log("Buscados")
     console.log(ramos_buscados)
@@ -155,10 +155,6 @@ export class lista_ramos extends React.Component {
           ))}
 
           </Container>
-          
-          <LinkContainer  activeClassName=""  to="/administrar" >
-            <button className="btn btn-secondary" >Volver a Administrar</button>
-          </LinkContainer>
           </Container>
         </main>
       );
