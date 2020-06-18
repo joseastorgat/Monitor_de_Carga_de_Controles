@@ -113,13 +113,14 @@ create_profesor() {
 															</div>
 													</div>                    
 											</div>
+											<div class="row"> </div>
+                        <div class="row">
+                        <div class="col-md-6" > </div>
+											<Button variant="success" center  type="submit">          Agregar </Button> </div>
 									</form>
 					</div>
 		</Modal.Body>
         <Modal.Footer>
-		<Button variant="success" center onClick={this.handleSubmit}>
-            Agregar
-          </Button>
           <Button variant="secondary" onClick={() => handleCancel()}>
             Cancelar
           </Button>
