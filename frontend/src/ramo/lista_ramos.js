@@ -9,7 +9,7 @@ import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import PopUp_add from "./nuevo_ramo"
+import Nuevo_ramo from "./nuevo_ramo"
 
 export class lista_ramos extends React.Component {
   constructor(props) {
@@ -18,7 +18,8 @@ export class lista_ramos extends React.Component {
     this.state = {
       ramos: [],
       showModal: false,
-      showModalAdd:false,
+      showModalAdd:false, 
+      sacar_pop_up:null,
       ramoPorEliminar: null,
       MostrarRamos: [],
       search: ""
@@ -29,13 +30,6 @@ export class lista_ramos extends React.Component {
   
   static propTypes = {
     auth: PropTypes.object.isRequired,
-  };
-
-  state = {
-    nombre_ramo: "",
-    codigo_ramo: "",
-    semestre_malla: "-1",
-    ramo_created: false,
   };
 
   async fetchRamos() {
@@ -128,7 +122,7 @@ export class lista_ramos extends React.Component {
     return (
       <main>
        <Container>
-       <PopUp_add
+       <Nuevo_ramo
           show_form={this.state.showModalAdd} 
           handleCancel={() => this.handleCancelAdd()}
           handleAdd={() => this.handleAdd()}

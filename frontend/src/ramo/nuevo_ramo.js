@@ -1,6 +1,6 @@
 import React from "react";
 import {LinkContainer } from "react-router-bootstrap";
-import {   Alert,Button, Modal,  Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
+import {   Button, Modal } from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -137,7 +137,7 @@ import { Redirect } from 'react-router-dom';
 //     } 
 // }
 
-export class PopUp_add extends React.Component {
+export class Nuevo_ramo extends React.Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
   };
@@ -261,12 +261,12 @@ export class PopUp_add extends React.Component {
           </form>
   </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => handleCancel()}>
-            Cancelar
-          </Button>
+        <Modal.Footer centered>
           <Button variant="success" onClick={this.handleSubmit}>
             Agregar
+          </Button>
+          <Button variant="secondary" onClick={() => handleCancel()}>
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>
@@ -278,5 +278,5 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(PopUp_add);
+export default connect(mapStateToProps)(Nuevo_ramo);
 
