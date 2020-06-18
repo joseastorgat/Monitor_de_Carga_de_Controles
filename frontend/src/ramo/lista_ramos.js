@@ -1,5 +1,5 @@
 import React from "react";
-import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
+import {   Alert,Button, Modal,  Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
@@ -9,6 +9,7 @@ import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import PopUp_add from "./nuevo_ramo"
 
 export class lista_ramos extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ export class lista_ramos extends React.Component {
     this.state = {
       ramos: [],
       showModal: false,
+      showModalAdd:false,
       ramoPorEliminar: null,
       MostrarRamos: [],
       search: ""
@@ -103,6 +105,9 @@ export class lista_ramos extends React.Component {
         });
       });
   }
+  showModalAdd() {
+    this.setState({ showModalAdd: true});
+  }
 
   showModal(ramo) {
     this.setState({ showModal: true, ramoPorEliminar: ramo });
@@ -111,11 +116,24 @@ export class lista_ramos extends React.Component {
   handleCancel() {
     this.setState({ showModal: false, ramoPorEliminar: null });
   }
+  handleCancelAdd(){
+    this.setState({ showModalAdd: false});
+  }
+  handleAdd(){
+    this.setState({ showModalAdd: false});
+    this.fetchRamos();
+  }
 
   render() {
     return (
       <main>
        <Container>
+       <PopUp_add
+          show_form={this.state.showModalAdd} 
+          handleCancel={() => this.handleCancelAdd()}
+          handleAdd={() => this.handleAdd()}
+        />
+
       <DeleteModal
           msg={this.deleteModalMsg}
           show={this.state.showModal}
@@ -138,9 +156,9 @@ export class lista_ramos extends React.Component {
 
               </Col>
               <Col xs="auto">
-                <Link to="/ramos/nuevo_ramo">
-                  <Button className="btn btn-primary">Nuevo Ramo</Button>
-                </Link>
+                {/* <Link to="/ramos/nuevo_ramo"> */}
+                  <Button className="btn btn-primary" onClick={() => this.showModalAdd()}>Nuevo Ramo</Button>
+                {/* </Link> */}
               </Col>
             </Row>
             {this.state.MostrarRamos.map(ramo => (
