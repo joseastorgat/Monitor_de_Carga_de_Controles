@@ -81,7 +81,7 @@ export class nuevo_ramo extends React.Component {
                                   <label >Ramo</label>
                               </div>
                               <div class="col-sm-9" >
-                                  <input type="text" className="form-control" name="nombre_ramo" onChange={this.onChange} placeholder="Ingrese Nombre Ramo" style={{textAlignLast:'center'}} />
+                                  <input required type="text" className="form-control" name="nombre_ramo" onChange={this.onChange} placeholder="Ingrese Nombre Ramo" style={{textAlignLast:'center'}} />
                               </div>
                           </div>
                       </div>  
@@ -92,7 +92,7 @@ export class nuevo_ramo extends React.Component {
                                   <label >Código</label>
                               </div>
                               <div class="col-sm-9" >
-                              <input type="text" className="form-control" name="codigo_ramo" onChange={this.onChange} placeholder="Ingrese Código CCXXXX" style={{textAlignLast:'center'}}  />
+                              <input required type="text" className="form-control" name="codigo_ramo" onChange={this.onChange} placeholder="Ingrese Código CCXXXX" style={{textAlignLast:'center'}}  />
                               </div>                          
                           </div>
                       </div>
@@ -124,11 +124,11 @@ export class nuevo_ramo extends React.Component {
 
               <div class="form-group" style={{'marginTop':"4rem"}}>
               <LinkContainer  activeClassName=""  to="/ramos" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                  <button className="btn btn-primary" type="button">Volver a Ramos</button>
+                  <button className="btn btn-secondary" type="button">Volver a Ramos</button>
               </LinkContainer>
 
               {/* <LinkContainer activeClassName=""  to="/ramos" style={{'marginRight':"14vw"}}> */}
-                  <button className="btn btn-primary" type="submit">Guardar Ramo</button>
+                  <button className="btn btn-success" type="submit">Guardar Ramo</button>
               {/* </LinkContainer> */}
               </div>
           </form>

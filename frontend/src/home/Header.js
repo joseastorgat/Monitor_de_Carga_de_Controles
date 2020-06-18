@@ -1,6 +1,6 @@
 import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import {NavLink, Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { logout } from "../actions/auth"
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -10,12 +10,34 @@ class LogedInView extends React.Component {
     const { user, logout } = this.props;
     // console.log({user});
     return (
-      <NavDropdown
+      <Nav>
+        <NavLink className="inactive" activeClassName="active">
+          <LinkContainer to="/semestres">
+            <h5 style={{color:"white"}}>Semestres</h5>
+          </LinkContainer>
+        </NavLink>
+        <NavLink  className="inactive" activeClassName="active">
+          <LinkContainer to="/ramos">
+            <h5>Ramos</h5>
+          </LinkContainer>
+        </NavLink>
+        <NavLink  className="inactive" activeClassName="active">
+          <LinkContainer to="/fechas_especiales">
+            <h5>Fechas especiales</h5>
+          </LinkContainer>
+        </NavLink>
+        <NavLink  className="inactive" activeClassName="active">
+          <LinkContainer to="/profesores">
+            <h5>Profesores</h5>
+          </LinkContainer>
+        </NavLink>
+      
+     <NavDropdown
         alignRight
         title={user ? `Bienvenido ${user.username}` : ''}
         id="navbar-dropdown"
       >
-        <NavDropdown.Header>Ir a administrar</NavDropdown.Header>
+        {/* <NavDropdown.Header>Ir a administrar</NavDropdown.Header>
         
         <LinkContainer to="/semestres">
           <NavDropdown.Item>Semestres</NavDropdown.Item>
@@ -29,13 +51,14 @@ class LogedInView extends React.Component {
         <LinkContainer to="/profesores">
           <NavDropdown.Item>Profesores</NavDropdown.Item>
         </LinkContainer>
-        <NavDropdown.Divider />
+        <NavDropdown.Divider /> */}
 
         <LinkContainer to="/" activeClassName="" >
           <NavDropdown.Item onClick={logout}>  Cerrar Sesión  </NavDropdown.Item>
         </LinkContainer>
 
-      </NavDropdown>
+      </NavDropdown> 
+      </Nav>
     );
   }
 }
@@ -71,7 +94,7 @@ class Header extends React.Component {
       <LogedOutView />
     );
     return (
-      <Navbar className="color-nav" variant="dark">
+      <Navbar className="navbar sticky-top color-nav" variant="dark">
         <LinkContainer to="/">
           <Navbar.Brand className="mr-auto"><h4 style={{color:'White'}}>U-Calendar</h4></Navbar.Brand>
         </LinkContainer>    

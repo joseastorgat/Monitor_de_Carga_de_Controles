@@ -134,11 +134,26 @@ export class nuevo_curso extends React.Component {
 	}
 
     render() {
+        const { ano, semestre } = this.props.match.params;
+        console.log(ano)
         return (
             <div>
                 <h4 className="titulo">Agregar nuevo curso</h4>
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
+                            <div class="row">
+                            <div class="col-sm-1"></div>
+                                <div class="col-sm-6" >
+                                    <div class="row">
+                                        <div class="col-sm-2" >
+                                            <label >Semestre</label>
+                                        </div>
+                                        <div class="col-sm-8" >
+                                        <input className="form-control" style={{textAlignLast:'center'}}  placeholder={ano+ "-"+ semestre} type="text" readOnly="readonly"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-sm-1"></div>
                                 <div class="col-sm-6" >
@@ -222,11 +237,11 @@ export class nuevo_curso extends React.Component {
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
                         <LinkContainer  activeClassName=""  to={this.paths} className="float-left " style={{'marginLeft':"10vw"}}>
-                            <button className="btn btn-primary" >Volver a Semestre</button>
+                            <button className="btn btn-secondary" >Volver a Semestre</button>
                         </LinkContainer>
 
                         {/* <LinkContainer activeClassName=""  to={this.paths} style={{'marginRight':"14vw"}}> */}
-                            <button className="btn btn-primary" type="submit">Guardar Curso</button>
+                            <button className="btn btn-success" type="submit">Guardar Curso</button>
                         {/* </LinkContainer> */}
                         </div>
                     </form>
