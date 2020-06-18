@@ -9,6 +9,7 @@ import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import Nueva_fecha from "./nueva_fecha"
 
 export class lista_fechas extends React.Component {
   constructor(props) {
@@ -97,6 +98,10 @@ export class lista_fechas extends React.Component {
       });
   }
 
+  showModalAdd() {
+    this.setState({ showModalAdd: true});
+  }
+
   showModal(fecha) {
     this.setState({ showModal: true, fechaPorEliminar: fecha });
   }
@@ -104,11 +109,23 @@ export class lista_fechas extends React.Component {
   handleCancel() {
     this.setState({ showModal: false, fechaPorEliminar: null });
   }
+  handleCancelAdd(){
+    this.setState({ showModalAdd: false});
+  }
+  handleAdd(){
+    this.setState({ showModalAdd: false});
+    this.fetchFechas();
+  }
 
   render() {
     return (
       <main>
       <Container>
+      <Nueva_fecha
+          show_form={this.state.showModalAdd} 
+          handleCancel={() => this.handleCancelAdd()}
+          handleAdd={() => this.handleAdd()}
+        />
       <DeleteModal
           msg={this.deleteModalMsg}
           show={this.state.showModal}
@@ -131,9 +148,9 @@ export class lista_fechas extends React.Component {
 
               </Col>
               <Col xs="auto">
-                <Link to="/fechas_especiales/nueva_fecha">
-                  <Button className="btn btn-primary">Nueva Fecha</Button>
-                </Link>
+                {/* <Link to="/fechas_especiales/nueva_fecha"> */}
+                  <Button className="btn btn-primary" onClick={() => this.showModalAdd()}>Nueva Fecha</Button>
+                {/* </Link> */}
               </Col>
             </Row>
             {this.state.MostrarFechas.map(fecha => (

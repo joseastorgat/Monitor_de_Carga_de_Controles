@@ -4,6 +4,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
+import { Button, Modal } from "react-bootstrap";
 
 export class nueva_fecha extends React.Component {
 
@@ -55,23 +56,31 @@ export class nueva_fecha extends React.Component {
             console.log(res);
             console.log("create fecha");
             this.setState({"fecha_created": true});
+            this.setState({"nombre_fecha": ""});
+            this.state.sacar_pop_up()
           })
           .catch( (err) => {
             console.log(err);
             console.log("cant create fecha");
             alert("No se pudo crear fecha!");
+            this.state.sacar_pop_up()
           });
       }
 
     render() {
-        if (this.state.fecha_created) {
-            return <Redirect to="/fechas_especiales/" />;
-        }
+        const { show_form, handleCancel, handleAdd} = this.props;
+        this.state.sacar_pop_up=handleAdd;
         return (
+            <Modal size="xl" centered show={show_form} onHide={() => handleCancel()}>
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Agregar nueva fecha
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
             <div>
-                <h4 className="titulo">Agregar nueva fecha</h4>
-                    <form className="" name="form" onSubmit={this.handleSubmit} >
-                        <div class="generic-form">
+                <form id="form_fecha" onSubmit={this.handleSubmit} >
+                        <div>
                             <div className="row">
                                 <div className="col-sm-1"></div>
                                 <div className="col-sm-5" >
@@ -129,21 +138,23 @@ export class nueva_fecha extends React.Component {
                                     </div>
                                 </div>
                             </div>
-
-                            
-                    
                         </div>
-                        <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to="/fechas_especiales" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                            <button className="btn btn-secondary" >Volver a Fechas</button>
-                        </LinkContainer>
-
-                        {/* <LinkContainer activeClassName=""  to="/fechas_especiales" style={{'marginRight':"14vw"}}> */}
-                            <button className="btn btn-success" type="submit">Guardar Fecha</button>
-                        {/* </LinkContainer> */}
+                        <div class="row"> </div>
+                        <div class="row">
+                        <div class="col-md-6" > </div>
+                        <Button variant="success" style={{alignItems: 'center', justifyContent: 'center'}} center type="submit">    Agregar        </Button>
                         </div>
                     </form>
             </div>
+            </Modal.Body>
+        <Modal.Footer>
+        
+          <Button variant="secondary" onClick={() => handleCancel()}>
+            Cancelar
+          </Button>
+
+        </Modal.Footer>
+      </Modal>
         );
       } 
 }
