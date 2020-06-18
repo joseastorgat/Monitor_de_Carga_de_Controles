@@ -97,9 +97,6 @@ export default class lista_semestre extends React.Component {
 
           </Container>
 
-          <LinkContainer  activeClassName=""  to="/administrar" >
-            <button className="btn btn-primary" >Volver a Administrar</button>
-          </LinkContainer>
           </Container>
         </main>
       );

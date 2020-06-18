@@ -1,5 +1,5 @@
 import React from "react";
-import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
+import {   Alert,Button, Modal,  Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
@@ -9,6 +9,7 @@ import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import Nuevo_ramo from "./nuevo_ramo"
 
 export class lista_ramos extends React.Component {
   constructor(props) {
@@ -17,6 +18,8 @@ export class lista_ramos extends React.Component {
     this.state = {
       ramos: [],
       showModal: false,
+      showModalAdd:false, 
+      sacar_pop_up:null,
       ramoPorEliminar: null,
       MostrarRamos: [],
       search: ""
@@ -27,13 +30,6 @@ export class lista_ramos extends React.Component {
   
   static propTypes = {
     auth: PropTypes.object.isRequired,
-  };
-
-  state = {
-    nombre_ramo: "",
-    codigo_ramo: "",
-    semestre_malla: "-1",
-    ramo_created: false,
   };
 
   async fetchRamos() {
@@ -63,7 +59,7 @@ export class lista_ramos extends React.Component {
     const busqueda= this.state.search;
     const ramos= this.state.ramos;
     const ramos_buscados= ramos.filter(o=>
-      (o.nombre.toString()+" " + o.codigo.toString() ).includes(busqueda)
+      (o.nombre.toString()+" " + o.codigo.toString()+" "+ "Semestre "+o.semestre_malla.toString() ).includes(busqueda)
     );
     console.log("Buscados")
     console.log(ramos_buscados)
@@ -103,6 +99,9 @@ export class lista_ramos extends React.Component {
         });
       });
   }
+  showModalAdd() {
+    this.setState({ showModalAdd: true});
+  }
 
   showModal(ramo) {
     this.setState({ showModal: true, ramoPorEliminar: ramo });
@@ -111,11 +110,24 @@ export class lista_ramos extends React.Component {
   handleCancel() {
     this.setState({ showModal: false, ramoPorEliminar: null });
   }
+  handleCancelAdd(){
+    this.setState({ showModalAdd: false});
+  }
+  handleAdd(){
+    this.setState({ showModalAdd: false});
+    this.fetchRamos();
+  }
 
   render() {
     return (
       <main>
        <Container>
+       <Nuevo_ramo
+          show_form={this.state.showModalAdd} 
+          handleCancel={() => this.handleCancelAdd()}
+          handleAdd={() => this.handleAdd()}
+        />
+
       <DeleteModal
           msg={this.deleteModalMsg}
           show={this.state.showModal}
@@ -138,9 +150,9 @@ export class lista_ramos extends React.Component {
 
               </Col>
               <Col xs="auto">
-                <Link to="/ramos/nuevo_ramo">
-                  <Button className="btn btn-primary">Nuevo Ramo</Button>
-                </Link>
+                {/* <Link to="/ramos/nuevo_ramo"> */}
+                  <Button className="btn btn-primary" onClick={() => this.showModalAdd()}>Nuevo Ramo</Button>
+                {/* </Link> */}
               </Col>
             </Row>
             {this.state.MostrarRamos.map(ramo => (
@@ -155,10 +167,6 @@ export class lista_ramos extends React.Component {
           ))}
 
           </Container>
-          
-          <LinkContainer  activeClassName=""  to="/administrar" >
-            <button className="btn btn-secondary" >Volver a Administrar</button>
-          </LinkContainer>
           </Container>
         </main>
       );

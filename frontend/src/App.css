@@ -177,3 +177,15 @@ footer {
     color: yellow;
     text-decoration: none;
   }
+
+.modal-add-ramo{
+    max-height: 800px;
+    width: 800px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+.custom-modal-style {
+    width: 1597px;
+    height: 802px;
+    }

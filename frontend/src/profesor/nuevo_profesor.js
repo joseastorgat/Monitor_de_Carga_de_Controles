@@ -4,6 +4,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
+import { Button, Modal } from "react-bootstrap";
 
 export class nuevo_profesor extends React.Component {
 	constructor(props) {
@@ -61,22 +62,31 @@ create_profesor() {
 				console.log(res);
 				console.log("create profesor");
 				this.setState({"profesor_created": true});
-				window.location.href="/profesores"
+				this.state.sacar_pop_up()
 			})
 			.catch( (err) => {
 				console.log(err);
 				console.log("cant create profesor");
 				alert("No se pudo crear profesor!");
+				this.state.sacar_pop_up()
 			});
 	}
 
 	render() {
-			const id= this.props.match.params.id
-			return (
+		const { show_form, handleCancel, handleAdd} = this.props;
+		this.state.sacar_pop_up=handleAdd;
+		// const id= this.props.match.params.id
+		return (
+			<Modal size="xl" centered show={show_form} onHide={() => handleCancel()}>
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Agregar nuevo profesor
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
 					<div>
-							<h4 className="titulo">Agregar Profesor</h4>
-									<form className="" name="form" onSubmit={this.handleSubmit}>
-											<div class="generic-form">
+						<form  onSubmit={this.handleSubmit}>
+											<div >
 													<div class="row">
 															<div class="col-sm-1"></div>
 															<div class="col-sm-5" >
@@ -103,16 +113,20 @@ create_profesor() {
 															</div>
 													</div>                    
 											</div>
-											<div class="form-group" style={{'marginTop':"4rem"}}>
-											<LinkContainer  activeClassName=""  to="/profesores" className="float-left btn btn-secondary" style={{'marginLeft':"10vw"}}>
-													<button >Volver a Profesores</button>
-											</LinkContainer>
-
-												<button className="btn btn-success" type="submit">Guardar Profesor</button>
-
-											</div>
+											<div class="row"> </div>
+                        <div class="row">
+                        <div class="col-md-6" > </div>
+											<Button variant="success" center  type="submit">          Agregar </Button> </div>
 									</form>
 					</div>
+		</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => handleCancel()}>
+            Cancelar
+          </Button>
+
+        </Modal.Footer>
+      </Modal>
 			);
 		} 
 }

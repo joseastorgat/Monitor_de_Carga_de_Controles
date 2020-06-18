@@ -9,6 +9,7 @@ import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import Nuevo_profesor from "./nuevo_profesor"
 
 export class lista_profesores extends React.Component {
   constructor(props) {
@@ -63,13 +64,22 @@ export class lista_profesores extends React.Component {
   update_Search(e){
     this.setState({search: e.target.value});
   }
-
+  showModalAdd() {
+    this.setState({ showModalAdd: true});
+  }
   showModal(profesor) {
     this.setState({ showModal: true, profesorPorEliminar: profesor });
   }
 
   handleCancel() {
     this.setState({ showModal: false, ramoPorEliminar: null });
+  }
+  handleCancelAdd(){
+    this.setState({ showModalAdd: false});
+  }
+  handleAdd(){
+    this.setState({ showModalAdd: false});
+    this.fetchProfesores();
   }
 
   async handleDelete() {
@@ -107,6 +117,11 @@ export class lista_profesores extends React.Component {
       return (
         <main>
         <Container>
+        <Nuevo_profesor
+          show_form={this.state.showModalAdd} 
+          handleCancel={() => this.handleCancelAdd()}
+          handleAdd={() => this.handleAdd()}
+        />
           <DeleteModal
             msg={this.deleteModalMsg}
             show={this.state.showModal}
@@ -129,9 +144,9 @@ export class lista_profesores extends React.Component {
 
               </Col>
               <Col xs="auto">
-                <Link to="/profesores/nuevo_profesor">
-                  <Button className="btn btn-primary">Nuevo Profesor</Button>
-                </Link>
+                {/* <Link to="/profesores/nuevo_profesor"> */}
+                  <Button className="btn btn-primary"  onClick={() => this.showModalAdd()}>Nuevo Profesor</Button>
+                {/* </Link> */}
               </Col>
             </Row>
               {this.state.MostrarProfesores.map(profesor => (
@@ -143,10 +158,6 @@ export class lista_profesores extends React.Component {
                   />
               ))}
           </Container>
-          
-          <LinkContainer  activeClassName=""  to="/administrar" >
-                            <button className="btn btn-secondary"> Volver a Administrar</button>
-          </LinkContainer>
           </Container>
         </main>
       );
