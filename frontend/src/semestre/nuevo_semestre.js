@@ -170,11 +170,11 @@ export class nuevo_semestre extends React.Component {
 
                         <div class="form-group" style={{'marginTop':"4rem"}}>
                         <LinkContainer  activeClassName=""  to="/semestres" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                            <button className="btn btn-primary" >Volver a Semestres</button>
+                            <button className="btn btn-secondary" >Volver a Semestres</button>
                         </LinkContainer>
 
                         {/* <LinkContainer activeClassName=""  to="/semestres" style={{'marginRight':"14vw"}}> */}
-                            <button className="btn btn-primary" type="submit">Guardar Semestre</button>
+                            <button className="btn btn-success" type="submit">Guardar Semestre</button>
                         {/* </LinkContainer> */}
                         </div>
                     </form>

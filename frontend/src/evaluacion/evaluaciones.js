@@ -297,7 +297,7 @@ export class evaluaciones extends React.Component {
                     <div class="row">
                         <div class="col-sm-2"></div>
  
-                        <button type="submit" className="float-left btn btn-primary col-sm-1">Guardar</button>
+                        <button type="submit" className="float-left btn btn-success col-sm-1">Guardar</button>
                         <div class="col-sm-5"></div>
                         <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
                     </div>
@@ -425,7 +425,7 @@ export class evaluaciones extends React.Component {
                     
                     <Container style={{marginBottom:"8vw",marginTop:"2vw"}}>
                             <LinkContainer  activeClassName=""  to="../../" className="float-left" >
-                                <button className="btn btn-primary">Volver a Cursos</button>
+                                <button className="btn btn-secondary">Volver a Cursos</button>
                             </LinkContainer>
 
                    </Container>

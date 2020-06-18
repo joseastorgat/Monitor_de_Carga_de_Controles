@@ -124,11 +124,11 @@ export class nuevo_ramo extends React.Component {
 
               <div class="form-group" style={{'marginTop':"4rem"}}>
               <LinkContainer  activeClassName=""  to="/ramos" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                  <button className="btn btn-primary" type="button">Volver a Ramos</button>
+                  <button className="btn btn-secondary" type="button">Volver a Ramos</button>
               </LinkContainer>
 
               {/* <LinkContainer activeClassName=""  to="/ramos" style={{'marginRight':"14vw"}}> */}
-                  <button className="btn btn-primary" type="submit">Guardar Ramo</button>
+                  <button className="btn btn-success" type="submit">Guardar Ramo</button>
               {/* </LinkContainer> */}
               </div>
           </form>
