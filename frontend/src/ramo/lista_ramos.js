@@ -115,6 +115,7 @@ export class lista_ramos extends React.Component {
   render() {
     return (
       <main>
+       <Container>
       <DeleteModal
           msg={this.deleteModalMsg}
           show={this.state.showModal}
@@ -155,9 +156,10 @@ export class lista_ramos extends React.Component {
 
           </Container>
           
-          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{'marginLeft':"10vw"}}>
-            <button className="btn btn-primary" >Volver a Administrar</button>
+          <LinkContainer  activeClassName=""  to="/administrar" >
+            <button className="btn btn-secondary" >Volver a Administrar</button>
           </LinkContainer>
+          </Container>
         </main>
       );
     }
@@ -169,12 +171,14 @@ export class lista_ramos extends React.Component {
     render() {
       const nombre =this.props.nombre;
       const codigo = this.props.codigo;
+      const semestre = this.props.semestre;
       const id = this.props.id;
       return (
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
               <span style={{'font-weight': "500"}} >{codigo} </span>  {nombre}
+              <p>Semestre {semestre}</p>
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">

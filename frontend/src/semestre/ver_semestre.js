@@ -31,7 +31,7 @@ class CursoItem extends React.Component {
     render() {
       return (
         <Link style={{ textDecoration: "none" }} to={`${this.info.codigo}/${this.info.seccion}/evaluaciones`}>
-          <Alert variant="primary">
+          <Alert variant="secondary">
             <Row>
               <Col>
                 <p className="mb-0">
@@ -91,7 +91,7 @@ export class ver_semestre extends React.Component {
   async fetchCursos() {
     const { ano, semestre } = this.props.match.params;
     const periodo= (semestre=="Otoño" ? "otoño" : "primavera")
-    await fetch(`http://127.0.0.1:8000/api/cursos/?semestre=${ano}&periodo=${periodo}`)
+    await fetch(`http://127.0.0.1:8000/api/cursos/detalle/?semestre=${ano}&periodo=${periodo}`)
     .then(response => response.json())
     .then(cursos =>
         this.setState({
@@ -120,6 +120,7 @@ export class ver_semestre extends React.Component {
     return(
           <main>
           <Container>
+          <Container>
             <ViewTitle>Cursos de semestre {semestre} {ano}</ViewTitle>
             <Row className="mb-3">
               <Col>
@@ -146,17 +147,19 @@ export class ver_semestre extends React.Component {
             {this.state.MostrarCursos.map(curso => (
                 <CursoItem
                 key={curso.id}
-                nombre={curso.id}
+                nombre={curso.ramo.nombre}
                 seccion={curso.seccion}
-                codigo={curso.ramo}
+                codigo={curso.ramo.codigo}
+                semestre_malla={curso.ramo.semestre_malla}
                 />
             ))}  
 
           </Container>
 
-          <LinkContainer  to="/semestres" className="float-left " style={{'marginLeft':"10vw"}}>
-              <button className="btn btn-primary" >Volver a Semestres</button>
+          <LinkContainer  to="/semestres"  >
+              <button className="btn btn-secondary" >Volver a Semestres</button>
           </LinkContainer>
+          </Container>
         </main>
         );
     }

@@ -104,11 +104,11 @@ create_profesor() {
 													</div>                    
 											</div>
 											<div class="form-group" style={{'marginTop':"4rem"}}>
-											<LinkContainer  activeClassName=""  to="/profesores" className="float-left btn btn-primary" style={{'marginLeft':"10vw"}}>
+											<LinkContainer  activeClassName=""  to="/profesores" className="float-left btn btn-secondary" style={{'marginLeft':"10vw"}}>
 													<button >Volver a Profesores</button>
 											</LinkContainer>
 
-												<button className="btn btn-primary" type="submit">Guardar Profesor</button>
+												<button className="btn btn-success" type="submit">Guardar Profesor</button>
 
 											</div>
 									</form>

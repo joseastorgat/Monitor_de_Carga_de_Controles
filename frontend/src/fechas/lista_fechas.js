@@ -108,6 +108,7 @@ export class lista_fechas extends React.Component {
   render() {
     return (
       <main>
+      <Container>
       <DeleteModal
           msg={this.deleteModalMsg}
           show={this.state.showModal}
@@ -115,7 +116,7 @@ export class lista_fechas extends React.Component {
           handleDelete={() => this.handleDelete()}
         />
         <Container>
-          <ViewTitle>Feriados</ViewTitle>
+          <ViewTitle>Fechas Especiales</ViewTitle>
             <Row className="mb-3">
               <Col>
 
@@ -149,9 +150,10 @@ export class lista_fechas extends React.Component {
 
           </Container>
           
-          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{'marginLeft':"10vw"}}>
-            <button className="btn btn-primary" >Volver a Administrar</button>
+          <LinkContainer  activeClassName=""  to="/administrar" >
+            <button className="btn btn-secondary" >Volver a Administrar</button>
           </LinkContainer>
+          </Container>
         </main>
       );
     }

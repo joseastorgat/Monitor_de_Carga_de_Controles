@@ -63,6 +63,7 @@ export default class lista_semestre extends React.Component {
   render() {
       return (
         <main>
+        <Container>
           <Container>
             <ViewTitle>Semestres</ViewTitle>
             <Row className="mb-3">
@@ -96,9 +97,10 @@ export default class lista_semestre extends React.Component {
 
           </Container>
 
-          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{'marginLeft':"10vw"}}>
+          <LinkContainer  activeClassName=""  to="/administrar" >
             <button className="btn btn-primary" >Volver a Administrar</button>
           </LinkContainer>
+          </Container>
         </main>
       );
     }
@@ -113,6 +115,7 @@ export default class lista_semestre extends React.Component {
     render() {
       const año=this.props.año;
       const semestre= this.props.semestre;
+      const id_periodo=(semestre==="Otoño" ? 1 : 2)
       return (
         <Link to={`semestres/${año}/${semestre}/`}>    
 
@@ -123,8 +126,9 @@ export default class lista_semestre extends React.Component {
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">
-                  <OptionButton  icon={Calendar}  description="Visualizar semestre"  onClick={() => alert("No implementado")} />
-  
+                  <Link to={`/calendar/${año}/${id_periodo}/`} >
+                    <OptionButton  icon={Calendar}  description="Visualizar semestre" />
+                  </Link>
                   <Link to={`semestres/${año}/${semestre}/editar`} >
                     <OptionButton icon={Pencil} description="Modificar semestre" />
                   </Link>
