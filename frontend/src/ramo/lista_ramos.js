@@ -156,9 +156,6 @@ export class lista_ramos extends React.Component {
 
           </Container>
           
-          <LinkContainer  activeClassName=""  to="/administrar" >
-            <button className="btn btn-secondary" >Volver a Administrar</button>
-          </LinkContainer>
           </Container>
         </main>
       );
