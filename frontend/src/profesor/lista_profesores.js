@@ -144,9 +144,6 @@ export class lista_profesores extends React.Component {
               ))}
           </Container>
           
-          <LinkContainer  activeClassName=""  to="/administrar" >
-                            <button className="btn btn-secondary"> Volver a Administrar</button>
-          </LinkContainer>
           </Container>
         </main>
       );
