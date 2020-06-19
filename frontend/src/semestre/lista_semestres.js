@@ -203,6 +203,7 @@ export class lista_semestre extends React.Component {
             <div class="col-sm-9" >
               <input type="text" className="form-control" name="eliminar_año"  onChange={this.onChange} style={{textAlignLast:'center'}} />
             </div>
+            <div class="row"></div>
             <div class="col-sm-6" >
               <label> Periodo (Primavera u Otoño)</label>
             </div>
