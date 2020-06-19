@@ -244,7 +244,8 @@ export class evaluaciones extends React.Component {
                 id: res.data.id,
                 titulo: res.data.titulo,
                 fecha: res.data.fecha,
-                tipo: res.data.tipo
+                tipo: res.data.tipo,
+                eliminar_index: -1
             })
         })      
     }
