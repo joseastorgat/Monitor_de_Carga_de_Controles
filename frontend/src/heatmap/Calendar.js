@@ -364,7 +364,7 @@ export default class Calendar extends React.Component {
           <Col >
           <Container>
          
-          <h4 style={{textAlign:'justify'}}>Heatmap Semestre {this.state.año} {this.state.periodo===1 ? "Otoño": "Primavera"} </h4>
+          <h4 style={{textAlign:'justify'}}>Heatmap Semestre {this.state.año} {this.state.periodo==1 ? "Otoño": "Primavera"} </h4>
           <div style={{display:"flex"}}> 
             <div>
             <div className="calendar">

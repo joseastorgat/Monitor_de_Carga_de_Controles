@@ -62,7 +62,7 @@ class Bloque_Calendario extends React.Component {
         </div>
         <div className="centrar">
         {this.state.MostrarSemestres.map(semestre=>(
-          <Link to={`/calendar/${semestre.año}/${semestre.periodo}`} >
+          <Link to={`/calendario/${semestre.año}/${semestre.periodo}/`} >
             <button className="btn btn-secondary botones_hacia_abajo" >Calendario Semestre {semestre.año} {semestre.periodo===1 ? "Otoño": "Primavera"}</button>
           </Link>
         ))}
@@ -95,7 +95,7 @@ export default class Home extends React.Component {
       <div>
         <Switch>
           <Route exact path="/" component={Bloque_Calendario_con} />
-          <Route exact path="/calendar/:anho/:periodo" component={Calendar} />
+          <Route exact path="/calendario/:anho/:periodo" component={Calendar} />
 
           {/* VISTAS DE ADMINISTRAR */}
           <PrivateRoute exact path="/administrar" component={administrar} />

@@ -123,7 +123,7 @@ export default class lista_semestre extends React.Component {
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">
-                  <Link to={`/calendar/${año}/${id_periodo}/`} >
+                  <Link to={`/calendario/${año}/${id_periodo}/`} >
                     <OptionButton  icon={Calendar}  description="Visualizar semestre" />
                   </Link>
                   <Link to={`semestres/${año}/${semestre}/editar`} >
