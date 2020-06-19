@@ -147,10 +147,10 @@ export class ver_semestre extends React.Component {
             {this.state.MostrarCursos.map(curso => (
                 <CursoItem
                 key={curso.id}
-                nombre={curso.ramo.nombre}
+                nombre={curso.nombre}
                 seccion={curso.seccion}
-                codigo={curso.ramo.codigo}
-                semestre_malla={curso.ramo.semestre_malla}
+                codigo={curso.ramo}
+                semestre_malla={curso.semestre_malla}
                 />
             ))}  
 
