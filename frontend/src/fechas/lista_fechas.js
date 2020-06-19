@@ -36,7 +36,13 @@ export class lista_fechas extends React.Component {
     .then(response => response.json())
     .then(fechas =>
       this.setState({
-        fechas: fechas,
+        fechas: fechas.sort((a, b) => {
+          if (a.inicio < b.inicio)
+            return -1;
+          if (a.inicio > b.inicio)
+            return 1;
+          return 0;
+        }),
         MostrarFechas: fechas
       })
       )    
@@ -144,9 +150,6 @@ export class lista_fechas extends React.Component {
 
           </Container>
           
-          <LinkContainer  activeClassName=""  to="/administrar" >
-            <button className="btn btn-secondary" >Volver a Administrar</button>
-          </LinkContainer>
           </Container>
         </main>
       );

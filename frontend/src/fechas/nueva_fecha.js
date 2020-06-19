@@ -80,7 +80,7 @@ export class nueva_fecha extends React.Component {
                                             <label >Nombre</label>
                                         </div>
                                         <div className="col-sm-10" >
-                                            <input type="text" className="form-control" name="nombre_fecha" onChange={this.onChange} placeholder="Feriado 1 mayo" style={{textAlignLast:'center'}} />
+                                            <input required type="text" className="form-control" name="nombre_fecha" onChange={this.onChange} placeholder="Feriado 1 mayo" style={{textAlignLast:'center'}} />
                                         </div>
                                     </div>
                                 </div>  
@@ -114,7 +114,7 @@ export class nueva_fecha extends React.Component {
                                         <label >Inicio</label>
                                         </div>
                                         <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                            <input type="date" onChange={this.onChange} className="form-control" name="inicio_fecha"  required pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}"/>
+                                            <input required type="date" onChange={this.onChange} className="form-control" name="inicio_fecha"  required pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}"/>
                                         </div>
                                     </div>
                                 </div>

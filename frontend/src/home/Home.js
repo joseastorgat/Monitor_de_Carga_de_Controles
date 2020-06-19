@@ -19,39 +19,59 @@ import FooterPage from "./Footer";
 import {  Container } from "react-bootstrap";
 
 class Bloque_Calendario extends React.Component {
-  
+  state = {
+    semestres: [],
+    MostrarSemestres: [],
+  };
   static propTypes = {
     auth: PropTypes.object.isRequired,
   };
 
+  async fetchSemestres() {
+    console.log("Fetching...")
+    var semestres= await fetch(`http://127.0.0.1:8000/api/semestres/`)
+    .then(response => response.json())
+    .then(semestres =>
+        this.setState({
+        semestres: semestres.sort((a, b) => {
+          if (a.año < b.año)
+            return -1;
+          if (a.año > b.año)
+            return 1;
+          return 0;
+        }),
+        MostrarSemestres: semestres,
+      })
+    )
+  }
+  async componentDidMount() {
+    this.fetchSemestres();
+  }
   render() {
+    const { user, logout } = this.props;
     const { isAuthenticated} = this.props.auth;
-    
-    // const authLinks = (
-    //   // <Link to="/administrar" style={{ color: '#FFF' }}>
-    //   // <Button renderAs="button" className="rectangulo_azul" style={{ backgroundColor: "#0E71DE"}}>  
-    //   //   <span className="col-sm-1"></span>  Administrar
-    //   //     <span className="col-sm-1"></span>
-    //   //     <BsGearFill size="35" />
-    //   // </Button> 
-    //   // </Link>
-    // );
-
+    const n =  new Date();
+    const y = n.getFullYear();
     return (
     <main>
       <Container >
       <div>
         <div className="centrar">
             <h2 className="titulo">Monitor de Carga de Controles</h2>
-            <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido, el semestre actual es ...</p>
+            <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido</p>
         </div>
         <div className="centrar">
-          <Link to="/calendar/2019/1/" >
+        {this.state.MostrarSemestres.map(semestre=>(
+          <Link to={`/calendar/${semestre.año}/${semestre.periodo}`} >
+            <button className="btn btn-secondary botones_hacia_abajo" >Calendario Semestre {semestre.año} {semestre.periodo===1 ? "Otoño": "Primavera"}</button>
+          </Link>
+        ))}
+          {/* <Link to="/calendar/2019/1/" >
             <button className="rectangulo_azul" >Ver Semestre Otoño 2020</button>
           </Link>
           <Link to="/calendar/2019/2/" >
             <button className="rectangulo_azul" >Ver Semestre Otoño 2020</button>
-          </Link>
+          </Link> */}
           {/* {isAuthenticated ? authLinks: '' } */}
         </div>
       </div>
