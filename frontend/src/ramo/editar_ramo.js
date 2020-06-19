@@ -140,11 +140,11 @@ export class editar_ramo extends React.Component {
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
                         <LinkContainer  activeClassName=""  to="/ramos" className="float-left " style={{'marginLeft':"10vw"}}>
-                            <button className="btn btn-primary">Volver</button>
+                            <button className="btn btn-secondary">Volver</button>
                         </LinkContainer>
 
                         {/* <LinkContainer activeClassName=""  to="/ramos" style={{'marginRight':"14vw"}}> */}
-                            <button className="btn btn-primary" type="submit">Guardar</button>
+                            <button className="btn btn-success" type="submit">Guardar</button>
                         {/* </LinkContainer> */}
                         </div>
                     </form>

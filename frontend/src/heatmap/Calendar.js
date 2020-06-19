@@ -152,7 +152,7 @@ class Sidebar extends React.Component {
     const { courses, handleChange, handleAccordion } = this.props;
     return (
       <Alert variant="primary" className="mb-5">
-        <h4>Seleccionar Cursos</h4>
+        <h4>Seleccione Cursos</h4>
         <Accordion>
           {this.props.groups.map((group, idx) => (
             <SidebarGroup
@@ -320,18 +320,18 @@ export default class Calendar extends React.Component {
   encontrar_mes(arreglo_semana){
     let mes=0
     mes=arreglo_semana[arreglo_semana.length-1].split("-")[1]
-    if (mes==="01") return "Enero"
-    else if (mes==="02") return "Febrero"
-    else if (mes==="03") return "Marzo"
-    else if (mes==="04") return "Abril"
-    else if (mes==="05") return "Mayo"
-    else if(mes==="06") return "Junio"
-    else if(mes==="07") return "Julio"
-    else if(mes==="08") return "Agosto"
-    else if(mes==="09") return "Septiembre"
-    else if(mes==="10") return "Octubre"
-    else if(mes==="11") return "Noviembre"
-    else return "Diciembre"
+    if (mes==="01") return "Ene"
+    else if (mes==="02") return "Feb"
+    else if (mes==="03") return "Mar"
+    else if (mes==="04") return "Abr"
+    else if (mes==="05") return "May"
+    else if(mes==="06") return "Jun"
+    else if(mes==="07") return "Jul"
+    else if(mes==="08") return "Ago"
+    else if(mes==="09") return "Sep"
+    else if(mes==="10") return "Oct"
+    else if(mes==="11") return "Nov"
+    else return "Dic"
   }
 
   render() {
@@ -349,6 +349,7 @@ export default class Calendar extends React.Component {
     else{
     
     return (
+      <main>
       <Container>
         <Row >
           <Col lg={3}>
@@ -361,11 +362,12 @@ export default class Calendar extends React.Component {
           </Col>
 
           <Col >
-          <div className="calendar">
-          <Container >
+          <Container>
+         
           <h4 style={{textAlign:'justify'}}>Heatmap Semestre {this.state.año} {this.state.periodo===1 ? "Otoño": "Primavera"} </h4>
           <div style={{display:"flex"}}> 
             <div>
+            <div className="calendar">
               <div className="week">
                 <div className="day-header"> <h6>Mes</h6> </div>
                 <div className="day-header"> <h6>Semana</h6> </div>
@@ -416,8 +418,8 @@ export default class Calendar extends React.Component {
               ))
             } 
           </div>
-          <Col className="text-center"></Col>
-          <Col className="mb-2 " >
+          </div>
+          <Col className="mb-1 " >
              <table className="leyenda">
               <tr style={{background:"#007BFF"}}>
                <h3> Leyenda</h3>
@@ -442,12 +444,12 @@ export default class Calendar extends React.Component {
             </Col>
           </div>  
           </Container>
-          </div>  
 
           </Col>
 
         </Row>
       </Container>
+      </main>
     );
   }
 }
