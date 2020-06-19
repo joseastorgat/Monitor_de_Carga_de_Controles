@@ -196,7 +196,7 @@ export class lista_semestre extends React.Component {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <label><font color="red">[ADVERTENCIA]</font> Eliminar un semestre eliminara los cursos y evaluaciones asociadas, para confirmar la eliminacion del semestre escogido ingrese el año y el periodo del semestre.</label>
+          <label><font color="red">[ADVERTENCIA]</font> Eliminar un semestre eliminara los cursos y evaluaciones asociadas. Para confirmar la eliminacion del semestre escogido ingrese su año y periodo.</label>
             <div class="col-sm-6" >
               <label >Año</label>
             </div>
