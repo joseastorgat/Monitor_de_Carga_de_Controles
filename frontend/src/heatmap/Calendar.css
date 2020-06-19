@@ -20,6 +20,14 @@
   text-align: center;
   background-color: #ccc;
 }
+.modal-backdrop
+{
+    opacity:0.0 !important;
+}
+.modal-header{
+  background-color: #007BFF;
+  color: white;
+}
 
 .year-selection {
   padding: 2em 0;

@@ -7,7 +7,7 @@ import {
   Button,
   Col,
   Row,
-  Container
+  Container,Modal
 } from "react-bootstrap";
 
 import { ChevronRight, ChevronDown } from "@primer/octicons-react";
@@ -177,6 +177,8 @@ export default class Calendar extends React.Component {
     super(props);
     
     this.state = {
+      show_evaluaciones_dia_Modal:false,
+      evaluaciones_dia:[],
       found: true,
       semestre_id: -1,
       año: this.props.match.params.anho,
@@ -188,6 +190,7 @@ export default class Calendar extends React.Component {
       evaluaciones: [],
       evaluaciones_a_mostrar: [],
       dias: [],
+      dia_mostrar_modal:[]
     }
     
     this.weeks = [];
@@ -249,7 +252,6 @@ export default class Calendar extends React.Component {
     else{
       this.setState({"inicio": res.data[0].inicio, "fin": res.data[0].fin, "semestre_id": res.data[0].id})
     }
-
     if(this.state.found){
       
       // generación de calendario
@@ -269,7 +271,6 @@ export default class Calendar extends React.Component {
         })
 
       const { year, semester } = this.state;
-      
 
       // obtener cursos
       const coursesPre = await fetch(
@@ -279,7 +280,6 @@ export default class Calendar extends React.Component {
       // console.log(coursesPre)
 
       let courses = [];
-      
 
       for(let course in coursesPre){
         // console.log(course);
@@ -307,7 +307,7 @@ export default class Calendar extends React.Component {
 
       console.log(courses);
       console.log(groups);
-      
+      console.log(courses)
       const evaluaciones = await fetch(
         `http://127.0.0.1:8000/api/evaluaciones/`
       ).then(res => res.json());
@@ -333,6 +333,17 @@ export default class Calendar extends React.Component {
     else if(mes==="11") return "Nov"
     else return "Dic"
   }
+  mostrar_evaluaciones_dia(evaluaciones_del_dia,dia,semana){
+    this.showModal(evaluaciones_del_dia,dia,semana)
+  }
+  
+  showModal(evaluaciones_del_dia,dia,semana) {
+    this.setState({ show_evaluaciones_dia_Modal: true, evaluaciones_dia: evaluaciones_del_dia, dia_mostrar_modal:[dia,semana]})
+  }
+
+  handleCancel() {
+    this.setState({ show_evaluaciones_dia_Modal: false,  evaluaciones_dia: [] , dia_mostrar_modal:[]})
+    }
 
   render() {
     console.log(this.state)
@@ -351,6 +362,12 @@ export default class Calendar extends React.Component {
     return (
       <main>
       <Container>
+        <Evaluacion_dia_Modal 
+          show={this.state.show_evaluaciones_dia_Modal}
+          handleCancel={() => this.handleCancel()}
+          evaluaciones={this.state.evaluaciones_dia}
+          info={this.state.dia_mostrar_modal}
+        />
         <Row >
           <Col lg={3}>
             <Sidebar
@@ -388,18 +405,19 @@ export default class Calendar extends React.Component {
                 <div className="day-header">S{i+1} </div>
       
                 {  week.map((day, di ) => {
-                    const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day).length
-                    if(evaluaciones_del_dia==1){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "#FDBC5F"}}> {day.split("-")[2] || "\u00a0" } </div> 
+                    const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day)
+                    const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
+                    if(cantidad_evaluaciones_dia==1){
+                      return <button className="day" key={di} id={day} style={{backgroundColor: "#FDBC5F"}}  onClick={()=> this.mostrar_evaluaciones_dia(evaluaciones_del_dia,day,i+1)}> {day.split("-")[2] || "\u00a0" } </button> 
                     }
-                    else if(evaluaciones_del_dia==2){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "#F9680A"}}> {day.split("-")[2] || "\u00a0" } </div> 
+                    else if(cantidad_evaluaciones_dia==2){
+                      return <button className="day" key={di} id={day} style={{backgroundColor: "#F9680A"}} onClick={()=> this.mostrar_evaluaciones_dia(evaluaciones_del_dia,day,i+1)}> {day.split("-")[2] || "\u00a0" } </button> 
                     } 
-                    else if(evaluaciones_del_dia==3){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "#FF0000"}}> {day.split("-")[2] || "\u00a0" } </div> 
+                    else if(cantidad_evaluaciones_dia==3){
+                      return <button className="day" key={di} id={day} style={{backgroundColor: "#FF0000"}} onClick={()=> this.mostrar_evaluaciones_dia(evaluaciones_del_dia,day,i+1)} > {day.split("-")[2] || "\u00a0" } </button> 
                     } 
-                    else if(evaluaciones_del_dia>3){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "#800000"}}> {day.split("-")[2] || "\u00a0" } </div> 
+                    else if(cantidad_evaluaciones_dia>3){
+                      return <button className="day" key={di} id={day} style={{backgroundColor: "#800000"}} onClick={()=> this.mostrar_evaluaciones_dia(evaluaciones_del_dia,day,i+1)}> {day.split("-")[2] || "\u00a0" } </button> 
                     } 
 
                     /* else if (this.state.dias.indexOf(day)>1){
@@ -448,3 +466,32 @@ export default class Calendar extends React.Component {
 }
 }
 
+
+export class Evaluacion_dia_Modal extends React.Component {
+  render() {
+    const { show, handleCancel, evaluaciones,info} = this.props;
+    const semana=info[1];
+    const fecha=info[0];
+    const f=fecha
+    // var date = new Date(fecha[0],fecha[1],fecha[2]);
+    var dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+    var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    return (
+      <Modal size="sm" centered show={show} onHide={() => handleCancel()}>
+        <Modal.Header  closeButton >
+          <Modal.Title id="contained-modal-title-vcenter">
+            <h6>Semana {semana}: {fecha}</h6>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        {evaluaciones.map(evaluacion=>
+        <div>{evaluacion.titulo} {evaluacion.tipo}</div>
+        )}
+        
+        </Modal.Body>
+        <Modal.Footer>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+}
