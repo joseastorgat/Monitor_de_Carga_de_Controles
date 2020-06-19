@@ -364,7 +364,7 @@ export default class Calendar extends React.Component {
           <Col >
           <Container>
          
-          <h4 style={{textAlign:'justify'}}>Heatmap Semestre {this.state.año} {this.state.periodo===1 ? "Otoño": "Primavera"} </h4>
+          <h4 style={{textAlign:'justify'}}>Heatmap Semestre {this.state.año} {this.state.periodo==1 ? "Otoño": "Primavera"} </h4>
           <div style={{display:"flex"}}> 
             <div>
             <div className="calendar">
@@ -390,18 +390,15 @@ export default class Calendar extends React.Component {
                 {  week.map((day, di ) => {
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day).length
                     if(evaluaciones_del_dia==1){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "#FEFD71"}}> {day.split("-")[2] || "\u00a0" } </div> 
+                      return <div className="day" key={di} id={day} style={{backgroundColor: "#FDBC5F"}}> {day.split("-")[2] || "\u00a0" } </div> 
                     }
                     else if(evaluaciones_del_dia==2){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "#FDBC5F"}}> {day.split("-")[2] || "\u00a0" } </div> 
-                    } 
-                    else if(evaluaciones_del_dia==3){
                       return <div className="day" key={di} id={day} style={{backgroundColor: "#F9680A"}}> {day.split("-")[2] || "\u00a0" } </div> 
                     } 
-                    else if(evaluaciones_del_dia==4){
+                    else if(evaluaciones_del_dia==3){
                       return <div className="day" key={di} id={day} style={{backgroundColor: "#FF0000"}}> {day.split("-")[2] || "\u00a0" } </div> 
                     } 
-                    else if(evaluaciones_del_dia>4){
+                    else if(evaluaciones_del_dia>3){
                       return <div className="day" key={di} id={day} style={{backgroundColor: "#800000"}}> {day.split("-")[2] || "\u00a0" } </div> 
                     } 
 
@@ -425,22 +422,18 @@ export default class Calendar extends React.Component {
                <h3> Leyenda</h3>
               </tr>
               <tr style={{display:'flex'}}>
-               <span className="espacio" ></span> <span class="cuadrado" style={{background:"#FEFD71"}}></span>1 Evaluacion
+                <span className="espacio"></span><div class="cuadrado" style={{background:"#FDBC5F"}}></div>1 Evaluaciones
               </tr>
               <tr style={{display:'flex'}}>
-                <span className="espacio"></span><div class="cuadrado" style={{background:"#FDBC5F"}}></div>2 Evaluaciones
+                <span className="espacio"></span><div class="cuadrado" style={{background:"#F9680A"}}></div>2 Evaluaciones
               </tr>
               <tr style={{display:'flex'}}>
-                <span className="espacio"></span><div class="cuadrado" style={{background:"#F9680A"}}></div>3 Evaluaciones
+                <span className="espacio"></span> <div class="cuadrado" style={{background:"#FF0000"}}></div>3 Evaluaciones
               </tr>
               <tr style={{display:'flex'}}>
-                <span className="espacio"></span> <div class="cuadrado" style={{background:"#FF0000"}}></div>4 Evaluaciones
-              </tr>
-              <tr style={{display:'flex'}}>
-                <span className="espacio"></span> <div class="cuadrado" style={{background:"#800000"}}></div>Más de 4 Evaluaciones
+                <span className="espacio"></span> <div class="cuadrado" style={{background:"#800000"}}></div>Más de 3 Evaluaciones
               </tr>
             </table>
-  
             </Col>
           </div>  
           </Container>
