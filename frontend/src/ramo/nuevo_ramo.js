@@ -114,6 +114,7 @@ export class nuevo_ramo extends React.Component {
                                       <option value="8">Octavo</option>
                                       <option value="9">Noveno</option>
                                       <option value="10">Décimo</option>
+                                      <option value="15">Electivo</option>
                                   </select>
                               </div>
                           </div>

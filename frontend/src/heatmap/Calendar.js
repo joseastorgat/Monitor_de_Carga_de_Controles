@@ -434,7 +434,6 @@ export default class Calendar extends React.Component {
                 <span className="espacio"></span> <div class="cuadrado" style={{background:"#800000"}}></div>Más de 3 Evaluaciones
               </tr>
             </table>
-  
             </Col>
           </div>  
           </Container>

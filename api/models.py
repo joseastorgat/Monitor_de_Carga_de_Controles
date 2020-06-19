@@ -33,7 +33,7 @@ class Semestre(models.Model):
 
 class Ramo(models.Model):
     _SEMESTRES = (
-        (0, "Electivo"),
+        (15, "Electivo"),
         (5, "Quinto"),
         (6, "Sexto"),
         (7, "Septimo"),

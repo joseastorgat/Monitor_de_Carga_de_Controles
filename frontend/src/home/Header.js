@@ -22,13 +22,13 @@ class LogedInView extends React.Component {
           </LinkContainer>
         </NavLink>
         <NavLink  className="inactive" activeClassName="active">
-          <LinkContainer to="/fechas_especiales">
-            <h5>Fechas especiales</h5>
+          <LinkContainer to="/profesores">
+            <h5>Profesores</h5>
           </LinkContainer>
         </NavLink>
         <NavLink  className="inactive" activeClassName="active">
-          <LinkContainer to="/profesores">
-            <h5>Profesores</h5>
+          <LinkContainer to="/fechas_especiales">
+            <h5>Fechas especiales</h5>
           </LinkContainer>
         </NavLink>
       
