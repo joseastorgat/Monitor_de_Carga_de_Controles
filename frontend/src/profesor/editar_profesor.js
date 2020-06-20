@@ -98,11 +98,11 @@ export class editar_profesor extends React.Component {
                             </div>                    
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to="/profesores" className="float-left btn btn-primary" style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
+                        <LinkContainer  activeClassName=""  to="/profesores" className="float-left btn btn-secondary" style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
                             <button >Volver</button>
                         </LinkContainer>
 
-                            <button className="btn btn-primary"  type="submit">Guardar</button>
+                            <button className="btn btn-success"  type="submit">Guardar</button>
                         </div>
                     </form>
             </div>

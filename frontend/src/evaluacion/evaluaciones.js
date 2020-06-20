@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import {Pencil, Trashcan} from "@primer/octicons-react";
 import DeleteModal from "../common/DeleteModal";
-
+import {  Container} from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -316,7 +316,7 @@ export class evaluaciones extends React.Component {
                     <div class="row">
                         <div class="col-sm-2"></div>
  
-                        <button type="submit" className="float-left btn btn-primary col-sm-1">Guardar</button>
+                        <button type="submit" className="float-left btn btn-success col-sm-1">Guardar</button>
                         <div class="col-sm-5"></div>
                         <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
                     </div>
@@ -389,7 +389,7 @@ export class evaluaciones extends React.Component {
     
     render() {
         return (
-            <main>
+            <Container>
             <DeleteModal
                 msg={this.deleteModalMsg}
                 show={this.state.showModal}
@@ -448,14 +448,14 @@ export class evaluaciones extends React.Component {
                     
                     {this.state.editar_index >= 0 ? this.updateFormRender() : this.createFormRender()}
                     
-                    <div class="form-group" style={{'marginTop':"4rem"}}>
-                            <LinkContainer  activeClassName=""  to="../../" className="float-left" style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                                <button className="btn btn-primary">Volver</button>
+                    <Container style={{marginBottom:"8vw",marginTop:"2vw"}}>
+                            <LinkContainer  activeClassName=""  to="../../" className="float-left" >
+                                <button className="btn btn-secondary">Volver a Cursos</button>
                             </LinkContainer>
 
-                    </div>
+                   </Container>
             </div>
-            </main>
+            </Container>
         );
     }
 }

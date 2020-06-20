@@ -28,16 +28,16 @@ div.row {
 }
 
 
-.rectangulo_azul{
+.botones_hacia_abajo{
+    background-color: #2B96F7;
     display: block;
-    background-color: #81B2E8;
-    color: white;
     padding: 15px 32px;
-    width: 20vw;
+    width: 25vw;
+    height: 3vw;
     margin: auto;
     margin-bottom: 1rem;
+    margin-left: 2rem;
     margin-top: 1rem;
-    border-radius: 8px;
     border-color: white;
 }
 
@@ -113,7 +113,7 @@ div.row {
 
 
 .titulo{ 
-    background-color: #858383;
+    background-color:#007BFF;
     border: solid 1px #ddd;
     color: white;
     padding: 15px 32px;
@@ -154,3 +154,26 @@ div.row {
     font-size: large;
     padding: 40px 10px ;
 }
+
+
+footer {
+    text-align: center;
+    padding: 10px;
+    margin-top: 100px;
+    background-color:#007BFF;
+    color: white;
+    position:fixed;
+    left:0;
+    bottom:0;
+    right:0;
+}
+
+.inactive {
+    color:white;
+    text-decoration: none;
+}
+
+.active {
+    color: yellow;
+    text-decoration: none;
+  }

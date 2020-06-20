@@ -36,7 +36,13 @@ export class lista_semestre extends React.Component {
     .then(response => response.json())
     .then(semestres =>
       this.setState({
-        semestres: semestres,
+        semestres: semestres.sort((a, b) => {
+          if (a.año < b.año)
+            return -1;
+          if (a.año> b.año)
+            return 1;
+          return 0;
+        }),
         MostrarSemestres: semestres
       })
       )    
@@ -101,14 +107,14 @@ export class lista_semestre extends React.Component {
 
   render() {
       return (
-        <main>
-        <DeleteSemestreModal
-          semestre={this.state.semestrePorEliminar}
-          show={this.state.showModal}
-          handleCancel={() => this.handleCancel()}
-          handleDelete={() => this.handleDelete()}
-        />
-          <Container>
+        <Container>
+          <DeleteSemestreModal
+            semestre={this.state.semestrePorEliminar}
+            show={this.state.showModal}
+            handleCancel={() => this.handleCancel()}
+            handleDelete={() => this.handleDelete()}
+          />
+          
             <ViewTitle>Semestres</ViewTitle>
             <Row className="mb-3">
               <Col>
@@ -140,11 +146,6 @@ export class lista_semestre extends React.Component {
           ))}
 
           </Container>
-
-          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{'marginLeft':"10vw"}}>
-            <button className="btn btn-primary" >Volver a Administrar</button>
-          </LinkContainer>
-        </main>
       );
     }
   }
@@ -232,6 +233,7 @@ export class lista_semestre extends React.Component {
     render() {
       const año=this.props.año;
       const semestre= this.props.semestre;
+      const id_periodo=(semestre==="Otoño" ? 1 : 2)
       return (
         <Alert variant="secondary">
             <Row>
@@ -242,8 +244,9 @@ export class lista_semestre extends React.Component {
               </Link>
               <Col className="text-center"></Col>
               <Col  xs="auto">
-                  <OptionButton  icon={Calendar}  description="Visualizar semestre"  onClick={() => alert("No implementado")} />
-  
+                  <Link to={`/calendario/${año}/${id_periodo}/`} >
+                    <OptionButton  icon={Calendar}  description="Visualizar semestre" />
+                  </Link>
                   <Link to={`semestres/${año}/${semestre}/editar`} >
                     <OptionButton icon={Pencil} description="Modificar semestre" />
                   </Link>

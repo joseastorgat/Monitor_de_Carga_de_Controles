@@ -4,15 +4,20 @@ from rest_framework import permissions
 from rest_framework import status
 
 from .models import Semestre, Ramo, Curso, Profesor, Calendario,\
-                    Fechas_especiales, Evaluacion
+    Fechas_especiales, Evaluacion
 from api.serializers import SemestreSerializer, RamoSerializer,\
-        CursoSerializer, ProfesorSerializer, CalendarioSerializer,\
-        FechaSerializer, EvaluacionSerializer, CursoDetailSerializer
+    CursoSerializer, ProfesorSerializer, CalendarioSerializer,\
+    FechaSerializer, EvaluacionSerializer, CursoDetailSerializer,\
+    SemestreFileSerializer
 
 from rest_framework.views import APIView
 from django.http import Http404
 from rest_framework.decorators import action
 from rest_framework.request import Request
+from rest_framework.parsers import FormParser, MultiPartParser
+
+from api.parser import parse_excel
+from api.utils import create_full_semester
 
 
 class SemestreViewSet(viewsets.ModelViewSet):
@@ -28,7 +33,14 @@ class SemestreViewSet(viewsets.ModelViewSet):
     def cursos(self, request, pk=None):
         # print(request.query_params)
         cursos = Curso.objects.filter(semestre=pk)
-        serializer = CursoSerializer(cursos, many=True)
+        serializer = CursoDetailSerializer(cursos, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'],
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def evaluaciones(self, request, pk=None):
+        evaluaciones = Evaluacion.objects.filter(curso__semestre=pk)
+        serializer = EvaluacionSerializer(evaluaciones, many=True)
         return Response(serializer.data)
 
     def get_queryset(self):
@@ -40,7 +52,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
             except Exception:
                 pass
         return super().get_queryset()
-    
+
     def apply_filters(self, params, model_class):
         model = model_class.objects
         for i, ftr in enumerate(params.items()):
@@ -48,19 +60,30 @@ class SemestreViewSet(viewsets.ModelViewSet):
             model = model.filter(ftr)
         return model.filter()
 
-
-    # @action(detail=False, methods=['get'],
-    #         permission_classes=[permissions.IsAuthenticatedOrReadOnly],
-    #         url_path='')
-    # def por_año(self, request, pk):
-    #     '''
-    #     Semestres por fecha
-    #     '''
-    #     print(request.query_params)
-    #     # usar los params para calcular la fecha
-    #     cursos = Curso.objects.filter(semestre__año=pk)
-    #     serializer = CursoSerializer(cursos, many=True)
-    #     return Response(serializer.data)
+    @action(detail=False,
+            methods=['POST'],
+            serializer_class=SemestreFileSerializer,
+            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
+            parser_classes=[
+                FormParser,
+                MultiPartParser,
+            ]
+            )
+    def from_xlsx(self, request, *args, **kwargs):
+        '''
+        Crear semestre mediante archivo excel xlsx
+        '''
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            bin_file = request.data['file']
+            parsed = parse_excel(bin_file)
+            create_full_semester(parsed)
+            # ver bien el response a dar
+            return Response({'status': 'Semestre creado!'})
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 class EvaluationViewSet(viewsets.ModelViewSet):
@@ -126,7 +149,8 @@ class CursoViewSet(viewsets.ModelViewSet):
                 key, value = ftr
                 # Otoño = 1, Primavera=2
                 value = value.lower()
-                value = 1 if value == "otoño" else (2 if value == "primavera" else 0)
+                value = 1 if value == "otoño" else (
+                    2 if value == "primavera" else 0)
                 if value == 0:
                     raise Exception
                 ftr = ('semestre__periodo', value)

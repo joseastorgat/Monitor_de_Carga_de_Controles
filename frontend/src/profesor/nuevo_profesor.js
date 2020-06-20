@@ -85,7 +85,7 @@ create_profesor() {
 																					<label >Nombre</label>
 																			</div>
 																			<div class="col-sm-10" >
-																					<input type="text" className="form-control" name="nombre" onChange={this.onChange} style={{textAlignLast:'center'}} />
+																					<input required type="text" className="form-control" name="nombre" onChange={this.onChange} style={{textAlignLast:'center'}} />
 																			</div>
 																	</div>
 															</div>  
@@ -96,7 +96,7 @@ create_profesor() {
 																					<label >Apellido</label>
 																			</div>
 																			<div class="col-sm-10" >
-																			<input type="text" className="form-control" name="apellido" onChange={this.onChange} style={{textAlignLast:'center'}}  />
+																			<input required type="text" className="form-control" name="apellido" onChange={this.onChange} style={{textAlignLast:'center'}}  />
 																			</div>
 																	
 																	</div>
@@ -104,11 +104,11 @@ create_profesor() {
 													</div>                    
 											</div>
 											<div class="form-group" style={{'marginTop':"4rem"}}>
-											<LinkContainer  activeClassName=""  to="/profesores" className="float-left btn btn-primary" style={{'marginLeft':"10vw"}}>
+											<LinkContainer  activeClassName=""  to="/profesores" className="float-left btn btn-secondary" style={{'marginLeft':"10vw"}}>
 													<button >Volver a Profesores</button>
 											</LinkContainer>
 
-												<button className="btn btn-primary" type="submit">Guardar Profesor</button>
+												<button className="btn btn-success" type="submit">Guardar Profesor</button>
 
 											</div>
 									</form>

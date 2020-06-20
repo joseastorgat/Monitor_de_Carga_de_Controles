@@ -13,41 +13,63 @@ import {nuevo_ramo ,editar_ramo, lista_ramos} from "../ramo/index_ramo";
 import {nuevo_fecha,editar_fecha, lista_fechas} from "../fechas/index_fecha";
 import {evaluaciones} from "../evaluacion/index_evaluacion";
 import {nuevo_profesor, editar_profesor, lista_profesores} from "../profesor/index_profesor";
+import Calendar from "../heatmap/Calendar";
 import { Button } from "react-bootstrap";
-
+import FooterPage from "./Footer";
+import {  Container } from "react-bootstrap";
 
 class Bloque_Calendario extends React.Component {
-  
+  state = {
+    semestres: [],
+    MostrarSemestres: [],
+  };
   static propTypes = {
     auth: PropTypes.object.isRequired,
   };
 
+  async fetchSemestres() {
+    console.log("Fetching...")
+    var semestres= await fetch(`http://127.0.0.1:8000/api/semestres/`)
+    .then(response => response.json())
+    .then(semestres =>
+        this.setState({
+        semestres: semestres.sort((a, b) => {
+          if (a.año < b.año)
+            return -1;
+          if (a.año > b.año)
+            return 1;
+          return 0;
+        }),
+        MostrarSemestres: semestres,
+      })
+    )
+  }
+  async componentDidMount() {
+    this.fetchSemestres();
+  }
   render() {
+    const { user, logout } = this.props;
     const { isAuthenticated} = this.props.auth;
-    
-    const authLinks = (
-      <Link to="/administrar" style={{ color: '#FFF' }}>
-      <Button renderAs="button" className="rectangulo_azul" style={{ backgroundColor: "#0E71DE"}}>  
-        <span className="col-sm-1"></span>  Administrar
-          <span className="col-sm-1"></span>
-          <BsGearFill size="35" />
-      </Button> 
-      </Link>
-    );
-
+    const n =  new Date();
+    const y = n.getFullYear();
     return (
+    <main>
+      <Container >
       <div>
-      <div className="centrar" style={{marginTop: '-6px'}}>
-          <h2 className="titulo">Monitor de Carga de Controles</h2>
-          <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido, el semestre actual es ...</p>
+        <div className="centrar">
+            <h2 className="titulo">U-Calendar</h2>
+            <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido</p>
+        </div>
+        <div className="centrar">
+        {this.state.MostrarSemestres.map(semestre=>(
+          <Link to={`/calendario/${semestre.año}/${semestre.periodo}/`} >
+            <button className="btn btn-dark botones_hacia_abajo" >Calendario Semestre {semestre.año} {semestre.periodo===1 ? "Otoño": "Primavera"}</button>
+          </Link>
+        ))}
+        </div>
       </div>
-      <div className="centrar" >
-        <button className="rectangulo_azul" >Ver Semestre Otoño 2020</button>
-        <button className="rectangulo_azul" >Ver Semestre Otoño 2020</button>
-        
-        {isAuthenticated ? authLinks: '' }
-      </div>
-      </div>
+     </Container>
+     </main>
     );
   }
 }
@@ -66,6 +88,7 @@ export default class Home extends React.Component {
       <div>
         <Switch>
           <Route exact path="/" component={Bloque_Calendario_con} />
+          <Route exact path="/calendario/:anho/:periodo" component={Calendar} />
 
           {/* VISTAS DE ADMINISTRAR */}
           <PrivateRoute exact path="/administrar" component={administrar} />
@@ -101,6 +124,7 @@ export default class Home extends React.Component {
 
         </Switch>
       </div>
+      <FooterPage ></FooterPage>
       </div>
     );
   }

@@ -1,12 +1,20 @@
 from rest_framework import serializers
 from .models import Semestre, Ramo, Curso, Profesor, Calendario,\
-                    Fechas_especiales, Evaluacion
+    Fechas_especiales, Evaluacion, Semana
 
 
 class SemestreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Semestre
         fields = '__all__'
+
+
+class SemestreFileSerializer(serializers.Serializer):
+    file = serializers.FileField()
+
+    def validate_file(self, file):
+        # TODO: validar archivo
+        return file
 
 
 class RamoSerializer(serializers.ModelSerializer):
@@ -21,17 +29,27 @@ class CursoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CursoDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Curso
-        fields = '__all__'
-        depth = 1
-
-
 class ProfesorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profesor
         fields = '__all__'
+
+
+class CursoDetailSerializer(serializers.ModelSerializer):
+    nombre = serializers.SerializerMethodField(read_only=True)
+    semestre_malla = serializers.SerializerMethodField(read_only=True)
+    profesor = serializers.SlugRelatedField(queryset=Profesor.objects.all(),
+                                            slug_field='nombre', many=True)
+
+    def get_semestre_malla(self, obj):
+        return obj.ramo.semestre_malla
+
+    def get_nombre(self, obj):
+        return obj.ramo.nombre
+
+    class Meta:
+        model = Curso
+        fields = ['id', 'ramo', 'nombre', 'seccion', 'semestre_malla', 'profesor', ]
 
 
 class CalendarioSerializer(serializers.ModelSerializer):
@@ -47,9 +65,31 @@ class FechaSerializer(serializers.ModelSerializer):
 
 
 class EvaluacionSerializer(serializers.ModelSerializer):
+    semana = serializers.SerializerMethodField(read_only=True)
+    dia = serializers.SerializerMethodField(read_only=True)
+
+    def get_semana_obj(self, obj):
+        current = obj.fecha
+        semana = Semana.objects.filter(inicio__lte=current)
+        semana = semana.filter(fin__gte=current)
+        return semana
+
+    def get_semana(self, obj):
+        semana = self.get_semana_obj(obj)
+        if semana:
+            semana = semana.get()
+            return semana.numero
+        return None
+
+    def get_dia(self, obj):
+        fecha = obj.fecha
+        return fecha.weekday()
+
     class Meta:
         model = Evaluacion
-        fields = '__all__'
+        fields = ['id', 'fecha', 'tipo', 'titulo', 'curso', 'semana', 'dia']
+
+
 
 # class Calendario_CursoSerializers(serializers.ModelSerializer):
 #     class Meta:

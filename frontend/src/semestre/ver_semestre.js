@@ -32,7 +32,7 @@ class CursoItem extends React.Component {
     render() {
       return (
         <Link style={{ textDecoration: "none" }} to={`${this.info.codigo}/${this.info.seccion}/evaluaciones`}>
-          <Alert variant="primary">
+          <Alert variant="secondary">
             <Row>
               <Col>
                 <p className="mb-0">
@@ -77,7 +77,7 @@ class CursoItem extends React.Component {
 export class ver_semestre extends React.Component {
   constructor(props) {
     super(props);
-
+    this.handle_search = this.handle_search.bind(this);
     this.state = {
       cursos: [],
       showModal: false,
@@ -94,7 +94,7 @@ export class ver_semestre extends React.Component {
   async fetchCursos() {
     const { ano, semestre } = this.props.match.params;
     const periodo= (semestre=="Otoño" ? "otoño" : "primavera")
-    await fetch(`http://127.0.0.1:8000/api/cursos/?semestre=${ano}&periodo=${periodo}`)
+    await fetch(`http://127.0.0.1:8000/api/cursos/detalle/?semestre=${ano}&periodo=${periodo}`)
     .then(response => response.json())
     .then(cursos =>
         this.setState({
@@ -145,15 +145,22 @@ export class ver_semestre extends React.Component {
   handleCancel() {
     this.setState({ showModal: false, cursoPorEliminar: null });
   }
+  handle_search(){
+    const busqueda= this.state.search;
+    const Cursos= this.state.cursos;
+    const cursos_buscados= Cursos.filter(o=>
+      (o.ramo.toString()+" " + o.nombre.toString() + "Sección " + o.seccion.toString()+"Seccion " + o.seccion.toString()).includes(busqueda)
+    );
+    console.log("Buscados")
+    console.log(cursos_buscados)
+    this.setState({MostrarCursos: cursos_buscados});
+  }
+
+  update_Search(e){
+    this.setState({search: e.target.value});
+  };
+
   render(){
-    const handle_search = e => {
-      e.preventDefault();
-      alert("No implementado, pero se busco "+ this.state.search)
-    }
-  
-    const update_Search= e => {
-      this.state.search=e.target.value;
-    };
     const { ano, semestre } = this.props.match.params;
     const path= this.props.match.url
 
@@ -166,14 +173,15 @@ export class ver_semestre extends React.Component {
             handleDelete={() => this.handleDelete()}
           />
           <Container>
+          <Container>
             <ViewTitle>Cursos de semestre {semestre} {ano}</ViewTitle>
             <Row className="mb-3">
               <Col>
 
-                <Form inline className="mr-auto" onSubmit={handle_search} >
+                <Form inline className="mr-auto"  onSubmit={e => {e.preventDefault(); this.handle_search();}}>
                   <InputGroup
                     value={this.state.search}
-                    onChange={update_Search} >
+                    onChange={e => this.update_Search(e)} >
                     <FormControl type="text" placeholder="Buscar Curso" className="mr-sm-2" />
                     <Button type="submit">Buscar</Button>
                   </InputGroup>
@@ -192,18 +200,20 @@ export class ver_semestre extends React.Component {
             {this.state.MostrarCursos.map(curso => (
                 <CursoItem
                 key={curso.id}
-                nombre={curso.id}
+                nombre={curso.nombre}
                 seccion={curso.seccion}
                 codigo={curso.ramo}
                 showModal={() => this.showModal(curso)}
+                semestre_malla={curso.semestre_malla}
                 />
             ))}  
 
           </Container>
 
-          <LinkContainer  to="/semestres" className="float-left " style={{'marginLeft':"10vw"}}>
-              <button className="btn btn-primary" >Volver a Semestres</button>
+          <LinkContainer  to="/semestres"  >
+              <button className="btn btn-secondary" >Volver a Semestres</button>
           </LinkContainer>
+          </Container>
         </main>
         );
     }

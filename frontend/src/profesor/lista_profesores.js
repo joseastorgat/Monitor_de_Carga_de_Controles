@@ -106,6 +106,7 @@ export class lista_profesores extends React.Component {
     render() {
       return (
         <main>
+        <Container>
           <DeleteModal
             msg={this.deleteModalMsg}
             show={this.state.showModal}
@@ -143,9 +144,7 @@ export class lista_profesores extends React.Component {
               ))}
           </Container>
           
-          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{'marginLeft':"10vw"}}>
-                            <button className="btn btn-primary"> Volver a Administrar</button>
-          </LinkContainer>
+          </Container>
         </main>
       );
     }
