@@ -4,6 +4,9 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
+import { Button } from "react-bootstrap";
+import Octicon from "@primer/octicons-react";
+import { ArrowLeft ,triangleleft} from "@primer/octicons-react";
 
 export class nuevo_semestre extends React.Component {
     static propTypes={
@@ -153,7 +156,7 @@ export class nuevo_semestre extends React.Component {
 
                         <div class="form-group" style={{'marginTop':"4rem"}}>
                         <LinkContainer  activeClassName=""  to="/semestres" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                            <button className="btn btn-secondary" >Volver a Semestres</button>
+                            <Button className="btn btn-secondary" > <Octicon icon={ArrowLeft} size="medium" />  Volver a Semestres       </Button>
                         </LinkContainer>
 
                         {/* <LinkContainer activeClassName=""  to="/semestres" style={{'marginRight':"14vw"}}> */}

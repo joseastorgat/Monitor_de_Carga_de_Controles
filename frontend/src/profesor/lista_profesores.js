@@ -116,8 +116,7 @@ export class lista_profesores extends React.Component {
           <Container>
             <ViewTitle>Profesores</ViewTitle>
             <Row className="mb-3">
-              <Col>
-
+              <Col  md={4}>
                 <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
                   <InputGroup
                     value={this.state.search}
@@ -128,7 +127,7 @@ export class lista_profesores extends React.Component {
                 </Form>
 
               </Col>
-              <Col xs="auto">
+              <Col  md={{ span: 2, offset: 6 }}>
                 <Link to="/profesores/nuevo_profesor">
                   <Button className="btn btn-primary">Nuevo Profesor</Button>
                 </Link>

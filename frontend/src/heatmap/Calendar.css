@@ -24,10 +24,6 @@
 {
     opacity:0.0 !important;
 }
-.modal-header{
-  background-color: #007BFF;
-  color: white;
-}
 
 .year-selection {
   padding: 2em 0;
@@ -52,6 +48,23 @@
   width: 100%;
 }
 
+table{
+  border: 2px solid #ddd;
+}
+
+td{
+  width:100px;
+  word-wrap: break-word;
+  border: 2px solid #ddd;
+}
+.sortable{
+  cursor: pointer;
+}
+
+th{
+  background-color: #ccc;
+  border: 2px solid #dddddd;
+}
 .card-header-checkbox {
   display: inline-block;
 }
@@ -151,14 +164,7 @@
 
 
 .leyenda{
-  width: 13em;
   border: 1px solid #dddddd;
-  border-radius: 15px;
-  text-align: center;
-}
-
-table.leyenda{
-  border-radius: 15px;
 }
 
 .cuadrado {

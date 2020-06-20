@@ -57,8 +57,8 @@ class Bloque_Calendario extends React.Component {
       <Container >
       <div>
         <div className="centrar">
-            <h2 className="titulo">U-Calendar</h2>
-            <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido</p>
+            <h3 className="titulo">U-Calendar</h3>
+            <p style={{marginTop: '46px'}}>Bienvenido</p>
         </div>
         <div className="centrar">
         {this.state.MostrarSemestres.map(semestre=>(

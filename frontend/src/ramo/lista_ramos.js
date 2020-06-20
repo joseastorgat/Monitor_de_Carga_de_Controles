@@ -125,8 +125,7 @@ export class lista_ramos extends React.Component {
         <Container>
           <ViewTitle>Ramos</ViewTitle>
             <Row className="mb-3">
-              <Col>
-
+              <Col md={4}>
                 <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
                   <InputGroup
                     value={this.state.search}
@@ -137,7 +136,7 @@ export class lista_ramos extends React.Component {
                 </Form>
 
               </Col>
-              <Col xs="auto">
+              <Col  md={{ span: 2, offset: 6 }}>
                 <Link to="/ramos/nuevo_ramo">
                   <Button className="btn btn-primary">Nuevo Ramo</Button>
                 </Link>

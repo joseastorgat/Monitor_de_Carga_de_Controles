@@ -98,7 +98,7 @@ export class nuevo_ramo extends React.Component {
                       </div>
                   </div>
 
-                  <div class="row">
+                  <div class="row form-group">
                       <div class="col-sm-1"></div>
                       <div class="col-sm-6" >
                           <div class="row">
@@ -107,7 +107,7 @@ export class nuevo_ramo extends React.Component {
                               </div>
                               <div class="col-sm-9" >
                               {/* No pude centrarlo, hay un problema con prioridades de css de react */}
-                                  <select className="form-control center" name="semestre_malla" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
+                                  <select class="form-control" name="semestre_malla" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
                                       <option value="5" selected>Quinto</option>
                                       <option value="6">Sexto</option>
                                       <option value="7">Séptimo</option>

@@ -382,7 +382,7 @@ export class evaluaciones extends React.Component {
                                 <div class="col-sm-5" >
                                     <input type="text" className="form-control" name="nombre_curso" placeholder={this.state.curso.ramo + "-" + this.state.curso.seccion}  style={{textAlignLast:'center'}} readOnly="readonly"/>
                                 </div>
-                                    <LinkContainer  activeClassName=""  to="#" onClick={this.handleClickNuevaEvaluacion} className="float-left col-sm-3"  style={{width: '7%', 'marginLeft':"3vw",borderRadius: '8px'}}>
+                                    <LinkContainer  activeClassName=""  to="#" onClick={this.handleClickNuevaEvaluacion}  style={{'marginLeft':"3vw"}}>
                                         <button  className="btn btn-primary" >Agregar Evaluacion</button>
                                     </LinkContainer>
                             </div>
@@ -454,15 +454,15 @@ class EvaluacionItem extends React.Component {
       return (
         <thead >
             <tr >
-            <th scope="col">{titulo}</th>
-            <th scope="col">{fecha}</th>
-            <th scope="col">{tipo}</th>
-            <th scope="col">
+            <td scope="col">{titulo}</td>
+            <td scope="col">{fecha}</td>
+            <td scope="col">{tipo}</td>
+            <td scope="col">
                 <Link onClick={e => handleUpdate(i)}>
                     <OptionButton icon={Gear} description="Modificar evaluacion" />
                 </Link>
                 <OptionButton   icon={Trashcan} description="Eliminar evaluacion"  onClick={e => handleDelete(id, i)}    last={true}  />
-            </th>
+            </td>
             </tr>
         </thead>
       );

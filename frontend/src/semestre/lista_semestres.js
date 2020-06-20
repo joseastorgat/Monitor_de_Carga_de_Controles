@@ -67,19 +67,18 @@ export default class lista_semestre extends React.Component {
           <Container>
             <ViewTitle>Semestres</ViewTitle>
             <Row className="mb-3">
-              <Col>
-
+              <Col md={4}>
                 <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
                   <InputGroup
+                    className="mr-sm-2"
                     value={this.state.search}
                     onChange={e => this.update_Search(e)} >
                     <FormControl type="text" placeholder="Buscar Semestre" className="mr-sm-2" />
                     <Button type="submit">Buscar</Button>
                   </InputGroup>
                 </Form>
-
               </Col>
-              <Col xs="auto">
+              <Col  md={{ span: 2, offset: 6 }}>
                 <Link to="/semestres/nuevo_semestre">
                   <Button className="btn btn-primary">Nuevo Semestre</Button>
                 </Link>

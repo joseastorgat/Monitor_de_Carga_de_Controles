@@ -118,8 +118,7 @@ export class lista_fechas extends React.Component {
         <Container>
           <ViewTitle>Fechas Especiales</ViewTitle>
             <Row className="mb-3">
-              <Col>
-
+              <Col  md={4}>
                 <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
                   <InputGroup
                     value={this.state.search}
@@ -130,7 +129,8 @@ export class lista_fechas extends React.Component {
                 </Form>
 
               </Col>
-              <Col xs="auto">
+              
+              <Col  md={{ span: 2, offset: 6 }}>
                 <Link to="/fechas_especiales/nueva_fecha">
                   <Button className="btn btn-primary">Nueva Fecha</Button>
                 </Link>
@@ -177,7 +177,7 @@ export class lista_fechas extends React.Component {
                <p > <span style={{'font-weight': "500"}} >Inicio: </span>{inicio} <span style={{'font-weight': "500"}}>   Fin: </span>{fin} </p>
               </Col>
               <Col className="text-center"></Col>
-              <Col  xs="auto">
+              <Col xs="auto">
                  
                   <Link to={`/fechas_especiales/${id}/editar`}>
                   <OptionButton icon={Pencil} description="Modificar fecha" />

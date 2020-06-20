@@ -26,7 +26,7 @@ class OptionButton extends React.Component {
     };
     let color= color_assigment(icon.name);
     return (
-      <OverlayTrigger placement="top" overlay={this.renderTooltip()}>
+      <OverlayTrigger size="medium" placement="top" overlay={this.renderTooltip()}>
         <Button
           variant={color}
           className={marginRight}
