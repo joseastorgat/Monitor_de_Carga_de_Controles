@@ -9,6 +9,14 @@ class SemestreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SemestreFileSerializer(serializers.Serializer):
+    file = serializers.FileField()
+
+    def validate_file(self, file):
+        # TODO: validar archivo
+        return file
+
+
 class RamoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ramo
@@ -76,7 +84,7 @@ class EvaluacionSerializer(serializers.ModelSerializer):
     def get_dia(self, obj):
         fecha = obj.fecha
         return fecha.weekday()
-    
+
     class Meta:
         model = Evaluacion
         fields = ['id', 'fecha', 'tipo', 'titulo', 'curso', 'semana', 'dia']
