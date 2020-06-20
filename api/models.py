@@ -27,6 +27,9 @@ class Semestre(models.Model):
     periodo = models.IntegerField(choices=_PERIODOS)
     estado = models.IntegerField(choices=_ESTADOS)
 
+    class Meta:
+        unique_together = (('año', 'periodo'))
+
     def __str__(self):
         return "Semestre "+self._PERIODOS[self.periodo-1][1]+" " +\
             str(self.año)
@@ -52,12 +55,14 @@ class Semestre(models.Model):
             if self.semana_valida(s):
                 print(f'semana {semanas[s]} es válida!')
                 inicio, fin = s
+                if Semana.objects.filter(numero=semanas[s], semestre=self):
+                    continue
                 Semana.objects.create(
                     numero=semanas[s], semestre=self, inicio=inicio, fin=fin)
         print('guardando semestre! :D',
               f'{counter} días en semestre, dia inicio {dia_inicio}')
         print(semanas)
-        return 
+        return
 
     def semana_valida(self, semana_tuple):
         dia_inicio, dia_fin = semana_tuple
@@ -65,11 +70,12 @@ class Semestre(models.Model):
         # procesar semana con fechas especiales
         current = dia_inicio
         one_day = datetime.timedelta(days=1)
+        # ver bien el sgte ciclo
         while current <= dia_inicio:
             dia_semana = current.weekday()
-            fecha = Fechas_especiales.objects.filter(inicio__gte=current)
-            fecha = fecha.filter(fin__lte=current)
-            if len(fecha):
+            fechas = Fechas_especiales.objects.filter(fin__gte=current)
+            fechas = fechas.filter(inicio__lte=current)
+            if len(fechas):
                 dias_lectivos.remove(dia_semana)
             current += one_day
         if dias_lectivos:
@@ -110,6 +116,65 @@ class Evaluacion(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
 
 
+class Semana(models.Model):
+    numero = models.IntegerField()
+    semestre = models.ForeignKey(Semestre, on_delete=models.CASCADE)
+    inicio = models.DateField()
+    fin = models.DateField()
+    fechas_especiales = models.ManyToManyField('Fechas_especiales')
+
+    class Meta:
+        unique_together = (("numero", "semestre"))
+
+    def validar(self):
+        dias_lectivos = [0, 1, 2, 3, 4]
+        one_day = datetime.timedelta(days=1)
+        for fecha_especial in self.fechas_especiales.all():
+            current_day = fecha_especial.inicio
+            while current_day <= self.fin and\
+                    current_day <= fecha_especial.fin:
+                dia_semana = current_day.weekday()
+                print(dia_semana)
+                if dia_semana < 5 and fecha_especial.is_restrictive():
+                    print(dias_lectivos)
+                    try:
+                        dias_lectivos.remove(dia_semana)
+                    except Exception:
+                        print('error, dia de la semana ya fue removido \
+                            anteriormente')
+                    print(dias_lectivos)
+                current_day += one_day
+            if len(dias_lectivos) == 0:
+                # chequear bien este cambio de numeros
+                # debuggear esta parte!!
+                numero = self.numero
+                self.numero = 0
+                self.save()
+                print(numero, self.numero)
+                semanas = Semana.objects.filter(numero__gt=numero)
+                semanas = semanas.filter(semestre=self.semestre)
+                print(semanas)
+                for sem in semanas:
+                    print(sem.numero)
+                    sem.numero -= 1
+                    print(sem.numero)
+                    sem.save()
+                return False
+            return True
+        return True
+
+        # for fecha in self.fechas_especiales.all():
+        #     dia_semana = fecha.fecha.weekday()
+        #     print(dia_semana)
+        #     if dia_semana < 5 and fecha.tipo:
+        #         print(dias_lectivos)
+        #         try:
+        #             dias_lectivos.remove(dia_semana)
+        #         except Exception:
+        #             pass
+        #         print(dias_lectivos)
+
+
 class Fechas_especiales(models.Model):
     _TIPOS_FECHAS = (
         (1, "Feriado"),
@@ -121,20 +186,33 @@ class Fechas_especiales(models.Model):
     )
     inicio = models.DateField()
     fin = models.DateField()
+    # fecha = models.DateField()
     nombre = models.CharField(max_length=45)
     tipo = models.IntegerField(choices=_TIPOS_FECHAS)
+
+    def save(self, *args, **kwargs):
+        super(Fechas_especiales, self).save(*args, **kwargs)
+        # fecha = self.fecha
+        fecha_inicio = self.inicio
+        fecha_fin = self.fin
+        semanas = Semana.objects.filter(inicio__lte=fecha_fin)
+        semanas = semanas.filter(fin__gte=fecha_inicio)
+        for semana in semanas:
+            # semana = semana.get()
+            semana.fechas_especiales.add(self)
+            if semana.validar() is False:
+                semana.delete()
+
+    def is_restrictive(self):
+        # ver bien los casos aqui
+        # definir que tipos de fechas
+        # especiales remueven dias
+        # del semestre y cuales no 
+        return True
 
 
 class Calendario(models.Model):
     fecha_creacion = models.DateField()
     nombre = models.CharField(max_length=45)
     token = models.CharField(max_length=45)
-    # link = models.CharField(max_length=100)
     cursos = models.ManyToManyField(Curso)
-
-
-class Semana(models.Model):
-    numero = models.IntegerField()
-    semestre = models.ForeignKey(Semestre, on_delete=models.CASCADE)
-    inicio = models.DateField()
-    fin = models.DateField()
