@@ -38,7 +38,7 @@ export class evaluaciones extends React.Component {
             MostrarEvaluaciones: [],
         //   search: ""
         };
-        this.deleteModalMsg = '¿Está seguro que desea eliminar la evaluacion?';
+        this.deleteModalMsg = '¿Está seguro que desea eliminar la evaluación?';
 
         this.form = null
 
@@ -164,7 +164,7 @@ export class evaluaciones extends React.Component {
         .catch( (err) => {
             console.log(err);
             console.log("cant update evaluacion");
-            alert("[ERROR] No se puedo actualizar la evaluacion! ");
+            alert("[ERROR] No se puedo actualizar la evaluación! ");
         });
     }
 
@@ -207,7 +207,7 @@ export class evaluaciones extends React.Component {
       })
       .catch( (err) => {
         console.log(err);
-        alert("[ERROR] No se puede eliminar la evaluacion! ");
+        alert("[ERROR] No se puede eliminar la evaluación! ");
       });
     }
 
@@ -289,13 +289,13 @@ export class evaluaciones extends React.Component {
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                 <div class="generic-form" ref={this.divToFocus}>  
-                    <h4>Nueva Evaluacion</h4>
+                    <h4>Nueva Evaluación</h4>
                     <div class="row">
                     <div class="col-sm-1"></div>        
                         <div class="col-sm-5">
                             <div class="row" >
                                 <div class="col-sm-2" >
-                                    <label >Titulo</label>
+                                    <label >Título</label>
                                 </div>
                                 <div class="col-sm-10" >
                                     <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
@@ -354,7 +354,7 @@ export class evaluaciones extends React.Component {
                         <div class="col-sm-5">
                             <div class="row" >
                                 <div class="col-sm-2" >
-                                    <label >Titulo</label>
+                                    <label >Título</label>
                                 </div>
                                 <div class="col-sm-10" >
                                     <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
@@ -394,7 +394,7 @@ export class evaluaciones extends React.Component {
                     <div class="row">
                         <div class="col-sm-2"></div>
                         {/* <LinkContainer activeClassName="" type="submit"  className="float-left btn btn-primary col-sm-2" to="./evaluaciones" style={{width: '7%','marginLeft':"14vw",borderRadius: '8px'}}> */}
-                            <button className="btn btn-primary col-sm-2" type="submit">Actualizar Evaluacion</button>
+                            <button className="btn btn-primary col-sm-2" type="submit">Actualizar Evaluación</button>
                         {/* </LinkContainer> */}
                         <div class="col-sm-4"></div>
                         <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
@@ -427,7 +427,7 @@ export class evaluaciones extends React.Component {
                                     <input type="text" className="form-control" name="nombre_curso" placeholder={this.state.curso.ramo + "-" + this.state.curso.seccion}  style={{textAlignLast:'center'}} readOnly="readonly"/>
                                 </div>
                                     <LinkContainer  activeClassName=""  to="#" onClick={this.handleClickNuevaEvaluacion} className="float-left col-sm-3"  style={{width: '7%', 'marginLeft':"3vw",borderRadius: '8px'}}>
-                                        <button  className="btn btn-primary" >Agregar Evaluacion</button>
+                                        <button  className="btn btn-primary" >Agregar Evaluación</button>
                                     </LinkContainer>
                             </div>
                         </div>
@@ -503,9 +503,9 @@ class EvaluacionItem extends React.Component {
             <th scope="col">{tipo}</th>
             <th scope="col">
                 <Link onClick={e => handleUpdate(i)}>
-                    <OptionButton icon={Pencil} description="Modificar evaluacion" />
+                    <OptionButton icon={Pencil} description="Modificar evaluación" />
                 </Link>
-                <OptionButton   icon={Trashcan} description="Eliminar evaluacion"  onClick={() => this.props.showModal()}    last={true}  />
+                <OptionButton   icon={Trashcan} description="Eliminar evaluación"  onClick={() => this.props.showModal()}    last={true}  />
             </th>
             </tr>
         </thead>
