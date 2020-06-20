@@ -36,6 +36,13 @@ class SemestreViewSet(viewsets.ModelViewSet):
         serializer = CursoDetailSerializer(cursos, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['get'],
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def evaluaciones(self, request, pk=None):
+        evaluaciones = Evaluacion.objects.filter(curso__semestre=pk)
+        serializer = EvaluacionSerializer(evaluaciones, many=True)
+        return Response(serializer.data)
+
     def get_queryset(self):
         if self.request.query_params:
             params = self.request.query_params
