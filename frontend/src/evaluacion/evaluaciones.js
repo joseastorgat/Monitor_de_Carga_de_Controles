@@ -149,7 +149,9 @@ export class evaluaciones extends React.Component {
             evaluaciones[this.state.editar_index] = res.data
             this.setState({
                 evaluacion_modified: true,
-                evaluaciones: evaluaciones
+                evaluaciones: evaluaciones,
+                eliminar_index: -1,
+                editar_index: -1
             });
             // window.location.reload(false);
         })
@@ -188,6 +190,7 @@ export class evaluaciones extends React.Component {
         this.setState({
             evaluaciones :evaluaciones,
             eliminar_index: -1,
+            editar_index: -1,
             showModal: false
         });
       })
