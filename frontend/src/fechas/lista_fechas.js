@@ -150,9 +150,6 @@ export class lista_fechas extends React.Component {
 
           </Container>
           
-          <LinkContainer  activeClassName=""  to="/administrar" >
-            <button className="btn btn-secondary" >Volver a Administrar</button>
-          </LinkContainer>
           </Container>
         </main>
       );

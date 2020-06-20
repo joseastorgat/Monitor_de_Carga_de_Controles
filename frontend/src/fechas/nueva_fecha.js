@@ -80,7 +80,7 @@ export class nueva_fecha extends React.Component {
                                             <label >Nombre</label>
                                         </div>
                                         <div className="col-sm-10" >
-                                            <input required type="text" className="form-control" name="nombre_fecha" onChange={this.onChange} placeholder="Feriado 1 mayo" style={{textAlignLast:'center'}} />
+                                            <input required type="text" className="form-control" name="nombre_fecha" onChange={this.onChange} placeholder="Que quiere que le pongamos" style={{textAlignLast:'center'}} />
                                         </div>
                                     </div>
                                 </div>  

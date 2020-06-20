@@ -22,37 +22,21 @@ class LogedInView extends React.Component {
           </LinkContainer>
         </NavLink>
         <NavLink  className="inactive" activeClassName="active">
-          <LinkContainer to="/fechas_especiales">
-            <h5>Fechas especiales</h5>
+          <LinkContainer to="/profesores">
+            <h5>Profesores</h5>
           </LinkContainer>
         </NavLink>
         <NavLink  className="inactive" activeClassName="active">
-          <LinkContainer to="/profesores">
-            <h5>Profesores</h5>
+          <LinkContainer to="/fechas_especiales">
+            <h5>Fechas especiales</h5>
           </LinkContainer>
         </NavLink>
       
      <NavDropdown
         alignRight
-        title={user ? `Bienvenido ${user.username}` : ''}
+        title={user ? `${user.username}` : ''}
         id="navbar-dropdown"
       >
-        {/* <NavDropdown.Header>Ir a administrar</NavDropdown.Header>
-        
-        <LinkContainer to="/semestres">
-          <NavDropdown.Item>Semestres</NavDropdown.Item>
-        </LinkContainer>
-        <LinkContainer to="/ramos">
-          <NavDropdown.Item>Ramos</NavDropdown.Item>
-        </LinkContainer>
-        <LinkContainer to="/fechas_especiales">
-          <NavDropdown.Item>Feriados</NavDropdown.Item>
-        </LinkContainer>
-        <LinkContainer to="/profesores">
-          <NavDropdown.Item>Profesores</NavDropdown.Item>
-        </LinkContainer>
-        <NavDropdown.Divider /> */}
-
         <LinkContainer to="/" activeClassName="" >
           <NavDropdown.Item onClick={logout}>  Cerrar Sesión  </NavDropdown.Item>
         </LinkContainer>
