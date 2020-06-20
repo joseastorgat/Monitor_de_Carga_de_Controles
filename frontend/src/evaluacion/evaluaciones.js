@@ -77,6 +77,7 @@ export class evaluaciones extends React.Component {
         else{
             this.create_evaluacion()
         }
+        this.form.reset()
     }
 
     //Scroll para nueva evaluacion
@@ -151,7 +152,12 @@ export class evaluaciones extends React.Component {
                 evaluacion_modified: true,
                 evaluaciones: evaluaciones,
                 eliminar_index: -1,
-                editar_index: -1
+                editar_index: -1,
+
+                id: "",
+                fecha: "",
+                tipo: "",
+                titulo: ""
             });
             // window.location.reload(false);
         })
@@ -191,7 +197,12 @@ export class evaluaciones extends React.Component {
             evaluaciones :evaluaciones,
             eliminar_index: -1,
             editar_index: -1,
-            showModal: false
+            showModal: false,
+
+            id: "",
+            fecha: "",
+            tipo: "",
+            titulo: ""
         });
       })
       .catch( (err) => {
@@ -227,7 +238,12 @@ export class evaluaciones extends React.Component {
         this.setState(
             {
                 evaluacion_created: true,
-                evaluaciones: evaluaciones
+                evaluaciones: evaluaciones,
+
+                id: "",
+                fecha: "",
+                tipo: "",
+                titulo: ""
             });
       })
       .catch( (err) => {
