@@ -45,13 +45,20 @@ export class nuevo_curso extends React.Component {
         console.log("Fetching Ramos...")
         await fetch(`http://127.0.0.1:8000/api/ramos/`)
         .then(response => response.json())
-        .then(res =>
+        .then(res =>{
           this.setState({
             ramos: res,
             MostrarRamos:res,
-            codigo:res[0].codigo})
+            })
+            if (res.length>0){
+                this.setState({
+                codigo:res[0].codigo,
+                ramo:res[0].nombre})
+            }
+        }
           )
       }
+      //Colocar un if si no hay ramos
     
     async fetchSemestre() {
         const { ano, semestre } = this.props.match.params;
@@ -95,12 +102,16 @@ export class nuevo_curso extends React.Component {
 
     create_curso() {  
 		console.log("post curso ...")
-        console.log(this.state.ramo)
+        // console.log(this.state.ramo)
         // No pude encontrar otra forma de sacar el id, hay un problema con el formato del json
         let id="0";
         this.state.semestre.map(semestre => (
             id=semestre.id
         ))
+        // console.log(id)
+        // console.log(this.state.seccion)
+        // console.log(this.state.profesores_curso)
+        console.log(this.state.ramo)
         console.log(id)
         console.log(this.state.seccion)
         console.log(this.state.profesores_curso)
@@ -113,7 +124,7 @@ export class nuevo_curso extends React.Component {
 				'Authorization': `Token ${this.props.auth.token}`
 			},
 			data: {
-				'ramo': this.state.ramo,
+				'ramo': this.state.codigo,
                 'semestre': id,
                 'seccion' : this.state.seccion,
                 'profesor': this.state.profesores_curso
