@@ -57,22 +57,15 @@ class Bloque_Calendario extends React.Component {
       <Container >
       <div>
         <div className="centrar">
-            <h2 className="titulo">Monitor de Carga de Controles</h2>
-            <p style={{marginTop: '46px',fontSize:'20px'}}>Bienvenido</p>
+            <h3 className="titulo">U-Calendar</h3>
+            <p style={{marginTop: '46px'}}>Bienvenido</p>
         </div>
         <div className="centrar">
         {this.state.MostrarSemestres.map(semestre=>(
-          <Link to={`/calendar/${semestre.año}/${semestre.periodo}`} >
-            <button className="btn btn-secondary botones_hacia_abajo" >Calendario Semestre {semestre.año} {semestre.periodo===1 ? "Otoño": "Primavera"}</button>
+          <Link to={`/calendario/${semestre.año}/${semestre.periodo}/`} >
+            <button className="btn btn-dark botones_hacia_abajo" >Calendario Semestre {semestre.año} {semestre.periodo===1 ? "Otoño": "Primavera"}</button>
           </Link>
         ))}
-          {/* <Link to="/calendar/2019/1/" >
-            <button className="rectangulo_azul" >Ver Semestre Otoño 2020</button>
-          </Link>
-          <Link to="/calendar/2019/2/" >
-            <button className="rectangulo_azul" >Ver Semestre Otoño 2020</button>
-          </Link> */}
-          {/* {isAuthenticated ? authLinks: '' } */}
         </div>
       </div>
      </Container>
@@ -95,7 +88,7 @@ export default class Home extends React.Component {
       <div>
         <Switch>
           <Route exact path="/" component={Bloque_Calendario_con} />
-          <Route exact path="/calendar/:anho/:periodo" component={Calendar} />
+          <Route exact path="/calendario/:anho/:periodo" component={Calendar} />
 
           {/* VISTAS DE ADMINISTRAR */}
           <PrivateRoute exact path="/administrar" component={administrar} />

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import OptionButton from "../common/OptionButton";
 import { File,  Pencil, Trashcan} from "@primer/octicons-react";
+import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -50,7 +51,7 @@ class CursoItem extends React.Component {
                     
                   />
                 </Link>
-                <Link to="#">
+                <Link to={`${this.info.codigo}/${this.info.seccion}/editar`}>
                   <OptionButton
                     icon={Pencil}
                     description={this.descriptions.edit}
@@ -61,6 +62,7 @@ class CursoItem extends React.Component {
                     icon={Trashcan}
                     description={this.descriptions.delete}
                     last={true}
+                    onClick={() => this.props.showModal()}
                   />
                 </Link>
               </Col>
@@ -83,10 +85,11 @@ export class ver_semestre extends React.Component {
       MostrarCursos: [],
       search: ""
     };
+    this.deleteModalMsg = `¿Está seguro que desea eliminar el curso?`;
   }
   static propTypes={
     auth: PropTypes.object.isRequired,
-};
+  };
   
   async fetchCursos() {
     const { ano, semestre } = this.props.match.params;
@@ -101,10 +104,47 @@ export class ver_semestre extends React.Component {
     )    
   }
 
+  async handleDelete() {
+    let e = this.state.cursoPorEliminar.id
+    console.log(e)
+    const url = `http://127.0.0.1:8000/api/cursos/${e}/`
+    let options = {
+      method: 'DELETE',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${this.props.auth.token}`
+      }
+    }
+    axios(options)
+      .then( (res) => {
+        this.setState({
+          showModal: false,
+          rcursoPorEliminar: null
+        });
+        this.fetchCursos();
+      })
+      .catch( (err) => {
+        console.log(err);
+        alert("[ERROR] No se pudo eliminar el curso! ");
+        this.setState({
+          showModal: false,
+          cursoPorEliminar: null
+        });
+      });
+  }
+
   async componentDidMount() {
     this.fetchCursos();
   }
 
+  showModal(curso) {
+    this.setState({ showModal: true, cursoPorEliminar: curso });
+  }
+
+  handleCancel() {
+    this.setState({ showModal: false, cursoPorEliminar: null });
+  }
   handle_search(){
     const busqueda= this.state.search;
     const Cursos= this.state.cursos;
@@ -126,6 +166,12 @@ export class ver_semestre extends React.Component {
 
     return(
           <main>
+          <DeleteModal
+            msg={this.deleteModalMsg}
+            show={this.state.showModal}
+            handleCancel={() => this.handleCancel()}
+            handleDelete={() => this.handleDelete()}
+          />
           <Container>
           <Container>
             <ViewTitle>Cursos de semestre {semestre} {ano}</ViewTitle>
@@ -154,9 +200,11 @@ export class ver_semestre extends React.Component {
             {this.state.MostrarCursos.map(curso => (
                 <CursoItem
                 key={curso.id}
+                id={curso.id}
                 nombre={curso.nombre}
                 seccion={curso.seccion}
                 codigo={curso.ramo}
+                showModal={() => this.showModal(curso)}
                 semestre_malla={curso.semestre_malla}
                 />
             ))}  

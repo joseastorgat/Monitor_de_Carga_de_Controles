@@ -16,6 +16,9 @@
 div.row { 
     margin-top: 16px;
 }
+.custom-class{
+    color:yellow;
+}
 
 /* ========================== Home.js =============================== */
 
@@ -29,11 +32,11 @@ div.row {
 
 
 .botones_hacia_abajo{
+    background-color: #2B96F7;
     display: block;
-    color: white;
     padding: 15px 32px;
-    width: 25vw;
-    height: 3vw;
+    width: 17rem;
+    height: 2.3rem;
     margin: auto;
     margin-bottom: 1rem;
     margin-left: 2rem;
@@ -41,6 +44,10 @@ div.row {
     border-color: white;
 }
 
+.block-example {
+    border: 1px solid #ddd;
+    display: inline-block;
+}
 .rectangulo_azul_admin{
     display: block;
     background-color: #0E71DE;
@@ -113,7 +120,7 @@ div.row {
 
 
 .titulo{ 
-    background-color: #858383;
+    background-color:#007BFF;
     border: solid 1px #ddd;
     color: white;
     padding: 15px 32px;

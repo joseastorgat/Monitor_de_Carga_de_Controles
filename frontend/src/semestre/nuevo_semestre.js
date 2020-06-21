@@ -4,6 +4,9 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
+import { Button } from "react-bootstrap";
+import Octicon from "@primer/octicons-react";
+import { ArrowLeft ,triangleleft} from "@primer/octicons-react";
 
 export class nuevo_semestre extends React.Component {
     static propTypes={
@@ -129,23 +132,6 @@ export class nuevo_semestre extends React.Component {
                                 </div>
                             </div>
 
-                            <div class="row" >
-                                <div class="col-md-1" ></div>
-                                <div class="col-md-5" >
-                                    <div class="row">
-                                        <div class="col-md-2" >
-                                            <label >Estado</label>
-                                        </div>
-                                        <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                            <select required className="form-control center" name="estado_semestre" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
-                                                <option value="1" selected>Por comenzar</option>
-                                                <option value="2">En curso</option>
-                                                <option value="3">Finalizado</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> 
                        </div> 
                         <div class="row" style={{textAlign:'center', justifyContent:'center'}}>
                             <div class="cuadrado-form">
@@ -170,7 +156,7 @@ export class nuevo_semestre extends React.Component {
 
                         <div class="form-group" style={{'marginTop':"4rem"}}>
                         <LinkContainer  activeClassName=""  to="/semestres" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                            <button className="btn btn-secondary" >Volver a Semestres</button>
+                            <Button className="btn btn-secondary" > <Octicon icon={ArrowLeft} size="medium" />  Volver a Semestres       </Button>
                         </LinkContainer>
 
                         {/* <LinkContainer activeClassName=""  to="/semestres" style={{'marginRight':"14vw"}}> */}

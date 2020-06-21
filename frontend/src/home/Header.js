@@ -10,20 +10,18 @@ class LogedInView extends React.Component {
     const { user, logout } = this.props;
     // console.log({user});
     return (
-      <Nav>
-        <NavLink className="inactive" activeClassName="active">
+      <Navbar.Collapse id="basic-navbar-nav">
+      <Nav className="ml-auto" >
+      <Nav.Item>
+        <Nav.Link className="inactive " activeClassName="active">
           <LinkContainer to="/semestres">
             <h5 style={{color:"white"}}>Semestres</h5>
           </LinkContainer>
-        </NavLink>
+        </Nav.Link>
+        </Nav.Item>
         <NavLink  className="inactive" activeClassName="active">
           <LinkContainer to="/ramos">
             <h5>Ramos</h5>
-          </LinkContainer>
-        </NavLink>
-        <NavLink  className="inactive" activeClassName="active">
-          <LinkContainer to="/fechas_especiales">
-            <h5>Fechas especiales</h5>
           </LinkContainer>
         </NavLink>
         <NavLink  className="inactive" activeClassName="active">
@@ -31,18 +29,18 @@ class LogedInView extends React.Component {
             <h5>Profesores</h5>
           </LinkContainer>
         </NavLink>
-      
+        <NavLink  className="inactive" activeClassName="active">
+          <LinkContainer to="/fechas_especiales">
+            <h5>Fechas especiales</h5>
+          </LinkContainer>
+        </NavLink>
      <NavDropdown
-        alignRight
         title={user ? `${user.username}` : ''}
-        id="navbar-dropdown"
       >
-        <LinkContainer to="/" activeClassName="" >
           <NavDropdown.Item onClick={logout}>  Cerrar Sesión  </NavDropdown.Item>
-        </LinkContainer>
-
       </NavDropdown> 
       </Nav>
+      </Navbar.Collapse>
     );
   }
 }
@@ -78,13 +76,14 @@ class Header extends React.Component {
       <LogedOutView />
     );
     return (
-      <Navbar className="navbar sticky-top color-nav" variant="dark">
+      <Navbar expand="lg" className="navbar sticky-top color-nav" variant="dark">
         <LinkContainer to="/">
           <Navbar.Brand className="mr-auto"><h4 style={{color:'White'}}>U-Calendar</h4></Navbar.Brand>
-        </LinkContainer>    
-        <Nav>
+        </LinkContainer>  
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />  
+       
         {isAuthenticated ? authLinks : guestLinks}
-        </Nav>
+        
       </Navbar>
       );
     }

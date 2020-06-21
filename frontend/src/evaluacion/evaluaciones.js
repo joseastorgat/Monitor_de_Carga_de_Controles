@@ -2,7 +2,8 @@ import React from "react";
 import {LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import {Gear, Trashcan} from "@primer/octicons-react";
+import {Pencil, Trashcan} from "@primer/octicons-react";
+import DeleteModal from "../common/DeleteModal";
 import {  Container} from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -23,6 +24,7 @@ export class evaluaciones extends React.Component {
             showModal: false,
             evaluacionPorEliminar: null,
             editar_index: -1,
+            eliminar_index: -1,
             form_focus: false,
 
             id: "",
@@ -36,7 +38,7 @@ export class evaluaciones extends React.Component {
             MostrarEvaluaciones: [],
         //   search: ""
         };
-        this.deleteModalMsg = '¿Está seguro que desea eliminar la evaluacion?';
+        this.deleteModalMsg = '¿Está seguro que desea eliminar la evaluación?';
 
         this.form = null
 
@@ -75,6 +77,7 @@ export class evaluaciones extends React.Component {
         else{
             this.create_evaluacion()
         }
+        this.form.reset()
     }
 
     //Scroll para nueva evaluacion
@@ -147,23 +150,33 @@ export class evaluaciones extends React.Component {
             evaluaciones[this.state.editar_index] = res.data
             this.setState({
                 evaluacion_modified: true,
-                evaluaciones: evaluaciones
+                evaluaciones: evaluaciones,
+                eliminar_index: -1,
+                editar_index: -1,
+
+                id: "",
+                fecha: "",
+                tipo: "",
+                titulo: ""
             });
             // window.location.reload(false);
         })
         .catch( (err) => {
             console.log(err);
             console.log("cant update evaluacion");
-            alert("[ERROR] No se puedo actualizar la evaluacion! ");
+            alert("[ERROR] No se puedo actualizar la evaluación! ");
         });
     }
 
 
-    handleDelete = (e, i) => {
-    
-        let evaluaciones = this.state.evaluaciones;
-        const titulo = evaluaciones[i]["titulo"];
-        const tipo = evaluaciones[i]["tipo"];
+    async handleDelete() {
+        let evaluacion = this.state.evaluacionPorEliminar
+        let e = evaluacion.id
+        let evaluaciones = this.state.evaluaciones
+        let i = this.state.eliminar_index
+        console.log(i)
+        const titulo = evaluacion.titulo;
+        const tipo = evaluacion.tipo;
         console.log("Eliminar: ", evaluaciones[i]);
     
         const url = `http://127.0.0.1:8000/api/evaluaciones/${e}/`
@@ -178,13 +191,23 @@ export class evaluaciones extends React.Component {
       }
       axios(options)
       .then( (res) => {
-        alert(`Evaluacion Eliminada ${titulo} - ${tipo}`);
+        // alert(`Evaluacion Eliminada ${titulo} - ${tipo}`);
         evaluaciones.splice(i, 1);
-        this.setState({evaluaciones :evaluaciones});
+        this.setState({
+            evaluaciones :evaluaciones,
+            eliminar_index: -1,
+            editar_index: -1,
+            showModal: false,
+
+            id: "",
+            fecha: "",
+            tipo: "",
+            titulo: ""
+        });
       })
       .catch( (err) => {
         console.log(err);
-        alert("[ERROR] No se puede eliminar la evaluacion! ");
+        alert("[ERROR] No se puede eliminar la evaluación! ");
       });
     }
 
@@ -215,7 +238,12 @@ export class evaluaciones extends React.Component {
         this.setState(
             {
                 evaluacion_created: true,
-                evaluaciones: evaluaciones
+                evaluaciones: evaluaciones,
+
+                id: "",
+                fecha: "",
+                tipo: "",
+                titulo: ""
             });
       })
       .catch( (err) => {
@@ -235,7 +263,8 @@ export class evaluaciones extends React.Component {
                 id: res.data.id,
                 titulo: res.data.titulo,
                 fecha: res.data.fecha,
-                tipo: res.data.tipo
+                tipo: res.data.tipo,
+                eliminar_index: -1
             })
         })      
     }
@@ -247,20 +276,29 @@ export class evaluaciones extends React.Component {
             })
         }
     }
+
+    showModal(evaluacion, index) {
+        this.setState({ showModal: true, evaluacionPorEliminar: evaluacion, eliminar_index: index });
+    }
+    
+    handleCancel() {
+        this.setState({ showModal: false, ramoPorEliminar: null });
+    }
+
     createFormRender(){
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                 <div class="generic-form" ref={this.divToFocus}>  
-                    <h4>Nueva Evaluacion</h4>
+                    <h4>Nueva Evaluación</h4>
                     <div class="row">
                     <div class="col-sm-1"></div>        
                         <div class="col-sm-5">
                             <div class="row" >
                                 <div class="col-sm-2" >
-                                    <label >Titulo</label>
+                                    <label >Título</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
+                                    <input required type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                 </div>
                             </div>
                         </div>
@@ -270,7 +308,7 @@ export class evaluaciones extends React.Component {
                                     <label >Fecha</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="date" className="form-control" name="fecha"  defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
+                                    <input required type="date" className="form-control" name="fecha"  defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
                                 </div>
                             </div>
                         </div>
@@ -284,7 +322,7 @@ export class evaluaciones extends React.Component {
                                 </div>
     
                                 <div class="custom-control custom-radio custom-control-inline"  >
-                                    <input type="radio" id="control" name="tipo" value="Control"  class="custom-control-input" onChange={this.onChange}/>
+                                    <input required type="radio" id="control" name="tipo" value="Control"  class="custom-control-input" onChange={this.onChange}/>
                                     <label class="custom-control-label" htmlFor="control">Control</label>
                                 </div>
                                 <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
@@ -316,7 +354,7 @@ export class evaluaciones extends React.Component {
                         <div class="col-sm-5">
                             <div class="row" >
                                 <div class="col-sm-2" >
-                                    <label >Titulo</label>
+                                    <label >Título</label>
                                 </div>
                                 <div class="col-sm-10" >
                                     <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
@@ -356,7 +394,7 @@ export class evaluaciones extends React.Component {
                     <div class="row">
                         <div class="col-sm-2"></div>
                         {/* <LinkContainer activeClassName="" type="submit"  className="float-left btn btn-primary col-sm-2" to="./evaluaciones" style={{width: '7%','marginLeft':"14vw",borderRadius: '8px'}}> */}
-                            <button className="btn btn-primary col-sm-2" type="submit">Actualizar Evaluacion</button>
+                            <button className="btn btn-primary col-sm-2" type="submit">Actualizar Evaluación</button>
                         {/* </LinkContainer> */}
                         <div class="col-sm-4"></div>
                         <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
@@ -369,8 +407,14 @@ export class evaluaciones extends React.Component {
     
     
     render() {
-        return [(
+        return (
             <Container>
+            <DeleteModal
+                msg={this.deleteModalMsg}
+                show={this.state.showModal}
+                handleCancel={() => this.handleCancel()}
+                handleDelete={() => this.handleDelete()}
+            />
             <div>
                 <h4 className="titulo">Evaluaciones</h4>
                     <div class="generic-form border-0">  
@@ -382,8 +426,8 @@ export class evaluaciones extends React.Component {
                                 <div class="col-sm-5" >
                                     <input type="text" className="form-control" name="nombre_curso" placeholder={this.state.curso.ramo + "-" + this.state.curso.seccion}  style={{textAlignLast:'center'}} readOnly="readonly"/>
                                 </div>
-                                    <LinkContainer  activeClassName=""  to="#" onClick={this.handleClickNuevaEvaluacion} className="float-left col-sm-3"  style={{width: '7%', 'marginLeft':"3vw",borderRadius: '8px'}}>
-                                        <button  className="btn btn-primary" >Agregar Evaluacion</button>
+                                    <LinkContainer  activeClassName=""  to="#" onClick={this.handleClickNuevaEvaluacion} style={{'marginLeft':"3vw"}}>
+                                        <button  className="btn btn-primary" >Agregar Evaluación</button>
                                     </LinkContainer>
                             </div>
                         </div>
@@ -407,7 +451,7 @@ export class evaluaciones extends React.Component {
                                 id_curso={evaluacion.curso}
                                 tipo={evaluacion.tipo}
                                 titulo={evaluacion.titulo}
-                                showModal={() => this.showModal(evaluacion)}
+                                showModal={() => this.showModal(evaluacion, _index)}
                                 handleDelete = {this.handleDelete}
                                 handleUpdate = {this.handleClickEditarEvaluacion}
                                 />
@@ -431,7 +475,7 @@ export class evaluaciones extends React.Component {
                    </Container>
             </div>
             </Container>
-        )];
+        );
     }
 }
 
@@ -454,15 +498,15 @@ class EvaluacionItem extends React.Component {
       return (
         <thead >
             <tr >
-            <th scope="col">{titulo}</th>
-            <th scope="col">{fecha}</th>
-            <th scope="col">{tipo}</th>
-            <th scope="col">
+            <td scope="col">{titulo}</td>
+            <td scope="col">{fecha}</td>
+            <td scope="col">{tipo}</td>
+            <td scope="col">
                 <Link onClick={e => handleUpdate(i)}>
-                    <OptionButton icon={Gear} description="Modificar evaluacion" />
+                    <OptionButton icon={Pencil} description="Modificar evaluación" />
                 </Link>
-                <OptionButton   icon={Trashcan} description="Eliminar evaluacion"  onClick={e => handleDelete(id, i)}    last={true}  />
-            </th>
+                <OptionButton   icon={Trashcan} description="Eliminar evaluación"  onClick={() => this.props.showModal()}    last={true}  />
+            </td>
             </tr>
         </thead>
       );
