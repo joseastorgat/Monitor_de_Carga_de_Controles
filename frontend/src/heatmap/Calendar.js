@@ -309,12 +309,12 @@ export default class Calendar extends React.Component {
         groups.includes(course.ramo_semestre) ? null : groups.push(course.ramo_semestre)
       );
       groups = groups.map(group => ({ number: group, icon: ChevronRight }));
-
+      const semestre_id=this.state.semestre_id
       console.log(courses);
       console.log(groups);
       console.log(courses)
       const evaluaciones = await fetch(
-        `http://127.0.0.1:8000/api/evaluaciones/`
+        `http://127.0.0.1:8000/api/semestres/${semestre_id}/evaluaciones/`
       ).then(res => res.json());
 
       // console.log(evaluaciones);
@@ -484,7 +484,12 @@ export class Evaluacion_dia_Modal extends React.Component {
         </Modal.Header>
         <Modal.Body>
         {evaluaciones.map(evaluacion=>
-        <div>{evaluacion.titulo} {evaluacion.tipo}</div>
+          <Row>
+          <Container>
+            <h6>{evaluacion.codigo}-{evaluacion.nombre_curso}</h6>
+            <div>{evaluacion.titulo} {evaluacion.tipo}</div>
+          </Container>
+        </Row>
         )}
         
         </Modal.Body>
