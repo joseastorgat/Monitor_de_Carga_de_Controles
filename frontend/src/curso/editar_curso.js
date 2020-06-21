@@ -4,6 +4,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
+import Select from 'react-select'
 
 export class editar_curso extends React.Component {
     constructor(props) {
@@ -92,8 +93,9 @@ export class editar_curso extends React.Component {
     };
 
     onChangeSelected = e => {
-        this.setState({profesores_curso: [...e.target.selectedOptions].map(o => o.value)}); 
+        this.setState({profesores_curso:e }); 
     }
+    
     handleSubmit = e => {
         e.preventDefault();
         console.log("submit");
@@ -106,6 +108,10 @@ export class editar_curso extends React.Component {
         // No pude encontrar otra forma de sacar el id, hay un problema con el formato del json
         console.log(this.state.seccion)
         console.log(this.state.profesores_curso)
+        var profesores=[]
+        this.state.profesores_curso.map(profesor => profesores.push(profesor.value))
+        console.log("Profes")
+        console.log(profesores)
         const url = `http://127.0.0.1:8000/api/cursos/${this.state.id_curso}/`
 	    let options = {
 			method: 'PATCH',
@@ -118,7 +124,7 @@ export class editar_curso extends React.Component {
 				'ramo': this.state.ramo,
                 'semestre': this.state.semestre_id,
                 'seccion' : this.state.seccion,
-                'profesor': this.state.profesores_curso
+                'profesor': profesores
 				}
 		}
 		
@@ -138,6 +144,14 @@ export class editar_curso extends React.Component {
 	}
 
     render() {
+        const options=this.state.MostrarProfesores.map(profesor => (
+            {value:profesor.id,label:profesor.nombre, style: { color: 'red' }}
+           ))
+        const customControlStyles = base => ({
+            ...base,
+            fontSize:"15px",
+        });
+        
         return (
             <div>
                 <h4 className="titulo">Editar curso</h4>
@@ -164,7 +178,7 @@ export class editar_curso extends React.Component {
                                             <label >Ramo</label>
                                         </div>
                                         <div class="col-sm-8" >
-                                            <select className="form-control center" name="ramo" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
+                                            <select  className="form-control center" name="ramo" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
                                                 {this.state.MostrarRamos.map(ramos => (
                                                 <option value={ramos.codigo}>{ramos.nombre}</option>
                                                 ))}
@@ -207,34 +221,12 @@ export class editar_curso extends React.Component {
                                         </div>
                                         <div class="col-sm-9" >
                                         {/* No pude centrarlo, hay un problema con prioridades de css de react */}
-                                            <select required className="form-control center"  value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} size = "3" multiple={true}>
-                                                {this.state.MostrarProfesores.map(profesor => (
-                                                <option value={profesor.id}>{profesor.nombre}</option>
-                                                ))}
-                                                
-                                                {/* <option value="5">Jeremy Barbay</option>
-                                                <option value="6">Nelson Baloian</option> */}
-                                            </select>
+                                            <Select className="basic-multi-select" styles={{control: customControlStyles}}   isMulti options={options} label="Seleccione profesores" value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} />
+
                                         </div>
                                     </div>
                                 </div>  
                             </div>
-
-                            {/* <div class="row">
-                                <div class="col-sm-1"></div>
-                                <div class="col-md-6">
-                                    <div class="row" style={{justifyContent: 'center'}} >
-                                        <div class="col-md-2" >
-                                            <label >Descripción</label>
-                                        </div>
-                                        <div class="col-sm-9" >
-                                        <textarea type="text"  rows="8" class="noresize form-control" name="descripcion_curso" placeholder="" style={{textAlignLast:'center'}}  />
-                                        </div>
-                                    
-                                    </div>
-                                </div>
-                                </div> */}
-
 
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>

@@ -16,6 +16,9 @@
 div.row { 
     margin-top: 16px;
 }
+.custom-class{
+    color:yellow;
+}
 
 /* ========================== Home.js =============================== */
 

@@ -178,9 +178,7 @@ class Sidebar extends React.Component {
 
 export default class Calendar extends React.Component {
   constructor(props) {
-    
     super(props);
-    
     this.state = {
       show_evaluaciones_dia_Modal:false,
       evaluaciones_dia:[],
@@ -200,6 +198,7 @@ export default class Calendar extends React.Component {
     
     this.weeks = [];
     this.handleChange.bind(this);
+    this.mostrar_evaluaciones_dia.bind(this);
   }
 
 
@@ -407,16 +406,16 @@ export default class Calendar extends React.Component {
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
                     if(cantidad_evaluaciones_dia==1){
-                      return<td class="sortable" style={{backgroundColor: "#F9680A"}}  onClick={()=> this.mostrar_evaluaciones_dia(evaluaciones_del_dia,day,i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" }  </td>
+                      return (<td class="sortable" style={{backgroundColor: "#F9680A"}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     }
                     else if(cantidad_evaluaciones_dia==2){
-                      return <td class="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A"}} onClick={()=> this.mostrar_evaluaciones_dia(evaluaciones_del_dia,day,i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>
+                      return (<td class="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
                     } 
                     else if(cantidad_evaluaciones_dia==3){
-                      return <td class="sortable" key={di} id={day} style={{backgroundColor: "#FF0000"}} onClick={()=> this.mostrar_evaluaciones_dia(evaluaciones_del_dia,day,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>
+                      return (<td class="sortable" key={di} id={day} style={{backgroundColor: "#FF0000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else if(cantidad_evaluaciones_dia>3){
-                      return <td  class="sortable" key={di} id={day} style={{backgroundColor: "#800000"}} onClick={()=> this.mostrar_evaluaciones_dia(evaluaciones_del_dia,day,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>
+                      return (<td  class="sortable" key={di} id={day} style={{backgroundColor: "#800000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else{
                       return <td key={di} id={day}> {day.split("-")[2] || "\u00a0" } </td>
@@ -470,7 +469,10 @@ export class Evaluacion_dia_Modal extends React.Component {
       color:"white"
   };
     const fecha=info[0];
-    console.log(fecha)
+
+  // PROBLEMAS ACA
+    // alert(fecha)
+    // console.log(fecha)
     // var date = new Date(fecha[0],fecha[1],fecha[2]);
     var dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
     var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
