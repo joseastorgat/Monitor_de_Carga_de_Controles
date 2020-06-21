@@ -45,11 +45,12 @@ export class nuevo_curso extends React.Component {
         console.log("Fetching Ramos...")
         await fetch(`http://127.0.0.1:8000/api/ramos/`)
         .then(response => response.json())
-        .then(ramos =>
+        .then(res =>
           this.setState({
-            ramos: ramos,
-            MostrarRamos:ramos
-          }))    
+            ramos: res,
+            MostrarRamos:res,
+            codigo:res[0].codigo})
+          )
       }
     
     async fetchSemestre() {
@@ -193,7 +194,7 @@ export class nuevo_curso extends React.Component {
                                             <label >Sección</label>
                                         </div>
                                         <div class="col-sm-8" >
-                                        <input type="number" required className="form-control" name="seccion"  min="1" max="10" style={{textAlignLast:'center'}}  onChange={this.onChange} />
+                                        <input type="number" required className="form-control" value={this.state.seccion} name="seccion"  min="1" max="10" style={{textAlignLast:'center'}}  onChange={this.onChange} />
                                         </div>
                                     </div>
                                 </div>
