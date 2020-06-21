@@ -55,7 +55,7 @@ class SidebarGroup extends React.Component {
       case 12:
         return "Duodécimo Semestre";
       default:
-        return "Otros Cursos";
+        return "Electivos";
     }
   }
 
@@ -65,7 +65,7 @@ class SidebarGroup extends React.Component {
     const this_courses = [];
     
     courses.map(course =>
-      course.ramo_semestre === nsemester  ? this_courses.push(course) : null
+      course.semestre_malla === nsemester  ? this_courses.push(course) : null
     );
 
     this.setState({ courses: this_courses });
@@ -123,7 +123,7 @@ class SidebarGroup extends React.Component {
                 <SidebarElement
                   key={i}
                   onChange={() => this.handleChangeSingle(courses.indexOf(course))}
-                  title={`${course.ramo}-${course.seccion} ${course.ramo_nombre}`}
+                  title={`${course.ramo}-${course.seccion} ${course.nombre}`}
                   checked={course.checked}
                 />
               ))}
@@ -264,59 +264,47 @@ export default class Calendar extends React.Component {
 
       for (let week of range.by('week')) {
         this.weeks.push(week);
+      
       }
-
       this.weeks = this.weeks.map( (week) =>  {
           let week_format = [];
           for (let i=0; i<7; i++){
             week_format.push(week.weekday(i).format("YYYY-MM-DD"));
           }
           return week_format;
-        })
+      })
 
-      const { year, semester } = this.state;
 
-      // obtener cursos
-      const coursesPre = await fetch(
+      // obtener cursos del semestre
+      let coursesPre = await fetch(
         `http://127.0.0.1:8000/api/semestres/${this.state.semestre_id}/cursos/`
         ).then(res => res.json());
 
-      // console.log(coursesPre)
-
-      let courses = [];
-
-      for(let course in coursesPre){
-        // console.log(course);
-        const ramo = await fetch(
-          `http://127.0.0.1:8000/api/ramos/${coursesPre[course].ramo}/`
-        ).then(res => res.json())
-        
-        // console.log(ramo);
-        courses.push({ ...coursesPre[course], checked:false, ramo_nombre:ramo.nombre, ramo_semestre:ramo.semestre_malla });
-      }
-      courses.sort((a, b) => {
-        if (a.ramo_semestre< b.ramo_semestre)
+      coursesPre.sort((a, b) => {
+        if (a.semestre_malla < b.semestre_malla)
           return -1;
-        if (a.ramo_semestre > b.ramo_semestre)
+        if (a.semestre_malla > b.semestre_malla)
           return 1;
         return 0;
       })
-      courses = courses.map(course => ({ ...course, checked: false }));
-      var groups = [];
-      
-      courses.map(course =>
-        groups.includes(course.ramo_semestre) ? null : groups.push(course.ramo_semestre)
-      );
+
+      let courses = coursesPre.map(course => ({ ...course, checked: false }));
+
+      // let groups = [];
+      var groups = [5, 6, 7, 8, 9, 10, 15];
+      // courses.map(course =>
+      //   groups.includes(course.semestre_malla) ? null : groups.push(course.semestre_malla)
+      // );
       groups = groups.map(group => ({ number: group, icon: ChevronRight }));
-      const semestre_id=this.state.semestre_id
-      console.log(courses);
-      console.log(groups);
-      console.log(courses)
+      
+
+      const semestre_id = this.state.semestre_id
+      
+      
       const evaluaciones = await fetch(
         `http://127.0.0.1:8000/api/semestres/${semestre_id}/evaluaciones/`
       ).then(res => res.json());
 
-      // console.log(evaluaciones);
       this.setState({ courses: courses, groups: groups, evaluaciones: evaluaciones});
     }
   }
@@ -337,12 +325,12 @@ export default class Calendar extends React.Component {
     else if(mes==="11") return "Nov"
     else return "Dic"
   }
-  mostrar_evaluaciones_dia(evaluaciones_del_dia,dia,semana,color){
-    this.showModal(evaluaciones_del_dia,dia,semana,color)
+  mostrar_evaluaciones_dia(evaluaciones_del_dia,dia,dia_n,semana,color){
+    this.showModal(evaluaciones_del_dia,dia,dia_n,semana,color)
   }
   
-  showModal(evaluaciones_del_dia,dia,semana,color) {
-    this.setState({ show_evaluaciones_dia_Modal: true, evaluaciones_dia: evaluaciones_del_dia, dia_mostrar_modal:[dia,semana,color]})
+  showModal(evaluaciones_del_dia,dia,dia_n,semana,color) {
+    this.setState({ show_evaluaciones_dia_Modal: true, evaluaciones_dia: evaluaciones_del_dia, dia_mostrar_modal:[dia,dia_n,semana,color]})
   }
 
   handleCancel() {
@@ -350,10 +338,11 @@ export default class Calendar extends React.Component {
     }
 
   render() {
-    console.log(this.state)
     
     const { courses, groups } = this.state;
+    console.log(this.state)
     console.log("rendering");
+    
     if(!this.state.found){
 
       return (
@@ -365,12 +354,15 @@ export default class Calendar extends React.Component {
     
     return (
       <Container>
-        <Evaluacion_dia_Modal 
-          show={this.state.show_evaluaciones_dia_Modal}
-          handleCancel={() => this.handleCancel()}
-          evaluaciones={this.state.evaluaciones_dia}
-          info={this.state.dia_mostrar_modal}
-        />
+
+        { this.state.show_evaluaciones_dia_Modal &&
+          <Evaluacion_dia_Modal 
+            show={this.state.show_evaluaciones_dia_Modal}
+            handleCancel={() => this.handleCancel()}
+            evaluaciones={this.state.evaluaciones_dia}
+            info={this.state.dia_mostrar_modal}
+          />
+        }
         <Row >
         <Col xs={3}>
             <Sidebar xs={3}
@@ -406,16 +398,16 @@ export default class Calendar extends React.Component {
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
                     if(cantidad_evaluaciones_dia==1){
-                      return (<td class="sortable" style={{backgroundColor: "#F9680A"}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td class="sortable"  key={di} id={day} style={{backgroundColor: "#FDBC5F"}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#FDBC5F")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     }
                     else if(cantidad_evaluaciones_dia==2){
-                      return (<td class="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
+                      return (<td class="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di, i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
                     } 
                     else if(cantidad_evaluaciones_dia==3){
-                      return (<td class="sortable" key={di} id={day} style={{backgroundColor: "#FF0000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td class="sortable" key={di} id={day} style={{backgroundColor: "#FF0000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else if(cantidad_evaluaciones_dia>3){
-                      return (<td  class="sortable" key={di} id={day} style={{backgroundColor: "#800000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td  class="sortable" key={di} id={day} style={{backgroundColor: "#800000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else{
                       return <td key={di} id={day}> {day.split("-")[2] || "\u00a0" } </td>
@@ -430,6 +422,8 @@ export default class Calendar extends React.Component {
           </Table>
           </div>  
           </Col>
+
+          {/* Leyenda */}
           <Col xs="auto" >
           <Table responsive className="leyenda" size="sm" style={{textAlign:'center'}}> 
               <thead>
@@ -461,35 +455,41 @@ export default class Calendar extends React.Component {
 
 export class Evaluacion_dia_Modal extends React.Component {
   render() {
-    const { show, handleCancel, evaluaciones,info} = this.props;
-    const semana=info[1];
-    const color=info[2];
+    const { show, handleCancel, evaluaciones, info} = this.props;
+    console.log(evaluaciones);
+    const semana = info[2];
+    const color = info[3];
     const divStyle = {
       backgroundColor: color,
       color:"white"
-  };
-    const fecha=info[0];
+    };
+    
+    var dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+    var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  
+    const fecha = info[0];
+    const dia = fecha.split("-")[2];
+    const mes = fecha.split("-")[1];
+    const dia_nombre = dias[info[1]];
 
   // PROBLEMAS ACA
     // alert(fecha)
     // console.log(fecha)
     // var date = new Date(fecha[0],fecha[1],fecha[2]);
-    var dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
-    var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  
+    
     return (
       <Modal size="sm" centered show={show} onHide={() => handleCancel()}>
         <Modal.Header style={divStyle} closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            <h6>Semana {semana}: {fecha}</h6>
+            <h6>Semana {semana}: {dia_nombre} {dia} de {meses[mes - 1]}</h6>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
         {evaluaciones.map(evaluacion=>
           <Row>
           <Container>
-            <h6>{evaluacion.codigo}-{evaluacion.nombre_curso}</h6>
-            <div>{evaluacion.titulo} {evaluacion.tipo}</div>
+            <h6>{evaluacion.codigo}- {evaluacion.nombre_curso}</h6>
+            <div>{evaluacion.titulo} ({evaluacion.tipo})</div>
           </Container>
         </Row>
         )}
@@ -497,6 +497,6 @@ export class Evaluacion_dia_Modal extends React.Component {
         </Modal.Body>
 
       </Modal>
-    );
+     );
   }
 }
