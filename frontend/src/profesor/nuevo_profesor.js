@@ -3,7 +3,11 @@ import { LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import {ArrowLeft} from "@primer/octicons-react";
+import ViewTitle from "../common/ViewTitle";
+import { Link } from "react-router-dom";
+import OptionButton from "../common/OptionButton";
+import { Container} from "react-bootstrap";
 
 export class nuevo_profesor extends React.Component {
 	constructor(props) {
@@ -73,8 +77,10 @@ create_profesor() {
 	render() {
 			const id= this.props.match.params.id
 			return (
-					<div>
-							<h4 className="titulo">Agregar Profesor</h4>
+					<Container>
+					<ViewTitle>
+					<Link  to="./"><OptionButton icon={ArrowLeft} description="Volver a profesores" /></Link>Agregar nuevo profesor</ViewTitle>
+							{/* <h4 className="titulo">Agregar Profesor</h4> */}
 									<form className="" name="form" onSubmit={this.handleSubmit}>
 											<div class="generic-form">
 													<div class="row">
@@ -112,7 +118,7 @@ create_profesor() {
 
 											</div>
 									</form>
-					</div>
+					</Container>
 			);
 		} 
 }

@@ -4,6 +4,11 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
+import {ArrowLeft} from "@primer/octicons-react";
+import ViewTitle from "../common/ViewTitle";
+import { Link } from "react-router-dom";
+import OptionButton from "../common/OptionButton";
+import { Container} from "react-bootstrap";
 
 export class nueva_fecha extends React.Component {
 
@@ -68,8 +73,10 @@ export class nueva_fecha extends React.Component {
             return <Redirect to="/fechas_especiales/" />;
         }
         return (
-            <div>
-                <h4 className="titulo">Agregar nueva fecha</h4>
+            <Container>
+            <ViewTitle>
+            <Link  to="./"><OptionButton icon={ArrowLeft} description="Volver a fechas" /></Link>Agregar nueva fecha</ViewTitle>
+                
                     <form className="" name="form" onSubmit={this.handleSubmit} >
                         <div class="generic-form">
                             <div className="row">
@@ -80,7 +87,7 @@ export class nueva_fecha extends React.Component {
                                             <label >Nombre</label>
                                         </div>
                                         <div className="col-sm-10" >
-                                            <input required type="text" className="form-control" name="nombre_fecha" onChange={this.onChange} placeholder="Que quiere que le pongamos" style={{textAlignLast:'center'}} />
+                                            <input required type="text" className="form-control" name="nombre_fecha" onChange={this.onChange} placeholder="Feriado 1 Mayo" style={{textAlignLast:'center'}} />
                                         </div>
                                     </div>
                                 </div>  
@@ -143,7 +150,7 @@ export class nueva_fecha extends React.Component {
                         {/* </LinkContainer> */}
                         </div>
                     </form>
-            </div>
+            </Container>
         );
       } 
 }

@@ -3,7 +3,7 @@ import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   Inp
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import { Pencil, Trashcan} from "@primer/octicons-react";
+import { Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import { LinkContainer } from "react-router-bootstrap";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
@@ -116,10 +116,12 @@ export class lista_fechas extends React.Component {
           handleDelete={() => this.handleDelete()}
         />
         <Container>
-          <ViewTitle>Fechas Especiales</ViewTitle>
+          <ViewTitle>
+          <Link to="/" exact path>
+          <OptionButton   icon={ArrowLeft} description="Volver a inicio" /></Link>
+          Fechas Especiales</ViewTitle>
             <Row className="mb-3">
-              <Col>
-
+              <Col  md={4}>
                 <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
                   <InputGroup
                     value={this.state.search}
@@ -130,9 +132,10 @@ export class lista_fechas extends React.Component {
                 </Form>
 
               </Col>
-              <Col xs="auto">
+              
+              <Col>
                 <Link to="/fechas_especiales/nueva_fecha">
-                  <Button className="btn btn-primary">Nueva Fecha</Button>
+                  <Button className="btn btn-primary float-right">Nueva Fecha</Button>
                 </Link>
               </Col>
             </Row>
@@ -177,7 +180,7 @@ export class lista_fechas extends React.Component {
                <p > <span style={{'font-weight': "500"}} >Inicio: </span>{inicio} <span style={{'font-weight': "500"}}>   Fin: </span>{fin} </p>
               </Col>
               <Col className="text-center"></Col>
-              <Col  xs="auto">
+              <Col xs="auto">
                  
                   <Link to={`/fechas_especiales/${id}/editar`}>
                   <OptionButton icon={Pencil} description="Modificar fecha" />

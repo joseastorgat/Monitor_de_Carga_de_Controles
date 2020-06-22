@@ -3,7 +3,7 @@ import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   Inp
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import {Pencil, Trashcan} from "@primer/octicons-react";
+import {Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import {LinkContainer } from "react-router-bootstrap";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
@@ -114,10 +114,11 @@ export class lista_profesores extends React.Component {
             handleDelete={() => this.handleDelete()}
         />
           <Container>
-            <ViewTitle>Profesores</ViewTitle>
+            <ViewTitle>
+            <Link to="/" exact path><OptionButton   icon={ArrowLeft} description="Volver a inicio" /></Link>
+            Profesores</ViewTitle>
             <Row className="mb-3">
-              <Col>
-
+              <Col  md={4}>
                 <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
                   <InputGroup
                     value={this.state.search}
@@ -128,9 +129,9 @@ export class lista_profesores extends React.Component {
                 </Form>
 
               </Col>
-              <Col xs="auto">
+              <Col>
                 <Link to="/profesores/nuevo_profesor">
-                  <Button className="btn btn-primary">Nuevo Profesor</Button>
+                  <Button className="btn btn-primary float-right">Nuevo Profesor</Button>
                 </Link>
               </Col>
             </Row>

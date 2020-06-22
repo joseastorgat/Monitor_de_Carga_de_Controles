@@ -4,7 +4,7 @@ import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import OptionButton from "../common/OptionButton";
-import { File,  Pencil, Trashcan} from "@primer/octicons-react";
+import { File,  Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -30,15 +30,17 @@ class CursoItem extends React.Component {
     }
   
     render() {
+      console.log(this.props.profesor)
       return (
         <Link style={{ textDecoration: "none" }} to={`${this.info.codigo}/${this.info.seccion}/evaluaciones`}>
           <Alert variant="secondary">
             <Row>
               <Col>
-                <p className="mb-0">
+              <span style={{'font-weight': "500"}} >
                   {this.props.codigo} {this.props.nombre}
-                </p>
+                </span>
                 <p className="mb-0">Sección {this.props.seccion}</p>
+                <p>Profesor:<ul> {this.props.profesor.map(profesor=> (<li>{profesor }</li>))}</ul></p>
               </Col>
               <Col xs="auto">
 
@@ -51,7 +53,7 @@ class CursoItem extends React.Component {
                     
                   />
                 </Link>
-                <Link to="#">
+                <Link to={`${this.info.codigo}/${this.info.seccion}/editar`}>
                   <OptionButton
                     icon={Pencil}
                     description={this.descriptions.edit}
@@ -174,7 +176,9 @@ export class ver_semestre extends React.Component {
           />
           <Container>
           <Container>
-            <ViewTitle>Cursos de semestre {semestre} {ano}</ViewTitle>
+            <ViewTitle>
+            <Link  to="/semestres"><OptionButton   icon={ArrowLeft} description="Volver a semestres" /></Link>
+            Cursos de semestre {semestre} {ano}</ViewTitle>
             <Row className="mb-3">
               <Col>
 
@@ -189,22 +193,24 @@ export class ver_semestre extends React.Component {
 
               </Col>
               <Col md="auto">
-              <Button >Exportar Semestre</Button>
+              <Button  className="btn btn-primary float-right">Exportar Semestre</Button>
             </Col>
               <Col xs="auto">
                 <Link to={path + "nuevo_curso"}>
-                  <Button className="btn btn-primary">Nuevo Curso</Button>
+                  <Button className="btn btn-primary float-right">Nuevo Curso</Button>
                 </Link>
               </Col>
             </Row>
             {this.state.MostrarCursos.map(curso => (
                 <CursoItem
                 key={curso.id}
+                id={curso.id}
                 nombre={curso.nombre}
                 seccion={curso.seccion}
                 codigo={curso.ramo}
                 showModal={() => this.showModal(curso)}
                 semestre_malla={curso.semestre_malla}
+                profesor={curso.profesor}
                 />
             ))}  
 

@@ -6,8 +6,8 @@ import {
   Accordion,
   Button,
   Col,
-  Row,
-  Container
+  Row,Table,
+  Container,Modal
 } from "react-bootstrap";
 
 import { ChevronRight, ChevronDown } from "@primer/octicons-react";
@@ -55,7 +55,7 @@ class SidebarGroup extends React.Component {
       case 12:
         return "Duodécimo Semestre";
       default:
-        return "Otros Cursos";
+        return "Electivos";
     }
   }
 
@@ -65,7 +65,7 @@ class SidebarGroup extends React.Component {
     const this_courses = [];
     
     courses.map(course =>
-      course.ramo_semestre === nsemester  ? this_courses.push(course) : null
+      course.semestre_malla === nsemester  ? this_courses.push(course) : null
     );
 
     this.setState({ courses: this_courses });
@@ -123,7 +123,7 @@ class SidebarGroup extends React.Component {
                 <SidebarElement
                   key={i}
                   onChange={() => this.handleChangeSingle(courses.indexOf(course))}
-                  title={`${course.ramo}-${course.seccion} ${course.ramo_nombre}`}
+                  title={`${course.ramo}-${course.seccion} ${course.nombre}`}
                   checked={course.checked}
                 />
               ))}
@@ -151,11 +151,11 @@ class Sidebar extends React.Component {
   render() {
     const { courses, handleChange, handleAccordion } = this.props;
     return (
-      <Alert variant="primary" className="mb-5">
+      <Alert variant="secondary" >
         <h4>Seleccione Cursos</h4>
         <Accordion>
           {this.props.groups.map((group, idx) => (
-            <SidebarGroup
+            <SidebarGroup 
               key={idx}
               checked={group.checked}
               nsemester={group.number}
@@ -166,6 +166,11 @@ class Sidebar extends React.Component {
             />
           ))}
         </Accordion>
+      <Row></Row><Row></Row>
+      <Row></Row>
+       <Row className="justify-content-md-center"> 
+        <Button >Guardar Calendario</Button>
+        </Row>
       </Alert>
     );
   }
@@ -173,10 +178,10 @@ class Sidebar extends React.Component {
 
 export default class Calendar extends React.Component {
   constructor(props) {
-    
     super(props);
-    
     this.state = {
+      show_evaluaciones_dia_Modal:false,
+      evaluaciones_dia:[],
       found: true,
       semestre_id: -1,
       año: this.props.match.params.anho,
@@ -188,10 +193,12 @@ export default class Calendar extends React.Component {
       evaluaciones: [],
       evaluaciones_a_mostrar: [],
       dias: [],
+      dia_mostrar_modal:[]
     }
     
     this.weeks = [];
     this.handleChange.bind(this);
+    this.mostrar_evaluaciones_dia.bind(this);
   }
 
 
@@ -249,7 +256,6 @@ export default class Calendar extends React.Component {
     else{
       this.setState({"inicio": res.data[0].inicio, "fin": res.data[0].fin, "semestre_id": res.data[0].id})
     }
-
     if(this.state.found){
       
       // generación de calendario
@@ -258,61 +264,47 @@ export default class Calendar extends React.Component {
 
       for (let week of range.by('week')) {
         this.weeks.push(week);
+      
       }
-
       this.weeks = this.weeks.map( (week) =>  {
           let week_format = [];
           for (let i=0; i<7; i++){
             week_format.push(week.weekday(i).format("YYYY-MM-DD"));
           }
           return week_format;
-        })
+      })
 
-      const { year, semester } = this.state;
-      
 
-      // obtener cursos
-      const coursesPre = await fetch(
+      // obtener cursos del semestre
+      let coursesPre = await fetch(
         `http://127.0.0.1:8000/api/semestres/${this.state.semestre_id}/cursos/`
         ).then(res => res.json());
 
-      // console.log(coursesPre)
-
-      let courses = [];
-      
-
-      for(let course in coursesPre){
-        // console.log(course);
-        const ramo = await fetch(
-          `http://127.0.0.1:8000/api/ramos/${coursesPre[course].ramo}/`
-        ).then(res => res.json())
-        
-        // console.log(ramo);
-        courses.push({ ...coursesPre[course], checked:false, ramo_nombre:ramo.nombre, ramo_semestre:ramo.semestre_malla });
-      }
-      courses.sort((a, b) => {
-        if (a.ramo_semestre< b.ramo_semestre)
+      coursesPre.sort((a, b) => {
+        if (a.semestre_malla < b.semestre_malla)
           return -1;
-        if (a.ramo_semestre > b.ramo_semestre)
+        if (a.semestre_malla > b.semestre_malla)
           return 1;
         return 0;
       })
-      courses = courses.map(course => ({ ...course, checked: false }));
-      var groups = [];
-      
-      courses.map(course =>
-        groups.includes(course.ramo_semestre) ? null : groups.push(course.ramo_semestre)
-      );
-      groups = groups.map(group => ({ number: group, icon: ChevronRight }));
 
-      console.log(courses);
-      console.log(groups);
+      let courses = coursesPre.map(course => ({ ...course, checked: false }));
+
+      // let groups = [];
+      var groups = [5, 6, 7, 8, 9, 10, 15];
+      // courses.map(course =>
+      //   groups.includes(course.semestre_malla) ? null : groups.push(course.semestre_malla)
+      // );
+      groups = groups.map(group => ({ number: group, icon: ChevronRight }));
+      
+
+      const semestre_id = this.state.semestre_id
+      
       
       const evaluaciones = await fetch(
-        `http://127.0.0.1:8000/api/evaluaciones/`
+        `http://127.0.0.1:8000/api/semestres/${semestre_id}/evaluaciones/`
       ).then(res => res.json());
 
-      // console.log(evaluaciones);
       this.setState({ courses: courses, groups: groups, evaluaciones: evaluaciones});
     }
   }
@@ -333,12 +325,24 @@ export default class Calendar extends React.Component {
     else if(mes==="11") return "Nov"
     else return "Dic"
   }
+  mostrar_evaluaciones_dia(evaluaciones_del_dia,dia,dia_n,semana,color){
+    this.showModal(evaluaciones_del_dia,dia,dia_n,semana,color)
+  }
+  
+  showModal(evaluaciones_del_dia,dia,dia_n,semana,color) {
+    this.setState({ show_evaluaciones_dia_Modal: true, evaluaciones_dia: evaluaciones_del_dia, dia_mostrar_modal:[dia,dia_n,semana,color]})
+  }
+
+  handleCancel() {
+    this.setState({ show_evaluaciones_dia_Modal: false,  evaluaciones_dia: [] , dia_mostrar_modal:[]})
+    }
 
   render() {
-    console.log(this.state)
     
     const { courses, groups } = this.state;
+    console.log(this.state)
     console.log("rendering");
+    
     if(!this.state.found){
 
       return (
@@ -349,78 +353,83 @@ export default class Calendar extends React.Component {
     else{
     
     return (
-      <main>
       <Container>
+
+        { this.state.show_evaluaciones_dia_Modal &&
+          <Evaluacion_dia_Modal 
+            show={this.state.show_evaluaciones_dia_Modal}
+            handleCancel={() => this.handleCancel()}
+            evaluaciones={this.state.evaluaciones_dia}
+            info={this.state.dia_mostrar_modal}
+          />
+        }
         <Row >
-          <Col lg={3}>
-            <Sidebar
+        <Col xs={3}>
+            <Sidebar xs={3}
               groups={groups}
               courses={courses}
               handleChange={(i, t) => this.handleChange(i, t)}
               handleAccordion={i => this.handleAccordion(i)}
             />
-          </Col>
-
-          <Col >
-          <Container>
-         
-          <h4 style={{textAlign:'justify'}}>Heatmap Semestre {this.state.año} {this.state.periodo==1 ? "Otoño": "Primavera"} </h4>
-          <div style={{display:"flex"}}> 
-            <div>
-            <div className="calendar">
-              <div className="week">
-                <div className="day-header"> <h6>Mes</h6> </div>
-                <div className="day-header"> <h6>Semana</h6> </div>
-                <div className="day-header"> <h6>Lunes</h6> </div>
-                <div className="day-header"> <h6>Martes</h6> </div>
-                <div className="day-header"> <h6>Miércoles </h6></div>
-                <div className="day-header"> <h6>Jueves</h6> </div>
-                <div className="day-header"> <h6>Viernes</h6> </div>
-                <div className="day-header"> <h6>Sábado </h6></div>
-                <div className="day-header"> <h6>Domingo</h6> </div>
-              </div>
-          
+        </Col>
+        <Col  style={{textAlign:'center'}} >
+          <h4 >Heatmap Semestre {this.state.periodo==1 ? "Otoño": "Primavera"}  {this.state.año} </h4>
+          <div > 
+          <Table size="sm" responsive >
+             <thead>
+                <tr>
+                <th><h6>Mes</h6></th>
+                <th> <h6>Semana</h6> </th>
+                <th> <h6>Lunes</h6> </th>
+                <th> <h6>Martes</h6> </th>
+                <th> <h6>Miércoles </h6></th>
+                <th> <h6>Jueves</h6> </th>
+                <th> <h6>Viernes</h6></th>
+                <th> <h6>Sábado </h6></th>
+                <th>  <h6>Domingo</h6> </th>
+              </tr>
+            </thead>
+            <tbody>
             { this.weeks.map( (week, i) => (
-              // <div> <h4> Semana {i}</h4>
-              
-              <div className="week" key={i}>
-              <div className="day-header"> <h6>{ this.encontrar_mes(week)}</h6></div>
-                <div className="day-header">S{i+1} </div>
-      
-                {  week.map((day, di ) => {
-                    const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day).length
-                    if(evaluaciones_del_dia==1){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "#FDBC5F"}}> {day.split("-")[2] || "\u00a0" } </div> 
+              <tr>
+              <th><h6>{ this.encontrar_mes(week)}</h6></th>
+              <th>S{i+1}</th>
+                {week.map((day, di ) => {
+                    const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day)
+                    const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
+                    if(cantidad_evaluaciones_dia==1){
+                      return (<td class="sortable"  key={di} id={day} style={{backgroundColor: "#FDBC5F"}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#FDBC5F")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     }
-                    else if(evaluaciones_del_dia==2){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "#F9680A"}}> {day.split("-")[2] || "\u00a0" } </div> 
+                    else if(cantidad_evaluaciones_dia==2){
+                      return (<td class="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di, i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
                     } 
-                    else if(evaluaciones_del_dia==3){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "#FF0000"}}> {day.split("-")[2] || "\u00a0" } </div> 
+                    else if(cantidad_evaluaciones_dia==3){
+                      return (<td class="sortable" key={di} id={day} style={{backgroundColor: "#FF0000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
-                    else if(evaluaciones_del_dia>3){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "#800000"}}> {day.split("-")[2] || "\u00a0" } </div> 
+                    else if(cantidad_evaluaciones_dia>3){
+                      return (<td  class="sortable" key={di} id={day} style={{backgroundColor: "#800000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
-
-                    /* else if (this.state.dias.indexOf(day)>1){
-                      return <div className="day" key={di} id={day} style={{backgroundColor: "green"}}> {day.split("-")[2] || "\u00a0" } {console.log(this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day))}</div> 
-                    }  */
                     else{
-                      return <div className="day" key={di} id={day}> {day.split("-")[2] || "\u00a0" } </div> 
+                      return <td key={di} id={day}> {day.split("-")[2] || "\u00a0" } </td>
                     }
                 
                   })
                 }
-              </div>
+                </tr>
               ))
             } 
-          </div>
-          </div>
-          <Col className="mb-1 " >
-             <table className="leyenda">
-              <tr style={{background:"#007BFF"}}>
-               <h3> Leyenda</h3>
-              </tr>
+            </tbody>
+          </Table>
+          </div>  
+          </Col>
+
+          {/* Leyenda */}
+          <Col xs="auto" >
+          <Table responsive className="leyenda" size="sm" style={{textAlign:'center'}}> 
+              <thead>
+              <th style={{background:"#007BFF"}}> Leyenda </th>
+              </thead>
+              <tbody>
               <tr style={{display:'flex'}}>
                 <span className="espacio"></span><div class="cuadrado" style={{background:"#FDBC5F"}}></div>1 Evaluaciones
               </tr>
@@ -433,18 +442,61 @@ export default class Calendar extends React.Component {
               <tr style={{display:'flex'}}>
                 <span className="espacio"></span> <div class="cuadrado" style={{background:"#800000"}}></div>Más de 3 Evaluaciones
               </tr>
-            </table>
+              </tbody>
+            </Table>
             </Col>
-          </div>  
-          </Container>
-
-          </Col>
-
         </Row>
       </Container>
-      </main>
     );
   }
 }
 }
 
+
+export class Evaluacion_dia_Modal extends React.Component {
+  render() {
+    const { show, handleCancel, evaluaciones, info} = this.props;
+    console.log(evaluaciones);
+    const semana = info[2];
+    const color = info[3];
+    const divStyle = {
+      backgroundColor: color,
+      color:"white"
+    };
+    
+    var dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+    var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  
+    const fecha = info[0];
+    const dia = fecha.split("-")[2];
+    const mes = fecha.split("-")[1];
+    const dia_nombre = dias[info[1]];
+
+    const customStyles = {
+      content : {
+        fontSize:"40px"
+      }
+    }
+    return (
+      <Modal portalClassName="modal" size="sm" centered show={show} onHide={() => handleCancel()}>
+        <Modal.Header style={divStyle} closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            <h6>Semana {semana}: {dia_nombre} {dia} de {meses[mes - 1]}</h6>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        {evaluaciones.map(evaluacion=>
+          <Row>
+          <Container>
+            <h6>{evaluacion.codigo} - {evaluacion.nombre_curso}</h6>
+            <p>{evaluacion.titulo} ({evaluacion.tipo})</p>
+          </Container>
+        </Row>
+        )}
+        
+        </Modal.Body>
+
+      </Modal>
+     );
+  }
+}
