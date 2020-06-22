@@ -4,6 +4,11 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
+import {ArrowLeft} from "@primer/octicons-react";
+import ViewTitle from "../common/ViewTitle";
+import { Link } from "react-router-dom";
+import OptionButton from "../common/OptionButton";
+import { Container} from "react-bootstrap";
 
 export class editar_semestre extends React.Component {
     state={
@@ -100,8 +105,10 @@ export class editar_semestre extends React.Component {
             return <Redirect to="/semestres" />;
         }
         return (
-            <div>
-                <h4 className="titulo">Editar semestre</h4>
+            <Container>
+            <ViewTitle>
+            <Link  to="/semestres"><OptionButton icon={ArrowLeft} description="Volver a semestres" /></Link>Editar semestre</ViewTitle>
+                
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
                             <div class="row">
@@ -190,7 +197,7 @@ export class editar_semestre extends React.Component {
                         {/* </LinkContainer> */}
                         </div>
                     </form>
-            </div>
+            </Container>
         );
       } 
 }

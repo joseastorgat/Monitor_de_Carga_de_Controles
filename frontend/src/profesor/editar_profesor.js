@@ -2,6 +2,11 @@ import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import { connect } from "react-redux";
+import {ArrowLeft} from "@primer/octicons-react";
+import ViewTitle from "../common/ViewTitle";
+import { Link } from "react-router-dom";
+import OptionButton from "../common/OptionButton";
+import { Container} from "react-bootstrap";
 
 export class editar_profesor extends React.Component {
     state = {
@@ -67,8 +72,11 @@ export class editar_profesor extends React.Component {
     }
     render() {
         return (
-            <div>
-                <h4 className="titulo">Editar Profesor</h4>
+            <Container>
+            <ViewTitle>
+					<Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a profesores" /></Link>Editar profesor</ViewTitle>
+					
+                {/* <h4 className="titulo">Editar Profesor</h4> */}
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
                             <div class="row">
@@ -105,7 +113,7 @@ export class editar_profesor extends React.Component {
                             <button className="btn btn-success"  type="submit">Guardar</button>
                         </div>
                     </form>
-            </div>
+            </Container>
         );
       } 
 }

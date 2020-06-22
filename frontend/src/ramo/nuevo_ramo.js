@@ -1,9 +1,14 @@
 import React from "react";
-import {LinkContainer } from "react-router-bootstrap";
+import {LinkContainer} from "react-router-bootstrap";
+import { Container} from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
+import {ArrowLeft} from "@primer/octicons-react";
+import ViewTitle from "../common/ViewTitle";
+import { Link } from "react-router-dom";
+import OptionButton from "../common/OptionButton";
 
 export class nuevo_ramo extends React.Component {
   
@@ -69,9 +74,12 @@ export class nuevo_ramo extends React.Component {
       return <Redirect to="/ramos/" />;
     }
     return (
+     <Container>
       <div>
-      <h4 className="titulo">Agregar nuevo ramo</h4>
-          <form className="" name="form" onSubmit={this.handleSubmit}>
+        <ViewTitle>
+            <Link  to="./"><OptionButton icon={ArrowLeft} description="Volver a ramos" /></Link>Agregar nuevo ramo</ViewTitle>
+      <div>
+        <form className="" name="form" onSubmit={this.handleSubmit}>
               <div class="generic-form">
                   <div class="row">
                       <div class="col-sm-1"></div>
@@ -132,8 +140,10 @@ export class nuevo_ramo extends React.Component {
                   <button className="btn btn-success" type="submit">Guardar Ramo</button>
               {/* </LinkContainer> */}
               </div>
-          </form>
-  </div>
+              
+          </form></div>
+          </div>
+          </Container>
 );
     } 
 }

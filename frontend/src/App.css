@@ -184,3 +184,8 @@ footer {
     color: yellow;
     text-decoration: none;
   }
+
+.dropdown-menu {
+    right: 0;
+    left: auto;
+}

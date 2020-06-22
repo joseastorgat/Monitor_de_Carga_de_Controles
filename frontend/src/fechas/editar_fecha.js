@@ -4,6 +4,12 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
+import {ArrowLeft} from "@primer/octicons-react";
+import ViewTitle from "../common/ViewTitle";
+import { Link } from "react-router-dom";
+import OptionButton from "../common/OptionButton";
+import { Container} from "react-bootstrap";
+
 
 export class editar_fecha extends React.Component {
     static propTypes={
@@ -84,8 +90,10 @@ export class editar_fecha extends React.Component {
         }
         const id= this.props.match.params.id;
         return (
-            <div>
-                <h4 className="titulo">Editar fecha {id}</h4>
+            <Container>
+            <ViewTitle>
+            <Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a fechas" /></Link>Editar fecha</ViewTitle>
+                
                 <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
                             <div class="row">
@@ -159,7 +167,7 @@ export class editar_fecha extends React.Component {
                         {/* </LinkContainer> */}
                         </div>
                     </form>
-            </div>
+            </Container>
         );
       } 
 }

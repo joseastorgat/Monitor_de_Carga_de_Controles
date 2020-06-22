@@ -2,12 +2,13 @@ import React from "react";
 import {LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import {Pencil, Trashcan} from "@primer/octicons-react";
+import {Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import DeleteModal from "../common/DeleteModal";
 import { Table, Container} from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import ViewTitle from "../common/ViewTitle";
 
 export class evaluaciones extends React.Component {
     constructor(props) {
@@ -422,7 +423,10 @@ export class evaluaciones extends React.Component {
                 handleDelete={() => this.handleDelete()}
             />
             <div>
-                <h4 className="titulo">Evaluaciones</h4>
+            <ViewTitle>
+            <Link  to="../../"><OptionButton   icon={ArrowLeft} description="Volver a cursos" /></Link>
+           Evaluaciones</ViewTitle>
+                {/* <h4 className="titulo">Evaluaciones</h4> */}
                     <div class="generic-form border-0">  
                         <div class="col-sm-7" >
                             <div class="row">
