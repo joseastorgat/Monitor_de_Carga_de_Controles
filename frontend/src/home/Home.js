@@ -11,7 +11,7 @@ import {nuevo_semestre , lista_semestres,editar_semestre, ver_semestre} from "..
 import {nuevo_curso , ver_curso, editar_curso} from "../curso/index_curso";
 import {nuevo_ramo ,editar_ramo, lista_ramos} from "../ramo/index_ramo";
 import {nuevo_fecha,editar_fecha, lista_fechas} from "../fechas/index_fecha";
-import {evaluaciones} from "../evaluacion/index_evaluacion";
+import {evaluaciones,lista_evaluaciones} from "../evaluacion/index_evaluacion";
 import {nuevo_profesor, editar_profesor, lista_profesores} from "../profesor/index_profesor";
 import Calendar from "../heatmap/Calendar";
 import { Button } from "react-bootstrap";
@@ -107,6 +107,7 @@ export default class Home extends React.Component {
 
           {/* VISTAS DE EVALUACION */}
           <Route exact path="/semestres/:ano/:semestre/:cod/:seccion/evaluaciones" component={evaluaciones} />
+          <Route exact path="/evaluaciones/" component={lista_evaluaciones} />
 
           {/* VISTAS DE PROFESOR */}
           <Route exact path="/profesores" component={lista_profesores} />
