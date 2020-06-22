@@ -63,7 +63,7 @@ export class LoginPage extends React.Component {
             <form class="login-form" name="form" onSubmit={this.onSubmit} >
           
               <div class="form-header">
-                <h2>U-Calendar</h2>
+                <h2>Iniciar Sesión</h2>
               </div>
 
               <div class="form-group">
