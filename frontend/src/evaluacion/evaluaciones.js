@@ -2,12 +2,13 @@ import React from "react";
 import {LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import {Pencil, Trashcan} from "@primer/octicons-react";
+import {Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import DeleteModal from "../common/DeleteModal";
-import {  Container} from "react-bootstrap";
+import { Table, Container} from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import ViewTitle from "../common/ViewTitle";
 
 export class evaluaciones extends React.Component {
     constructor(props) {
@@ -118,7 +119,13 @@ export class evaluaciones extends React.Component {
         .then(response => response.json())
         .then(evaluaciones =>
             this.setState({
-            evaluaciones: evaluaciones,
+            evaluaciones: evaluaciones.sort((a, b) => {
+                if (a.fecha < b.fecha)
+                  return -1;
+                if (a.fecha > b.fecha)
+                  return 1;
+                return 0;
+              }),
             MostrarEvaluaciones: evaluaciones,
           })
         )
@@ -335,7 +342,7 @@ export class evaluaciones extends React.Component {
                     <div class="row">
                         <div class="col-sm-2"></div>
  
-                        <button type="submit" className="float-left btn btn-success col-sm-1">Guardar</button>
+                        <button type="submit" className="float-left btn btn-success">Guardar</button>
                         <div class="col-sm-5"></div>
                         <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
                     </div>
@@ -416,7 +423,10 @@ export class evaluaciones extends React.Component {
                 handleDelete={() => this.handleDelete()}
             />
             <div>
-                <h4 className="titulo">Evaluaciones</h4>
+            <ViewTitle>
+            <Link  to="../../"><OptionButton   icon={ArrowLeft} description="Volver a cursos" /></Link>
+           Evaluaciones</ViewTitle>
+                {/* <h4 className="titulo">Evaluaciones</h4> */}
                     <div class="generic-form border-0">  
                         <div class="col-sm-7" >
                             <div class="row">
@@ -433,7 +443,7 @@ export class evaluaciones extends React.Component {
                         </div>
                     </div>
                     <div class="generic-form border-0">
-                        <table class="table table-condensed">
+                        <Table size="sm" responsive class="table table-condensed">
                         <thead>
                             <tr>
                             <th scope="col">Nombre</th>
@@ -461,7 +471,7 @@ export class evaluaciones extends React.Component {
                             <EvaluacionItem key="2" id="2" fecha="02-06-2020" id_curso="CC3301" tipo="Tarea" titulo="Tarea 2"  />
                             <EvaluacionItem key="3" id="3" fecha="15-05-2020" id_curso="CC3301" tipo="Control" titulo="Control 1"  /> */}
                         {/* </tbody> */}
-                        </table>
+                        </Table>
                     </div>
                     
                     
@@ -494,12 +504,14 @@ class EvaluacionItem extends React.Component {
       const handleDelete = this.props.handleDelete;
       const handleUpdate = this.props.handleUpdate;
       const i = this.props.index;
+      const fec=fecha.split("-")
+      const fecha_formato_m_d_y= fec[2]+"-"+fec[1]+"-"+fec[0]
 
       return (
         <thead >
             <tr >
             <td scope="col">{titulo}</td>
-            <td scope="col">{fecha}</td>
+            <td scope="col">{fecha_formato_m_d_y}</td>
             <td scope="col">{tipo}</td>
             <td scope="col">
                 <Link onClick={e => handleUpdate(i)}>

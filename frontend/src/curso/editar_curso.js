@@ -5,6 +5,11 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import Select from 'react-select'
+import {ArrowLeft} from "@primer/octicons-react";
+import ViewTitle from "../common/ViewTitle";
+import { Link } from "react-router-dom";
+import OptionButton from "../common/OptionButton";
+import { Container} from "react-bootstrap";
 
 export class editar_curso extends React.Component {
     constructor(props) {
@@ -153,8 +158,10 @@ export class editar_curso extends React.Component {
         });
         
         return (
-            <div>
-                <h4 className="titulo">Editar curso</h4>
+            <Container>
+            <ViewTitle>
+            <Link  to="../../"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Editar curso</ViewTitle>
+                
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
                             <div class="row">
@@ -239,7 +246,7 @@ export class editar_curso extends React.Component {
                         {/* </LinkContainer> */}
                         </div>
                     </form>
-            </div>
+            </Container>
         );
       } 
 }

@@ -6,7 +6,11 @@ import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import { Button } from "react-bootstrap";
 import Octicon from "@primer/octicons-react";
-import { ArrowLeft ,triangleleft} from "@primer/octicons-react";
+import {ArrowLeft} from "@primer/octicons-react";
+import ViewTitle from "../common/ViewTitle";
+import { Link } from "react-router-dom";
+import OptionButton from "../common/OptionButton";
+import { Container} from "react-bootstrap";
 
 export class nuevo_semestre extends React.Component {
     static propTypes={
@@ -136,8 +140,10 @@ export class nuevo_semestre extends React.Component {
             return <Redirect to="/semestres" />;
         }
         return (
-            <div>
-                <h4 className="titulo">Agregar semestre</h4>
+            <Container>
+            <ViewTitle>
+            <Link  to="/semestres"><OptionButton icon={ArrowLeft} description="Volver a semestres" /></Link>Agregar nuevo semestre</ViewTitle>
+               
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
                             <div class="row">
@@ -219,7 +225,9 @@ export class nuevo_semestre extends React.Component {
 
                         <div class="form-group" style={{'marginTop':"4rem"}}>
                         <LinkContainer  activeClassName=""  to="/semestres" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                            <Button className="btn btn-secondary" > <Octicon icon={ArrowLeft} size="medium" />  Volver a Semestres       </Button>
+                            <Button className="btn btn-secondary" > 
+                            {/* <Octicon icon={ArrowLeft} size="medium" /> */}
+                              Volver a Semestres       </Button>
                         </LinkContainer>
 
                         {/* <LinkContainer activeClassName=""  to="/semestres" style={{'marginRight':"14vw"}}> */}
@@ -227,7 +235,7 @@ export class nuevo_semestre extends React.Component {
                         {/* </LinkContainer> */}
                         </div>
                     </form>
-            </div>
+            </Container>
         );
       } 
 }
