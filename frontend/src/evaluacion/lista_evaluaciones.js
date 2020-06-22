@@ -1,30 +1,53 @@
 import React from "react";
-import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
+import { Alert,Button,   Container,   Col,   Row } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import {Gear, Trashcan} from "@primer/octicons-react";
-import {LinkContainer } from "react-router-bootstrap";
+import axios from "axios";
 
 export default class lista_evaluaciones extends React.Component {
     constructor(props) {
       super(props);
-      this.handle_search = this.handle_search.bind(this);
       this.state = {
         evaluaciones: [],
+        semestres:[],
+        cursos:[],
         showModal: false,
         EvaluacionPorEliminar: null,
         MostrarEvaluaciones: [],
+        MostrarSemestres: [],
+        MostrarCursos: [],
+        semestre_busqueda:"",
+        curso_busqueda:"",
         search: ""
       };
   
       this.deleteModalMsg = `¿Está seguro que desea eliminar el Evaluacion?`;
     }
   
-  
+    onChange_Semestre = (e) => {  
+      this.setState({
+        [e.target.name]: 
+        e.target.value
+      })
+      console.log("Fetching Cursos...")
+      axios.get(`http://127.0.0.1:8000/api/semestres/${e.target.value}/cursos/`)
+      .then(response =>
+          this.setState({
+              cursos: response.data,
+              MostrarCursos: response.data
+            })
+          )
+  };
+  onChange_Curso = (e) => {  
+    this.setState({
+      [e.target.name]: 
+      e.target.value
+    })
+  }
     async fetchEvaluaciones() {
-      console.log("Fetching...")
-      let evaluaciones = [];
+      console.log("Fetching Evaluaciones ...")
       await fetch(`http://127.0.0.1:8000/api/evaluaciones/`)
       .then(response => response.json())
       .then(evaluaciones =>
@@ -35,59 +58,65 @@ export default class lista_evaluaciones extends React.Component {
         )    
       console.log(this.state.evaluaciones)
     }
-  
+
+    async fetchSemestres() {
+      console.log("Fetching Semestres...")
+      await fetch(`http://127.0.0.1:8000/api/semestres/`)
+      .then(response => response.json())
+      .then(semestres =>
+        this.setState({
+          semestres: semestres,
+          MostrarSemestres: semestres
+        })
+      )    
+    }
+
     async componentDidMount() {
-      this.fetchEvaluaciones();
+      this.fetchSemestres();
     }
   
-    handle_search(){
-      const busqueda= this.state.search;
-      const evaluaciones= this.state.evaluaciones;
-      const evaluaciones_buscadas= evaluaciones.filter(o=>
-        (o.name.toString()+" " + o.codigo.toString() ).includes(busqueda)
-      );
-      console.log("Buscados")
-      console.log(evaluaciones_buscadas)
-      this.setState({MostrarEvaluaciones: evaluaciones_buscadas});
-    }
-  
-    update_Search(e){
-      this.setState({search: e.target.value});
+    validar_busqueda(){
+      
+      return false;
     }
 
     render() {
-      const handle_search = e => {
-        e.preventDefault();
-        alert("No implementado, pero se busco "+ this.state.search)
-      }
-
-      const update_Search= e => {
-        this.state.search=e.target.value;
-      };
-
       return (
         <main>
           <Container>
             <ViewTitle>Evaluaciones</ViewTitle>
-            <Row className="mb-3">
-              <Col>
-
-                <Form inline className="mr-auto" onSubmit={handle_search} >
-                  <InputGroup
-                    value={this.state.search}
-                    onChange={update_Search} >
-                    <FormControl type="text" placeholder="Buscar Evaluación" className="mr-sm-2" />
-                    <Button type="submit">Buscar</Button>
-                  </InputGroup>
-                </Form>
-
+            <form onSubmit={this.validar_busqueda}>
+            <Row >
+              <Col xs={4}> 
+                  <p>Semestre
+                    <select required className="form-control"  name="semestre_busqueda" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange_Semestre} >
+                        <option value="" >Seleccione semestre</option>
+                        {this.state.MostrarSemestres.map(semestre=>
+                          <option value={semestre.id} >{semestre.año} {semestre.periodo===1 ? "Otoño": "Primavera" }</option>         
+                        )}
+                    </select>
+                  </p>
               </Col>
-              <Col xs="auto">
-                <Link to="/evaluaciones/nueva_evaluacion">
-                  <Button className="btn btn-primary">Nueva Evaluacion</Button>
-                </Link>
+              <Col xs={4}>
+                <p>Curso
+                <select required className="form-control"  name="curso_busqueda" style={{textAlignLast:'center',textAlign:'center'}} value={this.state.curso_busqueda} onChange={this.onChange_Curso} >
+                    <option value="" >Seleccione curso</option>
+                    {this.state.MostrarCursos.map(curso=>
+                          <option value={curso.id} >{curso.ramo} {curso.nombre}</option>         
+                        )}
+                    
+                </select>
+                </p>
+                
               </Col>
-            </Row>
+              <Col >
+              <Row></Row>
+              <Button className="btn btn-primary" style={{height: "50px" }} type="submit">Buscar</Button>
+              </Col>
+              
+                </Row>
+                </form>
+                <Row ></Row><Row ></Row><Row ></Row>
                 {this.state.MostrarEvaluaciones.map(evaluacion => (
                 <EvaluacionItem
                 key={evaluacion.id}
@@ -97,16 +126,9 @@ export default class lista_evaluaciones extends React.Component {
                 titulo={evaluacion.titulo}
                 showModal={() => this.showModal(evaluacion)}
                 />
+                
             ))}
-
-            <EvaluacionItem key="1" id="1" id_curso="CC3301" tipo="Tarea" titulo="Tarea 1"  />
-            <EvaluacionItem key="2" id="2" id_curso="CC3301" tipo="Tarea" titulo="Tarea 2"  />
-            <EvaluacionItem key="3" id="3" id_curso="CC3301" tipo="Control" titulo="Control 1"  />
           </Container>
-          
-          <LinkContainer  activeClassName=""  to="/administrar" className="float-left " style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                            <button >Volver</button>
-          </LinkContainer>
         </main>
       );
     }

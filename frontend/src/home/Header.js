@@ -34,6 +34,11 @@ class LogedInView extends React.Component {
             <h5>Fechas especiales</h5>
           </LinkContainer>
         </NavLink>
+        <NavLink  className="inactive" activeClassName="active">
+          <LinkContainer to="/evaluaciones">
+            <h5>Evaluaciones</h5>
+          </LinkContainer>
+        </NavLink>
      <NavDropdown alignRight title={user ? `${user.username}` : ''} >
           <NavDropdown.Item onClick={logout}>  Cerrar Sesión  </NavDropdown.Item>
       </NavDropdown> 
