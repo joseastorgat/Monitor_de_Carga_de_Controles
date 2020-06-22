@@ -30,15 +30,17 @@ class CursoItem extends React.Component {
     }
   
     render() {
+      console.log(this.props.profesor)
       return (
         <Link style={{ textDecoration: "none" }} to={`${this.info.codigo}/${this.info.seccion}/evaluaciones`}>
           <Alert variant="secondary">
             <Row>
               <Col>
-                <p className="mb-0">
+              <span style={{'font-weight': "500"}} >
                   {this.props.codigo} {this.props.nombre}
-                </p>
+                </span>
                 <p className="mb-0">Sección {this.props.seccion}</p>
+                <p>Profesor:<ul> {this.props.profesor.map(profesor=> (<li>{profesor }</li>))}</ul></p>
               </Col>
               <Col xs="auto">
 
@@ -206,6 +208,7 @@ export class ver_semestre extends React.Component {
                 codigo={curso.ramo}
                 showModal={() => this.showModal(curso)}
                 semestre_malla={curso.semestre_malla}
+                profesor={curso.profesor}
                 />
             ))}  
 
