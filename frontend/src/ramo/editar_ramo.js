@@ -3,6 +3,11 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { connect } from "react-redux";
+import {ArrowLeft} from "@primer/octicons-react";
+import ViewTitle from "../common/ViewTitle";
+import { Link } from "react-router-dom";
+import OptionButton from "../common/OptionButton";
+import { Container} from "react-bootstrap";
 
 export class editar_ramo extends React.Component {
 
@@ -83,8 +88,10 @@ export class editar_ramo extends React.Component {
         const id= this.props.match.params.id;
 
         return (
-            <div>
-                <h4 className="titulo">Editar ramo {id}</h4>
+            <Container>
+            <ViewTitle>
+					<Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a ramos" /></Link>Editar ramo {id}</ViewTitle>
+                {/* <h4 className="titulo">Editar ramo {id}</h4> */}
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
                             <div class="row">
@@ -149,7 +156,7 @@ export class editar_ramo extends React.Component {
                         {/* </LinkContainer> */}
                         </div>
                     </form>
-            </div>
+            </Container>
         );
       } 
 }

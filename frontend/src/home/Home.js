@@ -61,11 +61,7 @@ class Bloque_Calendario extends React.Component {
     <main>
       <Container >
       <div>
-        <div className="centrar">
-            <h3 className="titulo">U-Calendar</h3>
-            <p style={{marginTop: '46px'}}>Bienvenido</p>
-        </div>
-        <div className="centrar">
+        <div className="centrar" style={{marginTop:"130px"}}>
         {this.state.MostrarSemestres.map(semestre=>(
           <Link to={`/calendario/${semestre.año}/${semestre.periodo}/`} >
             <button className="btn btn-dark botones_hacia_abajo" >Calendario Semestre {semestre.año} {semestre.periodo===1 ? "Otoño": "Primavera"}</button>

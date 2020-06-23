@@ -4,7 +4,7 @@ import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import DeleteModal from "../common/DeleteModal";
 import OptionButton from "../common/OptionButton";
-import { Pencil, Trashcan, Calendar,Book } from "@primer/octicons-react";
+import { Pencil, Trashcan, Calendar,Book ,ArrowLeft} from "@primer/octicons-react";
 import { LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -114,8 +114,11 @@ export class lista_semestre extends React.Component {
             handleCancel={() => this.handleCancel()}
             handleDelete={() => this.handleDelete()}
           />
-          
-            <ViewTitle>Semestres</ViewTitle>
+
+            <ViewTitle>   
+            <Link to="/" exact path>
+           <OptionButton   icon={ArrowLeft} description="Volver a inicio" /></Link>
+      Semestres</ViewTitle>
             <Row className="mb-3">
               <Col md={4}>
                 <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
@@ -128,9 +131,9 @@ export class lista_semestre extends React.Component {
                   </InputGroup>
                 </Form>
               </Col>
-              <Col  md={{ span: 2, offset: 6 }}>
+              <Col>
                 <Link to="/semestres/nuevo_semestre">
-                  <Button className="btn btn-primary">Nuevo Semestre</Button>
+                  <Button className="btn btn-primary float-right">Nuevo Semestre</Button>
                 </Link>
               </Col>
             </Row>
@@ -212,12 +215,14 @@ export class lista_semestre extends React.Component {
             </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => handleCancel()}>
-            Cancelar
-          </Button>
+        <div class="w-100" >
           <Button variant="danger" onClick={() => this.deleteValidation(semestre) ? handleDelete() : this.state.semestre_deleted = false}>
             Eliminar
           </Button>
+          <Button variant="secondary" className="float-right" onClick={() => handleCancel()}>
+            Cancelar
+          </Button>
+          </div>
         </Modal.Footer>
       </Modal>
       )
@@ -234,13 +239,13 @@ export class lista_semestre extends React.Component {
       const semestre= this.props.semestre;
       const id_periodo=(semestre==="Otoño" ? 1 : 2)
       return (
+        <Link to={`semestres/${año}/${semestre}/`} style={{ textDecoration: "none" }}>   
         <Alert variant="secondary">
             <Row>
-            <Link to={`semestres/${año}/${semestre}/`}>   
-              <Col xs="auto">
+                   <Col xs="auto">
                 {año} {semestre}
               </Col>
-              </Link>
+             
               <Col className="text-center"></Col>
               <Col  xs="auto">
                   <Link to={`/calendario/${año}/${id_periodo}/`} >
@@ -252,11 +257,13 @@ export class lista_semestre extends React.Component {
                   <Link to={`semestres/${año}/${semestre}/editar`} >
                     <OptionButton icon={Pencil} description="Modificar semestre" />
                   </Link>
-
+                  <Link to="#">
                   <OptionButton   icon={Trashcan} description="Eliminar semestre"  onClick={() => this.props.showModal()}    last={true}  />
+                  </Link>
               </Col>
             </Row>
             </Alert>
+            </Link>
             
       );
     }

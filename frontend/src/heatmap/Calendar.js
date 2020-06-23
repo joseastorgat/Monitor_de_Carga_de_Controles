@@ -472,13 +472,13 @@ export class Evaluacion_dia_Modal extends React.Component {
     const mes = fecha.split("-")[1];
     const dia_nombre = dias[info[1]];
 
-  // PROBLEMAS ACA
-    // alert(fecha)
-    // console.log(fecha)
-    // var date = new Date(fecha[0],fecha[1],fecha[2]);
-    
+    const customStyles = {
+      content : {
+        fontSize:"40px"
+      }
+    }
     return (
-      <Modal size="sm" centered show={show} onHide={() => handleCancel()}>
+      <Modal portalClassName="modal" size="sm" centered show={show} onHide={() => handleCancel()}>
         <Modal.Header style={divStyle} closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             <h6>Semana {semana}: {dia_nombre} {dia} de {meses[mes - 1]}</h6>
@@ -488,8 +488,8 @@ export class Evaluacion_dia_Modal extends React.Component {
         {evaluaciones.map(evaluacion=>
           <Row>
           <Container>
-            <h6>{evaluacion.codigo}- {evaluacion.nombre_curso}</h6>
-            <div>{evaluacion.titulo} ({evaluacion.tipo})</div>
+            <h6>{evaluacion.codigo} - {evaluacion.nombre_curso}</h6>
+            <p>{evaluacion.titulo} ({evaluacion.tipo})</p>
           </Container>
         </Row>
         )}

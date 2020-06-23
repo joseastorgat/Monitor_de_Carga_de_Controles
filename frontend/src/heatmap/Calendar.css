@@ -1,25 +1,4 @@
 
-.week {
-  display: inline-flex;
-  width: 100%;
-}
-.day {
-  display:inline-block;
-  width: 12%;
-  height: 1em;
-  padding: 2em 0;
-  border: 1px solid #ddd;
-  text-align: center;
-}
-.day-header {
-  display:inline-block;
-  width: 12%;
-  height: 2em;
-  padding: 2em 0;
-  border: 1px solid #ddd;
-  text-align: center;
-  background-color: #ccc;
-}
 .modal-backdrop
 {
     opacity:0.0 !important;
@@ -32,11 +11,6 @@
 .year-selection label {
   margin-left: 1em;
   margin-right: 0.25em;
-}
-
-.calendar {
-  max-width: 630px;
-  min-width: 400px;
 }
 
 .accordion-container {
@@ -131,9 +105,6 @@ th{
   box-shadow: none !important;
 }
 
-.svg-container {
-  
-}
 
 .example {
   font-size: 14px;
@@ -181,22 +152,6 @@ th{
   width:4vh;
 }
 
-/* .right {
-  padding-top: 10px;
-  padding-left: 10px;
-  margin-left: 10px;
-  position: relative;
-  float: left;
-  width: 45%;
-  height: auto;
+.modal{
+  font-size:15px;
 }
-
-.left {
-  padding-left: 10px;
-  padding-top: 10px;
-  margin-left: 57px;
-  float: left;
-  position: relative;
-  width: 45%;
-  height: auto;
-} */

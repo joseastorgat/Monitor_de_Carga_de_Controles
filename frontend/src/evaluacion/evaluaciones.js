@@ -2,12 +2,13 @@ import React from "react";
 import {LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import {Pencil, Trashcan} from "@primer/octicons-react";
+import {Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import DeleteModal from "../common/DeleteModal";
-import {  Container} from "react-bootstrap";
+import { Table, Container} from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import ViewTitle from "../common/ViewTitle";
 
 export class evaluaciones extends React.Component {
     constructor(props) {
@@ -29,7 +30,7 @@ export class evaluaciones extends React.Component {
 
             id: "",
             fecha: "",
-            tipo: "",
+            tipo: "Control",
             titulo: "",
             
             evaluacion_modified: false,
@@ -52,7 +53,7 @@ export class evaluaciones extends React.Component {
           [e.target.name]: 
           e.target.value
         })
-        console.log(this.state)
+        
     };
 
     onClickCancel = e => {
@@ -63,7 +64,7 @@ export class evaluaciones extends React.Component {
             form_focus: true,
             id: "",
             fecha: "",
-            tipo: "",
+            tipo: "Control",
             titulo: ""
         })
         this.form.reset()
@@ -89,7 +90,7 @@ export class evaluaciones extends React.Component {
 
             id: "",
             fecha: "",
-            tipo: "",
+            tipo: "Control",
             titulo: ""
         })
         this.form.reset()
@@ -118,7 +119,13 @@ export class evaluaciones extends React.Component {
         .then(response => response.json())
         .then(evaluaciones =>
             this.setState({
-            evaluaciones: evaluaciones,
+            evaluaciones: evaluaciones.sort((a, b) => {
+                if (a.fecha < b.fecha)
+                  return -1;
+                if (a.fecha > b.fecha)
+                  return 1;
+                return 0;
+              }),
             MostrarEvaluaciones: evaluaciones,
           })
         )
@@ -153,10 +160,9 @@ export class evaluaciones extends React.Component {
                 evaluaciones: evaluaciones,
                 eliminar_index: -1,
                 editar_index: -1,
-
                 id: "",
                 fecha: "",
-                tipo: "",
+                tipo: "Control",
                 titulo: ""
             });
             // window.location.reload(false);
@@ -201,7 +207,7 @@ export class evaluaciones extends React.Component {
 
             id: "",
             fecha: "",
-            tipo: "",
+            tipo: "Control",
             titulo: ""
         });
       })
@@ -232,23 +238,26 @@ export class evaluaciones extends React.Component {
       }
       axios(options)
       .then( (res) => {
-        console.log(res);
         console.log("create evaluacion");
+        console.log(res);
         evaluaciones.push(res.data)
         this.setState(
             {
                 evaluacion_created: true,
                 evaluaciones: evaluaciones,
-
                 id: "",
                 fecha: "",
-                tipo: "",
+                tipo: "Control",
                 titulo: ""
             });
       })
       .catch( (err) => {
-        console.log(err);
         console.log("cant create evaluacion");
+        console.log(this.state.fecha)
+        console.log(this.state.titulo)
+        console.log(this.state.curso.id)
+        console.log(this.state.tipo)
+        console.log(err);
         alert("[ERROR] No se pudo crear la evaluacion!");
       });
     }
@@ -259,7 +268,6 @@ export class evaluaciones extends React.Component {
         axios.get(`http://127.0.0.1:8000/api/evaluaciones/${id}/`)
         .then( (res) => { 
             this.setState({
-                
                 id: res.data.id,
                 titulo: res.data.titulo,
                 fecha: res.data.fecha,
@@ -288,26 +296,26 @@ export class evaluaciones extends React.Component {
     createFormRender(){
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
-                <div class="generic-form" ref={this.divToFocus}>  
+                <div className="generic-form" ref={this.divToFocus}>  
                     <h4>Nueva Evaluación</h4>
-                    <div class="row">
-                    <div class="col-sm-1"></div>        
-                        <div class="col-sm-5">
-                            <div class="row" >
-                                <div class="col-sm-2" >
+                    <div className="row">
+                    <div className="col-sm-1"></div>        
+                        <div className="col-sm-5">
+                            <div className="row" >
+                                <div className="col-sm-2" >
                                     <label >Título</label>
                                 </div>
-                                <div class="col-sm-10" >
+                                <div className="col-sm-10" >
                                     <input required type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-5">
-                            <div class="row" >
-                                <div class="col-sm-2" >
+                        <div className="col-sm-5">
+                            <div className="row" >
+                                <div className="col-sm-2" >
                                     <label >Fecha</label>
                                 </div>
-                                <div class="col-sm-10" >
+                                <div className="col-sm-10" >
                                     <input required type="date" className="form-control" name="fecha"  defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
                                 </div>
                             </div>
@@ -322,7 +330,7 @@ export class evaluaciones extends React.Component {
                                 </div>
     
                                 <div class="custom-control custom-radio custom-control-inline"  >
-                                    <input required type="radio" id="control" name="tipo" value="Control"  class="custom-control-input" onChange={this.onChange}/>
+                                    <input required type="radio" id="control" name="tipo" value="Control"  class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
                                     <label class="custom-control-label" htmlFor="control">Control</label>
                                 </div>
                                 <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
@@ -335,7 +343,7 @@ export class evaluaciones extends React.Component {
                     <div class="row">
                         <div class="col-sm-2"></div>
  
-                        <button type="submit" className="float-left btn btn-success col-sm-1">Guardar</button>
+                        <button type="submit" className="float-left btn btn-success">Guardar</button>
                         <div class="col-sm-5"></div>
                         <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
                     </div>
@@ -357,7 +365,7 @@ export class evaluaciones extends React.Component {
                                     <label >Título</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
+                                    <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} checked={this.state.tipo == "Control"} />
                                 </div>
                             </div>
                         </div>
@@ -416,7 +424,10 @@ export class evaluaciones extends React.Component {
                 handleDelete={() => this.handleDelete()}
             />
             <div>
-                <h4 className="titulo">Evaluaciones</h4>
+            <ViewTitle>
+            <Link  to="../../"><OptionButton   icon={ArrowLeft} description="Volver a cursos" /></Link>
+           Evaluaciones</ViewTitle>
+                {/* <h4 className="titulo">Evaluaciones</h4> */}
                     <div class="generic-form border-0">  
                         <div class="col-sm-7" >
                             <div class="row">
@@ -426,14 +437,14 @@ export class evaluaciones extends React.Component {
                                 <div class="col-sm-5" >
                                     <input type="text" className="form-control" name="nombre_curso" placeholder={this.state.curso.ramo + "-" + this.state.curso.seccion}  style={{textAlignLast:'center'}} readOnly="readonly"/>
                                 </div>
-                                    <LinkContainer  activeClassName=""  to="#" onClick={this.handleClickNuevaEvaluacion} style={{'marginLeft':"3vw"}}>
+                                    <LinkContainer to="#"  activeClassName="" onClick={this.handleClickNuevaEvaluacion} style={{'marginLeft':"3vw"}}>
                                         <button  className="btn btn-primary" >Agregar Evaluación</button>
                                     </LinkContainer>
                             </div>
                         </div>
                     </div>
                     <div class="generic-form border-0">
-                        <table class="table table-condensed">
+                        <Table size="sm" responsive class="table table-condensed">
                         <thead>
                             <tr>
                             <th scope="col">Nombre</th>
@@ -461,7 +472,7 @@ export class evaluaciones extends React.Component {
                             <EvaluacionItem key="2" id="2" fecha="02-06-2020" id_curso="CC3301" tipo="Tarea" titulo="Tarea 2"  />
                             <EvaluacionItem key="3" id="3" fecha="15-05-2020" id_curso="CC3301" tipo="Control" titulo="Control 1"  /> */}
                         {/* </tbody> */}
-                        </table>
+                        </Table>
                     </div>
                     
                     
@@ -494,15 +505,17 @@ class EvaluacionItem extends React.Component {
       const handleDelete = this.props.handleDelete;
       const handleUpdate = this.props.handleUpdate;
       const i = this.props.index;
+      const fec=fecha.split("-")
+      const fecha_formato_m_d_y= fec[2]+"-"+fec[1]+"-"+fec[0]
 
       return (
         <thead >
             <tr >
             <td scope="col">{titulo}</td>
-            <td scope="col">{fecha}</td>
+            <td scope="col">{fecha_formato_m_d_y}</td>
             <td scope="col">{tipo}</td>
             <td scope="col">
-                <Link onClick={e => handleUpdate(i)}>
+                <Link to="#" onClick={e => handleUpdate(i)}>
                     <OptionButton icon={Pencil} description="Modificar evaluación" />
                 </Link>
                 <OptionButton   icon={Trashcan} description="Eliminar evaluación"  onClick={() => this.props.showModal()}    last={true}  />
