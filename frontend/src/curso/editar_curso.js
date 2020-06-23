@@ -194,7 +194,7 @@ export class editar_curso extends React.Component {
                                             <label >Ramo</label>
                                         </div>
                                         <div class="col-sm-8" >
-                                            <select  className="form-control center" name="ramo" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
+                                            <select  className="form-control center" name="ramo" value={this.state.ramo} style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
                                                 {this.state.MostrarRamos.map(ramos => (
                                                 <option value={ramos.codigo}>{ramos.nombre}</option>
                                                 ))}
