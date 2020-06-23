@@ -46,9 +46,8 @@ export class evaluaciones extends React.Component {
         this.divToFocus = React.createRef() //para focusear la caja de creacion de nueva evaluacion
     }
 
-
-
     onChange = e => {
+        console.log("change")
         this.setState({
           [e.target.name]: 
           e.target.value
@@ -58,7 +57,7 @@ export class evaluaciones extends React.Component {
 
     onClickCancel = e => {
         e.preventDefault();
-
+        this.form.reset()
         this.setState({
             editar_index: -1,
             form_focus: true,
@@ -67,23 +66,23 @@ export class evaluaciones extends React.Component {
             tipo: "Control",
             titulo: ""
         })
-        this.form.reset()
     }
     handleSubmit = e => {
         e.preventDefault();
         console.log("submit");
+        console.log(this.state)
         if(this.state.editar_index >= 0){
             this.update_evaluacion();
         }
         else{
             this.create_evaluacion()
         }
-        this.form.reset()
     }
 
     //Scroll para nueva evaluacion
     handleClickNuevaEvaluacion = (e) => {
         e.preventDefault();
+        this.form.reset()
         this.setState({
             editar_index: -1,
             form_focus: true,
@@ -93,10 +92,12 @@ export class evaluaciones extends React.Component {
             tipo: "Control",
             titulo: ""
         })
-        this.form.reset()
+        
     }
     handleClickEditarEvaluacion = (i) => {
         // e.preventDefault()
+
+        this.form.reset()
         this.setState({
             editar_index: i,
             form_focus: true,
@@ -106,14 +107,13 @@ export class evaluaciones extends React.Component {
             tipo: this.state.evaluaciones[i].tipo,
             titulo: this.state.evaluaciones[i].titulo
         })
-        this.form.reset()
         // window.location.href = "evaluaciones?editar=" + id
     }
     async fetchEvaluaciones() {
         console.log("Fetching...")
         const params= this.props.match.params
         var curso = await fetch(`http://127.0.0.1:8000/api/cursos/?semestre=${params.ano}&periodo=${params.semestre}&ramo=${params.cod}&seccion=${params.seccion}`)
-        .then(response => response.json())
+                            .then(response => response.json())
         this.state.curso = curso[0]
         await fetch(`http://127.0.0.1:8000/api/cursos/${this.state.curso.id}/evaluaciones/`)
         .then(response => response.json())
@@ -155,6 +155,7 @@ export class evaluaciones extends React.Component {
             console.log("evaluacion updated");
             let evaluaciones = this.state.evaluaciones
             evaluaciones[this.state.editar_index] = res.data
+            this.form.reset()
             this.setState({
                 evaluacion_modified: true,
                 evaluaciones: evaluaciones,
@@ -219,6 +220,7 @@ export class evaluaciones extends React.Component {
 
     create_evaluacion() {  
         console.log("post evaluaciones ...")
+        console.log(this.state)
         var evaluaciones = this.state.evaluaciones
         const url = "http://127.0.0.1:8000/api/evaluaciones/"
         let options = {
@@ -228,7 +230,6 @@ export class evaluaciones extends React.Component {
             'Content-Type': 'application/json',
             'Authorization': `Token ${this.props.auth.token}`
           },
-          //falta buscar id curso
           data: {
             "fecha": this.state.fecha,
             "tipo": this.state.tipo,
@@ -241,6 +242,7 @@ export class evaluaciones extends React.Component {
         console.log("create evaluacion");
         console.log(res);
         evaluaciones.push(res.data)
+        this.form.reset()
         this.setState(
             {
                 evaluacion_created: true,
@@ -334,7 +336,7 @@ export class evaluaciones extends React.Component {
                                     <label class="custom-control-label" htmlFor="control">Control</label>
                                 </div>
                                 <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                    <input type="radio" id="tarea" name="tipo" value="Tarea"  class="custom-control-input" onChange={this.onChange}/>
+                                    <input type="radio" id="tarea" name="tipo" value="Tarea"  class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
                                     <label class="custom-control-label" htmlFor="tarea" >Tarea</label>
                                 </div>
                             </div>
@@ -365,7 +367,7 @@ export class evaluaciones extends React.Component {
                                     <label >Título</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} checked={this.state.tipo == "Control"} />
+                                    <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                 </div>
                             </div>
                         </div>
@@ -375,7 +377,7 @@ export class evaluaciones extends React.Component {
                                     <label >Fecha</label>
                                 </div>
                                 <div class="col-sm-10" >
-                                    <input type="date" className="form-control" name="fecha" defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange} />
+                                    <input type="date" className="form-control" name="fecha" defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
                                 </div>
                             </div>
                         </div>

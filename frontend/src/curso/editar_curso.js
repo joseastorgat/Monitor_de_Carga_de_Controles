@@ -71,10 +71,18 @@ export class editar_curso extends React.Component {
                       ramo: res[0].ramo,
                       codigo:res[0].ramo,
                       seccion: res[0].seccion,
-                      profesores_curso: res[0].profesor,
                       semestre_id:res[0].semestre,
                       id_curso:res[0].id
                   })
+                  let profesores_selected=[]
+                  let profesores=res[0].profesor
+                  Promise.all(profesores.map(profesor => {
+                    fetch(`http://127.0.0.1:8000/api/profesores/${profesor}/` )
+                    .then(response=> response.json())
+                    .then(response=> 
+                        {profesores_selected.push({value:response.id,label:response.nombre})}) 
+                  }));   
+                  this.setState({profesores_curso:profesores_selected})               
               })
     }
 
@@ -149,8 +157,9 @@ export class editar_curso extends React.Component {
 	}
 
     render() {
+        console.log(this.state.profesores_curso)
         const options=this.state.MostrarProfesores.map(profesor => (
-            {value:profesor.id,label:profesor.nombre, style: { color: 'red' }}
+            {value:profesor.id,label:profesor.nombre}
            ))
         const customControlStyles = base => ({
             ...base,
@@ -227,9 +236,7 @@ export class editar_curso extends React.Component {
                                             <label >Profesor</label>
                                         </div>
                                         <div class="col-sm-9" >
-                                        {/* No pude centrarlo, hay un problema con prioridades de css de react */}
-                                            <Select className="basic-multi-select" styles={{control: customControlStyles}}   isMulti options={options} label="Seleccione profesores" value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} />
-
+                                            <Select placeholder="Seleccionar profesor" className="select_profesores" styles={{control: customControlStyles}}   isMulti options={options} defaultValue={this.state.profesores_curso} value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} />
                                         </div>
                                     </div>
                                 </div>  
