@@ -68,6 +68,7 @@ export class nuevo_semestre extends React.Component {
           subir_archivo: true, 
           archivo_cargado: true,
           clonar_semestre: false,
+          required: "",
         })
     };
 
