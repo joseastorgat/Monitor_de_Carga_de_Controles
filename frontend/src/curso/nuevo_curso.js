@@ -8,6 +8,7 @@ import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import { Container} from "react-bootstrap";
+import Select from 'react-select'
 
 export class nuevo_curso extends React.Component {
     constructor(props) {
@@ -96,7 +97,7 @@ export class nuevo_curso extends React.Component {
     };
 
     onChangeSelected = e => {
-        this.setState({profesores_curso: [...e.target.selectedOptions].map(o => o.value)}); 
+        this.setState({profesores_curso:e }); 
     }
     handleSubmit = e => {
         e.preventDefault();
@@ -106,19 +107,13 @@ export class nuevo_curso extends React.Component {
 
     create_curso() {  
 		console.log("post curso ...")
-        // console.log(this.state.ramo)
         // No pude encontrar otra forma de sacar el id, hay un problema con el formato del json
         let id="0";
         this.state.semestre.map(semestre => (
             id=semestre.id
         ))
-        // console.log(id)
-        // console.log(this.state.seccion)
-        // console.log(this.state.profesores_curso)
-        console.log(this.state.ramo)
-        console.log(id)
-        console.log(this.state.seccion)
-        console.log(this.state.profesores_curso)
+        var profesores=[]
+        this.state.profesores_curso.map(profesor => profesores.push(profesor.value))
 		const url = "http://127.0.0.1:8000/api/cursos/"
 		let options = {
 			method: 'POST',
@@ -131,7 +126,7 @@ export class nuevo_curso extends React.Component {
 				'ramo': this.state.codigo,
                 'semestre': id,
                 'seccion' : this.state.seccion,
-                'profesor': this.state.profesores_curso
+                'profesor': profesores
 				}
 		}
 		
@@ -150,8 +145,19 @@ export class nuevo_curso extends React.Component {
 	}
 
     render() {
+        const options=this.state.MostrarProfesores.map(profesor => (
+            {value:profesor.id,label:profesor.nombre, style: { color: 'red' }}
+           ))
         const { ano, semestre } = this.props.match.params;
-        console.log(ano)
+        const customStyles = {
+            control: (base, state) => ({
+              ...base,
+
+              '&:hover': {
+                borderColor:'#ddd'
+              }
+            })
+          }
         return (
             <Container>
             <ViewTitle>
@@ -221,36 +227,12 @@ export class nuevo_curso extends React.Component {
                                         <div class="col-sm-3" >
                                             <label >Profesor</label>
                                         </div>
-                                        <div class="col-sm-9" >
-                                        {/* No pude centrarlo, hay un problema con prioridades de css de react */}
-                                            <select required className="form-control center" name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} size = "3" multiple={true}>
-                                                {this.state.MostrarProfesores.map(profesor => (
-                                                <option value={profesor.id}>{profesor.nombre}</option>
-                                                ))}
-                                                
-                                                {/* <option value="5">Jeremy Barbay</option>
-                                                <option value="6">Nelson Baloian</option> */}
-                                            </select>
+                                        <div class="col-sm-9 " >
+                                        <Select placeholder="Selecciona profesor" className="select_profesores"  style={{ color: "red",fontSize:"12px" }}   isMulti options={options} label="Seleccione profesores" value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} required />
                                         </div>
                                     </div>
                                 </div>  
                             </div>
-
-                            {/* <div class="row">
-                                <div class="col-sm-1"></div>
-                                <div class="col-md-6">
-                                    <div class="row" style={{justifyContent: 'center'}} >
-                                        <div class="col-md-2" >
-                                            <label >Descripción</label>
-                                        </div>
-                                        <div class="col-sm-9" >
-                                        <textarea type="text"  rows="8" class="noresize form-control" name="descripcion_curso" placeholder="" style={{textAlignLast:'center'}}  />
-                                        </div>
-                                    
-                                    </div>
-                                </div>
-                                </div> */}
-
 
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
