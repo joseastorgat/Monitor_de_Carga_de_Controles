@@ -129,8 +129,8 @@ export class nuevo_semestre extends React.Component {
             return axios.post(url, formData, {
                 headers: {Authorization: `Token ${this.props.auth.token}`}
             })
-            .then( e => alert("semestre creado") )
-            .catch( e=> alert(e))
+            .then( e => this.setState({"semestre_created": true}))
+            .catch( e=> console.log(e))
         }
       }
 
