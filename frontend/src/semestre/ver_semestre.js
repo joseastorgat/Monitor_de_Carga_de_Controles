@@ -30,17 +30,16 @@ class CursoItem extends React.Component {
     }
   
     render() {
-      console.log(this.props.profesor)
       return (
         <Link style={{ textDecoration: "none" }} to={`${this.info.codigo}/${this.info.seccion}/evaluaciones`}>
           <Alert variant="secondary">
             <Row>
               <Col>
-              <span style={{'font-weight': "500"}} >
+              <span style={{'fontWeight': "500"}} >
                   {this.props.codigo} {this.props.nombre}
                 </span>
                 <p className="mb-0">Sección {this.props.seccion}</p>
-                <p>Profesor:<ul> {this.props.profesor.map(profesor=> (<li>{profesor }</li>))}</ul></p>
+                <div>Profesor:<ul> {this.props.profesor.map(profesor=> (<li>{profesor }</li>))}</ul></div>
               </Col>
               <Col xs="auto">
 
