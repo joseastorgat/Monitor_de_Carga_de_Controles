@@ -49,6 +49,7 @@ export class evaluaciones extends React.Component {
 
 
     onChange = e => {
+        console.log("Change")
         this.setState({
           [e.target.name]: 
           e.target.value
@@ -72,6 +73,7 @@ export class evaluaciones extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
         console.log("submit");
+        console.log(this.state)
         if(this.state.editar_index >= 0){
             this.update_evaluacion();
         }
@@ -113,7 +115,7 @@ export class evaluaciones extends React.Component {
         console.log("Fetching...")
         const params= this.props.match.params
         var curso = await fetch(`http://127.0.0.1:8000/api/cursos/?semestre=${params.ano}&periodo=${params.semestre}&ramo=${params.cod}&seccion=${params.seccion}`)
-        .then(response => response.json())
+                            .then(response => response.json())
         this.state.curso = curso[0]
         await fetch(`http://127.0.0.1:8000/api/cursos/${this.state.curso.id}/evaluaciones/`)
         .then(response => response.json())
@@ -165,6 +167,7 @@ export class evaluaciones extends React.Component {
                 tipo: "Control",
                 titulo: ""
             });
+            this.form.reset()
             // window.location.reload(false);
         })
         .catch( (err) => {
@@ -219,6 +222,7 @@ export class evaluaciones extends React.Component {
 
     create_evaluacion() {  
         console.log("post evaluaciones ...")
+        console.log(this.state)
         var evaluaciones = this.state.evaluaciones
         const url = "http://127.0.0.1:8000/api/evaluaciones/"
         let options = {
@@ -228,7 +232,6 @@ export class evaluaciones extends React.Component {
             'Content-Type': 'application/json',
             'Authorization': `Token ${this.props.auth.token}`
           },
-          //falta buscar id curso
           data: {
             "fecha": this.state.fecha,
             "tipo": this.state.tipo,
@@ -250,6 +253,7 @@ export class evaluaciones extends React.Component {
                 tipo: "Control",
                 titulo: ""
             });
+        // this.form.reset()
       })
       .catch( (err) => {
         console.log("cant create evaluacion");
