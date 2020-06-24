@@ -380,13 +380,13 @@ export default class Calendar extends React.Component {
                 <tr>
                 <th><h6>Mes</h6></th>
                 <th> <h6>Semana</h6> </th>
-                <th> <h6>Lunes</h6> </th>
-                <th> <h6>Martes</h6> </th>
-                <th> <h6>Miércoles </h6></th>
-                <th> <h6>Jueves</h6> </th>
-                <th> <h6>Viernes</h6></th>
-                <th> <h6>Sábado </h6></th>
-                <th>  <h6>Domingo</h6> </th>
+                <th> <h6>Lun</h6> </th>
+                <th> <h6>Mar</h6> </th>
+                <th> <h6>Mié </h6></th>
+                <th> <h6>Jue</h6> </th>
+                <th> <h6>Vie</h6></th>
+                <th> <h6>Sáb </h6></th>
+                <th>  <h6>Dom</h6> </th>
               </tr>
             </thead>
             <tbody>
@@ -488,8 +488,12 @@ export class Evaluacion_dia_Modal extends React.Component {
         {evaluaciones.map(evaluacion=>
           <Row>
           <Container>
-            <h6>{evaluacion.codigo} - {evaluacion.nombre_curso}</h6>
-            <p>{evaluacion.titulo} ({evaluacion.tipo})</p>
+          <h6>{evaluacion.codigo}-{evaluacion.seccion} {evaluacion.nombre_curso}</h6>
+            
+            {/* <p>{evaluacion.titulo} ({evaluacion.tipo})</p> */}
+            
+            <p>{evaluacion.titulo} </p>
+
           </Container>
         </Row>
         )}

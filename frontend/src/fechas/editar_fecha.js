@@ -107,7 +107,7 @@ export class editar_fecha extends React.Component {
                                             <label >Nombre</label>
                                         </div>
                                         <div class="col-sm-10" >
-                                            <input type="text" className="form-control" name="nombre_fecha" value={this.state.nombre_fecha} onChange={this.onChange} placeholder="Feriado 1 mayo" style={{textAlignLast:'center'}} />
+                                            <input type="text" className="form-control" name="nombre_fecha" value={this.state.nombre_fecha} onChange={this.onChange} placeholder="Nombre Feriado" style={{textAlignLast:'center'}} />
                                         </div>
                                     </div>
                                 </div>  
