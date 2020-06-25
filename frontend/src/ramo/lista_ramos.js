@@ -140,7 +140,7 @@ export class lista_ramos extends React.Component {
 
               </Col>
               <Col >
-                <Link to="/ramos/nuevo_ramo">
+                <Link to="/ramos/nuevo_ramo/">
                   <Button className="btn btn-primary float-right">Nuevo Ramo</Button>
                 </Link>
               </Col>
@@ -183,7 +183,7 @@ export class lista_ramos extends React.Component {
               <Col className="text-center"></Col>
               <Col  xs="auto">
                  
-                  <Link to={`/ramos/${id}/editar`}>
+                  <Link to={`/ramos/${id}/editar/`}>
                     <OptionButton icon={Pencil} description="Modificar ramo" />
                   </Link>
 

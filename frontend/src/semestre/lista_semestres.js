@@ -136,7 +136,7 @@ export class lista_semestre extends React.Component {
                 </Form>
               </Col>
               <Col>
-                <Link to="/semestres/nuevo_semestre">
+                <Link to="/semestres/nuevo_semestre/">
                   <Button className="btn btn-primary float-right">Nuevo Semestre</Button>
                 </Link>
               </Col>
@@ -243,7 +243,7 @@ export class lista_semestre extends React.Component {
       const semestre= this.props.semestre;
       const id_periodo=(semestre==="Otoño" ? 1 : 2)
       return (
-        <Link to={`semestres/${año}/${semestre}/`} style={{ textDecoration: "none" }}>   
+        <Link to={`${año}/${semestre}/`} style={{ textDecoration: "none" }}>   
         <Alert variant="secondary">
             <Row>
                    <Col xs="auto">
@@ -255,10 +255,10 @@ export class lista_semestre extends React.Component {
                   <Link to={`/calendario/${año}/${id_periodo}/`} >
                     <OptionButton  icon={Calendar}  description="Visualizar semestre" />
                   </Link>
-                  <Link  to={`semestres/${año}/${semestre}/`} >
+                  <Link  to={`${año}/${semestre}/`} >
                     <OptionButton  icon={Book}  description="Ver cursos" />
                   </Link>
-                  <Link to={`semestres/${año}/${semestre}/editar`} >
+                  <Link to={`${año}/${semestre}/editar/`} >
                     <OptionButton icon={Pencil} description="Modificar semestre" />
                   </Link>
                   <Link to="#">

@@ -65,7 +65,7 @@ create_profesor() {
 				console.log(res);
 				console.log("create profesor");
 				this.setState({"profesor_created": true});
-				window.location.href="/profesores"
+				window.location.href="/profesores/"
 			})
 			.catch( (err) => {
 				console.log(err);
@@ -79,7 +79,7 @@ create_profesor() {
 			return (
 					<Container>
 					<ViewTitle>
-					<Link  to="./"><OptionButton icon={ArrowLeft} description="Volver a profesores" /></Link>Agregar nuevo profesor</ViewTitle>
+					<Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a profesores" /></Link>Agregar nuevo profesor</ViewTitle>
 							{/* <h4 className="titulo">Agregar Profesor</h4> */}
 									<form className="" name="form" onSubmit={this.handleSubmit}>
 											<div class="generic-form">
@@ -110,7 +110,7 @@ create_profesor() {
 													</div>                    
 											</div>
 											<div class="form-group" style={{'marginTop':"4rem"}}>
-											<LinkContainer  activeClassName=""  to="/profesores" className="float-left btn btn-secondary" style={{'marginLeft':"10vw"}}>
+											<LinkContainer  activeClassName=""  to="/profesores/" className="float-left btn btn-secondary" style={{'marginLeft':"10vw"}}>
 													<button >Volver a Profesores</button>
 											</LinkContainer>
 

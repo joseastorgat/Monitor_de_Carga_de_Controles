@@ -89,39 +89,36 @@ export default class Home extends React.Component {
       <div>
         <Switch>
           <Route exact path="/" component={Bloque_Calendario_con} />
-          <Route exact path="/calendario/:anho/:periodo" component={Calendar} />
-
-          {/* VISTAS DE ADMINISTRAR */}
-          <PrivateRoute exact path="/administrar" component={administrar} />
+          <Route exact path="/calendario/:anho/:periodo/" component={Calendar} />
 
           {/* VISTAS DE SEMESTRE */}
-          <PrivateRoute exact path="/semestres" component={lista_semestres} />
-          <PrivateRoute exact path="/semestres/nuevo_semestre" component={nuevo_semestre} />
-          <PrivateRoute exact path="/semestres/:ano/:semestre" component={ver_semestre}  />
-          <PrivateRoute exact path="/semestres/:ano/:semestre/editar" component={editar_semestre} />
+          <PrivateRoute exact path="/semestres/" component={lista_semestres} />
+          <PrivateRoute exact path="/semestres/nuevo_semestre/" component={nuevo_semestre} />
+          <PrivateRoute exact path="/semestres/:ano/:semestre/" component={ver_semestre}  />
+          <PrivateRoute exact path="/semestres/:ano/:semestre/editar/" component={editar_semestre} />
 
           {/* VISTAS DE CURSO */}
-          <PrivateRoute exact path="/semestres/:ano/:semestre/nuevo_curso" component={nuevo_curso} />
-          <PrivateRoute exact path="/semestres/:ano/:semestre/:cod/:seccion" component={ver_curso} />
-          <PrivateRoute exact  path="/semestres/:ano/:semestre/:cod/:seccion/editar"  component={editar_curso}  />
+          <PrivateRoute exact path="/semestres/:ano/:semestre/nuevo_curso/" component={nuevo_curso} />
+          <PrivateRoute exact path="/semestres/:ano/:semestre/:cod/:seccion/" component={ver_curso} />
+          <PrivateRoute exact  path="/semestres/:ano/:semestre/:cod/:seccion/editar/"  component={editar_curso}  />
 
           {/* VISTAS DE RAMO */}
-          <PrivateRoute exact path="/ramos" component={lista_ramos} />
-          <PrivateRoute exact path="/ramos/nuevo_ramo" component={nuevo_ramo} />
-          <PrivateRoute exact path="/ramos/:id/editar" component={editar_ramo} />
+          <PrivateRoute exact path="/ramos/" component={lista_ramos} />
+          <PrivateRoute exact path="/ramos/nuevo_ramo/" component={nuevo_ramo} />
+          <PrivateRoute exact path="/ramos/:id/editar/" component={editar_ramo} />
 
           {/* VISTAS DE EVALUACION */}
-          <Route exact path="/semestres/:ano/:semestre/:cod/:seccion/evaluaciones" component={evaluaciones} />
+          <PrivateRoute exact path="/semestres/:ano/:semestre/:cod/:seccion/evaluaciones/" component={evaluaciones} />
 
           {/* VISTAS DE PROFESOR */}
-          <Route exact path="/profesores" component={lista_profesores} />
-          <Route exact path="/profesores/nuevo_profesor" component={nuevo_profesor} />
-          <Route exact path="/profesores/:id/editar" component={editar_profesor} />
+          <PrivateRoute exact path="/profesores/" component={lista_profesores} />
+          <PrivateRoute exact path="/profesores/nuevo_profesor/" component={nuevo_profesor} />
+          <PrivateRoute exact path="/profesores/:id/editar/" component={editar_profesor} />
 
           {/* VISTAS DE FECHAS ESPECIALES */}
-          <PrivateRoute exact path="/fechas_especiales" component={lista_fechas} />
-          <PrivateRoute exact path="/fechas_especiales/nueva_fecha" component={nuevo_fecha} />
-          <PrivateRoute exact path="/fechas_especiales/:id/editar" component={editar_fecha} />
+          <PrivateRoute exact path="/fechas_especiales/" component={lista_fechas} />
+          <PrivateRoute exact path="/fechas_especiales/nueva_fecha/" component={nuevo_fecha} />
+          <PrivateRoute exact path="/fechas_especiales/:id/editar/" component={editar_fecha} />
 
         </Switch>
       </div>

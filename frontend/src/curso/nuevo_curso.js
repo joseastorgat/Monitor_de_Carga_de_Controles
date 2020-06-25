@@ -161,8 +161,7 @@ export class nuevo_curso extends React.Component {
         return (
             <Container>
             <ViewTitle>
-            <Link  to="./"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Nuevo curso</ViewTitle>
-                
+            <Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Nuevo curso</ViewTitle>
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
                             <div class="row">

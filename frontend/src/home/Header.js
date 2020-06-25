@@ -14,23 +14,23 @@ class LogedInView extends React.Component {
       <Nav className="ml-auto" >
       <Nav.Item>
         <Nav.Link eventKey="1" className="inactive " activeClassName="active">
-          <LinkContainer to="/semestres">
+          <LinkContainer to="/semestres/">
             <h5 style={{color:"white"}}>Semestres</h5>
           </LinkContainer>
         </Nav.Link>
         </Nav.Item>
         <NavLink  eventKey="2"  className="inactive" activeClassName="active">
-          <LinkContainer to="/ramos">
+          <LinkContainer to="/ramos/">
             <h5>Ramos</h5>
           </LinkContainer>
         </NavLink>
         <NavLink   eventKey="3" className="inactive" activeClassName="active">
-          <LinkContainer to="/profesores">
+          <LinkContainer to="/profesores/">
             <h5>Profesores</h5>
           </LinkContainer>
         </NavLink>
         <NavLink  eventKey="4" className="inactive" activeClassName="active">
-          <LinkContainer to="/fechas_especiales">
+          <LinkContainer to="/fechas_especiales/">
             <h5>Fechas especiales</h5>
           </LinkContainer>
         </NavLink>
@@ -46,7 +46,7 @@ class LogedInView extends React.Component {
 class LogedOutView extends React.Component {
   render() {
     return (
-      <LinkContainer to="/login">
+      <LinkContainer to="/login/">
         <Nav.Link><h5 style={{color:'Black'}}>Ingresar</h5></Nav.Link>
       </LinkContainer>
     );

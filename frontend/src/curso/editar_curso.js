@@ -169,7 +169,7 @@ export class editar_curso extends React.Component {
         return (
             <Container>
             <ViewTitle>
-            <Link  to="../../"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Editar curso</ViewTitle>
+            <Link  to="../../../"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Editar curso</ViewTitle>
                 
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
@@ -248,9 +248,7 @@ export class editar_curso extends React.Component {
                             <button className="btn btn-secondary" >Volver a Semestre</button>
                         </LinkContainer>
 
-                        {/* <LinkContainer activeClassName=""  to={this.paths} style={{'marginRight':"14vw"}}> */}
                             <button className="btn btn-success" type="submit">Guardar Curso</button>
-                        {/* </LinkContainer> */}
                         </div>
                     </form>
             </Container>

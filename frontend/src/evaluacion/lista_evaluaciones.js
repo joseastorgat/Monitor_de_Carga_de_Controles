@@ -83,7 +83,7 @@ export default class lista_evaluaciones extends React.Component {
 
               </Col>
               <Col xs="auto">
-                <Link to="/evaluaciones/nueva_evaluacion">
+                <Link to="/evaluaciones/nueva_evaluacion/">
                   <Button className="btn btn-primary">Nueva Evaluacion</Button>
                 </Link>
               </Col>
