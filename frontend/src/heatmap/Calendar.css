@@ -22,23 +22,6 @@
   width: 100%;
 }
 
-table{
-  border: 2px solid #ddd;
-}
-
-td{
-  width:100px;
-  word-wrap: break-word;
-  border: 2px solid #ddd;
-}
-.sortable{
-  cursor: pointer;
-}
-
-th{
-  background-color: #ccc;
-  border: 2px solid #dddddd;
-}
 .card-header-checkbox {
   display: inline-block;
 }
@@ -133,10 +116,32 @@ th{
   margin: 0 auto;
 } 
 
+/*                            Calendario                             */
 
-.leyenda{
-  border: 1px solid #dddddd;
+
+table{
+  border: 2px solid #ddd;
 }
+
+td{
+  width:100px;
+  word-wrap: break-word;
+  border: 2px solid #ddd;
+}
+.sortable{
+  cursor: pointer;
+}
+
+th{
+  background-color: #ccc;
+  border: 2px solid #dddddd;
+  position: sticky; top: 0;
+}
+.gris{
+  background-color: #ccc;
+}
+
+/*                            Leyenda                               */
 
 .cuadrado {
   display: flex;
@@ -145,7 +150,8 @@ th{
   height:20vh;
   max-height:20px;
   position:relative;
-  border: 1px solid #dddddd;
+ 
+  margin-right: 4px;
 }
 
 .espacio{
@@ -154,4 +160,10 @@ th{
 
 .modal{
   font-size:15px;
+}
+.td_leyenda{
+  border:none;
+  margin-bottom: -15px;
+  width:155px;
+  display: flex;
 }

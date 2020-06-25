@@ -20,7 +20,7 @@ export default class lista_evaluaciones extends React.Component {
         MostrarCursos: [],
         semestre_busqueda:"",
         curso_busqueda:"",
-        search: ""
+        search: false
       };
   
       this.deleteModalMsg = `¿Está seguro que desea eliminar el Evaluacion?`;
@@ -31,14 +31,16 @@ export default class lista_evaluaciones extends React.Component {
         [e.target.name]: 
         e.target.value
       })
-      console.log("Fetching Cursos...")
+      console.log("Fetching Cursos...")      
       axios.get(`http://127.0.0.1:8000/api/semestres/${e.target.value}/cursos/`)
-      .then(response =>
+      .then(response => {
+        // Primer valor default de ramos
+        response.data.splice(0,0,{"id": 0, "ramo": "Todos","nombre": " ",semana:0})
           this.setState({
               cursos: response.data,
               MostrarCursos: response.data
             })
-          )
+          })
   };
   onChange_Curso = (e) => {  
     this.setState({
@@ -48,16 +50,43 @@ export default class lista_evaluaciones extends React.Component {
   }
     async fetchEvaluaciones() {
       console.log("Fetching Evaluaciones ...")
-      await fetch(`http://127.0.0.1:8000/api/evaluaciones/`)
+      let url
+      if (this.state.curso_busqueda==0){//Traer todas las evaluaciones de ese semestre
+        url=`http://127.0.0.1:8000/api/semestres/${this.state.semestre_busqueda}/evaluaciones/`;
+      }
+      else{
+        url=`http://127.0.0.1:8000/api/cursos/${this.state.curso_busqueda}/evaluaciones/`;
+      }
+      await fetch(url)
       .then(response => response.json())
-      .then(evaluaciones =>
-        this.setState({
-          evaluaciones: evaluaciones,
-          MostrarEvaluaciones: evaluaciones
+      .then(evaluaciones =>{
+        evaluaciones.sort((a, b) => {
+          if (a.fecha < b.fecha)
+            return -1;
+          if (a.fecha > b.fecha)
+            return 1;
+          return 0;
         })
-        )    
-      console.log(this.state.evaluaciones)
+        // var evaluaciones_agrupadas=evaluaciones.reduce(function(result, current) {
+        //     result[current.semana] = result[current.semana] || [];
+        //     result[current.semana].push(current);
+        //     return result;
+        // }, {});
+        var evaluaciones_agrupadas = evaluaciones.reduce(function (r, a) {
+          r[a.semana] = r[a.semana] || [];
+          r[a.semana].push(a);
+          return r;
+      }, Object.create(null))
+      evaluaciones_agrupadas=this.json2array(evaluaciones_agrupadas)
+        this.setState({
+          evaluaciones: evaluaciones_agrupadas,
+          MostrarEvaluaciones: evaluaciones_agrupadas})
+          // console.log(evaluaciones_agrupadas)
+             
+         })    
+      this.setState({search:true})
     }
+    
 
     async fetchSemestres() {
       console.log("Fetching Semestres...")
@@ -74,10 +103,20 @@ export default class lista_evaluaciones extends React.Component {
     async componentDidMount() {
       this.fetchSemestres();
     }
+
+    json2array(json){
+      var result = [];
+      var keys = Object.keys(json);
+      keys.forEach(function(key){
+          result.push([key,json[key]]
+            );
+      });
+      return result;
+  }
   
-    validar_busqueda(){
-      
-      return false;
+    validar_busqueda = (e) =>{
+      e.preventDefault();
+     this.fetchEvaluaciones();
     }
 
     render() {
@@ -117,17 +156,32 @@ export default class lista_evaluaciones extends React.Component {
                 </Row>
                 </form>
                 <Row ></Row><Row ></Row><Row ></Row>
-                {this.state.MostrarEvaluaciones.map(evaluacion => (
-                <EvaluacionItem
+                { (this.state.MostrarEvaluaciones.length<1) ? (this.state.search ? <h5>No hay evaluaciones asociadas a este semestre</h5>: "") : 
+               
+                this.state.MostrarEvaluaciones.map((s,i)=>
+                  <div>
+                  <h5>Semana {s[0]}</h5>
+                  {s[1].map(evaluacion=> 
+                  <EvaluacionItem
                 key={evaluacion.id}
-                id={evaluacion.id}
-                id_curso={evaluacion.id_curso}
+                id_evaluacion={evaluacion.id}
+                id_curso={evaluacion.curso}
+                nombre_curso={evaluacion.nombre_curso}
+                codigo_curso={evaluacion.codigo}
+                seccion_curso={evaluacion.seccion}
+                fecha={evaluacion.fecha}
                 tipo={evaluacion.tipo}
                 titulo={evaluacion.titulo}
-                showModal={() => this.showModal(evaluacion)}
+                showModal={() => this.showModal(evaluacion)
+                }
                 />
                 
-            ))}
+                
+                
+                )}</div>
+                )                   
+                
+              }
           </Container>
         </main>
       );
@@ -141,19 +195,25 @@ export default class lista_evaluaciones extends React.Component {
     }
 
     render() {
+    
       const titulo =this.props.titulo;
+      console.log(titulo)
       const fecha = this.props.fecha;
       const tipo= this.props.tipo;
       const id = this.props.id;
-      const id_curso = this.props.id_curso;
+      const codigo_curso = this.props.codigo_curso;
+      const nombre_curso= this.props.nombre_curso;
+      const seccion_curso=this.props.seccion_curso;
       return (
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
-                {id_curso}   {titulo}
+                <h6>{codigo_curso}-{seccion_curso} {nombre_curso} </h6> 
+                <p>{titulo}</p>
+                <p>{fecha}</p>
               </Col>
               <Col className="text-center"></Col>
-              <Col  xs="auto">
+              <Col xs="auto">
                  
                   <Link to={'evaluaciones/${id}/editar'}>
                   <OptionButton icon={Gear} description="Modificar evaluacion" />

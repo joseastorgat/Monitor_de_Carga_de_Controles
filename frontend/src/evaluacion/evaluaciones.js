@@ -30,7 +30,7 @@ export class evaluaciones extends React.Component {
 
             id: "",
             fecha: "",
-            tipo: "",
+            tipo: "Control",
             titulo: "",
             
             evaluacion_modified: false,
@@ -46,57 +46,58 @@ export class evaluaciones extends React.Component {
         this.divToFocus = React.createRef() //para focusear la caja de creacion de nueva evaluacion
     }
 
-
-
     onChange = e => {
+        console.log("change")
         this.setState({
           [e.target.name]: 
           e.target.value
         })
-        console.log(this.state)
+        
     };
 
     onClickCancel = e => {
         e.preventDefault();
-
+        this.form.reset()
         this.setState({
             editar_index: -1,
             form_focus: true,
             id: "",
             fecha: "",
-            tipo: "",
+            tipo: "Control",
             titulo: ""
         })
-        this.form.reset()
     }
     handleSubmit = e => {
         e.preventDefault();
         console.log("submit");
+        console.log(this.state)
         if(this.state.editar_index >= 0){
             this.update_evaluacion();
         }
         else{
             this.create_evaluacion()
         }
-        this.form.reset()
     }
 
     //Scroll para nueva evaluacion
     handleClickNuevaEvaluacion = (e) => {
         e.preventDefault();
+        this.form.reset()
         this.setState({
             editar_index: -1,
             form_focus: true,
 
             id: "",
             fecha: "",
-            tipo: "",
+            tipo: "Control",
             titulo: ""
         })
-        this.form.reset()
+        
     }
     handleClickEditarEvaluacion = (i) => {
         // e.preventDefault()
+
+        this.form.reset()
         this.setState({
             editar_index: i,
             form_focus: true,
@@ -106,14 +107,13 @@ export class evaluaciones extends React.Component {
             tipo: this.state.evaluaciones[i].tipo,
             titulo: this.state.evaluaciones[i].titulo
         })
-        this.form.reset()
         // window.location.href = "evaluaciones?editar=" + id
     }
     async fetchEvaluaciones() {
         console.log("Fetching...")
         const params= this.props.match.params
         var curso = await fetch(`http://127.0.0.1:8000/api/cursos/?semestre=${params.ano}&periodo=${params.semestre}&ramo=${params.cod}&seccion=${params.seccion}`)
-        .then(response => response.json())
+                            .then(response => response.json())
         this.state.curso = curso[0]
         await fetch(`http://127.0.0.1:8000/api/cursos/${this.state.curso.id}/evaluaciones/`)
         .then(response => response.json())
@@ -155,15 +155,15 @@ export class evaluaciones extends React.Component {
             console.log("evaluacion updated");
             let evaluaciones = this.state.evaluaciones
             evaluaciones[this.state.editar_index] = res.data
+            this.form.reset()
             this.setState({
                 evaluacion_modified: true,
                 evaluaciones: evaluaciones,
                 eliminar_index: -1,
                 editar_index: -1,
-
                 id: "",
                 fecha: "",
-                tipo: "",
+                tipo: "Control",
                 titulo: ""
             });
             // window.location.reload(false);
@@ -208,7 +208,7 @@ export class evaluaciones extends React.Component {
 
             id: "",
             fecha: "",
-            tipo: "",
+            tipo: "Control",
             titulo: ""
         });
       })
@@ -220,6 +220,7 @@ export class evaluaciones extends React.Component {
 
     create_evaluacion() {  
         console.log("post evaluaciones ...")
+        console.log(this.state)
         var evaluaciones = this.state.evaluaciones
         const url = "http://127.0.0.1:8000/api/evaluaciones/"
         let options = {
@@ -229,7 +230,6 @@ export class evaluaciones extends React.Component {
             'Content-Type': 'application/json',
             'Authorization': `Token ${this.props.auth.token}`
           },
-          //falta buscar id curso
           data: {
             "fecha": this.state.fecha,
             "tipo": this.state.tipo,
@@ -239,23 +239,27 @@ export class evaluaciones extends React.Component {
       }
       axios(options)
       .then( (res) => {
-        console.log(res);
         console.log("create evaluacion");
+        console.log(res);
         evaluaciones.push(res.data)
+        this.form.reset()
         this.setState(
             {
                 evaluacion_created: true,
                 evaluaciones: evaluaciones,
-
                 id: "",
                 fecha: "",
-                tipo: "",
+                tipo: "Control",
                 titulo: ""
             });
       })
       .catch( (err) => {
-        console.log(err);
         console.log("cant create evaluacion");
+        console.log(this.state.fecha)
+        console.log(this.state.titulo)
+        console.log(this.state.curso.id)
+        console.log(this.state.tipo)
+        console.log(err);
         alert("[ERROR] No se pudo crear la evaluacion!");
       });
     }
@@ -266,7 +270,6 @@ export class evaluaciones extends React.Component {
         axios.get(`http://127.0.0.1:8000/api/evaluaciones/${id}/`)
         .then( (res) => { 
             this.setState({
-                
                 id: res.data.id,
                 titulo: res.data.titulo,
                 fecha: res.data.fecha,
@@ -295,56 +298,58 @@ export class evaluaciones extends React.Component {
     createFormRender(){
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
-                <div class="generic-form" ref={this.divToFocus}>  
+                <div className="generic-form" ref={this.divToFocus}>  
                     <h4>Nueva Evaluación</h4>
-                    <div class="row">
-                    <div class="col-sm-1"></div>        
-                        <div class="col-sm-5">
-                            <div class="row" >
-                                <div class="col-sm-2" >
+                    <div className="row">
+                    <div className="col-sm-1"></div>        
+                        <div className="col-sm-5">
+                            <div className="row" >
+                                <div className="col-sm-2" >
                                     <label >Título</label>
                                 </div>
-                                <div class="col-sm-10" >
+                                <div className="col-sm-10" >
                                     <input required type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-5">
-                            <div class="row" >
-                                <div class="col-sm-2" >
+                        <div className="col-sm-5">
+                            <div className="row" >
+                                <div className="col-sm-2" >
                                     <label >Fecha</label>
                                 </div>
-                                <div class="col-sm-10" >
+                                <div className="col-sm-10" >
                                     <input required type="date" className="form-control" name="fecha"  defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-5" >
-                            <div class="row" >
-                                <div class="col-sm-2" >
+                    <div className="row">
+                        <div className="col-sm-1"></div>
+                        <div className="col-sm-5" >
+                            <div className="row" >
+                                <div className="col-sm-2" >
                                     <label >Tipo</label>
                                 </div>
     
-                                <div class="custom-control custom-radio custom-control-inline"  >
-                                    <input required type="radio" id="control" name="tipo" value="Control"  class="custom-control-input" onChange={this.onChange}/>
-                                    <label class="custom-control-label" htmlFor="control">Control</label>
+                                <div className="custom-control custom-radio custom-control-inline"  >
+                                    <input required type="radio" id="control" name="tipo" value="Control"  className="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
+                                    <label className="custom-control-label" htmlFor="control">Control</label>
                                 </div>
-                                <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                    <input type="radio" id="tarea" name="tipo" value="Tarea"  class="custom-control-input" onChange={this.onChange}/>
-                                    <label class="custom-control-label" htmlFor="tarea" >Tarea</label>
+                                <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
+                                    <input type="radio" id="tarea" name="tipo" value="Tarea"  className="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
+                                    <label className="custom-control-label" htmlFor="tarea" >Tarea</label>
                                 </div>
                             </div>
                         </div>  
                     </div>
-                    <div class="row">
-                        <div class="col-sm-2"></div>
+                    <div className="row">
+                        <div className="col-sm-2"></div>
  
-                        <button type="submit" className="float-left btn btn-success">Guardar</button>
-                        <div class="col-sm-5"></div>
-                        <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
+                   
+                        <button className="btn btn-secondary col-sm-2 float-left" onClick={this.onClickCancel}> Cancelar</button>
+                        <div className="col-sm-5"></div>
+                        <button type="submit" className="float-right btn btn-success col-sm-2">Guardar</button>
+                        
                     </div>
                 </div>
             </form>
@@ -354,56 +359,56 @@ export class evaluaciones extends React.Component {
         var ev = this.state.evaluaciones[this.state.editar_index];
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
-                <div class="generic-form" ref={this.divToFocus}>  
+                <div className="generic-form" ref={this.divToFocus}>  
                     <h4>Editar {ev.tipo}: {ev.titulo}</h4>
-                    <div class="row">
-                    <div class="col-sm-1"></div>        
-                        <div class="col-sm-5">
-                            <div class="row" >
-                                <div class="col-sm-2" >
+                    <div className="row">
+                    <div className="col-sm-1"></div>        
+                        <div className="col-sm-5">
+                            <div className="row" >
+                                <div className="col-sm-2" >
                                     <label >Título</label>
                                 </div>
-                                <div class="col-sm-10" >
+                                <div className="col-sm-10" >
                                     <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-5">
-                            <div class="row" >
-                                <div class="col-sm-2" >
+                        <div className="col-sm-5">
+                            <div className="row" >
+                                <div className="col-sm-2" >
                                     <label >Fecha</label>
                                 </div>
-                                <div class="col-sm-10" >
-                                    <input type="date" className="form-control" name="fecha" defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange} />
+                                <div className="col-sm-10" >
+                                    <input type="date" className="form-control" name="fecha" defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-5" >
-                            <div class="row" >
-                                <div class="col-sm-2" >
+                    <div className="row">
+                        <div className="col-sm-1"></div>
+                        <div className="col-sm-5" >
+                            <div className="row" >
+                                <div className="col-sm-2" >
                                     <label >Tipo</label>
                                 </div>
     
-                                <div class="custom-control custom-radio custom-control-inline"  >
-                                    <input type="radio" id="control" value="Control" name="tipo"  class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
-                                    <label class="custom-control-label" htmlFor="control">Control</label>
+                                <div className="custom-control custom-radio custom-control-inline"  >
+                                    <input type="radio" id="control" value="Control" name="tipo"  className="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
+                                    <label className="custom-control-label" htmlFor="control">Control</label>
                                 </div>
-                                <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                    <input type="radio" id="tarea" value="Tarea" name="tipo"  class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
-                                    <label class="custom-control-label" htmlFor="tarea" >Tarea</label>
+                                <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
+                                    <input type="radio" id="tarea" value="Tarea" name="tipo"  className="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
+                                    <label className="custom-control-label" htmlFor="tarea" >Tarea</label>
                                 </div>
                             </div>
                         </div>  
                     </div>
-                    <div class="row">
-                        <div class="col-sm-2"></div>
+                    <div className="row">
+                        <div className="col-sm-2"></div>
                         {/* <LinkContainer activeClassName="" type="submit"  className="float-left btn btn-primary col-sm-2" to="./evaluaciones" style={{width: '7%','marginLeft':"14vw",borderRadius: '8px'}}> */}
                             <button className="btn btn-primary col-sm-2" type="submit">Actualizar Evaluación</button>
                         {/* </LinkContainer> */}
-                        <div class="col-sm-4"></div>
+                        <div className="col-sm-4"></div>
                         <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
 
                     </div>
@@ -424,26 +429,26 @@ export class evaluaciones extends React.Component {
             />
             <div>
             <ViewTitle>
-            <Link  to="../../"><OptionButton   icon={ArrowLeft} description="Volver a cursos" /></Link>
+            <Link  to="../../../"><OptionButton   icon={ArrowLeft} description="Volver a cursos" /></Link>
            Evaluaciones</ViewTitle>
                 {/* <h4 className="titulo">Evaluaciones</h4> */}
-                    <div class="generic-form border-0">  
-                        <div class="col-sm-7" >
-                            <div class="row">
-                                <div class="col-sm-2" >
+                    <div className="generic-form border-0">  
+                        <div className="col-sm-7" >
+                            <div className="row">
+                                <div className="col-sm-2" >
                                     <label >Curso</label>
                                 </div>
-                                <div class="col-sm-5" >
+                                <div className="col-sm-5" >
                                     <input type="text" className="form-control" name="nombre_curso" placeholder={this.state.curso.ramo + "-" + this.state.curso.seccion}  style={{textAlignLast:'center'}} readOnly="readonly"/>
                                 </div>
-                                    <LinkContainer  activeClassName=""  to="#" onClick={this.handleClickNuevaEvaluacion} style={{'marginLeft':"3vw"}}>
+                                    <LinkContainer to="#"  activeClassName="" onClick={this.handleClickNuevaEvaluacion} style={{'marginLeft':"3vw"}}>
                                         <button  className="btn btn-primary" >Agregar Evaluación</button>
                                     </LinkContainer>
                             </div>
                         </div>
                     </div>
-                    <div class="generic-form border-0">
-                        <Table size="sm" responsive class="table table-condensed">
+                    <div className="generic-form border-0">
+                        <Table size="sm" responsive className="table table-condensed">
                         <thead>
                             <tr>
                             <th scope="col">Nombre</th>
@@ -478,7 +483,7 @@ export class evaluaciones extends React.Component {
                     {this.state.editar_index >= 0 ? this.updateFormRender() : this.createFormRender()}
                     
                     <Container style={{marginBottom:"8vw",marginTop:"2vw"}}>
-                            <LinkContainer  activeClassName=""  to="../../" className="float-left" >
+                            <LinkContainer  activeClassName=""  to="../../../" className="float-left" >
                                 <button className="btn btn-secondary">Volver a Cursos</button>
                             </LinkContainer>
 
@@ -514,7 +519,7 @@ class EvaluacionItem extends React.Component {
             <td scope="col">{fecha_formato_m_d_y}</td>
             <td scope="col">{tipo}</td>
             <td scope="col">
-                <Link onClick={e => handleUpdate(i)}>
+                <Link to="#" onClick={e => handleUpdate(i)}>
                     <OptionButton icon={Pencil} description="Modificar evaluación" />
                 </Link>
                 <OptionButton   icon={Trashcan} description="Eliminar evaluación"  onClick={() => this.props.showModal()}    last={true}  />

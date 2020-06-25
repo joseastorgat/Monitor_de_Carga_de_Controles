@@ -54,6 +54,9 @@ export class editar_fecha extends React.Component {
 
     update_fecha() {  
         console.log("post fecha ...")
+
+        const fecha_fin = this.state.fin_fecha === "" ? this.state.inicio_fecha : this.state.fin_fecha;
+
         const url = `http://127.0.0.1:8000/api/fechas-especiales/${this.state.id}/`
         let options = {
             method: 'PATCH',
@@ -66,7 +69,7 @@ export class editar_fecha extends React.Component {
                 "nombre": this.state.nombre_fecha,
                 "tipo":this.state.tipo_fecha,
                 "inicio": this.state.inicio_fecha,
-                "fin": this.state.fin_fecha
+                "fin": fecha_fin,
             }
         }
         
@@ -88,11 +91,10 @@ export class editar_fecha extends React.Component {
         if (this.state.fecha_modified) {
             return <Redirect to="/fechas_especiales/" />;
         }
-        const id= this.props.match.params.id;
         return (
             <Container>
             <ViewTitle>
-            <Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a fechas" /></Link>Editar fecha</ViewTitle>
+            <Link  to="../../"><OptionButton icon={ArrowLeft} description="Volver a fechas" /></Link>Editar fecha</ViewTitle>
                 
                 <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
@@ -104,7 +106,7 @@ export class editar_fecha extends React.Component {
                                             <label >Nombre</label>
                                         </div>
                                         <div class="col-sm-10" >
-                                            <input type="text" className="form-control" name="nombre_fecha" value={this.state.nombre_fecha} onChange={this.onChange} placeholder="Feriado 1 mayo" style={{textAlignLast:'center'}} />
+                                            <input type="text" className="form-control" name="nombre_fecha" value={this.state.nombre_fecha} onChange={this.onChange} placeholder="Nombre Feriado" style={{textAlignLast:'center'}} />
                                         </div>
                                     </div>
                                 </div>  
@@ -158,13 +160,12 @@ export class editar_fecha extends React.Component {
                     
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to="/fechas_especiales" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                            <button className="btn btn-secondary" >Volver</button>
+                        <LinkContainer  activeClassName=""  to="/fechas_especiales/" className="float-left " style={{ 'marginLeft':"10vw"}}>
+                            <button className="btn btn-secondary" type="button" >Volver</button>
                         </LinkContainer>
 
-                        {/* <LinkContainer activeClassName=""  to="/fechas_especiales" style={{'marginRight':"14vw"}}> */}
+                    
                             <button className="btn btn-success" type="submit">Guardar</button>
-                        {/* </LinkContainer> */}
                         </div>
                     </form>
             </Container>

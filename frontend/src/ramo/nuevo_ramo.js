@@ -77,7 +77,7 @@ export class nuevo_ramo extends React.Component {
      <Container>
       <div>
         <ViewTitle>
-            <Link  to="./"><OptionButton icon={ArrowLeft} description="Volver a ramos" /></Link>Agregar nuevo ramo</ViewTitle>
+            <Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a ramos" /></Link>Agregar nuevo ramo</ViewTitle>
       <div>
         <form className="" name="form" onSubmit={this.handleSubmit}>
               <div class="generic-form">
@@ -132,13 +132,11 @@ export class nuevo_ramo extends React.Component {
               </div>
 
               <div class="form-group" style={{'marginTop':"4rem"}}>
-              <LinkContainer  activeClassName=""  to="/ramos" className="float-left " style={{ 'marginLeft':"10vw"}}>
+              <LinkContainer  activeClassName=""  to="/ramos/" className="float-left " style={{ 'marginLeft':"10vw"}}>
                   <button className="btn btn-secondary" type="button">Volver a Ramos</button>
               </LinkContainer>
 
-              {/* <LinkContainer activeClassName=""  to="/ramos" style={{'marginRight':"14vw"}}> */}
                   <button className="btn btn-success" type="submit">Guardar Ramo</button>
-              {/* </LinkContainer> */}
               </div>
               
           </form></div>

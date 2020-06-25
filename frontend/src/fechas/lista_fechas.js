@@ -34,7 +34,7 @@ export class lista_fechas extends React.Component {
     console.log("Fetching...")
     await fetch(`http://127.0.0.1:8000/api/fechas-especiales/`)
     .then(response => response.json())
-    .then(fechas =>
+    .then(fechas =>{
       this.setState({
         fechas: fechas.sort((a, b) => {
           if (a.inicio < b.inicio)
@@ -45,6 +45,9 @@ export class lista_fechas extends React.Component {
         }),
         MostrarFechas: fechas
       })
+      console.log(fechas)
+    }
+      
       )    
     console.log(this.state.fechas)
   }
@@ -134,7 +137,7 @@ export class lista_fechas extends React.Component {
               </Col>
               
               <Col>
-                <Link to="/fechas_especiales/nueva_fecha">
+                <Link to="/fechas_especiales/nueva_fecha/">
                   <Button className="btn btn-primary float-right">Nueva Fecha</Button>
                 </Link>
               </Col>
@@ -182,7 +185,7 @@ export class lista_fechas extends React.Component {
               <Col className="text-center"></Col>
               <Col xs="auto">
                  
-                  <Link to={`/fechas_especiales/${id}/editar`}>
+                  <Link to={`/fechas_especiales/${id}/editar/`}>
                   <OptionButton icon={Pencil} description="Modificar fecha" />
                   </Link>
 

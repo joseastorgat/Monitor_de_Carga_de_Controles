@@ -74,7 +74,7 @@ export class editar_profesor extends React.Component {
         return (
             <Container>
             <ViewTitle>
-					<Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a profesores" /></Link>Editar profesor</ViewTitle>
+					<Link  to="../../"><OptionButton icon={ArrowLeft} description="Volver a profesores" /></Link>Editar profesor</ViewTitle>
 					
                 {/* <h4 className="titulo">Editar Profesor</h4> */}
                     <form className="" name="form" onSubmit={this.handleSubmit}>
@@ -106,7 +106,7 @@ export class editar_profesor extends React.Component {
                             </div>                    
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to="/profesores" className="float-left btn btn-secondary" style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
+                        <LinkContainer  activeClassName=""  to="/profesores/" className="float-left btn btn-secondary" style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
                             <button >Volver</button>
                         </LinkContainer>
 

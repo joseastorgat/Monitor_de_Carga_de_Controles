@@ -69,6 +69,10 @@ class EvaluacionSerializer(serializers.ModelSerializer):
     dia = serializers.SerializerMethodField(read_only=True)
     nombre_curso = serializers.SerializerMethodField(read_only=True)
     codigo = serializers.SerializerMethodField(read_only=True)
+    seccion = serializers.SerializerMethodField(read_only=True)
+
+    def get_seccion(self, obj):
+        return obj.curso.seccion
 
     def get_semana_obj(self, obj):
         current = obj.fecha
@@ -95,7 +99,7 @@ class EvaluacionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Evaluacion
-        fields = ['id', 'fecha', 'tipo', 'titulo', 'curso', 'nombre_curso', 'codigo', 'semana', 'dia']
+        fields = ['id', 'fecha', 'tipo', 'titulo', 'curso', 'seccion', 'nombre_curso', 'codigo', 'semana', 'dia']
 
 
 
