@@ -8,6 +8,7 @@ import axios from "axios";
 import DeleteModal from "../common/DeleteModal";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import Nueva_evaluacion from "./nueva_evaluacion"
 
 export class lista_evaluaciones extends React.Component {
     constructor(props) {
@@ -17,6 +18,7 @@ export class lista_evaluaciones extends React.Component {
         semestres:[],
         cursos:[],
         showModal: false,
+        showModalAdd:false,
         EvaluacionPorEliminar: null,
         MostrarEvaluaciones: [],
         MostrarSemestres: [],
@@ -57,11 +59,13 @@ export class lista_evaluaciones extends React.Component {
     async fetchEvaluaciones() {
       console.log("Fetching Evaluaciones ...")
       let url
-      if (this.state.curso_busqueda==0){//Traer todas las evaluaciones de ese semestre
+      var curso=this.state.curso_busqueda.split("-")[0]
+      if (curso==0){//Traer todas las evaluaciones de ese semestre
         url=`http://127.0.0.1:8000/api/semestres/${this.state.semestre_busqueda}/evaluaciones/`;
       }
       else{
-        url=`http://127.0.0.1:8000/api/cursos/${this.state.curso_busqueda}/evaluaciones/`;
+        console.log(curso)
+        url=`http://127.0.0.1:8000/api/cursos/${curso}/evaluaciones/`;
       }
       await fetch(url)
       .then(response => response.json())
@@ -121,10 +125,23 @@ export class lista_evaluaciones extends React.Component {
     showModal(evaluacion, index) {
       this.setState({ showModal: true, evaluacionPorEliminar: evaluacion, eliminar_index: index });
     }
+
+    handleAdd(){
+      this.setState({ showModalAdd: false});
+      this.fetchEvaluaciones();
+    }
+
+    showModalAdd() {
+      this.setState({ showModalAdd: true});
+    }
   
     handleCancel() {
       this.setState({ showModal: false, evaluacionPorEliminar: null });
     }
+    handleCancelAdd() {
+      this.setState({ showModalAdd: false });
+    }
+
     async handleDelete() {
       let e = this.state.evaluacionPorEliminar.id
       const url = `http://127.0.0.1:8000/api/evaluaciones/${e}/`
@@ -176,7 +193,7 @@ export class lista_evaluaciones extends React.Component {
                 <select required className="form-control"  name="curso_busqueda" style={{textAlignLast:'center',textAlign:'center'}} value={this.state.curso_busqueda} onChange={this.onChange_Curso} >
                     <option value="" >Seleccione curso</option>
                     {this.state.MostrarCursos.map(curso=>
-                          <option value={curso.id} >{curso.ramo} {curso.nombre}</option>         
+                          <option value={curso.id+"-"+curso.ramo+"-"+curso.seccion + " "+curso.nombre} >{curso.ramo} {curso.nombre}</option>         
                         )}
                     
                 </select>
@@ -190,7 +207,8 @@ export class lista_evaluaciones extends React.Component {
               
                 </Row>
                 </form>
-                <Row ></Row><Row ></Row><Row ></Row>
+                <Row ></Row><Row ></Row>
+                
                 {this.state.showModal &&
                 <DeleteModal
                 msg={this.deleteModalMsg+this.state.evaluacionPorEliminar.titulo+ " del curso "+ 
@@ -199,9 +217,33 @@ export class lista_evaluaciones extends React.Component {
                 handleCancel={() => this.handleCancel()}
                 handleDelete={() => this.handleDelete()}
                 />}
-                { (this.state.MostrarEvaluaciones.length<1) ? (this.state.search ? <h5>No hay evaluaciones asociadas a este semestre</h5>: "") : 
-               
-                this.state.MostrarEvaluaciones.map((s,i)=>
+
+                <Nueva_evaluacion
+                    show_form={this.state.showModalAdd} 
+                    handleCancel={() => this.handleCancelAdd()}
+                    handleAdd={() => this.handleAdd()}
+                    cursos={this.state.cursos}
+                    curso_seleccionado={this.state.curso_busqueda}
+                />
+
+                <Container>
+                { (this.state.MostrarEvaluaciones.length<1) ? (this.state.search ? <div><h5>No hay evaluaciones asociadas a este semestre</h5>
+                  <Row className="float-right">
+                 <Button className="btn btn-primary"  onClick={() => this.showModalAdd()}>Nueva Evaluacion</Button>
+                  </Row></div>: "") : 
+               <div>
+               <Row className="float-right">
+               <Col>
+                 <Button className="btn btn-primary"  onClick={() => this.showModalAdd()}>Nueva Evaluacion</Button>
+                 </Col>
+                  </Row>
+                <Row></Row>
+                <Row></Row>
+                <Row></Row>
+                <Row></Row>
+                <Row></Row>
+                
+                {this.state.MostrarEvaluaciones.map((s,i)=>
                   <div>
                   <h5>Semana {s[0]}</h5>
                   {s[1].map(evaluacion=> 
@@ -220,8 +262,9 @@ export class lista_evaluaciones extends React.Component {
                     handleUpdate = {this.handleClickEditarEvaluacion}    
                 />
                 )}</div>
-                )                   
+                )   }  </div>              
               }
+              </Container>
           </Container>
         </main>
       );
