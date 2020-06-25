@@ -120,7 +120,7 @@ export class lista_fechas extends React.Component {
         />
         <Container>
           <ViewTitle>
-          <Link to="/" exact path>
+          <Link to="/">
           <OptionButton   icon={ArrowLeft} description="Volver a inicio" /></Link>
           Fechas Especiales</ViewTitle>
             <Row className="mb-3">
@@ -180,7 +180,7 @@ export class lista_fechas extends React.Component {
             <Row>
               <Col xs="auto">
               <h6> {nombre}  </h6> 
-               <p > <span style={{'font-weight': "500"}} >Inicio: </span>{inicio} <span style={{'font-weight': "500"}}>   Fin: </span>{fin} </p>
+               <p > <span style={{'fontWeight': "500"}} >Inicio: </span>{inicio} <span style={{'fontWeight': "500"}}>   Fin: </span>{fin} </p>
               </Col>
               <Col className="text-center"></Col>
               <Col xs="auto">

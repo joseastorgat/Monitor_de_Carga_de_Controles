@@ -343,9 +343,7 @@ export class evaluaciones extends React.Component {
                         </div>  
                     </div>
                     <div className="row">
-                        <div className="col-sm-2"></div>
- 
-                   
+                        <div className="col-sm-2"></div>                  
                         <button className="btn btn-secondary col-sm-2 float-left" onClick={this.onClickCancel}> Cancelar</button>
                         <div className="col-sm-5"></div>
                         <button type="submit" className="float-right btn btn-success col-sm-2">Guardar</button>
@@ -467,15 +465,9 @@ export class evaluaciones extends React.Component {
                                 tipo={evaluacion.tipo}
                                 titulo={evaluacion.titulo}
                                 showModal={() => this.showModal(evaluacion, _index)}
-                                handleDelete = {this.handleDelete}
-                                handleUpdate = {this.handleClickEditarEvaluacion}
                                 />
                             ))}
-                        {/* <tbody> */}
-                            {/* <EvaluacionItem key="1" id="1" fecha="02-05-2020" id_curso="CC3301" tipo="Tarea" titulo="Tarea 1"  />
-                            <EvaluacionItem key="2" id="2" fecha="02-06-2020" id_curso="CC3301" tipo="Tarea" titulo="Tarea 2"  />
-                            <EvaluacionItem key="3" id="3" fecha="15-05-2020" id_curso="CC3301" tipo="Control" titulo="Control 1"  /> */}
-                        {/* </tbody> */}
+
                         </Table>
                     </div>
                     

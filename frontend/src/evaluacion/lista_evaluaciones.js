@@ -3,10 +3,13 @@ import { Alert,Button,   Container,   Col,   Row } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import {Gear, Trashcan} from "@primer/octicons-react";
+import {Pencil, Trashcan} from "@primer/octicons-react";
 import axios from "axios";
+import DeleteModal from "../common/DeleteModal";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-export default class lista_evaluaciones extends React.Component {
+export class lista_evaluaciones extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -23,8 +26,11 @@ export default class lista_evaluaciones extends React.Component {
         search: false
       };
   
-      this.deleteModalMsg = `¿Está seguro que desea eliminar el Evaluacion?`;
+      this.deleteModalMsg = `¿Está seguro que desea eliminar la evaluacion `;
     }
+    static propTypes = {
+      auth: PropTypes.object.isRequired,
+    };
   
     onChange_Semestre = (e) => {  
       this.setState({
@@ -42,12 +48,12 @@ export default class lista_evaluaciones extends React.Component {
             })
           })
   };
-  onChange_Curso = (e) => {  
-    this.setState({
-      [e.target.name]: 
-      e.target.value
-    })
-  }
+    onChange_Curso = (e) => {  
+        this.setState({
+          [e.target.name]: 
+          e.target.value
+        })
+     }
     async fetchEvaluaciones() {
       console.log("Fetching Evaluaciones ...")
       let url
@@ -67,11 +73,6 @@ export default class lista_evaluaciones extends React.Component {
             return 1;
           return 0;
         })
-        // var evaluaciones_agrupadas=evaluaciones.reduce(function(result, current) {
-        //     result[current.semana] = result[current.semana] || [];
-        //     result[current.semana].push(current);
-        //     return result;
-        // }, {});
         var evaluaciones_agrupadas = evaluaciones.reduce(function (r, a) {
           r[a.semana] = r[a.semana] || [];
           r[a.semana].push(a);
@@ -80,9 +81,7 @@ export default class lista_evaluaciones extends React.Component {
       evaluaciones_agrupadas=this.json2array(evaluaciones_agrupadas)
         this.setState({
           evaluaciones: evaluaciones_agrupadas,
-          MostrarEvaluaciones: evaluaciones_agrupadas})
-          // console.log(evaluaciones_agrupadas)
-             
+          MostrarEvaluaciones: evaluaciones_agrupadas})             
          })    
       this.setState({search:true})
     }
@@ -117,6 +116,42 @@ export default class lista_evaluaciones extends React.Component {
     validar_busqueda = (e) =>{
       e.preventDefault();
      this.fetchEvaluaciones();
+    }
+
+    showModal(evaluacion, index) {
+      this.setState({ showModal: true, evaluacionPorEliminar: evaluacion, eliminar_index: index });
+    }
+  
+    handleCancel() {
+      this.setState({ showModal: false, evaluacionPorEliminar: null });
+    }
+    async handleDelete() {
+      let e = this.state.evaluacionPorEliminar.id
+      const url = `http://127.0.0.1:8000/api/evaluaciones/${e}/`
+      let options = {
+        method: 'DELETE',
+        url: url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${this.props.auth.token}`
+        }
+      }
+      axios(options)
+        .then( (res) => {
+          this.setState({
+            showModal: false,
+            evaluacionPorEliminar: null
+          });
+          this.fetchEvaluaciones();
+        })
+        .catch( (err) => {
+          console.log(err);
+          alert("[ERROR] No se pudo eliminar la evaluacion! ");
+          this.setState({
+            showModal: false,
+            evaluacionPorEliminar: null
+          });
+        });
     }
 
     render() {
@@ -156,6 +191,14 @@ export default class lista_evaluaciones extends React.Component {
                 </Row>
                 </form>
                 <Row ></Row><Row ></Row><Row ></Row>
+                {this.state.showModal &&
+                <DeleteModal
+                msg={this.deleteModalMsg+this.state.evaluacionPorEliminar.titulo+ " del curso "+ 
+                this.state.evaluacionPorEliminar.nombre_curso +" seccion "+ this.state.evaluacionPorEliminar.seccion +" ?"}
+                show={this.state.showModal}
+                handleCancel={() => this.handleCancel()}
+                handleDelete={() => this.handleDelete()}
+                />}
                 { (this.state.MostrarEvaluaciones.length<1) ? (this.state.search ? <h5>No hay evaluaciones asociadas a este semestre</h5>: "") : 
                
                 this.state.MostrarEvaluaciones.map((s,i)=>
@@ -163,24 +206,21 @@ export default class lista_evaluaciones extends React.Component {
                   <h5>Semana {s[0]}</h5>
                   {s[1].map(evaluacion=> 
                   <EvaluacionItem
-                key={evaluacion.id}
-                id_evaluacion={evaluacion.id}
-                id_curso={evaluacion.curso}
-                nombre_curso={evaluacion.nombre_curso}
-                codigo_curso={evaluacion.codigo}
-                seccion_curso={evaluacion.seccion}
-                fecha={evaluacion.fecha}
-                tipo={evaluacion.tipo}
-                titulo={evaluacion.titulo}
-                showModal={() => this.showModal(evaluacion)
-                }
+                    key={evaluacion.id}
+                    id_evaluacion={evaluacion.id}
+                    id_curso={evaluacion.curso}
+                    nombre_curso={evaluacion.nombre_curso}
+                    codigo_curso={evaluacion.codigo}
+                    seccion_curso={evaluacion.seccion}
+                    fecha={evaluacion.fecha}
+                    tipo={evaluacion.tipo}
+                    titulo={evaluacion.titulo}
+                    showModal={() => this.showModal(evaluacion, i)}
+                    handleDelete = {this.handleDelete}
+                    handleUpdate = {this.handleClickEditarEvaluacion}    
                 />
-                
-                
-                
                 )}</div>
                 )                   
-                
               }
           </Container>
         </main>
@@ -195,34 +235,37 @@ export default class lista_evaluaciones extends React.Component {
     }
 
     render() {
-    
       const titulo =this.props.titulo;
-      console.log(titulo)
-      const fecha = this.props.fecha;
-      const tipo= this.props.tipo;
-      const id = this.props.id;
+      const fecha = this.props.fecha.split("-");
+      // const tipo= this.props.tipo;
+      // const id = this.props.id;
       const codigo_curso = this.props.codigo_curso;
       const nombre_curso= this.props.nombre_curso;
       const seccion_curso=this.props.seccion_curso;
       return (
         <Alert variant="secondary">
             <Row>
-              <Col xs="auto">
+              <Col xs={5}>
                 <h6>{codigo_curso}-{seccion_curso} {nombre_curso} </h6> 
                 <p>{titulo}</p>
-                <p>{fecha}</p>
               </Col>
-              <Col className="text-center"></Col>
-              <Col xs="auto">
-                 
+              <Col xs={5} className="text-center"> 
+              <p>{fecha[2]}-{fecha[1]}-{fecha[0]}</p></Col>
+              <Col xs="auto" className="float-left">
                   <Link to={'evaluaciones/${id}/editar'}>
-                  <OptionButton icon={Gear} description="Modificar evaluacion" />
+                  <OptionButton icon={Pencil} description="Modificar evaluacion" />
                   </Link>
 
-                  <OptionButton   icon={Trashcan} description="Eliminar evaluacion"  onClick={() => alert("No implementado")}    last={true}  />
+                  <OptionButton   icon={Trashcan} description="Eliminar evaluacion"  onClick={() => this.props.showModal()}     last={true}  />
               </Col>
             </Row>
             </Alert>
       );
     }
   }
+
+const mapStateToProps = (state) => ({
+    auth: state.auth
+  });
+    
+export default connect(mapStateToProps)(lista_evaluaciones);
