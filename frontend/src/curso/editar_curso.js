@@ -3,7 +3,6 @@ import {LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Redirect } from 'react-router-dom';
 import Select from 'react-select'
 import {ArrowLeft} from "@primer/octicons-react";
 import ViewTitle from "../common/ViewTitle";
@@ -71,10 +70,18 @@ export class editar_curso extends React.Component {
                       ramo: res[0].ramo,
                       codigo:res[0].ramo,
                       seccion: res[0].seccion,
-                      profesores_curso: res[0].profesor,
                       semestre_id:res[0].semestre,
                       id_curso:res[0].id
                   })
+                  let profesores_selected=[]
+                  let profesores=res[0].profesor
+                  Promise.all(profesores.map(profesor => {
+                    fetch(`http://127.0.0.1:8000/api/profesores/${profesor}/` )
+                    .then(response=> response.json())
+                    .then(response=> 
+                        {profesores_selected.push({value:response.id,label:response.nombre})}) 
+                  }));   
+                  this.setState({profesores_curso:profesores_selected})               
               })
     }
 
@@ -85,7 +92,7 @@ export class editar_curso extends React.Component {
     }
     
     onChange = e => {
-        if (e.target.name=="ramo"){
+        if (e.target.name==="ramo"){
             this.setState({
                 ["codigo"]: 
                 e.target.value
@@ -149,8 +156,9 @@ export class editar_curso extends React.Component {
 	}
 
     render() {
+        console.log(this.state.profesores_curso)
         const options=this.state.MostrarProfesores.map(profesor => (
-            {value:profesor.id,label:profesor.nombre, style: { color: 'red' }}
+            {value:profesor.id,label:profesor.nombre}
            ))
         const customControlStyles = base => ({
             ...base,
@@ -160,7 +168,7 @@ export class editar_curso extends React.Component {
         return (
             <Container>
             <ViewTitle>
-            <Link  to="../../"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Editar curso</ViewTitle>
+            <Link  to="../../../"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Editar curso</ViewTitle>
                 
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
@@ -185,7 +193,7 @@ export class editar_curso extends React.Component {
                                             <label >Ramo</label>
                                         </div>
                                         <div class="col-sm-8" >
-                                            <select  className="form-control center" name="ramo" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
+                                            <select  className="form-control center" name="ramo" value={this.state.ramo} style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
                                                 {this.state.MostrarRamos.map(ramos => (
                                                 <option value={ramos.codigo}>{ramos.nombre}</option>
                                                 ))}
@@ -227,9 +235,7 @@ export class editar_curso extends React.Component {
                                             <label >Profesor</label>
                                         </div>
                                         <div class="col-sm-9" >
-                                        {/* No pude centrarlo, hay un problema con prioridades de css de react */}
-                                            <Select className="basic-multi-select" styles={{control: customControlStyles}}   isMulti options={options} label="Seleccione profesores" value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} />
-
+                                            <Select placeholder="Seleccionar profesor" className="select_profesores" styles={{control: customControlStyles}}   isMulti options={options} defaultValue={this.state.profesores_curso} value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} />
                                         </div>
                                     </div>
                                 </div>  
@@ -241,9 +247,7 @@ export class editar_curso extends React.Component {
                             <button className="btn btn-secondary" >Volver a Semestre</button>
                         </LinkContainer>
 
-                        {/* <LinkContainer activeClassName=""  to={this.paths} style={{'marginRight':"14vw"}}> */}
                             <button className="btn btn-success" type="submit">Guardar Curso</button>
-                        {/* </LinkContainer> */}
                         </div>
                     </form>
             </Container>

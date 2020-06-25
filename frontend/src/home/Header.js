@@ -10,32 +10,32 @@ class LogedInView extends React.Component {
     const { user, logout } = this.props;
     // console.log({user});
     return (
-      <Navbar.Collapse id="basic-navbar-nav">
+      <Navbar.Collapse className="mr-auto">
       <Nav className="ml-auto" >
       <Nav.Item>
-        <Nav.Link className="inactive " activeClassName="active">
-          <LinkContainer to="/semestres">
+        <Nav.Link eventKey="1">
+          <LinkContainer to="/semestres/">
             <h5 style={{color:"white"}}>Semestres</h5>
           </LinkContainer>
         </Nav.Link>
         </Nav.Item>
-        <NavLink  className="inactive" activeClassName="active">
-          <LinkContainer to="/ramos">
+        <NavLink  eventKey="2" >
+          <LinkContainer to="/ramos/">
             <h5>Ramos</h5>
           </LinkContainer>
         </NavLink>
-        <NavLink  className="inactive" activeClassName="active">
-          <LinkContainer to="/profesores">
+        <NavLink   eventKey="3">
+          <LinkContainer to="/profesores/">
             <h5>Profesores</h5>
           </LinkContainer>
         </NavLink>
-        <NavLink  className="inactive" activeClassName="active">
-          <LinkContainer to="/fechas_especiales">
+        <NavLink  eventKey="4" >
+          <LinkContainer to="/fechas_especiales/">
             <h5>Fechas especiales</h5>
           </LinkContainer>
         </NavLink>
-        <NavLink  className="inactive" activeClassName="active">
-          <LinkContainer to="/evaluaciones">
+        <NavLink eventKey="5" >
+          <LinkContainer to="/evaluaciones/">
             <h5>Evaluaciones</h5>
           </LinkContainer>
         </NavLink>
@@ -51,7 +51,7 @@ class LogedInView extends React.Component {
 class LogedOutView extends React.Component {
   render() {
     return (
-      <LinkContainer to="/login">
+      <LinkContainer to="/login/">
         <Nav.Link><h5 style={{color:'Black'}}>Ingresar</h5></Nav.Link>
       </LinkContainer>
     );
@@ -79,7 +79,7 @@ class Header extends React.Component {
       <LogedOutView />
     );
     return (
-      <Navbar expand="lg" className="navbar sticky-top color-nav" variant="dark">
+      <Navbar collapseOnSelect expand="lg" className="navbar sticky-top color-nav" variant="dark">
         <LinkContainer to="/">
           <Navbar.Brand className="mr-auto"><h4 style={{color:'White'}}>U-Calendar</h4></Navbar.Brand>
         </LinkContainer>  

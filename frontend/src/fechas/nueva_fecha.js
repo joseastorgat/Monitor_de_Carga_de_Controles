@@ -40,6 +40,9 @@ export class nueva_fecha extends React.Component {
     create_fecha() {  
         console.log("post fecha ...")
         const url = "http://127.0.0.1:8000/api/fechas-especiales/"
+
+        const fecha_fin = this.state.fin_fecha === "" ? this.state.inicio_fecha : this.state.fin_fecha;
+
         let options = {
           method: 'POST',
           url: url,
@@ -51,7 +54,7 @@ export class nueva_fecha extends React.Component {
             "nombre": this.state.nombre_fecha,
             "tipo":this.state.tipo_fecha,
             "inicio": this.state.inicio_fecha,
-            "fin": this.state.fin_fecha
+            "fin": fecha_fin,
            }
         }
         
@@ -75,7 +78,7 @@ export class nueva_fecha extends React.Component {
         return (
             <Container>
             <ViewTitle>
-            <Link  to="./"><OptionButton icon={ArrowLeft} description="Volver a fechas" /></Link>Agregar nueva fecha</ViewTitle>
+            <Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a fechas" /></Link>Agregar nueva fecha</ViewTitle>
                 
                     <form className="" name="form" onSubmit={this.handleSubmit} >
                         <div class="generic-form">
@@ -87,7 +90,7 @@ export class nueva_fecha extends React.Component {
                                             <label >Nombre</label>
                                         </div>
                                         <div className="col-sm-10" >
-                                            <input required type="text" className="form-control" name="nombre_fecha" onChange={this.onChange} placeholder="Feriado 1 Mayo" style={{textAlignLast:'center'}} />
+                                            <input required type="text" className="form-control" name="nombre_fecha" onChange={this.onChange} placeholder="Nombre Feriado" style={{textAlignLast:'center'}} />
                                         </div>
                                     </div>
                                 </div>  
@@ -141,13 +144,11 @@ export class nueva_fecha extends React.Component {
                     
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to="/fechas_especiales" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                            <button className="btn btn-secondary" >Volver a Fechas</button>
+                        <LinkContainer  activeClassName=""  to="/fechas_especiales/" className="float-left " style={{ 'marginLeft':"10vw"}}>
+                            <button className="btn btn-secondary" type="button">Volver a Fechas</button>
                         </LinkContainer>
 
-                        {/* <LinkContainer activeClassName=""  to="/fechas_especiales" style={{'marginRight':"14vw"}}> */}
                             <button className="btn btn-success" type="submit">Guardar Fecha</button>
-                        {/* </LinkContainer> */}
                         </div>
                     </form>
             </Container>
