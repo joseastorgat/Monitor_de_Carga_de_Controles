@@ -3,18 +3,15 @@ import { Route, Switch } from "react-router-dom";
 import PrivateRoute from "../common/PrivateRoute"
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { BsGearFill} from 'react-icons/bs';
 import { Link } from "react-router-dom";
-import administrar from "./Administrar";
 import Header from "./Header";
 import {nuevo_semestre , lista_semestres,editar_semestre, ver_semestre} from "../semestre/index_semestre";
-import {nuevo_curso , ver_curso, editar_curso} from "../curso/index_curso";
+import {nuevo_curso , editar_curso} from "../curso/index_curso";
 import {nuevo_ramo ,editar_ramo, lista_ramos} from "../ramo/index_ramo";
 import {nuevo_fecha,editar_fecha, lista_fechas} from "../fechas/index_fecha";
 import {evaluaciones} from "../evaluacion/index_evaluacion";
 import {nuevo_profesor, editar_profesor, lista_profesores} from "../profesor/index_profesor";
 import Calendar from "../heatmap/Calendar";
-import { Button } from "react-bootstrap";
 import FooterPage from "./Footer";
 import {  Container } from "react-bootstrap";
 
@@ -29,7 +26,7 @@ class Bloque_Calendario extends React.Component {
 
   async fetchSemestres() {
     console.log("Fetching...")
-    var semestres= await fetch(`http://127.0.0.1:8000/api/semestres/`)
+    await fetch(`http://127.0.0.1:8000/api/semestres/`)
     .then(response => response.json())
     .then(semestres =>
         this.setState({
@@ -53,10 +50,6 @@ class Bloque_Calendario extends React.Component {
     this.fetchSemestres();
   }
   render() {
-    const { user, logout } = this.props;
-    const { isAuthenticated} = this.props.auth;
-    const n =  new Date();
-    const y = n.getFullYear();
     return (
     <main>
       <Container >
@@ -99,7 +92,6 @@ export default class Home extends React.Component {
 
           {/* VISTAS DE CURSO */}
           <PrivateRoute exact path="/semestres/:ano/:semestre/nuevo_curso/" component={nuevo_curso} />
-          <PrivateRoute exact path="/semestres/:ano/:semestre/:cod/:seccion/" component={ver_curso} />
           <PrivateRoute exact  path="/semestres/:ano/:semestre/:cod/:seccion/editar/"  component={editar_curso}  />
 
           {/* VISTAS DE RAMO */}

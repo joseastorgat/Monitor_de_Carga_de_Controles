@@ -2,10 +2,8 @@ import React from "react";
 import {   Alert,Button, Modal,  Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
-import DeleteModal from "../common/DeleteModal";
 import OptionButton from "../common/OptionButton";
 import { Pencil, Trashcan, Calendar,Book ,ArrowLeft} from "@primer/octicons-react";
-import { LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -146,7 +144,7 @@ export class lista_semestre extends React.Component {
             <SemesterItem
               id={semestre.id}
               año={semestre.año}
-              semestre={ semestre.periodo==1 ? ("Otoño") : ("Primavera")}
+              semestre={ semestre.periodo===1 ? ("Otoño") : ("Primavera")}
               showModal={() => this.showModal(semestre)}
             />
           ))}
@@ -175,18 +173,18 @@ export class lista_semestre extends React.Component {
 
     deleteValidation(semestre){
       console.log(this.state.eliminar_año)
-      if(this.state.eliminar_año == "" || this.state.eliminar_periodo == ""){
+      if(this.state.eliminar_año === "" || this.state.eliminar_periodo === ""){
         alert("Debe ingresar tanto el año como el periodo del semestre que esta eliminando")
         return false
       }
       var periodo = "" 
-      if (this.state.eliminar_periodo.toLowerCase() == "primavera"){
+      if (this.state.eliminar_periodo.toLowerCase() === "primavera"){
         periodo = 2
       }
-      if(this.state.eliminar_periodo.toLowerCase() == "otoño"){
+      if(this.state.eliminar_periodo.toLowerCase() === "otoño"){
         periodo = 1
       }
-      if(semestre.año == this.state.eliminar_año && semestre.periodo == periodo){
+      if(semestre.año === this.state.eliminar_año && semestre.periodo === periodo){
         this.state.semestre_deleted = true
         return true
       }

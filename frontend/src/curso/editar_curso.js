@@ -3,7 +3,6 @@ import {LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Redirect } from 'react-router-dom';
 import Select from 'react-select'
 import {ArrowLeft} from "@primer/octicons-react";
 import ViewTitle from "../common/ViewTitle";
@@ -93,7 +92,7 @@ export class editar_curso extends React.Component {
     }
     
     onChange = e => {
-        if (e.target.name=="ramo"){
+        if (e.target.name==="ramo"){
             this.setState({
                 ["codigo"]: 
                 e.target.value

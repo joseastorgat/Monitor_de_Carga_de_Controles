@@ -75,7 +75,6 @@ create_profesor() {
 	}
 
 	render() {
-			const id= this.props.match.params.id
 			return (
 					<Container>
 					<ViewTitle>

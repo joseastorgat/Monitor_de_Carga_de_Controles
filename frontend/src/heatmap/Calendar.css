@@ -142,9 +142,6 @@ th{
 }
 
 /*                            Leyenda                               */
-.leyenda{
-  border: 1px solid #dddddd;
-}
 
 .cuadrado {
   display: flex;
@@ -153,7 +150,8 @@ th{
   height:20vh;
   max-height:20px;
   position:relative;
-  border: 1px solid #dddddd;
+ 
+  margin-right: 4px;
 }
 
 .espacio{
@@ -162,4 +160,10 @@ th{
 
 .modal{
   font-size:15px;
+}
+.td_leyenda{
+  border:none;
+  margin-bottom: -15px;
+  width:155px;
+  display: flex;
 }
