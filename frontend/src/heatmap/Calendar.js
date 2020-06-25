@@ -354,7 +354,6 @@ export default class Calendar extends React.Component {
     
     return (
       <Container>
-
         { this.state.show_evaluaciones_dia_Modal &&
           <Evaluacion_dia_Modal 
             show={this.state.show_evaluaciones_dia_Modal}
@@ -364,25 +363,26 @@ export default class Calendar extends React.Component {
           />
         }
         <Row >
-        <Col xs={3}>
-            <Sidebar xs={3}
+        
+        <Col xs={9} md={3}>
+            <Sidebar 
               groups={groups}
               courses={courses}
               handleChange={(i, t) => this.handleChange(i, t)}
               handleAccordion={i => this.handleAccordion(i)}
             />
         </Col>
-        <Col  style={{textAlign:'center'}} >
+        <Col xs="auto" md={7} style={{textAlign:'center'}} >
           <h4 >Heatmap Semestre {this.state.periodo==1 ? "Otoño": "Primavera"}  {this.state.año} </h4>
           <div > 
-          <Table size="sm" responsive >
+          <Table classname="calendar" size="sm" responsive style={{display: 'block',maxHeight:"400px",overflowY:'scroll'}}>
              <thead>
                 <tr>
                 <th><h6>Mes</h6></th>
-                <th> <h6>Semana</h6> </th>
+                <th> <h6>Sem</h6> </th>
                 <th> <h6>Lun</h6> </th>
                 <th> <h6>Mar</h6> </th>
-                <th> <h6>Mié </h6></th>
+                <th> <h6>Mie </h6></th>
                 <th> <h6>Jue</h6> </th>
                 <th> <h6>Vie</h6></th>
                 <th> <h6>Sáb </h6></th>
@@ -392,8 +392,8 @@ export default class Calendar extends React.Component {
             <tbody>
             { this.weeks.map( (week, i) => (
               <tr>
-              <th><h6>{ this.encontrar_mes(week)}</h6></th>
-              <th>S{i+1}</th>
+              <td className="gris"><h6>{ this.encontrar_mes(week)}</h6></td>
+              <td  className="gris">S{i+1}</td>
                 {week.map((day, di ) => {
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
@@ -422,10 +422,8 @@ export default class Calendar extends React.Component {
           </Table>
           </div>  
           </Col>
-
-          {/* Leyenda */}
-          <Col xs="auto" >
-          <Table responsive className="leyenda" size="sm" style={{textAlign:'center'}}> 
+          <Col xs="auto" md={2} lg={2}>
+          <Table responsive className="leyenda"  style={{textAlign:'center'}}> 
               <thead>
               <th style={{background:"#007BFF"}}> Leyenda </th>
               </thead>
@@ -440,11 +438,13 @@ export default class Calendar extends React.Component {
                 <span className="espacio"></span> <div class="cuadrado" style={{background:"#FF0000"}}></div>3 Evaluaciones
               </tr>
               <tr style={{display:'flex'}}>
-                <span className="espacio"></span> <div class="cuadrado" style={{background:"#800000"}}></div>Más de 3 Evaluaciones
+                <span className="espacio"></span> <div class="cuadrado" style={{background:"#800000"}}></div>4+ Evaluaciones
               </tr>
               </tbody>
             </Table>
             </Col>
+
+         
         </Row>
       </Container>
     );

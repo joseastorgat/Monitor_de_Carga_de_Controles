@@ -10,26 +10,26 @@ class LogedInView extends React.Component {
     const { user, logout } = this.props;
     // console.log({user});
     return (
-      <Navbar.Collapse id="basic-navbar-nav">
+      <Navbar.Collapse className="mr-auto">
       <Nav className="ml-auto" >
       <Nav.Item>
-        <Nav.Link className="inactive " activeClassName="active">
+        <Nav.Link eventKey="1" className="inactive " activeClassName="active">
           <LinkContainer to="/semestres">
             <h5 style={{color:"white"}}>Semestres</h5>
           </LinkContainer>
         </Nav.Link>
         </Nav.Item>
-        <NavLink  className="inactive" activeClassName="active">
+        <NavLink  eventKey="2"  className="inactive" activeClassName="active">
           <LinkContainer to="/ramos">
             <h5>Ramos</h5>
           </LinkContainer>
         </NavLink>
-        <NavLink  className="inactive" activeClassName="active">
+        <NavLink   eventKey="3" className="inactive" activeClassName="active">
           <LinkContainer to="/profesores">
             <h5>Profesores</h5>
           </LinkContainer>
         </NavLink>
-        <NavLink  className="inactive" activeClassName="active">
+        <NavLink  eventKey="4" className="inactive" activeClassName="active">
           <LinkContainer to="/fechas_especiales">
             <h5>Fechas especiales</h5>
           </LinkContainer>
@@ -74,7 +74,7 @@ class Header extends React.Component {
       <LogedOutView />
     );
     return (
-      <Navbar expand="lg" className="navbar sticky-top color-nav" variant="dark">
+      <Navbar collapseOnSelect expand="lg" className="navbar sticky-top color-nav" variant="dark">
         <LinkContainer to="/">
           <Navbar.Brand className="mr-auto"><h4 style={{color:'White'}}>U-Calendar</h4></Navbar.Brand>
         </LinkContainer>  
