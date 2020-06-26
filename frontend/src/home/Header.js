@@ -12,33 +12,43 @@ class LogedInView extends React.Component {
     return (
       <Navbar.Collapse className="mr-auto">
       <Nav className="ml-auto" >
-      <Nav.Item>
+     
+      <LinkContainer to="/semestres/">
         <Nav.Link eventKey="1">
-          <LinkContainer to="/semestres/">
-            <h5 style={{color:"white"}}>Semestres</h5>
-          </LinkContainer>
+          
+            <h5 >Semestres</h5>
+         
         </Nav.Link>
-        </Nav.Item>
-        <NavLink  eventKey="2" >
-          <LinkContainer to="/ramos/">
+        </LinkContainer>
+      
+        <LinkContainer to="/ramos/">
+        <NavLink eventKey="2" >
+      
             <h5>Ramos</h5>
-          </LinkContainer>
+         
         </NavLink>
+        </LinkContainer>
+        <LinkContainer to="/profesores/">
         <NavLink   eventKey="3">
-          <LinkContainer to="/profesores/">
+         
             <h5>Profesores</h5>
-          </LinkContainer>
+          
         </NavLink>
+        </LinkContainer>
+        <LinkContainer to="/fechas_especiales/">
         <NavLink  eventKey="4" >
-          <LinkContainer to="/fechas_especiales/">
+          
             <h5>Fechas especiales</h5>
-          </LinkContainer>
+        
         </NavLink>
-        <NavLink eventKey="5" >
-          <LinkContainer to="/evaluaciones/">
+        </LinkContainer>
+        <LinkContainer to="/evaluaciones/">
+        <NavLink eventKey="5">
+         
             <h5>Evaluaciones</h5>
-          </LinkContainer>
+         
         </NavLink>
+        </LinkContainer>
      <NavDropdown alignRight title={user ? `${user.username}` : ''} >
           <NavDropdown.Item onClick={logout}>  Cerrar Sesión  </NavDropdown.Item>
       </NavDropdown> 
