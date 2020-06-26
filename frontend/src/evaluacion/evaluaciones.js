@@ -23,7 +23,13 @@ export class evaluaciones extends React.Component {
                 profesor: ""
             },
             showModal: false,
-            evaluacionPorEliminar: null,
+            evaluacionPorEliminar: {
+                id: "",
+                titulo: "",
+                fecha: "",
+                tipo: "",
+                curso: ""
+            },
             editar_index: -1,
             eliminar_index: -1,
             form_focus: false,
@@ -37,9 +43,10 @@ export class evaluaciones extends React.Component {
             evaluacion_created: false,
 
             MostrarEvaluaciones: [],
+            deleteModalMsg: "",
         //   search: ""
         };
-        this.deleteModalMsg = '¿Está seguro que desea eliminar la evaluación?';
+        
 
         this.form = null
 
@@ -151,7 +158,6 @@ export class evaluaciones extends React.Component {
         console.log(options)
         axios(options)
         .then( (res) => {
-            console.log(res);
             console.log("evaluacion updated");
             let evaluaciones = this.state.evaluaciones
             evaluaciones[this.state.editar_index] = res.data
@@ -220,7 +226,6 @@ export class evaluaciones extends React.Component {
 
     create_evaluacion() {  
         console.log("post evaluaciones ...")
-        console.log(this.state)
         var evaluaciones = this.state.evaluaciones
         const url = "http://127.0.0.1:8000/api/evaluaciones/"
         let options = {
@@ -255,10 +260,6 @@ export class evaluaciones extends React.Component {
       })
       .catch( (err) => {
         console.log("cant create evaluacion");
-        console.log(this.state.fecha)
-        console.log(this.state.titulo)
-        console.log(this.state.curso.id)
-        console.log(this.state.tipo)
         console.log(err);
         alert("[ERROR] No se pudo crear la evaluacion!");
       });
@@ -288,7 +289,12 @@ export class evaluaciones extends React.Component {
     }
 
     showModal(evaluacion, index) {
-        this.setState({ showModal: true, evaluacionPorEliminar: evaluacion, eliminar_index: index });
+        this.setState({ 
+            showModal: true, 
+            evaluacionPorEliminar: evaluacion, 
+            eliminar_index: index,
+            deleteModalMsg: `¿Está seguro que desea eliminar ${evaluacion.tipo == "Tarea" ?  "la Tarea: " : "el Control: " } ${evaluacion.titulo}`
+        });
     }
     
     handleCancel() {
@@ -420,7 +426,7 @@ export class evaluaciones extends React.Component {
         return (
             <Container>
             <DeleteModal
-                msg={this.deleteModalMsg}
+                msg={this.state.deleteModalMsg}
                 show={this.state.showModal}
                 handleCancel={() => this.handleCancel()}
                 handleDelete={() => this.handleDelete()}
