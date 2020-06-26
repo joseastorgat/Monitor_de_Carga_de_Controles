@@ -84,9 +84,9 @@ export class ver_semestre extends React.Component {
       showModal: false,
       cursoPorEliminar: null,
       MostrarCursos: [],
-      search: ""
+      search: "",
+      deleteModalMsg: `¿Está seguro que desea eliminar el curso?`
     };
-    this.deleteModalMsg = `¿Está seguro que desea eliminar el curso?`;
   }
   static propTypes={
     auth: PropTypes.object.isRequired,
@@ -140,7 +140,11 @@ export class ver_semestre extends React.Component {
   }
 
   showModal(curso) {
-    this.setState({ showModal: true, cursoPorEliminar: curso });
+    this.setState({ 
+      showModal: true, 
+      cursoPorEliminar: curso,
+      deleteModalMsg: `¿Está seguro que desea eliminar el curso: ${curso.ramo}-${curso.seccion}  ${curso.nombre}?`
+    });
   }
 
   handleCancel() {
@@ -168,7 +172,7 @@ export class ver_semestre extends React.Component {
     return(
           <main>
           <DeleteModal
-            msg={this.deleteModalMsg}
+            msg={this.state.deleteModalMsg}
             show={this.state.showModal}
             handleCancel={() => this.handleCancel()}
             handleDelete={() => this.handleDelete()}
