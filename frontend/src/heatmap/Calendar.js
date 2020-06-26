@@ -20,161 +20,10 @@ import 'moment/locale/es';
 
 import axios from "axios"; //from "axios";
 import { evaluaciones } from "../evaluacion/evaluaciones";
-
+import Sidebar from "./CourseSelector";
 
 const moment = extendMoment(Moment);
 moment.locale("es");
-
-// A group inside the sidebar 
-class SidebarGroup extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      courses: [],
-      checked: false
-    };
-  }
-
-  getVariant() {
-    switch (this.props.nsemester) {
-      case 5:
-        return "Quinto Semestre";
-      case 6:
-        return "Sexto Semestre";
-      case 7:
-        return "Séptimo Semestre";
-      case 8:
-        return "Octavo Semestre";
-      case 9:
-        return "Noveno Semestre";
-      case 10:
-        return "Décimo Semestre";
-      case 11:
-        return "Undécimo Semestre";
-      case 12:
-        return "Duodécimo Semestre";
-      default:
-        return "Electivos";
-    }
-  }
-
-  componentDidMount() {
-
-    const { nsemester, courses } = this.props;
-    const this_courses = [];
-    
-    courses.map(course =>
-      course.semestre_malla === nsemester  ? this_courses.push(course) : null
-    );
-
-    this.setState({ courses: this_courses });
-  }
-
-  handleChangeGroup() {
-    const { handleChange, courses } = this.props;
-    this.setState({ checked: !this.state.checked });
-     
-    handleChange(this.state.courses.map(course => courses.indexOf(course)), !this.state.checked);
-
-  }
-
-  handleChangeSingle(course_index) {
-    
-    const { handleChange} = this.props;
-    console.log(this.state.courses);
-
-    if(this.state.checked){
-      this.setState({ checked: false });
-    }
-    handleChange([course_index]);
-  }
-
-  render() {
-    const {handleAccordion, nsemester, courses } = this.props;
-    return (
-      <div className="accordion-container">
-        <Card>
-          <Accordion.Toggle
-            as={Button}
-            variant="primary"
-            onClick={() => handleAccordion(nsemester)}
-            eventKey={nsemester}
-            className="card-header-btn"
-          >
-            <span className="svg-container">
-              <Octicon icon={this.props.icon} size="small" />
-            </span>
-          </Accordion.Toggle>
-          
-          <Card.Header bg="light" className="accordion-card-header">
-            <div className="card-header-checkbox">
-              <Form.Check
-                checked={this.state.checked}
-                onChange={() => this.handleChangeGroup()}
-                label={this.getVariant(nsemester)}
-              />
-            </div>
-          </Card.Header>
-          
-          <Accordion.Collapse eventKey={nsemester}>
-            <Card.Body className="card-body-checkbox">
-              {this.state.courses.map((course, i) => (
-                <SidebarElement
-                  key={i}
-                  onChange={() => this.handleChangeSingle(courses.indexOf(course))}
-                  title={`${course.ramo}-${course.seccion} ${course.nombre}`}
-                  checked={course.checked}
-                />
-              ))}
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </div>
-    );
-  }
-}
-
-class SidebarElement extends React.Component {
-  render() {
-    return (
-      <Form.Check
-        onChange={() => this.props.onChange()}
-        checked={this.props.checked}
-        label={this.props.title}
-      />
-    );
-  }
-}
-
-class Sidebar extends React.Component {
-  render() {
-    const { courses, handleChange, handleAccordion } = this.props;
-    return (
-      <Alert variant="secondary" >
-        <h4>Seleccione Cursos</h4>
-        <Accordion>
-          {this.props.groups.map((group, idx) => (
-            <SidebarGroup 
-              key={idx}
-              checked={group.checked}
-              nsemester={group.number}
-              courses={courses}
-              handleAccordion={handleAccordion}
-              handleChange={handleChange}
-              icon={group.icon}
-            />
-          ))}
-        </Accordion>
-      <Row></Row><Row></Row>
-      <Row></Row>
-       <Row className="justify-content-md-center"> 
-        <Button >Guardar Calendario</Button>
-        </Row>
-      </Alert>
-    );
-  }
-}
 
 export default class Calendar extends React.Component {
   constructor(props) {
@@ -233,16 +82,16 @@ export default class Calendar extends React.Component {
   }
 
 
-  handleAccordion(i) {
-    const groups = this.state.groups.map(group =>
-      group.number === i
-        ? group.icon === ChevronRight
-          ? { number: i, icon: ChevronDown }
-          : { number: i, icon: ChevronRight }
-        : { number: group.number, icon: ChevronRight }
-    );
-    this.setState({ groups: groups });
-  }
+  // handleAccordion(i) {
+  //   const groups = this.state.groups.map(group =>
+  //     group.number === i
+  //       ? group.icon === ChevronRight
+  //         ? { number: i, icon: ChevronDown }
+  //         : { number: i, icon: ChevronRight }
+  //       : { number: group.number, icon: ChevronRight }
+  //   );
+  //   this.setState({ groups: groups });
+  // }
 
   async componentDidMount() {
   
@@ -369,7 +218,6 @@ export default class Calendar extends React.Component {
               groups={groups}
               courses={courses}
               handleChange={(i, t) => this.handleChange(i, t)}
-              handleAccordion={i => this.handleAccordion(i)}
             />
         </Col>
         <Col xs="auto" md={7} style={{textAlign:'center'}} >
