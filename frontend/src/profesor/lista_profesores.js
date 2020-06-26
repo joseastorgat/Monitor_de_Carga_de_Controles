@@ -19,10 +19,10 @@ export class lista_profesores extends React.Component {
       showModal: false,
       profesorPorEliminar: null,
       MostrarProfesores: [],
-      search: ""
+      search: "",
+      deleteModalMsg: '¿Está seguro que desea eliminar el Profesor?'
     };
 
-    this.deleteModalMsg = '¿Está seguro que desea eliminar el Profesor?';
   }
   static propTypes = {
     auth: PropTypes.object.isRequired,
@@ -65,7 +65,11 @@ export class lista_profesores extends React.Component {
   }
 
   showModal(profesor) {
-    this.setState({ showModal: true, profesorPorEliminar: profesor });
+    this.setState({ 
+      showModal: true, 
+      profesorPorEliminar: profesor,
+      deleteModalMsg: `¿Está seguro que desea eliminar el/la profesor/a: ${profesor.nombre}?`
+    });
   }
 
   handleCancel() {
@@ -108,7 +112,7 @@ export class lista_profesores extends React.Component {
         <main>
         <Container>
           <DeleteModal
-            msg={this.deleteModalMsg}
+            msg={this.state.deleteModalMsg}
             show={this.state.showModal}
             handleCancel={() => this.handleCancel()}
             handleDelete={() => this.handleDelete()}
