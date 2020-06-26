@@ -20,6 +20,7 @@ div.row {
     color:yellow;
 }
 
+/* ========================== nuevo_curso.js =============================== */
 .select_profesores{
     height: 50px;
     font-size: 16px;
@@ -81,6 +82,16 @@ div.row {
     background-color:#007BFF;
 }
 
+.inactive {
+    color:white;
+    text-decoration: none;
+}
+
+.active {
+    color: yellow;
+    text-decoration: none;
+  }
+
 
 /* ========================== Login.js =============================== */
 .form-header{
@@ -127,20 +138,6 @@ div.row {
 }
 
 
-.titulo{ 
-    background-color:#007BFF;
-    border: solid 1px #ddd;
-    color: white;
-    padding: 15px 32px;
-    width: 80vw;
-    margin: auto;
-    margin-bottom: 1rem;
-    margin-top: 2rem;
-    border-radius: 8px;
-}
-
-
-
 /* ========================== Semestre.js =============================== */
 
 .generic-form{
@@ -170,6 +167,7 @@ div.row {
     padding: 40px 10px ;
 }
 
+/* ========================== Footer.js =============================== */
 
 footer {
     text-align: center;
@@ -183,16 +181,7 @@ footer {
     right:0;
 }
 
-.inactive {
-    color:white;
-    text-decoration: none;
-}
-
-.active {
-    color: yellow;
-    text-decoration: none;
-  }
-
+  /* ========================== lista_evaluaciones.js =============================== */
 .dropdown-menu {
     right: 0;
     left: auto;

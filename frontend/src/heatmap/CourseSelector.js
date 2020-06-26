@@ -27,9 +27,6 @@ class SidebarElement extends React.Component {
   
 // A group inside the Sidebar 
 class SidebarGroup extends React.Component {
-    constructor(props) {
-      super(props);
-    }
   
     getVariant() {
       switch (this.props.nsemester) {

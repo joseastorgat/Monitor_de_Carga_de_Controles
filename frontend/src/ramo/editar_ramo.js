@@ -90,7 +90,7 @@ export class editar_ramo extends React.Component {
         return (
             <Container>
             <ViewTitle>
-					<Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a ramos" /></Link>Editar ramo {id}</ViewTitle>
+					<Link  to="../../"><OptionButton icon={ArrowLeft} description="Volver a ramos" /></Link>Editar ramo {id}</ViewTitle>
                 {/* <h4 className="titulo">Editar ramo {id}</h4> */}
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">

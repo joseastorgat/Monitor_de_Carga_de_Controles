@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import { Button } from "react-bootstrap";
-import Octicon from "@primer/octicons-react";
 import {ArrowLeft} from "@primer/octicons-react";
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
@@ -143,7 +142,7 @@ export class nuevo_semestre extends React.Component {
         return (
             <Container>
             <ViewTitle>
-            <Link  to="/semestres"><OptionButton icon={ArrowLeft} description="Volver a semestres" /></Link>Agregar nuevo semestre</ViewTitle>
+            <Link  to="/semestres/"><OptionButton icon={ArrowLeft} description="Volver a semestres" /></Link>Agregar nuevo semestre</ViewTitle>
                
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
@@ -225,15 +224,13 @@ export class nuevo_semestre extends React.Component {
                         </div>
 
                         <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to="/semestres" className="float-left " style={{ 'marginLeft':"10vw"}}>
+                        <LinkContainer  activeClassName=""  to="/semestres/" className="float-left " style={{ 'marginLeft':"10vw"}}>
                             <Button className="btn btn-secondary" > 
-                            {/* <Octicon icon={ArrowLeft} size="medium" /> */}
                               Volver a Semestres       </Button>
                         </LinkContainer>
 
-                        {/* <LinkContainer activeClassName=""  to="/semestres" style={{'marginRight':"14vw"}}> */}
+                     
                             <button className="btn btn-success" type="submit">Guardar Semestre</button>
-                        {/* </LinkContainer> */}
                         </div>
                     </form>
             </Container>

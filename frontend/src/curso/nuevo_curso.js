@@ -67,7 +67,7 @@ export class nuevo_curso extends React.Component {
     
     async fetchSemestre() {
         const { ano, semestre } = this.props.match.params;
-        const se= (semestre=="Otoño" ? 1 : 2)
+        const se= (semestre==="Otoño" ? 1 : 2)
         console.log("Fetching Semestre...")
         await fetch(`http://127.0.0.1:8000/api/semestres/?año=${ano}&periodo=${se}`)
         .then(response => response.json())
@@ -84,7 +84,7 @@ export class nuevo_curso extends React.Component {
     }
     
     onChange = e => {
-        if (e.target.name=="ramo"){
+        if (e.target.name==="ramo"){
             this.setState({
                 ["codigo"]: 
                 e.target.value
@@ -149,20 +149,10 @@ export class nuevo_curso extends React.Component {
             {value:profesor.id,label:profesor.nombre, style: { color: 'red' }}
            ))
         const { ano, semestre } = this.props.match.params;
-        const customStyles = {
-            control: (base, state) => ({
-              ...base,
-
-              '&:hover': {
-                borderColor:'#ddd'
-              }
-            })
-          }
         return (
             <Container>
             <ViewTitle>
-            <Link  to="./"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Nuevo curso</ViewTitle>
-                
+            <Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Nuevo curso</ViewTitle>
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
                             <div class="row">
@@ -240,9 +230,7 @@ export class nuevo_curso extends React.Component {
                             <button className="btn btn-secondary" >Volver a Semestre</button>
                         </LinkContainer>
 
-                        {/* <LinkContainer activeClassName=""  to={this.paths} style={{'marginRight':"14vw"}}> */}
                             <button className="btn btn-success" type="submit">Guardar Curso</button>
-                        {/* </LinkContainer> */}
                         </div>
                     </form>
             </Container>

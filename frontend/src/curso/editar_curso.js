@@ -3,7 +3,6 @@ import {LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Redirect } from 'react-router-dom';
 import Select from 'react-select'
 import {ArrowLeft} from "@primer/octicons-react";
 import ViewTitle from "../common/ViewTitle";
@@ -93,7 +92,7 @@ export class editar_curso extends React.Component {
     }
     
     onChange = e => {
-        if (e.target.name=="ramo"){
+        if (e.target.name==="ramo"){
             this.setState({
                 ["codigo"]: 
                 e.target.value
@@ -169,7 +168,7 @@ export class editar_curso extends React.Component {
         return (
             <Container>
             <ViewTitle>
-            <Link  to="../../"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Editar curso</ViewTitle>
+            <Link  to="../../../"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Editar curso</ViewTitle>
                 
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
@@ -248,9 +247,7 @@ export class editar_curso extends React.Component {
                             <button className="btn btn-secondary" >Volver a Semestre</button>
                         </LinkContainer>
 
-                        {/* <LinkContainer activeClassName=""  to={this.paths} style={{'marginRight':"14vw"}}> */}
                             <button className="btn btn-success" type="submit">Guardar Curso</button>
-                        {/* </LinkContainer> */}
                         </div>
                     </form>
             </Container>

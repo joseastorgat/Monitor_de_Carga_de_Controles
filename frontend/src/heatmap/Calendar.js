@@ -6,10 +6,9 @@ import {
 } from "react-bootstrap";
 
 import "./Calendar.css";
-import Moment, { weekdays } from 'moment';
+import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 import 'moment/locale/es';
-
 import axios from "axios"; //from "axios";
 import Sidebar from "./CourseSelector";
 
@@ -47,20 +46,17 @@ export default class Calendar extends React.Component {
     const evaluaciones = this.state.evaluaciones.slice();
     let evaluaciones_a_mostrar = this.state.evaluaciones_a_mostrar.slice();
 
-    console.log(checks);
-
     checks.forEach(i => {
-      if(courses[i].checked != target){
+      if(courses[i].checked !== target){
         courses[i].checked = target !== undefined ? target : !courses[i].checked;
         if(courses[i].checked){
-          const evaluaciones_curso = evaluaciones.filter( evaluacion => evaluacion.curso == courses[i].id);
+          const evaluaciones_curso = evaluaciones.filter( evaluacion => evaluacion.curso === courses[i].id);
           evaluaciones_a_mostrar = evaluaciones_a_mostrar.concat(evaluaciones_curso);
         }
         else{
           evaluaciones_a_mostrar = evaluaciones_a_mostrar.filter(evaluacion => evaluacion.curso !== courses[i].id);
         }
       }
-
     });
 
     const dias = evaluaciones_a_mostrar.map(evaluacion => evaluacion.fecha);
@@ -126,7 +122,6 @@ export default class Calendar extends React.Component {
 
       let courses = coursesPre.map( (course, i) => ({ ...course, index: i, checked: false }));
 
-      
       // obtener evaluaciones del semestre
       const semestre_id = this.state.semestre_id
       const evaluaciones = await fetch(
@@ -167,9 +162,7 @@ export default class Calendar extends React.Component {
 
   render() {
     
-    const { courses, groups } = this.state;
-    console.log(this.state)
-    console.log("rendering");
+    const { courses } = this.state;
     
     if(!this.state.found){
 
@@ -183,7 +176,7 @@ export default class Calendar extends React.Component {
     return (
       <Container>
         { this.state.show_evaluaciones_dia_Modal &&
-          <Evaluacion_dia_Modal 
+          <EvaluacionDiaModal 
             show={this.state.show_evaluaciones_dia_Modal}
             handleCancel={() => this.handleCancel()}
             evaluaciones={this.state.evaluaciones_dia}
@@ -199,9 +192,9 @@ export default class Calendar extends React.Component {
             />
         </Col>
         <Col xs="auto" md={7} style={{textAlign:'center'}} >
-          <h4 >Heatmap Semestre {this.state.periodo==1 ? "Otoño": "Primavera"}  {this.state.año} </h4>
+          <h4 >Heatmap Semestre {this.state.periodo===1 ? "Otoño": "Primavera"}  {this.state.año} </h4>
           <div > 
-          <Table classname="calendar" size="sm" responsive style={{display: 'block',maxHeight:"400px",overflowY:'scroll'}}>
+          <Table className="calendar" size="sm" responsive style={{display: 'block',maxHeight:"400px",maxWidth:"800px",overflowY:'scroll'}}>
              <thead>
                 <tr>
                 <th><h6>Mes</h6></th>
@@ -221,19 +214,19 @@ export default class Calendar extends React.Component {
               <td className="gris"><h6>{ this.encontrar_mes(week)}</h6></td>
               <td  className="gris">S{i+1}</td>
                 {week.map((day, di ) => {
-                    const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha == day)
+                    const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha === day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
-                    if(cantidad_evaluaciones_dia==1){
-                      return (<td class="sortable"  key={di} id={day} style={{backgroundColor: "#FDBC5F"}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#FDBC5F")}> {day.split("-")[2] || "\u00a0" }  </td>)
+                    if(cantidad_evaluaciones_dia===1){
+                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#FDBC5F"}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#FDBC5F")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     }
-                    else if(cantidad_evaluaciones_dia==2){
-                      return (<td class="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di, i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
+                    else if(cantidad_evaluaciones_dia===2){
+                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di, i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
                     } 
-                    else if(cantidad_evaluaciones_dia==3){
-                      return (<td class="sortable" key={di} id={day} style={{backgroundColor: "#FF0000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
+                    else if(cantidad_evaluaciones_dia===3){
+                      return (<td className="sortable" key={di} id={day} style={{backgroundColor: "#FF0000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else if(cantidad_evaluaciones_dia>3){
-                      return (<td  class="sortable" key={di} id={day} style={{backgroundColor: "#800000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td  className="sortable" key={di} id={day} style={{backgroundColor: "#800000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else{
                       return <td key={di} id={day}> {day.split("-")[2] || "\u00a0" } </td>
@@ -249,22 +242,24 @@ export default class Calendar extends React.Component {
           </div>  
           </Col>
           <Col xs="auto" md={2} lg={2}>
-          <Table responsive className="leyenda"  style={{textAlign:'center'}}> 
+          <Table responsive style={{textAlign:'center'}}> 
               <thead>
+              <tr>
               <th style={{background:"#007BFF"}}> Leyenda </th>
+              </tr>
               </thead>
               <tbody>
-              <tr style={{display:'flex'}}>
-                <span className="espacio"></span><div class="cuadrado" style={{background:"#FDBC5F"}}></div>1 Evaluaciones
+              <tr className="tr_leyenda" >
+                <td className="td_leyenda"><div className="cuadrado" style={{background:"#FDBC5F"}}></div> 1 Evaluaciones</td>
               </tr>
-              <tr style={{display:'flex'}}>
-                <span className="espacio"></span><div class="cuadrado" style={{background:"#F9680A"}}></div>2 Evaluaciones
+              <tr className="tr_leyenda" >
+              <td className="td_leyenda"><div className="cuadrado" style={{background:"#F9680A"}}></div>2 Evaluaciones</td>
               </tr>
-              <tr style={{display:'flex'}}>
-                <span className="espacio"></span> <div class="cuadrado" style={{background:"#FF0000"}}></div>3 Evaluaciones
+              <tr className="tr_leyenda" >
+              <td className="td_leyenda"><div className="cuadrado" style={{background:"#FF0000"}}></div> 3 Evaluaciones</td>
               </tr>
-              <tr style={{display:'flex'}}>
-                <span className="espacio"></span> <div class="cuadrado" style={{background:"#800000"}}></div>4+ Evaluaciones
+              <tr className="tr_leyenda" >
+              <td className="td_leyenda"> <div className="cuadrado" style={{background:"#800000"}}></div> 4+Evaluaciones</td>
               </tr>
               </tbody>
             </Table>
@@ -279,10 +274,9 @@ export default class Calendar extends React.Component {
 }
 
 
-export class Evaluacion_dia_Modal extends React.Component {
+export class EvaluacionDiaModal extends React.Component {
   render() {
     const { show, handleCancel, evaluaciones, info} = this.props;
-    console.log(evaluaciones);
     const semana = info[2];
     const color = info[3];
     const divStyle = {
@@ -298,13 +292,8 @@ export class Evaluacion_dia_Modal extends React.Component {
     const mes = fecha.split("-")[1];
     const dia_nombre = dias[info[1]];
 
-    const customStyles = {
-      content : {
-        fontSize:"40px"
-      }
-    }
     return (
-      <Modal portalClassName="modal" size="sm" centered show={show} onHide={() => handleCancel()}>
+      <Modal size="sm" centered show={show} onHide={() => handleCancel()}>
         <Modal.Header style={divStyle} closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             <h6>Semana {semana}: {dia_nombre} {dia} de {meses[mes - 1]}</h6>
