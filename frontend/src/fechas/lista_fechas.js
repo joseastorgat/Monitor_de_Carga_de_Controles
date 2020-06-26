@@ -19,10 +19,9 @@ export class lista_fechas extends React.Component {
       showModal: false,
       fechaPorEliminar: null,
       MostrarFechas: [],
-      search: ""
+      search: "",
+      deleteModalMsg: `¿Está seguro que desea eliminar la fecha?`
     };
-
-    this.deleteModalMsg = `¿Está seguro que desea eliminar la fecha?`;
   }
 
   static propTypes = {
@@ -98,7 +97,11 @@ export class lista_fechas extends React.Component {
   }
 
   showModal(fecha) {
-    this.setState({ showModal: true, fechaPorEliminar: fecha });
+    this.setState({ 
+      showModal: true, 
+      fechaPorEliminar: fecha,
+      deleteModalMsg: `¿Está seguro que desea eliminar la fecha: ${fecha.nombre}?`
+    });
   }
 
   handleCancel() {
@@ -110,7 +113,7 @@ export class lista_fechas extends React.Component {
       <main>
       <Container>
       <DeleteModal
-          msg={this.deleteModalMsg}
+          msg={this.state.deleteModalMsg}
           show={this.state.showModal}
           handleCancel={() => this.handleCancel()}
           handleDelete={() => this.handleDelete()}
