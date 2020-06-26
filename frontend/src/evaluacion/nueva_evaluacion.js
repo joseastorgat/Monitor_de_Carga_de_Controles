@@ -66,7 +66,7 @@ export class nueva_evaluacion extends React.Component {
                 this.state.sacar_pop_up()
                 this.state.titulo=""
                 this.state.fecha=""
-                this.state.tipo="control"
+                this.state.tipo="Control"
 			})
 			.catch( (err) => {
 				console.log(err);
@@ -75,7 +75,7 @@ export class nueva_evaluacion extends React.Component {
                 this.state.sacar_pop_up()
                 this.state.titulo=""
                 this.state.fecha=""
-                this.state.tipo="control"
+                this.state.tipo="Control"
 			});
 	}
 

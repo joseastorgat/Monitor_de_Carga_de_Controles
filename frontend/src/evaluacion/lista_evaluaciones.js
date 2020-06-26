@@ -9,6 +9,7 @@ import DeleteModal from "../common/DeleteModal";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Nueva_evaluacion from "./nueva_evaluacion"
+import Editar_evaluacion from "./editar_evaluacion"
 
 export class lista_evaluaciones extends React.Component {
     constructor(props) {
@@ -19,7 +20,9 @@ export class lista_evaluaciones extends React.Component {
         cursos:[],
         showModal: false,
         showModalAdd:false,
+        showModalEdit:false,
         EvaluacionPorEliminar: null,
+        evaluacionPorEditar: null,
         MostrarEvaluaciones: [],
         MostrarSemestres: [],
         MostrarCursos: [],
@@ -56,6 +59,7 @@ export class lista_evaluaciones extends React.Component {
           e.target.value
         })
      }
+
     async fetchEvaluaciones() {
       console.log("Fetching Evaluaciones ...")
       let url
@@ -126,17 +130,28 @@ export class lista_evaluaciones extends React.Component {
       this.setState({ showModal: true, evaluacionPorEliminar: evaluacion, eliminar_index: index });
     }
 
+    showModalAdd() {
+      this.setState({ showModalAdd: true});
+    }
+    showModalEdit(evaluacion,index) {
+      this.setState({ showModalEdit: true, evaluacionPorEditar: evaluacion, editar_index: index });
+    }
     handleAdd(){
       this.setState({ showModalAdd: false});
       this.fetchEvaluaciones();
     }
 
-    showModalAdd() {
-      this.setState({ showModalAdd: true});
+    handleEdit(){
+      this.setState({ showModalEdit: false});
+      this.fetchEvaluaciones();
     }
   
     handleCancel() {
       this.setState({ showModal: false, evaluacionPorEliminar: null });
+    }
+
+    handleCancelEdit() {
+      this.setState({ showModalEdit: false, evaluacionPorEditar: null });
     }
     handleCancelAdd() {
       this.setState({ showModalAdd: false });
@@ -225,6 +240,13 @@ export class lista_evaluaciones extends React.Component {
                     cursos={this.state.cursos}
                     curso_seleccionado={this.state.curso_busqueda}
                 />
+                {this.state.showModalEdit &&
+                <Editar_evaluacion
+                    show_form={this.state.showModalEdit} 
+                    handleCancel={() => this.handleCancelEdit()}
+                    handleEdit={() => this.handleEdit()}
+                    evaluacion={this.state.evaluacionPorEditar}
+                />}
 
                 <Container>
                 { (this.state.MostrarEvaluaciones.length<1) ? (this.state.search ? <div><h5>No hay evaluaciones asociadas a este semestre</h5>
@@ -258,6 +280,7 @@ export class lista_evaluaciones extends React.Component {
                     tipo={evaluacion.tipo}
                     titulo={evaluacion.titulo}
                     showModal={() => this.showModal(evaluacion, i)}
+                    showModalEdit={() => this.showModalEdit(evaluacion, i)}
                     handleDelete = {this.handleDelete}
                     handleUpdate = {this.handleClickEditarEvaluacion}    
                 />
@@ -295,9 +318,8 @@ export class lista_evaluaciones extends React.Component {
               <Col xs={5} className="text-center"> 
               <p>{fecha[2]}-{fecha[1]}-{fecha[0]}</p></Col>
               <Col xs="auto" className="float-left">
-                  <Link to={'evaluaciones/${id}/editar'}>
-                  <OptionButton icon={Pencil} description="Modificar evaluacion" />
-                  </Link>
+          
+                  <OptionButton icon={Pencil} description="Modificar evaluacion" onClick={() => this.props.showModalEdit()} />
 
                   <OptionButton   icon={Trashcan} description="Eliminar evaluacion"  onClick={() => this.props.showModal()}     last={true}  />
               </Col>
