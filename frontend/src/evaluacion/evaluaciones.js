@@ -323,31 +323,31 @@ export class evaluaciones extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-5" >
-                            <div class="row" >
-                                <div class="col-sm-2" >
+                    <div className="row">
+                        <div className="col-sm-1"></div>
+                        <div className="col-sm-5" >
+                            <div className="row" >
+                                <div className="col-sm-2" >
                                     <label >Tipo</label>
                                 </div>
     
-                                <div class="custom-control custom-radio custom-control-inline"  >
-                                    <input required type="radio" id="control" name="tipo" value="Control"  class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
-                                    <label class="custom-control-label" htmlFor="control">Control</label>
+                                <div className="custom-control custom-radio custom-control-inline"  >
+                                    <input required type="radio" id="control" name="tipo" value="Control"  className="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
+                                    <label className="custom-control-label" htmlFor="control">Control</label>
                                 </div>
-                                <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                    <input type="radio" id="tarea" name="tipo" value="Tarea"  class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
-                                    <label class="custom-control-label" htmlFor="tarea" >Tarea</label>
+                                <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
+                                    <input type="radio" id="tarea" name="tipo" value="Tarea"  className="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
+                                    <label className="custom-control-label" htmlFor="tarea" >Tarea</label>
                                 </div>
                             </div>
                         </div>  
                     </div>
-                    <div class="row">
-                        <div class="col-sm-2"></div>
- 
-                        <button type="submit" className="float-left btn btn-success">Guardar</button>
-                        <div class="col-sm-5"></div>
-                        <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
+                    <div className="row">
+                        <div className="col-sm-2"></div>                  
+                        <button className="btn btn-secondary col-sm-2 float-left" onClick={this.onClickCancel}> Cancelar</button>
+                        <div className="col-sm-5"></div>
+                        <button type="submit" className="float-right btn btn-success col-sm-2">Guardar</button>
+                        
                     </div>
                 </div>
             </form>
@@ -357,56 +357,56 @@ export class evaluaciones extends React.Component {
         var ev = this.state.evaluaciones[this.state.editar_index];
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
-                <div class="generic-form" ref={this.divToFocus}>  
+                <div className="generic-form" ref={this.divToFocus}>  
                     <h4>Editar {ev.tipo}: {ev.titulo}</h4>
-                    <div class="row">
-                    <div class="col-sm-1"></div>        
-                        <div class="col-sm-5">
-                            <div class="row" >
-                                <div class="col-sm-2" >
+                    <div className="row">
+                    <div className="col-sm-1"></div>        
+                        <div className="col-sm-5">
+                            <div className="row" >
+                                <div className="col-sm-2" >
                                     <label >Título</label>
                                 </div>
-                                <div class="col-sm-10" >
+                                <div className="col-sm-10" >
                                     <input type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-5">
-                            <div class="row" >
-                                <div class="col-sm-2" >
+                        <div className="col-sm-5">
+                            <div className="row" >
+                                <div className="col-sm-2" >
                                     <label >Fecha</label>
                                 </div>
-                                <div class="col-sm-10" >
+                                <div className="col-sm-10" >
                                     <input type="date" className="form-control" name="fecha" defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-5" >
-                            <div class="row" >
-                                <div class="col-sm-2" >
+                    <div className="row">
+                        <div className="col-sm-1"></div>
+                        <div className="col-sm-5" >
+                            <div className="row" >
+                                <div className="col-sm-2" >
                                     <label >Tipo</label>
                                 </div>
     
-                                <div class="custom-control custom-radio custom-control-inline"  >
-                                    <input type="radio" id="control" value="Control" name="tipo"  class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
-                                    <label class="custom-control-label" htmlFor="control">Control</label>
+                                <div className="custom-control custom-radio custom-control-inline"  >
+                                    <input type="radio" id="control" value="Control" name="tipo"  className="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
+                                    <label className="custom-control-label" htmlFor="control">Control</label>
                                 </div>
-                                <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                    <input type="radio" id="tarea" value="Tarea" name="tipo"  class="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
-                                    <label class="custom-control-label" htmlFor="tarea" >Tarea</label>
+                                <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
+                                    <input type="radio" id="tarea" value="Tarea" name="tipo"  className="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
+                                    <label className="custom-control-label" htmlFor="tarea" >Tarea</label>
                                 </div>
                             </div>
                         </div>  
                     </div>
-                    <div class="row">
-                        <div class="col-sm-2"></div>
+                    <div className="row">
+                        <div className="col-sm-2"></div>
                         {/* <LinkContainer activeClassName="" type="submit"  className="float-left btn btn-primary col-sm-2" to="./evaluaciones" style={{width: '7%','marginLeft':"14vw",borderRadius: '8px'}}> */}
                             <button className="btn btn-primary col-sm-2" type="submit">Actualizar Evaluación</button>
                         {/* </LinkContainer> */}
-                        <div class="col-sm-4"></div>
+                        <div className="col-sm-4"></div>
                         <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
 
                     </div>
@@ -427,16 +427,16 @@ export class evaluaciones extends React.Component {
             />
             <div>
             <ViewTitle>
-            <Link  to="../../"><OptionButton   icon={ArrowLeft} description="Volver a cursos" /></Link>
+            <Link  to="../../../"><OptionButton   icon={ArrowLeft} description="Volver a cursos" /></Link>
            Evaluaciones</ViewTitle>
                 {/* <h4 className="titulo">Evaluaciones</h4> */}
-                    <div class="generic-form border-0">  
-                        <div class="col-sm-7" >
-                            <div class="row">
-                                <div class="col-sm-2" >
+                    <div className="generic-form border-0">  
+                        <div className="col-sm-7" >
+                            <div className="row">
+                                <div className="col-sm-2" >
                                     <label >Curso</label>
                                 </div>
-                                <div class="col-sm-5" >
+                                <div className="col-sm-5" >
                                     <input type="text" className="form-control" name="nombre_curso" placeholder={this.state.curso.ramo + "-" + this.state.curso.seccion}  style={{textAlignLast:'center'}} readOnly="readonly"/>
                                 </div>
                                     <LinkContainer to="#"  activeClassName="" onClick={this.handleClickNuevaEvaluacion} style={{'marginLeft':"3vw"}}>
@@ -445,8 +445,8 @@ export class evaluaciones extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div class="generic-form border-0">
-                        <Table size="sm" responsive class="table table-condensed">
+                    <div className="generic-form border-0">
+                        <Table size="sm" responsive className="table table-condensed">
                         <thead>
                             <tr>
                             <th scope="col">Nombre</th>
@@ -465,15 +465,9 @@ export class evaluaciones extends React.Component {
                                 tipo={evaluacion.tipo}
                                 titulo={evaluacion.titulo}
                                 showModal={() => this.showModal(evaluacion, _index)}
-                                handleDelete = {this.handleDelete}
-                                handleUpdate = {this.handleClickEditarEvaluacion}
                                 />
                             ))}
-                        {/* <tbody> */}
-                            {/* <EvaluacionItem key="1" id="1" fecha="02-05-2020" id_curso="CC3301" tipo="Tarea" titulo="Tarea 1"  />
-                            <EvaluacionItem key="2" id="2" fecha="02-06-2020" id_curso="CC3301" tipo="Tarea" titulo="Tarea 2"  />
-                            <EvaluacionItem key="3" id="3" fecha="15-05-2020" id_curso="CC3301" tipo="Control" titulo="Control 1"  /> */}
-                        {/* </tbody> */}
+
                         </Table>
                     </div>
                     
@@ -481,7 +475,7 @@ export class evaluaciones extends React.Component {
                     {this.state.editar_index >= 0 ? this.updateFormRender() : this.createFormRender()}
                     
                     <Container style={{marginBottom:"8vw",marginTop:"2vw"}}>
-                            <LinkContainer  activeClassName=""  to="../../" className="float-left" >
+                            <LinkContainer  activeClassName=""  to="../../../" className="float-left" >
                                 <button className="btn btn-secondary">Volver a Cursos</button>
                             </LinkContainer>
 

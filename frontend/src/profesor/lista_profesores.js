@@ -4,7 +4,6 @@ import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import {Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
-import {LinkContainer } from "react-router-bootstrap";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -130,7 +129,7 @@ export class lista_profesores extends React.Component {
 
               </Col>
               <Col>
-                <Link to="/profesores/nuevo_profesor">
+                <Link to="/profesores/nuevo_profesor/">
                   <Button className="btn btn-primary float-right">Nuevo Profesor</Button>
                 </Link>
               </Col>
@@ -169,7 +168,7 @@ export class lista_profesores extends React.Component {
               <Col className="text-center"></Col>
               <Col  xs="auto">
                  
-                  <Link to={`./profesores/${id}/editar`}>
+                  <Link to={`${id}/editar/`}>
                   <OptionButton icon={Pencil} description="Modificar profesor"/>
                   </Link>
 

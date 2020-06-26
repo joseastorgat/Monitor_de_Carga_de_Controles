@@ -78,7 +78,7 @@ export class nueva_fecha extends React.Component {
         return (
             <Container>
             <ViewTitle>
-            <Link  to="./"><OptionButton icon={ArrowLeft} description="Volver a fechas" /></Link>Agregar nueva fecha</ViewTitle>
+            <Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a fechas" /></Link>Agregar nueva fecha</ViewTitle>
                 
                     <form className="" name="form" onSubmit={this.handleSubmit} >
                         <div class="generic-form">
@@ -144,13 +144,11 @@ export class nueva_fecha extends React.Component {
                     
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to="/fechas_especiales" className="float-left " style={{ 'marginLeft':"10vw"}}>
+                        <LinkContainer  activeClassName=""  to="/fechas_especiales/" className="float-left " style={{ 'marginLeft':"10vw"}}>
                             <button className="btn btn-secondary" type="button">Volver a Fechas</button>
                         </LinkContainer>
 
-                        {/* <LinkContainer activeClassName=""  to="/fechas_especiales" style={{'marginRight':"14vw"}}> */}
                             <button className="btn btn-success" type="submit">Guardar Fecha</button>
-                        {/* </LinkContainer> */}
                         </div>
                     </form>
             </Container>
