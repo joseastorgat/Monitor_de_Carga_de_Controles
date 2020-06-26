@@ -23,6 +23,20 @@ import { evaluaciones } from "../evaluacion/evaluaciones";
 
 
 
+// Element (course) inside sidebar
+class SidebarElement extends React.Component {
+    render() {
+      return (
+        <Form.Check
+          onChange={() => this.props.onChange()}
+          checked={this.props.checked}
+          label={this.props.title}
+        />
+      );
+    }
+  }
+  
+
 // A group inside the sidebar 
 class SidebarGroup extends React.Component {
     constructor(props) {
@@ -73,11 +87,11 @@ class SidebarGroup extends React.Component {
       const { handleChange, courses } = this.props;
       const check = this.state.checked;
       this.setState({ checked: !check });
-      handleChange(this.state.courses.map(course => courses.indexOf(course)), !check);
+      handleChange(this.state.courses.map(course => course.index), !check);
   
     }
   
-    handleCheckSingle(course_index) {      
+    handleCheckSingle(course_index) {
       const { handleChange} = this.props;
   
       if(this.state.checked){
@@ -97,8 +111,8 @@ class SidebarGroup extends React.Component {
     }
   
     render() {
-      const {handleAccordion, nsemester, courses } = this.props;
-      return (
+        const {handleAccordion, nsemester, courses } = this.props;
+        return (
         <div className="accordion-container">
           <Card>
             <Accordion.Toggle
@@ -128,7 +142,7 @@ class SidebarGroup extends React.Component {
                 {this.state.courses.map((course, i) => (
                   <SidebarElement
                     key={i}
-                    onChange={() => this.handleCheckSingle(courses.indexOf(course))}
+                    onChange={() => this.handleCheckSingle(course.index)}
                     title={`${course.ramo}-${course.seccion} ${course.nombre}`}
                     checked={course.checked}
                   />
@@ -137,18 +151,6 @@ class SidebarGroup extends React.Component {
             </Accordion.Collapse>
           </Card>
         </div>
-      );
-    }
-  }
-  
-class SidebarElement extends React.Component {
-    render() {
-      return (
-        <Form.Check
-          onChange={() => this.props.onChange()}
-          checked={this.props.checked}
-          label={this.props.title}
-        />
       );
     }
   }

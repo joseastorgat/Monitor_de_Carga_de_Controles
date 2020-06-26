@@ -56,22 +56,19 @@ export default class Calendar extends React.Component {
     const courses = this.state.courses.slice();
     const evaluaciones = this.state.evaluaciones.slice();
     let evaluaciones_a_mostrar = this.state.evaluaciones_a_mostrar.slice();
+
     console.log(checks);
 
     checks.forEach(i => {
-    
-      courses[i].checked = target !== undefined ? target : !courses[i].checked;
-  
-      if(courses[i].checked){
-        console.log(i);
-        const evaluaciones_curso = evaluaciones.filter( evaluacion => evaluacion.curso == courses[i].id);
-        evaluaciones_a_mostrar = evaluaciones_a_mostrar.concat(evaluaciones_curso);
-      }
-      else{
-        console.log("filtrando curso");
-        console.log(i);
-        evaluaciones_a_mostrar = evaluaciones_a_mostrar.filter(evaluacion => evaluacion.curso !== courses[i].id);
-        console.log(evaluaciones_a_mostrar);
+      if(courses[i].checked != target){
+        courses[i].checked = target !== undefined ? target : !courses[i].checked;
+        if(courses[i].checked){
+          const evaluaciones_curso = evaluaciones.filter( evaluacion => evaluacion.curso == courses[i].id);
+          evaluaciones_a_mostrar = evaluaciones_a_mostrar.concat(evaluaciones_curso);
+        }
+        else{
+          evaluaciones_a_mostrar = evaluaciones_a_mostrar.filter(evaluacion => evaluacion.curso !== courses[i].id);
+        }
       }
 
     });
@@ -80,18 +77,6 @@ export default class Calendar extends React.Component {
 
     this.setState({ courses: courses, evaluaciones_a_mostrar: evaluaciones_a_mostrar, dias: dias});
   }
-
-
-  // handleAccordion(i) {
-  //   const groups = this.state.groups.map(group =>
-  //     group.number === i
-  //       ? group.icon === ChevronRight
-  //         ? { number: i, icon: ChevronDown }
-  //         : { number: i, icon: ChevronRight }
-  //       : { number: group.number, icon: ChevronRight }
-  //   );
-  //   this.setState({ groups: groups });
-  // }
 
   async componentDidMount() {
   
@@ -105,6 +90,7 @@ export default class Calendar extends React.Component {
     else{
       this.setState({"inicio": res.data[0].inicio, "fin": res.data[0].fin, "semestre_id": res.data[0].id})
     }
+
     if(this.state.found){
       
       // generación de calendario
@@ -123,33 +109,37 @@ export default class Calendar extends React.Component {
           return week_format;
       })
 
-
       // obtener cursos del semestre
       let coursesPre = await fetch(
         `http://127.0.0.1:8000/api/semestres/${this.state.semestre_id}/cursos/`
-        ).then(res => res.json());
+      ).then(res => res.json());
 
+      // ordenar los cursos por semestre malla - codigo - seccion
       coursesPre.sort((a, b) => {
         if (a.semestre_malla < b.semestre_malla)
           return -1;
+        
         if (a.semestre_malla > b.semestre_malla)
           return 1;
-        return 0;
+        
+        if (a.ramo > b.ramo)
+          return 1;
+        
+        if (a.ramo < b.ramo)
+          return -1;
+
+        if (a.seccion < b.seccion)
+          return -1;
+
+        return 1;
       })
 
-      let courses = coursesPre.map(course => ({ ...course, checked: false }));
-
-      // let groups = [];
-      var groups = [5, 6, 7, 8, 9, 10, 15];
-      // courses.map(course =>
-      //   groups.includes(course.semestre_malla) ? null : groups.push(course.semestre_malla)
-      // );
+      let courses = coursesPre.map( (course, i) => ({ ...course, index: i, checked: false }));
+      let groups = [5, 6, 7, 8, 9, 10, 15];
       groups = groups.map(group => ({ number: group, icon: ChevronRight }));
       
-
+      // obtener evaluaciones del semestre
       const semestre_id = this.state.semestre_id
-      
-      
       const evaluaciones = await fetch(
         `http://127.0.0.1:8000/api/semestres/${semestre_id}/evaluaciones/`
       ).then(res => res.json());
