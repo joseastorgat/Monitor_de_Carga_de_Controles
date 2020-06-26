@@ -5,25 +5,14 @@ import {
   Card,
   Accordion,
   Button,
-  Col,
-  Row,Table,
-  Container,Modal
+  Row
 } from "react-bootstrap";
 
 import { ChevronRight, ChevronDown } from "@primer/octicons-react";
 import Octicon from "@primer/octicons-react";
 import "./Calendar.css";
 
-import Moment, { weekdays } from 'moment';
-import { extendMoment } from 'moment-range';
-import 'moment/locale/es';
-
-import axios from "axios"; //from "axios";
-import { evaluaciones } from "../evaluacion/evaluaciones";
-
-
-
-// Element (course) inside sidebar
+// Element (course) inside SidebarGroup
 class SidebarElement extends React.Component {
     render() {
       return (
@@ -36,16 +25,10 @@ class SidebarElement extends React.Component {
     }
   }
   
-
-// A group inside the sidebar 
+// A group inside the Sidebar 
 class SidebarGroup extends React.Component {
     constructor(props) {
       super(props);
-  
-      this.state = {
-        courses: [],
-        checked: false
-      };
     }
   
     getVariant() {
@@ -71,47 +54,18 @@ class SidebarGroup extends React.Component {
       }
     }
   
-    componentDidMount() {
-  
-      const { nsemester, courses } = this.props;
-      const this_courses = [];
-      
-      courses.map(course =>
-        course.semestre_malla === nsemester  ? this_courses.push(course) : null
-      );
-  
-      this.setState({ courses: this_courses });
-    }
-  
     handleCheckGroup() {
-      const { handleChange, courses } = this.props;
-      const check = this.state.checked;
-      this.setState({ checked: !check });
-      handleChange(this.state.courses.map(course => course.index), !check);
-  
+      const { handleChange, courses, checked } = this.props;
+      handleChange(courses.map(course => course.index), !checked)
     }
   
     handleCheckSingle(course_index) {
-      const { handleChange} = this.props;
-  
-      if(this.state.checked){
-        this.setState({ checked: false });
-      }
-  
+      const { handleChange} = this.props;  
       handleChange([course_index]);
-    }
-
-    componentDidUpdate(){
-        let all_selected = true;
-        
-        this.state.courses.forEach( (course) => {
-            all_selected = all_selected && (course.checked);
-        })
-
     }
   
     render() {
-        const {handleAccordion, nsemester, courses } = this.props;
+        const {handleAccordion, nsemester, courses, checked } = this.props;
         return (
         <div className="accordion-container">
           <Card>
@@ -130,7 +84,7 @@ class SidebarGroup extends React.Component {
             <Card.Header bg="light" className="accordion-card-header">
               <div className="card-header-checkbox">
                 <Form.Check
-                  checked={this.state.checked}
+                  checked={checked}
                   onChange={() => this.handleCheckGroup()}
                   label={this.getVariant(nsemester)}
                 />
@@ -139,7 +93,7 @@ class SidebarGroup extends React.Component {
             
             <Accordion.Collapse eventKey={nsemester}>
               <Card.Body className="card-body-checkbox">
-                {this.state.courses.map((course, i) => (
+                {courses.map((course, i) => (
                   <SidebarElement
                     key={i}
                     onChange={() => this.handleCheckSingle(course.index)}
@@ -158,8 +112,12 @@ class SidebarGroup extends React.Component {
 export default class Sidebar extends React.Component {
     constructor(props) {
         super(props);
+        
+        let groups = [5, 6, 7, 8, 9, 10, 15];
+        groups = groups.map(group => ({ number: group, icon: ChevronRight }));
+
         this.state = {
-            groups: this.props.groups
+            groups: groups
         }
         this.handleAccordion = this.handleAccordion.bind(this);
     }
@@ -181,17 +139,19 @@ export default class Sidebar extends React.Component {
         <Alert variant="secondary" >
           <h4>Seleccione Cursos</h4>
           <Accordion>
-            {this.props.groups.map((group, idx) => (
-              <SidebarGroup 
+            {this.state.groups.map((group, idx) => {
+              const group_courses = courses.filter(c => c.semestre_malla === group.number);
+              
+              return <SidebarGroup 
                 key={idx}
-                checked={group.checked}
                 nsemester={group.number}
-                courses={courses}
+                courses={group_courses}
+                checked={group_courses.reduce( (acc, course) => acc && course.checked , group_courses.length > 0)}
                 handleAccordion={this.handleAccordion}
                 handleChange={handleChange}
                 icon={group.icon}
               />
-            ))}
+            })}
           </Accordion>
         <Row></Row><Row></Row>
         <Row></Row>

@@ -1,25 +1,16 @@
 import React from "react";
 import {
-  Alert,
-  Form,
-  Card,
-  Accordion,
-  Button,
   Col,
   Row,Table,
   Container,Modal
 } from "react-bootstrap";
 
-import { ChevronRight, ChevronDown } from "@primer/octicons-react";
-import Octicon from "@primer/octicons-react";
 import "./Calendar.css";
-
 import Moment, { weekdays } from 'moment';
 import { extendMoment } from 'moment-range';
 import 'moment/locale/es';
 
 import axios from "axios"; //from "axios";
-import { evaluaciones } from "../evaluacion/evaluaciones";
 import Sidebar from "./CourseSelector";
 
 const moment = extendMoment(Moment);
@@ -38,7 +29,6 @@ export default class Calendar extends React.Component {
       inicio: "",
       fin: "",
       courses: [],
-      groups: [],
       evaluaciones: [],
       evaluaciones_a_mostrar: [],
       dias: [],
@@ -135,8 +125,7 @@ export default class Calendar extends React.Component {
       })
 
       let courses = coursesPre.map( (course, i) => ({ ...course, index: i, checked: false }));
-      let groups = [5, 6, 7, 8, 9, 10, 15];
-      groups = groups.map(group => ({ number: group, icon: ChevronRight }));
+
       
       // obtener evaluaciones del semestre
       const semestre_id = this.state.semestre_id
@@ -144,7 +133,7 @@ export default class Calendar extends React.Component {
         `http://127.0.0.1:8000/api/semestres/${semestre_id}/evaluaciones/`
       ).then(res => res.json());
 
-      this.setState({ courses: courses, groups: groups, evaluaciones: evaluaciones});
+      this.setState({ courses: courses, evaluaciones: evaluaciones});
     }
   }
   
@@ -205,7 +194,6 @@ export default class Calendar extends React.Component {
         
         <Col xs={9} md={3}>
             <Sidebar 
-              groups={groups}
               courses={courses}
               handleChange={(i, t) => this.handleChange(i, t)}
             />
