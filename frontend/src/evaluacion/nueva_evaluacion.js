@@ -41,6 +41,7 @@ export class nueva_evaluacion extends React.Component {
         if(curso==null){
             curso=this.props.curso_seleccionado.split("-")[0]
         }
+        console.log(curso)
 
 		let options = {
 			method: 'POST',
@@ -82,7 +83,8 @@ export class nueva_evaluacion extends React.Component {
 	render() {
         const { show_form, handleCancel, handleAdd} = this.props;
         const curso_info=this.props.curso_seleccionado.split("-") //se recibe id- codigo-seccion y nombre de curso
-		this.state.sacar_pop_up=handleAdd;
+        this.state.sacar_pop_up=handleAdd;
+        console.log(curso_info)
 		return (
 			<Modal size="xl" centered show={show_form} onHide={() => handleCancel()}>
         <Modal.Header closeButton>
