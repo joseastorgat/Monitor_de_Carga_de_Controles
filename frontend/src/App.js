@@ -6,6 +6,7 @@ import { loadUser } from './actions/auth';
 import './App.css';
 import Home from "./home/Home";
 import LoginPage from "./home/Login";
+import ResetPass from "./home/ResetPass";
 
 class App extends React.Component {
  
@@ -17,6 +18,7 @@ class App extends React.Component {
       <Provider store={store}>
       <Router>
         <Switch>
+          <Route exact path="/login/reset" component={ResetPass} />
           <Route path="/login" component={LoginPage} />
           <Route path="/" component={Home} />
         </Switch>
