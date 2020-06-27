@@ -18,8 +18,8 @@ class App extends React.Component {
       <Provider store={store}>
       <Router>
         <Switch>
-          <Route exact path="/login/reset" component={ResetPass} />
-          <Route path="/login" component={LoginPage} />
+          <Route exact path="/login/reset/" component={ResetPass} />
+          <Route path="/login/" component={LoginPage} />
           <Route path="/" component={Home} />
         </Switch>
       </Router>

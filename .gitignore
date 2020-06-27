@@ -57,3 +57,5 @@ tmp_email/
 #pycache
 /MCC/__pycache__/
 /api/__pycache__/
+
+sent_emails/

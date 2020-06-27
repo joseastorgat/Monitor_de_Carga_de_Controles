@@ -79,7 +79,7 @@ export class LoginPage extends React.Component {
                 <button className="form-button">Ingresar</button>
               </div>
               
-              <Link to={"/login/reset"} >
+              <Link to={"/login/reset/"} >
                 ¿Olvidaste tu Contraseña?
               </Link>
               
