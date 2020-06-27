@@ -3,7 +3,12 @@ import {LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import {ArrowLeft} from "@primer/octicons-react";
+import ViewTitle from "../common/ViewTitle";
+import { Link } from "react-router-dom";
+import OptionButton from "../common/OptionButton";
+import { Container} from "react-bootstrap";
+import Select from 'react-select'
 
 export class nuevo_curso extends React.Component {
     constructor(props) {
@@ -45,16 +50,24 @@ export class nuevo_curso extends React.Component {
         console.log("Fetching Ramos...")
         await fetch(`http://127.0.0.1:8000/api/ramos/`)
         .then(response => response.json())
-        .then(ramos =>
+        .then(res =>{
           this.setState({
-            ramos: ramos,
-            MostrarRamos:ramos
-          }))    
+            ramos: res,
+            MostrarRamos:res,
+            })
+            if (res.length>0){
+                this.setState({
+                codigo:res[0].codigo,
+                ramo:res[0].nombre})
+            }
+        }
+          )
       }
+      //Colocar un if si no hay ramos
     
     async fetchSemestre() {
         const { ano, semestre } = this.props.match.params;
-        const se= (semestre=="Otoño" ? 1 : 2)
+        const se= (semestre==="Otoño" ? 1 : 2)
         console.log("Fetching Semestre...")
         await fetch(`http://127.0.0.1:8000/api/semestres/?año=${ano}&periodo=${se}`)
         .then(response => response.json())
@@ -71,7 +84,7 @@ export class nuevo_curso extends React.Component {
     }
     
     onChange = e => {
-        if (e.target.name=="ramo"){
+        if (e.target.name==="ramo"){
             this.setState({
                 ["codigo"]: 
                 e.target.value
@@ -84,7 +97,7 @@ export class nuevo_curso extends React.Component {
     };
 
     onChangeSelected = e => {
-        this.setState({profesores_curso: [...e.target.selectedOptions].map(o => o.value)}); 
+        this.setState({profesores_curso:e }); 
     }
     handleSubmit = e => {
         e.preventDefault();
@@ -94,15 +107,13 @@ export class nuevo_curso extends React.Component {
 
     create_curso() {  
 		console.log("post curso ...")
-        console.log(this.state.ramo)
         // No pude encontrar otra forma de sacar el id, hay un problema con el formato del json
         let id="0";
         this.state.semestre.map(semestre => (
             id=semestre.id
         ))
-        console.log(id)
-        console.log(this.state.seccion)
-        console.log(this.state.profesores_curso)
+        var profesores=[]
+        this.state.profesores_curso.map(profesor => profesores.push(profesor.value))
 		const url = "http://127.0.0.1:8000/api/cursos/"
 		let options = {
 			method: 'POST',
@@ -112,10 +123,10 @@ export class nuevo_curso extends React.Component {
 				'Authorization': `Token ${this.props.auth.token}`
 			},
 			data: {
-				'ramo': this.state.ramo,
+				'ramo': this.state.codigo,
                 'semestre': id,
                 'seccion' : this.state.seccion,
-                'profesor': this.state.profesores_curso
+                'profesor': profesores
 				}
 		}
 		
@@ -134,11 +145,14 @@ export class nuevo_curso extends React.Component {
 	}
 
     render() {
+        const options=this.state.MostrarProfesores.map(profesor => (
+            {value:profesor.id,label:profesor.nombre, style: { color: 'red' }}
+           ))
         const { ano, semestre } = this.props.match.params;
-        console.log(ano)
         return (
-            <div>
-                <h4 className="titulo">Agregar nuevo curso</h4>
+            <Container>
+            <ViewTitle>
+            <Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Nuevo curso</ViewTitle>
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                         <div class="generic-form">
                             <div class="row">
@@ -193,7 +207,7 @@ export class nuevo_curso extends React.Component {
                                             <label >Sección</label>
                                         </div>
                                         <div class="col-sm-8" >
-                                        <input type="number" required className="form-control" name="seccion"  min="1" max="10" style={{textAlignLast:'center'}}  onChange={this.onChange} />
+                                        <input type="number" required className="form-control" value={this.state.seccion} name="seccion"  min="1" max="10" style={{textAlignLast:'center'}}  onChange={this.onChange} />
                                         </div>
                                     </div>
                                 </div>
@@ -203,36 +217,12 @@ export class nuevo_curso extends React.Component {
                                         <div class="col-sm-3" >
                                             <label >Profesor</label>
                                         </div>
-                                        <div class="col-sm-9" >
-                                        {/* No pude centrarlo, hay un problema con prioridades de css de react */}
-                                            <select required className="form-control center" name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} size = "3" multiple={true}>
-                                                {this.state.MostrarProfesores.map(profesor => (
-                                                <option value={profesor.id}>{profesor.nombre}</option>
-                                                ))}
-                                                
-                                                {/* <option value="5">Jeremy Barbay</option>
-                                                <option value="6">Nelson Baloian</option> */}
-                                            </select>
+                                        <div class="col-sm-9 " >
+                                        <Select placeholder="Selecciona profesor" className="select_profesores"  style={{ color: "red",fontSize:"12px" }}   isMulti options={options} label="Seleccione profesores" value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} required />
                                         </div>
                                     </div>
                                 </div>  
                             </div>
-
-                            {/* <div class="row">
-                                <div class="col-sm-1"></div>
-                                <div class="col-md-6">
-                                    <div class="row" style={{justifyContent: 'center'}} >
-                                        <div class="col-md-2" >
-                                            <label >Descripción</label>
-                                        </div>
-                                        <div class="col-sm-9" >
-                                        <textarea type="text"  rows="8" class="noresize form-control" name="descripcion_curso" placeholder="" style={{textAlignLast:'center'}}  />
-                                        </div>
-                                    
-                                    </div>
-                                </div>
-                                </div> */}
-
 
                         </div>
                         <div class="form-group" style={{'marginTop':"4rem"}}>
@@ -240,12 +230,10 @@ export class nuevo_curso extends React.Component {
                             <button className="btn btn-secondary" >Volver a Semestre</button>
                         </LinkContainer>
 
-                        {/* <LinkContainer activeClassName=""  to={this.paths} style={{'marginRight':"14vw"}}> */}
                             <button className="btn btn-success" type="submit">Guardar Curso</button>
-                        {/* </LinkContainer> */}
                         </div>
                     </form>
-            </div>
+            </Container>
         );
       } 
 }

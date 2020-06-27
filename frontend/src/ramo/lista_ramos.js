@@ -3,7 +3,7 @@ import {   Alert,Button, Modal,  Container,   Col,   Row,   Form,   FormControl,
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import { Pencil, Trashcan} from "@primer/octicons-react";
+import { Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import { LinkContainer } from "react-router-bootstrap";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
@@ -22,10 +22,9 @@ export class lista_ramos extends React.Component {
       sacar_pop_up:null,
       ramoPorEliminar: null,
       MostrarRamos: [],
-      search: ""
+      search: "",
+      deleteModalMsg: `¿Está seguro que desea eliminar el ramo?`
     };
-
-    this.deleteModalMsg = `¿Está seguro que desea eliminar el ramo?`;
   }
   
   static propTypes = {
@@ -104,7 +103,12 @@ export class lista_ramos extends React.Component {
   }
 
   showModal(ramo) {
-    this.setState({ showModal: true, ramoPorEliminar: ramo });
+    this.setState({ 
+      showModal: true, 
+      ramoPorEliminar: ramo,
+      deleteModalMsg: `¿Está seguro que desea eliminar el ramo: ${ramo.codigo} - ${ramo.nombre} ?`
+
+    });
   }
 
   handleCancel() {
@@ -129,16 +133,18 @@ export class lista_ramos extends React.Component {
         />
 
       <DeleteModal
-          msg={this.deleteModalMsg}
+          msg={this.state.deleteModalMsg}
           show={this.state.showModal}
           handleCancel={() => this.handleCancel()}
           handleDelete={() => this.handleDelete()}
         />
         <Container>
-          <ViewTitle>Ramos</ViewTitle>
+          <ViewTitle>
+          <Link to="/" exact path>
+          <OptionButton   icon={ArrowLeft} description="Volver a inicio" /></Link>
+          Ramos</ViewTitle>
             <Row className="mb-3">
-              <Col>
-
+              <Col md={4}>
                 <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
                   <InputGroup
                     value={this.state.search}
@@ -149,10 +155,17 @@ export class lista_ramos extends React.Component {
                 </Form>
 
               </Col>
+<<<<<<< HEAD
               <Col xs="auto">
                 {/* <Link to="/ramos/nuevo_ramo"> */}
                   <Button className="btn btn-primary" onClick={() => this.showModalAdd()}>Nuevo Ramo</Button>
                 {/* </Link> */}
+=======
+              <Col >
+                <Link to="/ramos/nuevo_ramo/">
+                  <Button className="btn btn-primary float-right">Nuevo Ramo</Button>
+                </Link>
+>>>>>>> master_actualizado
               </Col>
             </Row>
             {this.state.MostrarRamos.map(ramo => (
@@ -167,6 +180,10 @@ export class lista_ramos extends React.Component {
           ))}
 
           </Container>
+<<<<<<< HEAD
+=======
+          
+>>>>>>> master_actualizado
           </Container>
         </main>
       );
@@ -180,18 +197,19 @@ export class lista_ramos extends React.Component {
       const nombre =this.props.nombre;
       const codigo = this.props.codigo;
       const semestre = this.props.semestre;
+      const nombre_semestre= "Semestre "+ semestre
       const id = this.props.id;
       return (
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
               <span style={{'font-weight': "500"}} >{codigo} </span>  {nombre}
-              <p>Semestre {semestre}</p>
+              <p>{semestre==15 ? "Electivo" :  nombre_semestre }</p>
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">
                  
-                  <Link to={`/ramos/${id}/editar`}>
+                  <Link to={`/ramos/${id}/editar/`}>
                     <OptionButton icon={Pencil} description="Modificar ramo" />
                   </Link>
 

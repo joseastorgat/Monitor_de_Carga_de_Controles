@@ -16,7 +16,19 @@
 div.row { 
     margin-top: 16px;
 }
+.custom-class{
+    color:yellow;
+}
 
+/* ========================== nuevo_curso.js =============================== */
+.select_profesores{
+    height: 50px;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.select{
+    font-family: Arial, Helvetica, sans-serif;
+}
 /* ========================== Home.js =============================== */
 
 .centrar{
@@ -28,19 +40,23 @@ div.row {
 }
 
 
-.rectangulo_azul{
+.botones_hacia_abajo{
+    background-color: #2B96F7;
     display: block;
-    background-color: #81B2E8;
-    color: white;
     padding: 15px 32px;
-    width: 20vw;
+    width: 17rem;
+    height: 2.3rem;
     margin: auto;
     margin-bottom: 1rem;
+    margin-left: 2rem;
     margin-top: 1rem;
-    border-radius: 8px;
     border-color: white;
 }
 
+.block-example {
+    border: 1px solid #ddd;
+    display: inline-block;
+}
 .rectangulo_azul_admin{
     display: block;
     background-color: #0E71DE;
@@ -65,6 +81,16 @@ div.row {
 .color-nav {
     background-color:#007BFF;
 }
+
+.inactive {
+    color:white;
+    text-decoration: none;
+}
+
+.active {
+    color: yellow;
+    text-decoration: none;
+  }
 
 
 /* ========================== Login.js =============================== */
@@ -112,20 +138,6 @@ div.row {
 }
 
 
-.titulo{ 
-    background-color: #858383;
-    border: solid 1px #ddd;
-    color: white;
-    padding: 15px 32px;
-    width: 80vw;
-    margin: auto;
-    margin-bottom: 1rem;
-    margin-top: 2rem;
-    border-radius: 8px;
-}
-
-
-
 /* ========================== Semestre.js =============================== */
 
 .generic-form{
@@ -155,6 +167,7 @@ div.row {
     padding: 40px 10px ;
 }
 
+/* ========================== Footer.js =============================== */
 
 footer {
     text-align: center;
@@ -168,16 +181,6 @@ footer {
     right:0;
 }
 
-.inactive {
-    color:white;
-    text-decoration: none;
-}
-
-.active {
-    color: yellow;
-    text-decoration: none;
-  }
-
 .modal-add-ramo{
     max-height: 800px;
     width: 800px;
@@ -189,3 +192,8 @@ footer {
     width: 1597px;
     height: 802px;
     }
+  /* ========================== lista_evaluaciones.js =============================== */
+.dropdown-menu {
+    right: 0;
+    left: auto;
+}

@@ -3,8 +3,7 @@ import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   Inp
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import {Pencil, Trashcan} from "@primer/octicons-react";
-import {LinkContainer } from "react-router-bootstrap";
+import {Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -20,10 +19,10 @@ export class lista_profesores extends React.Component {
       showModal: false,
       profesorPorEliminar: null,
       MostrarProfesores: [],
-      search: ""
+      search: "",
+      deleteModalMsg: '¿Está seguro que desea eliminar el Profesor?'
     };
 
-    this.deleteModalMsg = '¿Está seguro que desea eliminar el Profesor?';
   }
   static propTypes = {
     auth: PropTypes.object.isRequired,
@@ -68,7 +67,11 @@ export class lista_profesores extends React.Component {
     this.setState({ showModalAdd: true});
   }
   showModal(profesor) {
-    this.setState({ showModal: true, profesorPorEliminar: profesor });
+    this.setState({ 
+      showModal: true, 
+      profesorPorEliminar: profesor,
+      deleteModalMsg: `¿Está seguro que desea eliminar el/la profesor/a: ${profesor.nombre}?`
+    });
   }
 
   handleCancel() {
@@ -123,16 +126,17 @@ export class lista_profesores extends React.Component {
           handleAdd={() => this.handleAdd()}
         />
           <DeleteModal
-            msg={this.deleteModalMsg}
+            msg={this.state.deleteModalMsg}
             show={this.state.showModal}
             handleCancel={() => this.handleCancel()}
             handleDelete={() => this.handleDelete()}
         />
           <Container>
-            <ViewTitle>Profesores</ViewTitle>
+            <ViewTitle>
+            <Link to="/" exact path><OptionButton   icon={ArrowLeft} description="Volver a inicio" /></Link>
+            Profesores</ViewTitle>
             <Row className="mb-3">
-              <Col>
-
+              <Col  md={4}>
                 <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
                   <InputGroup
                     value={this.state.search}
@@ -182,7 +186,7 @@ export class lista_profesores extends React.Component {
               <Col className="text-center"></Col>
               <Col  xs="auto">
                  
-                  <Link to={`./profesores/${id}/editar`}>
+                  <Link to={`${id}/editar/`}>
                   <OptionButton icon={Pencil} description="Modificar profesor"/>
                   </Link>
 

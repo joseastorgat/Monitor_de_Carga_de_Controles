@@ -5,6 +5,11 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import { Button, Modal } from "react-bootstrap";
+import {ArrowLeft} from "@primer/octicons-react";
+import ViewTitle from "../common/ViewTitle";
+import { Link } from "react-router-dom";
+import OptionButton from "../common/OptionButton";
+import { Container} from "react-bootstrap";
 
 export class nueva_fecha extends React.Component {
 
@@ -36,6 +41,9 @@ export class nueva_fecha extends React.Component {
     create_fecha() {  
         console.log("post fecha ...")
         const url = "http://127.0.0.1:8000/api/fechas-especiales/"
+
+        const fecha_fin = this.state.fin_fecha === "" ? this.state.inicio_fecha : this.state.fin_fecha;
+
         let options = {
           method: 'POST',
           url: url,
@@ -47,7 +55,7 @@ export class nueva_fecha extends React.Component {
             "nombre": this.state.nombre_fecha,
             "tipo":this.state.tipo_fecha,
             "inicio": this.state.inicio_fecha,
-            "fin": this.state.fin_fecha
+            "fin": fecha_fin,
            }
         }
         
@@ -89,7 +97,7 @@ export class nueva_fecha extends React.Component {
                                             <label >Nombre</label>
                                         </div>
                                         <div className="col-sm-10" >
-                                            <input required type="text" className="form-control" name="nombre_fecha" onChange={this.onChange} placeholder="Feriado 1 mayo" style={{textAlignLast:'center'}} />
+                                            <input required type="text" className="form-control" name="nombre_fecha" onChange={this.onChange} placeholder="Nombre Feriado" style={{textAlignLast:'center'}} />
                                         </div>
                                     </div>
                                 </div>  

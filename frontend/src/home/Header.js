@@ -10,55 +10,50 @@ class LogedInView extends React.Component {
     const { user, logout } = this.props;
     // console.log({user});
     return (
-      <Nav>
-        <NavLink className="inactive" activeClassName="active">
-          <LinkContainer to="/semestres">
-            <h5 style={{color:"white"}}>Semestres</h5>
-          </LinkContainer>
-        </NavLink>
-        <NavLink  className="inactive" activeClassName="active">
-          <LinkContainer to="/ramos">
-            <h5>Ramos</h5>
-          </LinkContainer>
-        </NavLink>
-        <NavLink  className="inactive" activeClassName="active">
-          <LinkContainer to="/fechas_especiales">
-            <h5>Fechas especiales</h5>
-          </LinkContainer>
-        </NavLink>
-        <NavLink  className="inactive" activeClassName="active">
-          <LinkContainer to="/profesores">
-            <h5>Profesores</h5>
-          </LinkContainer>
-        </NavLink>
+      <Navbar.Collapse className="mr-auto">
+      <Nav className="ml-auto" >
+     
+      <LinkContainer to="/semestres/">
+        <Nav.Link eventKey="1">
+          
+            <h5 >Semestres</h5>
+         
+        </Nav.Link>
+        </LinkContainer>
       
-     <NavDropdown
-        alignRight
-        title={user ? `Bienvenido ${user.username}` : ''}
-        id="navbar-dropdown"
-      >
-        {/* <NavDropdown.Header>Ir a administrar</NavDropdown.Header>
+        <LinkContainer to="/ramos/">
+        <NavLink eventKey="2" >
+      
+            <h5>Ramos</h5>
+         
+        </NavLink>
+        </LinkContainer>
+        <LinkContainer to="/profesores/">
+        <NavLink   eventKey="3">
+         
+            <h5>Profesores</h5>
+          
+        </NavLink>
+        </LinkContainer>
+        <LinkContainer to="/fechas_especiales/">
+        <NavLink  eventKey="4" >
+          
+            <h5>Fechas especiales</h5>
         
-        <LinkContainer to="/semestres">
-          <NavDropdown.Item>Semestres</NavDropdown.Item>
+        </NavLink>
         </LinkContainer>
-        <LinkContainer to="/ramos">
-          <NavDropdown.Item>Ramos</NavDropdown.Item>
+        <LinkContainer to="/evaluaciones/">
+        <NavLink eventKey="5">
+         
+            <h5>Evaluaciones</h5>
+         
+        </NavLink>
         </LinkContainer>
-        <LinkContainer to="/fechas_especiales">
-          <NavDropdown.Item>Feriados</NavDropdown.Item>
-        </LinkContainer>
-        <LinkContainer to="/profesores">
-          <NavDropdown.Item>Profesores</NavDropdown.Item>
-        </LinkContainer>
-        <NavDropdown.Divider /> */}
-
-        <LinkContainer to="/" activeClassName="" >
+     <NavDropdown alignRight title={user ? `${user.username}` : ''} >
           <NavDropdown.Item onClick={logout}>  Cerrar Sesión  </NavDropdown.Item>
-        </LinkContainer>
-
       </NavDropdown> 
       </Nav>
+      </Navbar.Collapse>
     );
   }
 }
@@ -66,7 +61,7 @@ class LogedInView extends React.Component {
 class LogedOutView extends React.Component {
   render() {
     return (
-      <LinkContainer to="/login">
+      <LinkContainer to="/login/">
         <Nav.Link><h5 style={{color:'Black'}}>Ingresar</h5></Nav.Link>
       </LinkContainer>
     );
@@ -94,13 +89,14 @@ class Header extends React.Component {
       <LogedOutView />
     );
     return (
-      <Navbar className="navbar sticky-top color-nav" variant="dark">
+      <Navbar collapseOnSelect expand="lg" className="navbar sticky-top color-nav" variant="dark">
         <LinkContainer to="/">
           <Navbar.Brand className="mr-auto"><h4 style={{color:'White'}}>U-Calendar</h4></Navbar.Brand>
-        </LinkContainer>    
-        <Nav>
+        </LinkContainer>  
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />  
+       
         {isAuthenticated ? authLinks : guestLinks}
-        </Nav>
+        
       </Navbar>
       );
     }
