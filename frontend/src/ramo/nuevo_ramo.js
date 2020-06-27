@@ -1,18 +1,10 @@
 import React from "react";
-import {LinkContainer } from "react-router-bootstrap";
-import {   Button, Modal } from "react-bootstrap";
-import {LinkContainer} from "react-router-bootstrap";
-import { Container} from "react-bootstrap";
+import {   Button, Modal,Row } from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Redirect } from 'react-router-dom';
-import {ArrowLeft} from "@primer/octicons-react";
-import ViewTitle from "../common/ViewTitle";
-import { Link } from "react-router-dom";
-import OptionButton from "../common/OptionButton";
 
-export class Nuevo_ramo extends React.Component {
+export class Nuevoramo extends React.Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
   };
@@ -134,18 +126,19 @@ export class Nuevo_ramo extends React.Component {
                   </div>
 
               </div>
-              <div class="row"> </div>
-                        <div class="row">
+              <Row></Row><Row></Row><Row></Row>
+                        <Row>
                         <div class="col-md-6" > </div>
-											<Button variant="success" center  type="submit">          Agregar </Button> </div>
+											<Button variant="success" center  type="submit">          Agregar </Button> </Row>
+              <Row></Row><Row></Row>
           </form>
   </div>
         </Modal.Body>
-        <Modal.Footer centered>
+        {/* <Modal.Footer centered>
           <Button variant="secondary" onClick={() => handleCancel()}>
             Cancelar
           </Button>
-        </Modal.Footer>
+        </Modal.Footer> */}
       </Modal>
     );
   }
@@ -155,5 +148,5 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(Nuevo_ramo);
+export default connect(mapStateToProps)(Nuevoramo);
 

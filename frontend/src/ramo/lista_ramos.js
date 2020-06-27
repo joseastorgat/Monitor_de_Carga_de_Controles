@@ -1,5 +1,5 @@
 import React from "react";
-import {   Alert,Button, Modal,  Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
+import {   Alert,Button,  Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
@@ -9,7 +9,7 @@ import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Nuevo_ramo from "./nuevo_ramo"
+import Nuevoramo from "./nuevo_ramo"
 
 export class lista_ramos extends React.Component {
   constructor(props) {
@@ -126,7 +126,7 @@ export class lista_ramos extends React.Component {
     return (
       <main>
        <Container>
-       <Nuevo_ramo
+       <Nuevoramo
           show_form={this.state.showModalAdd} 
           handleCancel={() => this.handleCancelAdd()}
           handleAdd={() => this.handleAdd()}
@@ -155,17 +155,8 @@ export class lista_ramos extends React.Component {
                 </Form>
 
               </Col>
-<<<<<<< HEAD
-              <Col xs="auto">
-                {/* <Link to="/ramos/nuevo_ramo"> */}
-                  <Button className="btn btn-primary" onClick={() => this.showModalAdd()}>Nuevo Ramo</Button>
-                {/* </Link> */}
-=======
-              <Col >
-                <Link to="/ramos/nuevo_ramo/">
-                  <Button className="btn btn-primary float-right">Nuevo Ramo</Button>
-                </Link>
->>>>>>> master_actualizado
+              <Col>
+                  <Button className="btn btn-primary float-right" onClick={() => this.showModalAdd()}>Nuevo Ramo</Button>
               </Col>
             </Row>
             {this.state.MostrarRamos.map(ramo => (
@@ -180,10 +171,6 @@ export class lista_ramos extends React.Component {
           ))}
 
           </Container>
-<<<<<<< HEAD
-=======
-          
->>>>>>> master_actualizado
           </Container>
         </main>
       );

@@ -9,7 +9,7 @@ import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Nueva_fecha from "./nueva_fecha"
+import Nuevafecha from "./nueva_fecha"
 
 export class lista_fechas extends React.Component {
   constructor(props) {
@@ -127,7 +127,7 @@ export class lista_fechas extends React.Component {
     return (
       <main>
       <Container>
-      <Nueva_fecha
+      <Nuevafecha
           show_form={this.state.showModalAdd} 
           handleCancel={() => this.handleCancelAdd()}
           handleAdd={() => this.handleAdd()}
@@ -155,10 +155,8 @@ export class lista_fechas extends React.Component {
                 </Form>
 
               </Col>
-              <Col xs="auto">
-                {/* <Link to="/fechas_especiales/nueva_fecha"> */}
-                  <Button className="btn btn-primary" onClick={() => this.showModalAdd()}>Nueva Fecha</Button>
-                {/* </Link> */}
+              <Col>
+                  <Button className="btn btn-primary float-right" onClick={() => this.showModalAdd()}>Nueva Fecha</Button>
               </Col>
             </Row>
             {this.state.MostrarFechas.map(fecha => (

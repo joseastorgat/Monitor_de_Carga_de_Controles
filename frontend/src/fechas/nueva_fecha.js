@@ -1,17 +1,10 @@
 import React from "react";
-import {LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Redirect } from 'react-router-dom';
-import { Button, Modal } from "react-bootstrap";
-import {ArrowLeft} from "@primer/octicons-react";
-import ViewTitle from "../common/ViewTitle";
-import { Link } from "react-router-dom";
-import OptionButton from "../common/OptionButton";
-import { Container} from "react-bootstrap";
+import { Button, Modal,Row } from "react-bootstrap";
 
-export class nueva_fecha extends React.Component {
+export class nuevafecha extends React.Component {
 
     static propTypes={
         auth: PropTypes.object.isRequired,
@@ -147,21 +140,21 @@ export class nueva_fecha extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div class="row"> </div>
-                        <div class="row">
+                        <Row></Row><Row></Row><Row></Row>
+                        <Row>
                         <div class="col-md-6" > </div>
                         <Button variant="success" style={{alignItems: 'center', justifyContent: 'center'}} center type="submit">    Agregar        </Button>
-                        </div>
+                        </Row>
+                        <Row></Row><Row></Row>
+
                     </form>
             </div>
             </Modal.Body>
-        <Modal.Footer>
-        
+        {/* <Modal.Footer>
           <Button variant="secondary" onClick={() => handleCancel()}>
             Cancelar
           </Button>
-
-        </Modal.Footer>
+        </Modal.Footer> */}
       </Modal>
         );
       } 
@@ -170,4 +163,4 @@ const mapStateToProps = (state) => ({
     auth: state.auth
 });
 
-export default connect(mapStateToProps)(nueva_fecha);
+export default connect(mapStateToProps)(nuevafecha);
