@@ -1,178 +1,19 @@
 import React from "react";
 import {
-  Alert,
-  Form,
-  Card,
-  Accordion,
-  Button,
   Col,
   Row,Table,
   Container,Modal
 } from "react-bootstrap";
 
-import { ChevronRight, ChevronDown } from "@primer/octicons-react";
-import Octicon from "@primer/octicons-react";
 import "./Calendar.css";
-
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 import 'moment/locale/es';
-
 import axios from "axios"; //from "axios";
+import Sidebar from "./CourseSelector";
 
 const moment = extendMoment(Moment);
 moment.locale("es");
-
-// A group inside the sidebar 
-class SidebarGroup extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      courses: [],
-      checked: false
-    };
-  }
-
-  getVariant() {
-    switch (this.props.nsemester) {
-      case 5:
-        return "Quinto Semestre";
-      case 6:
-        return "Sexto Semestre";
-      case 7:
-        return "Séptimo Semestre";
-      case 8:
-        return "Octavo Semestre";
-      case 9:
-        return "Noveno Semestre";
-      case 10:
-        return "Décimo Semestre";
-      case 11:
-        return "Undécimo Semestre";
-      case 12:
-        return "Duodécimo Semestre";
-      default:
-        return "Electivos";
-    }
-  }
-
-  componentDidMount() {
-
-    const { nsemester, courses } = this.props;
-    const this_courses = [];
-    
-    courses.map(course =>
-      course.semestre_malla === nsemester  ? this_courses.push(course) : null
-    );
-
-    this.setState({ courses: this_courses });
-  }
-
-  handleChangeGroup() {
-    const { handleChange, courses } = this.props;
-    this.setState({ checked: !this.state.checked });
-     
-    handleChange(this.state.courses.map(course => courses.indexOf(course)), !this.state.checked);
-
-  }
-
-  handleChangeSingle(course_index) {
-    
-    const { handleChange} = this.props;
-    console.log(this.state.courses);
-
-    if(this.state.checked){
-      this.setState({ checked: false });
-    }
-    handleChange([course_index]);
-  }
-
-  render() {
-    const {handleAccordion, nsemester, courses } = this.props;
-    return (
-      <div className="accordion-container">
-        <Card>
-          <Accordion.Toggle
-            as={Button}
-            variant="primary"
-            onClick={() => handleAccordion(nsemester)}
-            eventKey={nsemester}
-            className="card-header-btn"
-          >
-            <span className="svg-container">
-              <Octicon icon={this.props.icon} size="small" />
-            </span>
-          </Accordion.Toggle>
-          
-          <Card.Header bg="light" className="accordion-card-header">
-            <div className="card-header-checkbox">
-              <Form.Check
-                checked={this.state.checked}
-                onChange={() => this.handleChangeGroup()}
-                label={this.getVariant(nsemester)}
-              />
-            </div>
-          </Card.Header>
-          
-          <Accordion.Collapse eventKey={nsemester}>
-            <Card.Body className="card-body-checkbox">
-              {this.state.courses.map((course, i) => (
-                <SidebarElement
-                  key={i}
-                  onChange={() => this.handleChangeSingle(courses.indexOf(course))}
-                  title={`${course.ramo}-${course.seccion} ${course.nombre}`}
-                  checked={course.checked}
-                />
-              ))}
-            </Card.Body>
-          </Accordion.Collapse>
-        </Card>
-      </div>
-    );
-  }
-}
-
-class SidebarElement extends React.Component {
-  render() {
-    return (
-      <Form.Check
-        onChange={() => this.props.onChange()}
-        checked={this.props.checked}
-        label={this.props.title}
-      />
-    );
-  }
-}
-
-class Sidebar extends React.Component {
-  render() {
-    const { courses, handleChange, handleAccordion } = this.props;
-    return (
-      <Alert variant="secondary" >
-        <h4>Seleccione Cursos</h4>
-        <Accordion>
-          {this.props.groups.map((group, idx) => (
-            <SidebarGroup 
-              key={idx}
-              checked={group.checked}
-              nsemester={group.number}
-              courses={courses}
-              handleAccordion={handleAccordion}
-              handleChange={handleChange}
-              icon={group.icon}
-            />
-          ))}
-        </Accordion>
-      <Row></Row><Row></Row>
-      <Row></Row>
-       <Row className="justify-content-md-center"> 
-        <Button >Guardar Calendario</Button>
-        </Row>
-      </Alert>
-    );
-  }
-}
 
 export default class Calendar extends React.Component {
   constructor(props) {
@@ -187,7 +28,6 @@ export default class Calendar extends React.Component {
       inicio: "",
       fin: "",
       courses: [],
-      groups: [],
       evaluaciones: [],
       evaluaciones_a_mostrar: [],
       dias: [],
@@ -205,41 +45,23 @@ export default class Calendar extends React.Component {
     const courses = this.state.courses.slice();
     const evaluaciones = this.state.evaluaciones.slice();
     let evaluaciones_a_mostrar = this.state.evaluaciones_a_mostrar.slice();
-    // console.log(checks);
 
     checks.forEach(i => {
-    
-      courses[i].checked = target !== undefined ? target : !courses[i].checked;
-  
-      if(courses[i].checked){
-        // console.log(i);
-        const evaluaciones_curso = evaluaciones.filter( evaluacion => evaluacion.curso === courses[i].id);
-        evaluaciones_a_mostrar = evaluaciones_a_mostrar.concat(evaluaciones_curso);
+      if(courses[i].checked !== target){
+        courses[i].checked = target !== undefined ? target : !courses[i].checked;
+        if(courses[i].checked){
+          const evaluaciones_curso = evaluaciones.filter( evaluacion => evaluacion.curso === courses[i].id);
+          evaluaciones_a_mostrar = evaluaciones_a_mostrar.concat(evaluaciones_curso);
+        }
+        else{
+          evaluaciones_a_mostrar = evaluaciones_a_mostrar.filter(evaluacion => evaluacion.curso !== courses[i].id);
+        }
       }
-      else{
-        console.log("filtrando curso");
-        // console.log(i);
-        evaluaciones_a_mostrar = evaluaciones_a_mostrar.filter(evaluacion => evaluacion.curso !== courses[i].id);
-        // console.log(evaluaciones_a_mostrar);
-      }
-
     });
 
     const dias = evaluaciones_a_mostrar.map(evaluacion => evaluacion.fecha);
 
     this.setState({ courses: courses, evaluaciones_a_mostrar: evaluaciones_a_mostrar, dias: dias});
-  }
-
-
-  handleAccordion(i) {
-    const groups = this.state.groups.map(group =>
-      group.number === i
-        ? group.icon === ChevronRight
-          ? { number: i, icon: ChevronDown }
-          : { number: i, icon: ChevronRight }
-        : { number: group.number, icon: ChevronRight }
-    );
-    this.setState({ groups: groups });
   }
 
   async componentDidMount() {
@@ -254,6 +76,7 @@ export default class Calendar extends React.Component {
     else{
       this.setState({"inicio": res.data[0].inicio, "fin": res.data[0].fin, "semestre_id": res.data[0].id})
     }
+
     if(this.state.found){
       
       // generación de calendario
@@ -272,38 +95,40 @@ export default class Calendar extends React.Component {
           return week_format;
       })
 
-
       // obtener cursos del semestre
       let coursesPre = await fetch(
         `http://127.0.0.1:8000/api/semestres/${this.state.semestre_id}/cursos/`
-        ).then(res => res.json());
+      ).then(res => res.json());
 
+      // ordenar los cursos por semestre malla - codigo - seccion
       coursesPre.sort((a, b) => {
         if (a.semestre_malla < b.semestre_malla)
           return -1;
+        
         if (a.semestre_malla > b.semestre_malla)
           return 1;
-        return 0;
+        
+        if (a.ramo > b.ramo)
+          return 1;
+        
+        if (a.ramo < b.ramo)
+          return -1;
+
+        if (a.seccion < b.seccion)
+          return -1;
+
+        return 1;
       })
 
-      let courses = coursesPre.map(course => ({ ...course, checked: false }));
+      let courses = coursesPre.map( (course, i) => ({ ...course, index: i, checked: false }));
 
-      // let groups = [];
-      var groups = [5, 6, 7, 8, 9, 10, 15];
-      // courses.map(course =>
-      //   groups.includes(course.semestre_malla) ? null : groups.push(course.semestre_malla)
-      // );
-      groups = groups.map(group => ({ number: group, icon: ChevronRight }));
-      
-
+      // obtener evaluaciones del semestre
       const semestre_id = this.state.semestre_id
-      
-      
       const evaluaciones = await fetch(
         `http://127.0.0.1:8000/api/semestres/${semestre_id}/evaluaciones/`
       ).then(res => res.json());
 
-      this.setState({ courses: courses, groups: groups, evaluaciones: evaluaciones});
+      this.setState({ courses: courses, evaluaciones: evaluaciones});
     }
   }
   
@@ -337,9 +162,7 @@ export default class Calendar extends React.Component {
 
   render() {
     
-    const { courses, groups } = this.state;
-    // console.log(this.state)
-    console.log("rendering");
+    const { courses } = this.state;
     
     if(!this.state.found){
 
@@ -353,7 +176,7 @@ export default class Calendar extends React.Component {
     return (
       <Container>
         { this.state.show_evaluaciones_dia_Modal &&
-          <Evaluacion_dia_Modal 
+          <EvaluacionDiaModal 
             show={this.state.show_evaluaciones_dia_Modal}
             handleCancel={() => this.handleCancel()}
             evaluaciones={this.state.evaluaciones_dia}
@@ -364,10 +187,8 @@ export default class Calendar extends React.Component {
         
         <Col xs={9} md={3}>
             <Sidebar 
-              groups={groups}
               courses={courses}
               handleChange={(i, t) => this.handleChange(i, t)}
-              handleAccordion={i => this.handleAccordion(i)}
             />
         </Col>
         <Col xs="auto" md={7} style={{textAlign:'center'}} >
@@ -453,7 +274,7 @@ export default class Calendar extends React.Component {
 }
 
 
-export class Evaluacion_dia_Modal extends React.Component {
+export class EvaluacionDiaModal extends React.Component {
   render() {
     const { show, handleCancel, evaluaciones, info} = this.props;
     const semana = info[2];
