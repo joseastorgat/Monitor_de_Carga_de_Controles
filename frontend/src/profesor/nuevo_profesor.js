@@ -97,7 +97,7 @@ create_profesor() {
 
 							<Col lg={5}>
 								<Row >
-									<Col  xs="auto">
+									<Col xs="auto">
 											<label >Apellido</label>
 									</Col>
 									<Col lg={8} xs={12}>
@@ -112,7 +112,7 @@ create_profesor() {
 					<Row className="centrar_button">
 						<Button variant="success" type="submit"> Agregar </Button>
 					</Row>
-					<Row></Row><Row></Row>
+					<Row></Row>
 				</form>
 			</div>
 					

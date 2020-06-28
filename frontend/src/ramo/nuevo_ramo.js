@@ -1,5 +1,5 @@
 import React from "react";
-import {   Button, Modal,Row } from "react-bootstrap";
+import {Button, Modal,Row,Col} from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -32,13 +32,11 @@ export class Nuevoramo extends React.Component {
   
   create_ramo() {  
     console.log("post ramo ...")
-    
     const url = "http://127.0.0.1:8000/api/ramos/"
     let options = {
       method: 'POST',
       url: url,
       headers: {
-    
         'Content-Type': 'application/json',
         'Authorization': `Token ${this.props.auth.token}`
       },
@@ -67,8 +65,8 @@ export class Nuevoramo extends React.Component {
     const { show_form, handleCancel, handleAdd} = this.props;
     this.state.sacar_pop_up=handleAdd;
     return (
-      <Modal size="xl" centered show={show_form} onHide={() => handleCancel()}>
-        <Modal.Header closeButton>
+      <Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
+        <Modal.Header className="header-add" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Agregar nuevo ramo
           </Modal.Title>
@@ -76,61 +74,58 @@ export class Nuevoramo extends React.Component {
         <Modal.Body>
         <div>
           <form className="" name="form" onSubmit={this.handleSubmit}>
-              <div >
-                  <div class="row">
-                      <div class="col-sm-1"></div>
-                      <div class="col-sm-6" >
-                          <div class="row">
-                              <div class="col-sm-2" >
-                                  <label >Ramo</label>
-                              </div>
-                              <div class="col-sm-9" >
-                                  <input required type="text" className="form-control" name="nombre_ramo" onChange={this.onChange} placeholder="Ingrese Nombre Ramo" style={{textAlignLast:'center'}} />
-                              </div>
-                          </div>
-                      </div>  
+              <Row>
+                <Col xs="1"></Col>
+                  <Col lg={5} >
+                      <Row>
+                          <Col xs="auto">
+                              <label >Ramo</label>
+                          </Col>
+                          <Col lg={9} xs={12}>
+                              <input required type="text" className="form-control" name="nombre_ramo" onChange={this.onChange} placeholder="Ingrese Nombre Ramo" style={{textAlignLast:'center'}} />
+                          </Col>
+                      </Row>
+                  </Col>  
 
-                      <div class="col-md-4">
-                          <div class="row" style={{justifyContent: 'center'}} >
-                              <div class="col-md-3" >
-                                  <label >Código</label>
-                              </div>
-                              <div class="col-sm-9" >
-                              <input required type="text" className="form-control" name="codigo_ramo" onChange={this.onChange} placeholder="Ingrese Código CCXXXX" style={{textAlignLast:'center'}}  />
-                              </div>                          
-                          </div>
-                      </div>
-                  </div>
+                  <Col lg={5}>
+                      <Row>
+                          <Col xs="auto">
+                              <label >Código</label>
+                          </Col>
+                          <Col lg={9} xs={12}>
+                          <input required type="text" className="form-control" name="codigo_ramo" onChange={this.onChange} placeholder="Ingrese Código CCXXXX" style={{textAlignLast:'center'}}  />
+                          </Col>                          
+                      </Row>
+                  </Col>
+              </Row>
 
-                  <div class="row form-group">
-                      <div class="col-sm-1"></div>
-                      <div class="col-sm-6" >
-                          <div class="row">
-                              <div class="col-sm-2" >
-                                  <label >Semestre</label>
-                              </div>
-                              <div class="col-sm-9" >
-                              {/* No pude centrarlo, hay un problema con prioridades de css de react */}
-                                  <select class="form-control" name="semestre_malla" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
-                                      <option value="5" selected>Quinto</option>
-                                      <option value="6">Sexto</option>
-                                      <option value="7">Séptimo</option>
-                                      <option value="8">Octavo</option>
-                                      <option value="9">Noveno</option>
-                                      <option value="10">Décimo</option>
-                                      <option value="15">Electivo</option>
-                                  </select>
-                              </div>
-                          </div>
-                      </div>  
-                  </div>
-
-              </div>
-              <Row></Row><Row></Row><Row></Row>
-                        <Row>
-                        <div class="col-md-6" > </div>
-											<Button variant="success" center  type="submit">          Agregar </Button> </Row>
-              <Row></Row><Row></Row>
+              <Row>
+                <Col xs="1"></Col>
+                  <Col lg={5}>
+                      <Row> 
+                          <Col xs="auto" >
+                              <label >Semestre</label>
+                          </Col>
+                          <Col lg={8} xs={12}>
+                          {/* No pude centrarlo, hay un problema con prioridades de css de react */}
+                              <select class="form-control" name="semestre_malla" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
+                                  <option value="5" selected>Quinto</option>
+                                  <option value="6">Sexto</option>
+                                  <option value="7">Séptimo</option>
+                                  <option value="8">Octavo</option>
+                                  <option value="9">Noveno</option>
+                                  <option value="10">Décimo</option>
+                                  <option value="15">Electivo</option>
+                              </select>
+                          </Col>
+                      </Row>
+                  </Col>  
+              </Row>
+          <Row></Row><Row></Row><Row></Row>
+                    <Row>
+                    <div class="col-md-6" > </div>
+                  <Button variant="success" center  type="submit">          Agregar </Button> </Row>
+          <Row></Row><Row></Row>
           </form>
   </div>
         </Modal.Body>

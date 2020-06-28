@@ -202,10 +202,8 @@ export class lista_fechas extends React.Component {
               <Col className="text-center"></Col>
               <Col xs="auto">
                  
-                  <Link to={`/fechas_especiales/${id}/editar/`}>
                   <OptionButton icon={Pencil} description="Modificar fecha" />
-                  </Link>
-
+                  <span style={{marginRight:'30px'}}></span> 
                   <OptionButton
                   icon={Trashcan}
                   description="Eliminar fecha"

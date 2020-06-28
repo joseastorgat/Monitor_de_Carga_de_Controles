@@ -86,7 +86,7 @@ export class editar_evaluacion extends React.Component {
         var evaluacion=this.props.evaluacion
 		return (
 			<Modal size="xl" centered show={show_form} onHide={() => handleCancel()}>
-        <Modal.Header closeButton>
+        <Modal.Header className="header-edit" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Modificar evaluacion
           </Modal.Title>

@@ -195,7 +195,18 @@ footer {
     left: auto;
 }
 
+
+  /* ========================== Modals =============================== */
 .header-add{
     background-color:#007BFF;
-    color:white;
+    color:black;
+}
+.header-edit{
+    background-color:#ffcc00;
+    color:black;
+}
+
+.header-delete{
+    background-color:#dc3545;
+    color:black;
 }

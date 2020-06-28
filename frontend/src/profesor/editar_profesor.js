@@ -58,8 +58,8 @@ export class editarprofesor extends React.Component {
 		const { show_form, handleCancel, handleEdit} = this.props;
 		this.state.sacar_pop_up=handleEdit;
 		return (
-			<Modal size="xl" centered show={show_form} onHide={() => handleCancel()}>
-        <Modal.Header className="header-add" closeButton>
+			<Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
+        <Modal.Header className="header-edit" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Editar profesor
           </Modal.Title>
@@ -96,9 +96,9 @@ export class editarprofesor extends React.Component {
 					</div>
 					<Row></Row><Row></Row><Row></Row>
 					<Row className="centrar_button">
-						<Button variant="success" type="submit"> Agregar </Button>
+						<Button variant="success" type="submit"> Actualizar </Button>
 					</Row>
-					<Row></Row><Row></Row>
+					<Row></Row>
 				</form>
 			</div>
 					

@@ -8,8 +8,8 @@ import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Nuevoprofesor from "./nuevo_profesor"
-import Editarprofesor from "./editar_profesor"
+import NuevoProfesor from "./nuevo_profesor"
+import EditarProfesor from "./editar_profesor"
 
 export class lista_profesores extends React.Component {
   constructor(props) {
@@ -83,14 +83,14 @@ export class lista_profesores extends React.Component {
     });
   }
 
-  handleCancel() {
-    this.setState({ showModalDelete: false, ramoPorEliminar: null });
+  handleCancelDelete() {
+    this.setState({ showModalDelete: false, profesorPorEliminar: null });
   }
   handleCancelAdd(){
     this.setState({ showModalAdd: false});
   }
   handleCancelEdit(){
-    this.setState({ showModalEdit: false});
+    this.setState({ showModalEdit: false, profesorPorEliminar: null});
   }
   handleAdd(){
     this.setState({ showModalAdd: false});
@@ -137,13 +137,13 @@ export class lista_profesores extends React.Component {
       return (
         <main>
         <Container>
-        <Nuevoprofesor
+        <NuevoProfesor
           show_form={this.state.showModalAdd} 
           handleCancel={() => this.handleCancelAdd()}
           handleAdd={() => this.handleAdd()}
         />
         {this.state.showModalEdit &&
-        <Editarprofesor
+        <EditarProfesor
           show_form={this.state.showModalEdit} 
           handleCancel={() => this.handleCancelEdit()}
           handleEdit={() => this.handleEdit()}
@@ -152,7 +152,7 @@ export class lista_profesores extends React.Component {
           <DeleteModal
             msg={this.state.deleteModalMsg}
             show={this.state.showModalDelete}
-            handleCancel={() => this.handleCancel()}
+            handleCancel={() => this.handleCancelDelete()}
             handleDelete={() => this.handleDelete()}
         />
           <Container>
@@ -208,7 +208,7 @@ export class lista_profesores extends React.Component {
               <Col className="text-center"></Col>
               <Col xs="auto">
                   <OptionButton icon={Pencil} description="Modificar profesor"  onClick={() => this.props.showModalEdit()} last={true} />
-                  <span style={{marginRight:'50px'}}></span> 
+                  <span style={{marginRight:'30px'}}></span> 
                   <OptionButton   icon={Trashcan} description="Eliminar profesor" onClick={() => this.props.showModalDelete()} last={true} />
               </Col>
             </Row>

@@ -6,7 +6,7 @@ export default class DeleteModal extends React.Component {
     const { show, handleCancel, handleDelete, msg } = this.props;
     return (
       <Modal show={show}  centered onHide={() => handleCancel()}>
-        <Modal.Header closeButton>
+        <Modal.Header className="header-delete" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Confirmación de eliminación
           </Modal.Title>
