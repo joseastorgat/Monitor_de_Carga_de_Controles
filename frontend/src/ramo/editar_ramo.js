@@ -31,7 +31,7 @@ export class editar_ramo extends React.Component {
       semestre_malla:this.props.ramo.semestre_malla,
       ramo_modified: false,
       sacar_pop_up:this.props.handleEdit
-        })
+    })
   }
 
   update_ramo() {  
@@ -127,7 +127,7 @@ export class editar_ramo extends React.Component {
           <Row></Row><Row></Row><Row></Row>
                     <Row>
                     <div className="col-md-6" > </div>
-                  <Button variant="success" center  type="submit">          Actualizar </Button> </Row>
+                  <Button variant="success" type="submit">          Actualizar </Button> </Row>
           <Row></Row><Row></Row>
           </form>
   </div>
