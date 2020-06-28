@@ -151,13 +151,12 @@ div.row {
     font-size: large;
 }
 
-
 .cuadrado-form{
     display:flex;
     text-align: center;
     justify-content: center;
     align-items: center;
-    width:40vw;
+    width:55vw;
     border: 1px solid #ddd;
     background: #ffffff;
     font-size: large;

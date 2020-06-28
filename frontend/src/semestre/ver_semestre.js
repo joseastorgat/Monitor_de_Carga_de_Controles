@@ -216,10 +216,6 @@ export class ver_semestre extends React.Component {
             ))}  
 
           </Container>
-
-          <LinkContainer  to="/semestres/"  >
-              <button className="btn btn-secondary" >Volver a Semestres</button>
-          </LinkContainer>
           </Container>
         </main>
         );

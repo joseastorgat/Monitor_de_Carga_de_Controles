@@ -30,7 +30,7 @@ export class editar_ramo extends React.Component {
       codigo_ramo: this.props.ramo.codigo,
       semestre_malla:this.props.ramo.semestre_malla,
       ramo_modified: false,
-      sacar_pop_up:this.props.handleEdits
+      sacar_pop_up:this.props.handleEdit
         })
   }
 
@@ -127,7 +127,7 @@ export class editar_ramo extends React.Component {
           <Row></Row><Row></Row><Row></Row>
                     <Row>
                     <div className="col-md-6" > </div>
-                  <Button variant="success" center  type="submit">          Agregar </Button> </Row>
+                  <Button variant="success" center  type="submit">          Actualizar </Button> </Row>
           <Row></Row><Row></Row>
           </form>
   </div>

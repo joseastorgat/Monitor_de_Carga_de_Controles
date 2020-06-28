@@ -150,7 +150,7 @@ export class editarfecha extends React.Component {
                         <Row></Row><Row></Row><Row></Row>
                         <Row>
                         <div className="col-md-6" > </div>
-                        <Button variant="success" type="submit">    Agregar        </Button>
+                        <Button variant="success" type="submit">    Actualizar      </Button>
                         </Row>
                         <Row></Row><Row></Row>
 

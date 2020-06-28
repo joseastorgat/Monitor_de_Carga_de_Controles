@@ -144,7 +144,6 @@ export class nuevafecha extends React.Component {
                         <Button variant="success" type="submit">    Agregar        </Button>
                         </Row>
                         <Row></Row><Row></Row>
-
                     </form>
             </div>
             </Modal.Body>

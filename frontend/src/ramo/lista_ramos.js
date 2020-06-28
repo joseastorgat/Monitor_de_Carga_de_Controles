@@ -4,7 +4,6 @@ import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import { Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
-import { LinkContainer } from "react-router-bootstrap";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -48,7 +47,6 @@ export class lista_ramos extends React.Component {
         MostrarRamos: ramos
       })
       )    
-    // console.log(this.state.ramos)
   }
 
   async componentDidMount() {
@@ -209,13 +207,12 @@ export class lista_ramos extends React.Component {
       const codigo = this.props.codigo;
       const semestre = this.props.semestre;
       const nombre_semestre= "Semestre "+ semestre
-      const id = this.props.id;
       return (
         <Alert variant="secondary">
             <Row>
               <Col xs="auto">
               <span style={{'fontWeight': "500"}} >{codigo} </span>  {nombre}
-              <p>{semestre==15 ? "Electivo" :  nombre_semestre }</p>
+              <p>{semestre===15 ? "Electivo" :  nombre_semestre }</p>
               </Col>
               <Col className="text-center"></Col>
               <Col  xs="auto">
