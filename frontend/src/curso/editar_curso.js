@@ -1,5 +1,4 @@
 import React from "react";
-import {LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -40,8 +39,12 @@ export class editar_curso extends React.Component {
         .then(profesores =>
           this.setState({
             profesores: profesores,
-            MostrarProfesores: profesores
+            MostrarProfesores: profesores,
+            options:profesores.map(profesor => (
+                {value:profesor.id,label:profesor.nombre}
+               ))
           }))    
+          
       }
       
     async fetchRamos() {
@@ -153,9 +156,7 @@ export class editar_curso extends React.Component {
 	}
 
     render() {
-        const options=this.state.MostrarProfesores.map(profesor => (
-            {value:profesor.id,label:profesor.nombre}
-           ))
+        
         const customControlStyles = base => ({
             ...base,
             fontSize:"15px",
@@ -234,7 +235,7 @@ export class editar_curso extends React.Component {
                                             <label >Profesor</label>
                                         </Col>
                                         <Col lg={9} xs={12}>
-                                            <Select placeholder="Seleccionar profesor" className="select_profesores" styles={{control: customControlStyles}}   isMulti options={options} defaultValue={this.state.profesores_curso} value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} />
+                                            <Select placeholder="Selecciona profesor" className="select_profesores" styles={{control: customControlStyles}}   isMulti options={this.state.options}  value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} />
                                         </Col>
                                     </Row>
                                 </Col>  

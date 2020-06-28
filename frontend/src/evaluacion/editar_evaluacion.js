@@ -88,7 +88,7 @@ export class editar_evaluacion extends React.Component {
 			<Modal size="xl" centered show={show_form} onHide={() => handleCancel()}>
         <Modal.Header className="header-edit" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Modificar evaluacion
+            Editar evaluación
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -153,7 +153,7 @@ export class editar_evaluacion extends React.Component {
                     </div>
                     <Row></Row>
                     <div style={{textAlign: 'center'}}>
-                        <Button variant="success" type="submit">  Guardar </Button> 
+                        <Button variant="success" type="submit">  Actualizar </Button> 
                     </div>
             </form>			
 					</div>
