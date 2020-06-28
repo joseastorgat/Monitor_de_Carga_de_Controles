@@ -14,7 +14,7 @@ export class Nuevoramo extends React.Component {
     codigo_ramo: "",
     semestre_malla: "5",
     ramo_created: false,
-    sacar_pop_up:null
+    sacar_pop_up: this.props.handleAdd
   };
 
   onChange = e => {
@@ -62,8 +62,7 @@ export class Nuevoramo extends React.Component {
       });
   }
   render() {
-    const { show_form, handleCancel, handleAdd} = this.props;
-    this.state.sacar_pop_up=handleAdd;
+    const { show_form, handleCancel} = this.props;
     return (
       <Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
         <Modal.Header className="header-add" closeButton>
@@ -108,7 +107,7 @@ export class Nuevoramo extends React.Component {
                           </Col>
                           <Col lg={8} xs={12}>
                           {/* No pude centrarlo, hay un problema con prioridades de css de react */}
-                              <select class="form-control" name="semestre_malla" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
+                              <select className="form-control" name="semestre_malla" onChange={this.onChange} style={{textAlignLast:'center',textAlign:'center'}}  >
                                   <option value="5" selected>Quinto</option>
                                   <option value="6">Sexto</option>
                                   <option value="7">Séptimo</option>
@@ -123,8 +122,8 @@ export class Nuevoramo extends React.Component {
               </Row>
           <Row></Row><Row></Row><Row></Row>
                     <Row>
-                    <div class="col-md-6" > </div>
-                  <Button variant="success" center  type="submit">          Agregar </Button> </Row>
+                    <div className="col-md-6" > </div>
+                  <Button variant="success" type="submit">          Agregar </Button> </Row>
           <Row></Row><Row></Row>
           </form>
   </div>

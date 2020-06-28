@@ -157,7 +157,7 @@ export class lista_profesores extends React.Component {
         />
           <Container>
             <ViewTitle>
-            <Link to="/" exact path><OptionButton   icon={ArrowLeft} description="Volver a inicio" /></Link>
+            <Link to="/" ><OptionButton   icon={ArrowLeft} description="Volver a inicio" /></Link>
             Profesores</ViewTitle>
             <Row className="mb-3">
               <Col  md={4}>
@@ -193,10 +193,6 @@ export class lista_profesores extends React.Component {
 
 
   class ProfesorItem extends React.Component {
-    constructor(props) {
-      super(props);
-    }
-
     render() {
       const nombre =this.props.nombre;
       return (

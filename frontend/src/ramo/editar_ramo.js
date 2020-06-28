@@ -5,10 +5,11 @@ import { Button,Row,Col,Modal} from "react-bootstrap";
 
 export class editar_ramo extends React.Component {
   state = {
-    nombre_ramo: this.props.ramo.nombre,
-    codigo_ramo: this.props.ramo.codigo,
-    semestre_malla:this.props.ramo.semestre_malla,
+    nombre_ramo: "",
+    codigo_ramo: "",
+    semestre_malla:"",
     ramo_modified: false,
+    sacar_pop_up:"",
   };
 
   onChange = e => {
@@ -22,6 +23,15 @@ export class editar_ramo extends React.Component {
       e.preventDefault();
       console.log("submit");
       this.update_ramo();
+  }
+  async componentDidMount () {  
+    this.setState({
+      nombre_ramo: this.props.ramo.nombre,
+      codigo_ramo: this.props.ramo.codigo,
+      semestre_malla:this.props.ramo.semestre_malla,
+      ramo_modified: false,
+      sacar_pop_up:this.props.handleEdits
+        })
   }
 
   update_ramo() {  
@@ -56,8 +66,7 @@ export class editar_ramo extends React.Component {
   }
 
   render() {
-    const { show_form, handleCancel, handleEdit} = this.props;
-    this.state.sacar_pop_up=handleEdit;
+    const { show_form, handleCancel} = this.props;
     return (
       <Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
         <Modal.Header className="header-edit" closeButton>
@@ -102,7 +111,7 @@ export class editar_ramo extends React.Component {
                           </Col>
                           <Col lg={8} xs={12}>
                           {/* No pude centrarlo, hay un problema con prioridades de css de react */}
-                              <select class="form-control" name="semestre_malla" onChange={this.onChange} value={this.state.semestre_malla} style={{textAlignLast:'center',textAlign:'center'}}  >
+                              <select className="form-control" name="semestre_malla" onChange={this.onChange} value={this.state.semestre_malla} style={{textAlignLast:'center',textAlign:'center'}}  >
                                   <option value="5" selected>Quinto</option>
                                   <option value="6">Sexto</option>
                                   <option value="7">Séptimo</option>
@@ -117,7 +126,7 @@ export class editar_ramo extends React.Component {
               </Row>
           <Row></Row><Row></Row><Row></Row>
                     <Row>
-                    <div class="col-md-6" > </div>
+                    <div className="col-md-6" > </div>
                   <Button variant="success" center  type="submit">          Agregar </Button> </Row>
           <Row></Row><Row></Row>
           </form>

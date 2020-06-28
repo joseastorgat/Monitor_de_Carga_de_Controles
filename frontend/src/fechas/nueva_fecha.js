@@ -2,10 +2,9 @@ import React from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Button, Modal,Row } from "react-bootstrap";
+import { Button, Modal,Row,Col} from "react-bootstrap";
 
 export class nuevafecha extends React.Component {
-
     static propTypes={
         auth: PropTypes.object.isRequired,
     };
@@ -16,6 +15,7 @@ export class nuevafecha extends React.Component {
         inicio_fecha: "",
         fin_fecha:"",
         fecha_created: false,
+        sacar_pop_up: this.props.handleAdd
     }
 
     onChange = e => {
@@ -34,7 +34,6 @@ export class nuevafecha extends React.Component {
     create_fecha() {  
         console.log("post fecha ...")
         const url = "http://127.0.0.1:8000/api/fechas-especiales/"
-
         const fecha_fin = this.state.fin_fecha === "" ? this.state.inicio_fecha : this.state.fin_fecha;
 
         let options = {
@@ -69,11 +68,10 @@ export class nuevafecha extends React.Component {
       }
 
     render() {
-        const { show_form, handleCancel, handleAdd} = this.props;
-        this.state.sacar_pop_up=handleAdd;
+        const { show_form, handleCancel} = this.props;
         return (
-            <Modal size="xl" centered show={show_form} onHide={() => handleCancel()}>
-        <Modal.Header closeButton>
+            <Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
+        <Modal.Header className="header-add" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Agregar nueva fecha
           </Modal.Title>
@@ -82,26 +80,26 @@ export class nuevafecha extends React.Component {
             <div>
                 <form id="form_fecha" onSubmit={this.handleSubmit} >
                         <div>
-                            <div className="row">
-                                <div className="col-sm-1"></div>
-                                <div className="col-sm-5" >
-                                    <div className="row">
-                                        <div className="col-sm-2" >
+                            <Row>
+                                <Col xs="1"></Col>
+                                <Col lg={5}>
+                                    <Row>
+                                        <Col xs={3}>
                                             <label >Nombre</label>
-                                        </div>
-                                        <div className="col-sm-10" >
+                                        </Col>
+                                        <Col lg={8} xs={12}>
                                             <input required type="text" className="form-control" name="nombre_fecha" onChange={this.onChange} placeholder="Nombre Feriado" style={{textAlignLast:'center'}} />
-                                        </div>
-                                    </div>
-                                </div>  
+                                        </Col>
+                                    </Row>
+                                </Col>  
 
-                                <div class="col-sm-5" >
-                                    <div class="row">
-                                        <div class="col-sm-2" >
+                                <Col lg={5}>
+                                    <Row>
+                                        <Col xs={2}>
                                             <label >Tipo</label>
-                                        </div>
+                                        </Col>
                     
-                                        <div class="col-sm-10 centrado" >
+                                        <Col lg={8} xs={12}>
                                         {/* No pude centrarlo, hay un problema con prioridades de css de react */}
                                             <select className="form-control"  onChange={this.onChange} name="tipo_fecha" style={{textAlignLast:'center',textAlign:'center'}}  >
                                                 <option value="1" selected>Feriado</option>
@@ -110,40 +108,40 @@ export class nuevafecha extends React.Component {
                                                 <option value="4">Semana de Vacaciones</option>
                                                 <option value="5">Otros</option>
                                             </select>
-                                        </div>
-                                    </div>
-                                </div>
+                                        </Col>
+                                    </Row>
+                                </Col>
                                     
-                            </div>
+                            </Row>
 
-                            <div class="row" >
-                                <div class="col-md-1" ></div>
-                                <div class="col-md-5" >
-                                    <div class="row">
-                                        <div class="col-md-2" >
+                            <Row>
+                                <Col xs="1"></Col>
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={3}>
                                         <label >Inicio</label>
-                                        </div>
-                                        <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                            <input required type="date" onChange={this.onChange} className="form-control" name="inicio_fecha"  required pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-5" >
-                                    <div class="row" style={{justifyContent: 'center'}}>
-                                        <div class="col-md-2" >
+                                        </Col>
+                                        <Col lg={8} xs={12}>
+                                            <input required type="date" onChange={this.onChange} className="form-control" name="inicio_fecha" />
+                                        </Col>
+                                    </Row>
+                                </Col>
+                                <Col lg={5}>
+                                    <Row>
+                                        <Col xs={2}>
                                             <label >Fin</label>
-                                        </div>
-                                        <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
+                                        </Col>
+                                        <Col lg={8} xs={12}>
                                             <input type="date" onChange={this.onChange} className="form-control" name="fin_fecha"  />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
                         </div>
                         <Row></Row><Row></Row><Row></Row>
                         <Row>
-                        <div class="col-md-6" > </div>
-                        <Button variant="success" style={{alignItems: 'center', justifyContent: 'center'}} center type="submit">    Agregar        </Button>
+                        <div className="col-md-6" > </div>
+                        <Button variant="success" type="submit">    Agregar        </Button>
                         </Row>
                         <Row></Row><Row></Row>
 

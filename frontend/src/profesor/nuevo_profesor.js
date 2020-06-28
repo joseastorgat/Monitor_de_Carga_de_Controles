@@ -10,7 +10,8 @@ export class nuevoprofesor extends React.Component {
 		this.state = {
 				nombre: "",
 				apellido: "",
-				profesor_created: false
+				profesor_created: false,
+				sacar_pop_up: this.props.handleAdd
 		}
 	};
 	static propTypes = {
@@ -69,8 +70,7 @@ create_profesor() {
 	}
 
 	render() {
-		const { show_form, handleCancel, handleAdd} = this.props;
-		this.state.sacar_pop_up=handleAdd;
+		const { show_form, handleCancel} = this.props;
 		return (
 			<Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
         <Modal.Header className="header-add" closeButton>

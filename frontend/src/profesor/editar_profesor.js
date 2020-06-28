@@ -5,8 +5,8 @@ import { Button,Row,Col,Modal} from "react-bootstrap";
 
 export class editarprofesor extends React.Component {
     state = {
-        id: this.props.profesor.id,
-        nombre: this.props.profesor.nombre, 
+        id: "",
+        nombre:"",
         apellido: "",
         profesor_modified: false,
     };
@@ -23,11 +23,18 @@ export class editarprofesor extends React.Component {
         console.log("submit");
         this.update_profesor();
     };
+
+    async componentDidMount () {  
+      this.setState({
+        id: this.props.profesor.id,
+        nombre: this.props.profesor.nombre, 
+        apellido: "",
+        profesor_modified: false,
+        sacar_pop_up:this.props.handleEdit})
+    }
     
     update_profesor() {  
         console.log("post ramo ...")
-        console.log(this.state.id)
-        
         const url = `http://127.0.0.1:8000/api/profesores/${this.state.id}/`
         let options = {
             method: 'PATCH',
@@ -43,7 +50,6 @@ export class editarprofesor extends React.Component {
         
         axios(options)
             .then( (res) => {
-                console.log(res);
                 console.log("profesor updated");
                 this.setState({"profesor_modified": true});
                 this.state.sacar_pop_up()
@@ -55,8 +61,7 @@ export class editarprofesor extends React.Component {
             });
     }
     render() {
-		const { show_form, handleCancel, handleEdit} = this.props;
-		this.state.sacar_pop_up=handleEdit;
+		const { show_form, handleCancel} = this.props;
 		return (
 			<Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
         <Modal.Header className="header-edit" closeButton>
