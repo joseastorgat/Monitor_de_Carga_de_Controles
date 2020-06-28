@@ -1,7 +1,6 @@
 import React from "react";
 import { Alert,Button,   Container,   Col,   Row } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
-import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import {Pencil, Trashcan} from "@primer/octicons-react";
 import axios from "axios";
@@ -311,17 +310,17 @@ export class lista_evaluaciones extends React.Component {
       return (
         <Alert variant="secondary">
             <Row>
-              <Col xs={5}>
+              <Col xs={6}>
                 <h6>{codigo_curso}-{seccion_curso} {nombre_curso} </h6> 
                 <p>{titulo}</p>
               </Col>
-              <Col xs={5} className="text-center"> 
-              <p>{fecha[2]}-{fecha[1]}-{fecha[0]}</p></Col>
-              <Col xs="auto" className="float-left">
-          
+              <Col xs={4} className="text-center"> 
+              <p>{fecha[2]}-{fecha[1]}-{fecha[0]}</p>
+              </Col>
+              <Col className="float-rigth">
                   <OptionButton icon={Pencil} description="Modificar evaluacion" onClick={() => this.props.showModalEdit()} />
-
-                  <OptionButton   icon={Trashcan} description="Eliminar evaluacion"  onClick={() => this.props.showModal()}     last={true}  />
+                  <span style={{marginRight:'30px'}}></span> 
+                  <OptionButton icon={Trashcan} description="Eliminar evaluacion"  onClick={() => this.props.showModal()}     last={true}  />
               </Col>
             </Row>
             </Alert>

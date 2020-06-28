@@ -16,9 +16,6 @@
 div.row { 
     margin-top: 16px;
 }
-.custom-class{
-    color:yellow;
-}
 
 /* ========================== nuevo_curso.js =============================== */
 .select_profesores{
@@ -154,13 +151,12 @@ div.row {
     font-size: large;
 }
 
-
 .cuadrado-form{
     display:flex;
     text-align: center;
     justify-content: center;
     align-items: center;
-    width:40vw;
+    width:55vw;
     border: 1px solid #ddd;
     background: #ffffff;
     font-size: large;
@@ -181,8 +177,35 @@ footer {
     right:0;
 }
 
+.modal-add-ramo{
+    max-height: 800px;
+    width: 800px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+.custom-modal-style {
+    width: 1597px;
+    height: 802px;
+    }
   /* ========================== lista_evaluaciones.js =============================== */
 .dropdown-menu {
     right: 0;
     left: auto;
+}
+
+
+  /* ========================== Modals =============================== */
+.header-add{
+    background-color:#007BFF;
+    color:black;
+}
+.header-edit{
+    background-color:#ffcc00;
+    color:black;
+}
+
+.header-delete{
+    background-color:#dc3545;
+    color:black;
 }

@@ -1,14 +1,10 @@
 import React from "react";
-import {LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Select from 'react-select'
-import {ArrowLeft} from "@primer/octicons-react";
-import ViewTitle from "../common/ViewTitle";
-import { Link } from "react-router-dom";
-import OptionButton from "../common/OptionButton";
-import { Container} from "react-bootstrap";
+import Select from 'react-select';
+import { Button,Row,Col,Modal} from "react-bootstrap";
+
 
 export class editar_curso extends React.Component {
     constructor(props) {
@@ -27,11 +23,9 @@ export class editar_curso extends React.Component {
             MostrarRamos:[],
             semestre_id:"",
             id_curso:"",
-            curso_update: false
+            curso_update: false,
+            sacar_pop_up:this.props.handleEdit
           };
-    
-        const { ano, semestre } = this.props.match.params;
-        this.paths = `/semestres/${ano}/${semestre}/`;
     }
 
     static propTypes={
@@ -45,8 +39,12 @@ export class editar_curso extends React.Component {
         .then(profesores =>
           this.setState({
             profesores: profesores,
-            MostrarProfesores: profesores
+            MostrarProfesores: profesores,
+            options:profesores.map(profesor => (
+                {value:profesor.id,label:profesor.nombre}
+               ))
           }))    
+          
       }
       
     async fetchRamos() {
@@ -61,9 +59,10 @@ export class editar_curso extends React.Component {
       }
     
     async fetchCurso() {
-        const { ano, semestre ,cod,seccion} = this.props.match.params;
-        this.setState({ semestre_año: ano, semestre_periodo:semestre })
-        await fetch(`http://127.0.0.1:8000/api/cursos/?ramo=${cod}&seccion=${seccion}&semestre=${ano}&periodo=${semestre}` )
+        const { año, periodo ,codigo,seccion} = this.props
+        console.log(this.props)
+        this.setState({ semestre_año: año, semestre_periodo:periodo})
+        await fetch(`http://127.0.0.1:8000/api/cursos/?ramo=${codigo}&seccion=${seccion}&semestre=${año}&periodo=${periodo}` )
         .then( res=> res.json())  
         .then( res => { 
                   this.setState({
@@ -144,113 +143,115 @@ export class editar_curso extends React.Component {
 			.then( (res) => {
 				console.log(res);
 				console.log("update curso");
-				this.setState({"curso_update": true});
-				window.location.href=this.paths;
+                this.setState({"curso_update": true});
+                this.state.sacar_pop_up();
 			})
 			.catch( (err) => {
                 console.log(this.state)
 				console.log(err);
 				console.log("cant update curso");
-				alert("No se pudo actualizar curso!");
+                alert("No se pudo actualizar curso!");
+                this.state.sacar_pop_up();
 			});
 	}
 
     render() {
-        console.log(this.state.profesores_curso)
-        const options=this.state.MostrarProfesores.map(profesor => (
-            {value:profesor.id,label:profesor.nombre}
-           ))
+        
         const customControlStyles = base => ({
             ...base,
             fontSize:"15px",
         });
+        const { show_form, handleCancel} = this.props;
         
         return (
-            <Container>
-            <ViewTitle>
-            <Link  to="../../../"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Editar curso</ViewTitle>
-                
+            <Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
+                <Modal.Header className="header-edit" closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Editar curso
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
                     <form className="" name="form" onSubmit={this.handleSubmit}>
-                        <div class="generic-form">
-                            <div class="row">
-                            <div class="col-sm-1"></div>
-                                <div class="col-sm-6" >
-                                    <div class="row">
-                                        <div class="col-sm-2" >
+                            <Row>
+                                <Col xs="1"></Col>
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={3}>
                                             <label >Semestre</label>
-                                        </div>
-                                        <div class="col-sm-8" >
+                                        </Col>
+                                        <Col lg={9} xs={12}>
                                         <input className="form-control" style={{textAlignLast:'center'}}  placeholder={this.state.semestre_año+ "-"+ this.state.semestre_periodo} type="text" readOnly="readonly"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-1"></div>
-                                <div class="col-sm-6" >
-                                    <div class="row">
-                                        <div class="col-sm-2" >
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs="1"></Col>
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={3}>
                                             <label >Ramo</label>
-                                        </div>
-                                        <div class="col-sm-8" >
+                                        </Col>
+                                        <Col lg={9} xs={12}>
                                             <select  className="form-control center" name="ramo" value={this.state.ramo} style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
                                                 {this.state.MostrarRamos.map(ramos => (
                                                 <option value={ramos.codigo}>{ramos.nombre}</option>
                                                 ))}
                                             </select>
                                             
-                                        </div>
-                                    </div>
-                                </div>  
+                                        </Col>
+                                    </Row>
+                                </Col>  
 
-                                <div class="col-md-4">
-                                    <div class="row" style={{justifyContent: 'center'}} >
-                                        <div class="col-md-3" >
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={3}>
                                             <label >Código</label>
-                                        </div>
-                                        <div class="col-sm-9" >
+                                        </Col>
+                                        <Col lg={9} xs={12}>
                                             <input type="text" className="form-control" name="codigo" value={this.state.codigo}  style={{textAlignLast:'center'}} readOnly="readonly"/>
-                                        </div>
+                                        </Col>
                                     
-                                    </div>
-                                </div>
-                            </div>
+                                    </Row>
+                                </Col>
+                            </Row>
 
-                            <div class="row">
-                                <div class="col-sm-1"></div>
-                                <div class="col-md-6">
-                                    <div class="row"  >
-                                        <div class="col-md-2" >
+                            <Row>
+                                <Col xs="1"></Col>
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={3}>
                                             <label >Sección</label>
-                                        </div>
-                                        <div class="col-sm-8" >
+                                        </Col>
+                                        <Col lg={9} xs={12}>
                                         <input type="number" required className="form-control" name="seccion"  value={this.state.seccion} min="1" max="10" style={{textAlignLast:'center'}}  onChange={this.onChange} />
-                                        </div>
-                                    </div>
-                                </div>
+                                        </Col>
+                                    </Row>
+                                </Col>
 
-                                <div class="col-sm-4" >
-                                    <div class="row">
-                                        <div class="col-sm-3" >
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={3}>
                                             <label >Profesor</label>
-                                        </div>
-                                        <div class="col-sm-9" >
-                                            <Select placeholder="Seleccionar profesor" className="select_profesores" styles={{control: customControlStyles}}   isMulti options={options} defaultValue={this.state.profesores_curso} value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} />
-                                        </div>
-                                    </div>
-                                </div>  
-                            </div>
+                                        </Col>
+                                        <Col lg={9} xs={12}>
+                                            <Select placeholder="Selecciona profesor" className="select_profesores" styles={{control: customControlStyles}}   isMulti options={this.state.options}  value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} />
+                                        </Col>
+                                    </Row>
+                                </Col>  
+                            </Row>
 
-                        </div>
-                        <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to={this.paths} className="float-left " style={{'marginLeft':"10vw"}}>
-                            <button className="btn btn-secondary" >Volver a Semestre</button>
-                        </LinkContainer>
 
-                            <button className="btn btn-success" type="submit">Guardar Curso</button>
-                        </div>
-                    </form>
-            </Container>
+                    <Row></Row><Row></Row><Row></Row>
+                    <Row>
+                        <div className="col-md-6" > </div>
+                        <Button variant="success" type="submit">          Actualizar </Button>
+                    </Row>
+                <Row></Row><Row></Row>
+                </form>
+        </Modal.Body>
+      </Modal>
+            
         );
       } 
 }

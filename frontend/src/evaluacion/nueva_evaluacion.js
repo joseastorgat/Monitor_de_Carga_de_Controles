@@ -87,7 +87,7 @@ export class nueva_evaluacion extends React.Component {
         console.log(curso_info)
 		return (
 			<Modal size="xl" centered show={show_form} onHide={() => handleCancel()}>
-        <Modal.Header closeButton>
+        <Modal.Header className="header-add" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Agregar nueva evaluación 
           </Modal.Title>

@@ -1,21 +1,17 @@
 import React from "react";
-import { LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import {ArrowLeft} from "@primer/octicons-react";
-import ViewTitle from "../common/ViewTitle";
-import { Link } from "react-router-dom";
-import OptionButton from "../common/OptionButton";
-import { Container} from "react-bootstrap";
+import {Modal,Button,Row,Col} from "react-bootstrap";
 
-export class nuevo_profesor extends React.Component {
+export class nuevoprofesor extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 				nombre: "",
 				apellido: "",
-				profesor_created: false
+				profesor_created: false,
+				sacar_pop_up: this.props.handleAdd
 		}
 	};
 	static propTypes = {
@@ -45,7 +41,6 @@ export class nuevo_profesor extends React.Component {
 
 create_profesor() {  
 		console.log("post ramo ...")
-		
 		const url = "http://127.0.0.1:8000/api/profesores/"
 		let options = {
 			method: 'POST',
@@ -59,65 +54,76 @@ create_profesor() {
 				"nombre": this.state.nombre + " " + this.state.apellido,
 				}
 		}
-		
 		axios(options)
 			.then( (res) => {
 				console.log(res);
 				console.log("create profesor");
 				this.setState({"profesor_created": true});
-				window.location.href="/profesores/"
+				this.state.sacar_pop_up()
 			})
 			.catch( (err) => {
 				console.log(err);
 				console.log("cant create profesor");
 				alert("No se pudo crear profesor!");
+				this.state.sacar_pop_up()
 			});
 	}
 
 	render() {
-			return (
-					<Container>
-					<ViewTitle>
-					<Link  to="../"><OptionButton icon={ArrowLeft} description="Volver a profesores" /></Link>Agregar nuevo profesor</ViewTitle>
-							{/* <h4 className="titulo">Agregar Profesor</h4> */}
-									<form className="" name="form" onSubmit={this.handleSubmit}>
-											<div class="generic-form">
-													<div class="row">
-															<div class="col-sm-1"></div>
-															<div class="col-sm-5" >
-																	<div class="row">
-																			<div class="col-sm-2" >
-																					<label >Nombre</label>
-																			</div>
-																			<div class="col-sm-10" >
-																					<input required type="text" className="form-control" name="nombre" onChange={this.onChange} style={{textAlignLast:'center'}} />
-																			</div>
-																	</div>
-															</div>  
+		const { show_form, handleCancel} = this.props;
+		return (
+			<Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
+        <Modal.Header className="header-add" closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Agregar nuevo profesor
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+			<div>
+				<form  onSubmit={this.handleSubmit}>
+					<div >
+						<Row>
+							<Col xs="1"></Col>
+							<Col lg={5}>
+									<Row>
+										<Col xs="auto">
+												<label>Nombre</label>
+										</Col>
+										<Col lg={8} xs={12}>
+												<input required type="text" className="form-control" name="nombre" onChange={this.onChange} style={{textAlignLast:'center'}} />
+										</Col>
+									</Row>
+							</Col>  
 
-															<div class="col-sm-5">
-																	<div class="row" style={{justifyContent: 'center'}} >
-																			<div class="col-sm-2" >
-																					<label >Apellido</label>
-																			</div>
-																			<div class="col-sm-10" >
-																			<input required type="text" className="form-control" name="apellido" onChange={this.onChange} style={{textAlignLast:'center'}}  />
-																			</div>
-																	
-																	</div>
-															</div>
-													</div>                    
-											</div>
-											<div class="form-group" style={{'marginTop':"4rem"}}>
-											<LinkContainer  activeClassName=""  to="/profesores/" className="float-left btn btn-secondary" style={{'marginLeft':"10vw"}}>
-													<button >Volver a Profesores</button>
-											</LinkContainer>
+							<Col lg={5}>
+								<Row >
+									<Col xs="auto">
+											<label >Apellido</label>
+									</Col>
+									<Col lg={8} xs={12}>
+										<input required type="text" className="form-control" name="apellido" onChange={this.onChange} style={{textAlignLast:'center'}}  />
+									</Col>
+								
+								</Row>
+							</Col>
+						</Row>                    
+					</div>
+					<Row></Row><Row></Row><Row></Row>
+					<Row className="centrar_button">
+						<Button variant="success" type="submit"> Agregar </Button>
+					</Row>
+					<Row></Row>
+				</form>
+			</div>
+					
+		</Modal.Body>
+        {/* <Modal.Footer>
+          <Button variant="secondary" onClick={() => handleCancel()}>
+            Cancelar
+          </Button>
 
-												<button className="btn btn-success" type="submit">Guardar Profesor</button>
-
-											</div>
-									</form>
-					</Container>
+        </Modal.Footer> */}
+      </Modal>
 			);
 		} 
 }
@@ -126,4 +132,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(nuevo_profesor);
+export default connect(mapStateToProps)(nuevoprofesor);
