@@ -79,7 +79,7 @@ export class nuevo_curso extends React.Component {
     onChange = e => {
         if (e.target.name==="ramo"){
             this.setState({
-                ["codigo"]: 
+                codigo: 
                 e.target.value
             })
         }
@@ -216,7 +216,7 @@ export class nuevo_curso extends React.Component {
                                             <label >Profesor</label>
                                         </Col>
                                         <Col lg={9} xs={12}>
-                                        <Select placeholder="Selecciona profesor" className="select_profesores"  style={{ color: "red",fontSize:"12px" }}   isMulti options={options} label="Seleccione profesores" value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} required />
+                                        <Select placeholder="Selecciona profesor" className="select_profesores"  style={{ color: "red",fontSize:"12px", textAlignLast:'center', textAlign:'center' }} isMulti options={options} label="Seleccione profesores" value={this.state.profesores_curso} name="profesores_curso"  onChange={this.onChangeSelected} required />
                                         </Col>
                                     </Row>
                                 </Col>  
