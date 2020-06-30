@@ -30,7 +30,7 @@ export class nuevo_curso extends React.Component {
 
     async fetchProfesores() {
         console.log("Fetching Profesores...")
-        await fetch(`http://127.0.0.1:8000/api/profesores/`)
+        await fetch(process.env.REACT_APP_API_URL + `/profesores/`)
         .then(response => response.json())
         .then(profesores =>
           this.setState({
@@ -41,7 +41,7 @@ export class nuevo_curso extends React.Component {
       
     async fetchRamos() {
         console.log("Fetching Ramos...")
-        await fetch(`http://127.0.0.1:8000/api/ramos/`)
+        await fetch(process.env.REACT_APP_API_URL + `/ramos/`)
         .then(response => response.json())
         .then(res =>{
           this.setState({
@@ -56,13 +56,13 @@ export class nuevo_curso extends React.Component {
         }
           )
       }
-      //Colocar un if si no hay ramos
+    //Colocar un if si no hay ramos
     
     async fetchSemestre() {
         const { año, periodo } = this.props
         const se= (periodo==="Otoño" ? 1 : 2)
         console.log("Fetching Semestre...")
-        await fetch(`http://127.0.0.1:8000/api/semestres/?año=${año}&periodo=${se}`)
+        await fetch(process.env.REACT_APP_API_URL + `/semestres/?año=${año}&periodo=${se}`)
         .then(response => response.json())
         .then(semestre =>
           this.setState({
@@ -107,7 +107,7 @@ export class nuevo_curso extends React.Component {
         ))
         var profesores=[]
         this.state.profesores_curso.map(profesor => profesores.push(profesor.value))
-		const url = "http://127.0.0.1:8000/api/cursos/"
+		const url = process.env.REACT_APP_API_URL + "/cursos/"
 		let options = {
 			method: 'POST',
 			url: url,
@@ -176,7 +176,7 @@ export class nuevo_curso extends React.Component {
                                         <Col lg={9} xs={12}>
                                             <select className="form-control center" name="ramo" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
                                                 {this.state.MostrarRamos.map(ramos => (
-                                                <option value={ramos.codigo}>{ramos.nombre}</option>
+                                                <option  value={ramos.codigo}>{ramos.nombre}</option>
                                                 ))}
                                             </select>
                                             

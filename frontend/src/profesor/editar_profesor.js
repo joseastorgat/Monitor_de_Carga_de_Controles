@@ -35,7 +35,7 @@ export class editarprofesor extends React.Component {
     
     update_profesor() {  
         console.log("post ramo ...")
-        const url = `http://127.0.0.1:8000/api/profesores/${this.state.id}/`
+        const url = process.env.REACT_APP_API_URL + `/profesores/${this.state.id}/`
         let options = {
             method: 'PATCH',
             url: url,
@@ -81,7 +81,7 @@ export class editarprofesor extends React.Component {
 												<label>Nombre</label>
 										</Col>
 										<Col lg={8} xs={12}>
-                                            <input type="text" className="form-control" name="nombre" defaultValue={this.state.nombre} onChange={this.onChange} style={{textAlignLast:'center'}} />
+                        <input type="text" className="form-control" name="nombre" defaultValue={this.state.nombre} onChange={this.onChange} style={{textAlignLast:'center'}} />
 										</Col>
 									</Row>
 							</Col>  
@@ -92,7 +92,7 @@ export class editarprofesor extends React.Component {
 											<label >Apellido</label>
 									</Col>
 									<Col lg={8} xs={12}>
-                                        <input type="text" className="form-control" name="apellido" defaultValue={this.state.apellido} onChange={this.onChange} style={{textAlignLast:'center'}}  />
+                      <input type="text" className="form-control" name="apellido" defaultValue={this.state.apellido} onChange={this.onChange} style={{textAlignLast:'center'}}  />
 									</Col>
 								
 								</Row>

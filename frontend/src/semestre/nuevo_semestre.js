@@ -74,7 +74,7 @@ export class nuevosemestre extends React.Component {
         let options = {};
        
         if(!this.state.subir_archivo){
-            url = "http://127.0.0.1:8000/api/semestres/"
+            url = process.env.REACT_APP_API_URL + "/semestres/";
 
             data = {
                 "año": parseInt(this.state.año_semestre),
@@ -112,7 +112,7 @@ export class nuevosemestre extends React.Component {
                 alert("Debes cargar un archivo primero");
                 return;
             }
-            url = "http://127.0.0.1:8000/api/semestres/from_xlsx/"
+            url = process.env.REACT_APP_API_URL + "/semestres/from_xlsx/";
             const formData = new FormData();
             formData.append("file", this.state.archivo);
             return axios.post(url, formData, {

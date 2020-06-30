@@ -33,7 +33,7 @@ export class lista_ramos extends React.Component {
 
   async fetchRamos() {
     // console.log("Fetching...")
-    await fetch(`http://127.0.0.1:8000/api/ramos/`)
+    await fetch(process.env.REACT_APP_API_URL + '/ramos/')
     .then(response => response.json())
     .then(ramos =>
       this.setState({
@@ -59,8 +59,8 @@ export class lista_ramos extends React.Component {
     const ramos_buscados= ramos.filter(o=>
       (o.nombre.toString()+" " + o.codigo.toString()+" "+ "Semestre "+o.semestre_malla.toString() ).includes(busqueda)
     );
-    console.log("Buscados")
-    console.log(ramos_buscados)
+    console.log("Buscados");
+    console.log(ramos_buscados);
     this.setState({MostrarRamos: ramos_buscados});
   }
 
@@ -69,9 +69,9 @@ export class lista_ramos extends React.Component {
   }
 
   async handleDelete() {
-    let e = this.state.ramoPorEliminar.codigo
-    console.log(e)
-    const url = `http://127.0.0.1:8000/api/ramos/${e}/`
+    let e = this.state.ramoPorEliminar.codigo;
+    console.log(e);
+    const url = process.env.REACT_APP_API_URL + `/ramos/${e}/`;
     let options = {
       method: 'DELETE',
       url: url,

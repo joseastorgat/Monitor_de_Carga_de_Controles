@@ -47,7 +47,7 @@ export class editar_semestre extends React.Component {
 
     update_semestre() {  
         console.log("post semestre ...")
-        const url = `http://127.0.0.1:8000/api/semestres/${this.state.id}/`
+        const url = process.env.REACT_APP_API_URL + `/semestres/${this.state.id}/`
         let options = {
             method: 'PATCH',
             url: url,

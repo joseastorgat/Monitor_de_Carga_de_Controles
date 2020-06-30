@@ -85,7 +85,7 @@ export class ver_semestre extends React.Component {
   async fetchCursos() {
     const { ano, semestre } = this.props.match.params;
     const periodo= (semestre==="Otoño" ? "otoño" : "primavera")
-    await fetch(`http://127.0.0.1:8000/api/cursos/detalle/?semestre=${ano}&periodo=${periodo}`)
+    await fetch(process.env.REACT_APP_API_URL + `/cursos/detalle/?semestre=${ano}&periodo=${periodo}`)
     .then(response => response.json())
     .then(cursos =>
         this.setState({
@@ -98,7 +98,7 @@ export class ver_semestre extends React.Component {
   async handleDelete() {
     let e = this.state.cursoPorEliminar.id
     console.log(e)
-    const url = `http://127.0.0.1:8000/api/cursos/${e}/`
+    const url = process.env.REACT_APP_API_URL + `/cursos/${e}/`
     let options = {
       method: 'DELETE',
       url: url,

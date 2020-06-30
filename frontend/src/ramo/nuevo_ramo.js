@@ -31,8 +31,8 @@ export class Nuevoramo extends React.Component {
   }
   
   create_ramo() {  
-    console.log("post ramo ...")
-    const url = "http://127.0.0.1:8000/api/ramos/"
+    // console.log("post ramo ...");
+    const url = process.env.REACT_APP_API_URL + '/ramos/';
     let options = {
       method: 'POST',
       url: url,
