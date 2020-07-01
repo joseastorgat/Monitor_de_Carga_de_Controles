@@ -42,7 +42,7 @@ export class lista_evaluaciones extends React.Component {
         e.target.value
       })
       console.log("Fetching Cursos...")      
-      axios.get(`http://127.0.0.1:8000/api/semestres/${e.target.value}/cursos/`)
+      axios.get(process.env.REACT_APP_API_URL + `/semestres/${e.target.value}/cursos/`)
       .then(response => {
         // Primer valor default de ramos
         response.data.splice(0,0,{"id": 0, "ramo": "Todos","nombre": " ",semana:0})
@@ -64,11 +64,11 @@ export class lista_evaluaciones extends React.Component {
       let url
       var curso=this.state.curso_busqueda.split("-")[0]
       if (curso==0){//Traer todas las evaluaciones de ese semestre
-        url=`http://127.0.0.1:8000/api/semestres/${this.state.semestre_busqueda}/evaluaciones/`;
+        url=process.env.REACT_APP_API_URL + `/semestres/${this.state.semestre_busqueda}/evaluaciones/`;
       }
       else{
         console.log(curso)
-        url=`http://127.0.0.1:8000/api/cursos/${curso}/evaluaciones/`;
+        url=process.env.REACT_APP_API_URL + `/cursos/${curso}/evaluaciones/`;
       }
       await fetch(url)
       .then(response => response.json())
@@ -96,7 +96,7 @@ export class lista_evaluaciones extends React.Component {
 
     async fetchSemestres() {
       console.log("Fetching Semestres...")
-      await fetch(`http://127.0.0.1:8000/api/semestres/`)
+      await fetch(process.env.REACT_APP_API_URL + `/semestres/`)
       .then(response => response.json())
       .then(semestres =>
         this.setState({
@@ -158,7 +158,7 @@ export class lista_evaluaciones extends React.Component {
 
     async handleDelete() {
       let e = this.state.evaluacionPorEliminar.id
-      const url = `http://127.0.0.1:8000/api/evaluaciones/${e}/`
+      const url = process.env.REACT_APP_API_URL + `/evaluaciones/${e}/`
       let options = {
         method: 'DELETE',
         url: url,

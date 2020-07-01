@@ -67,7 +67,7 @@ export default class Calendar extends React.Component {
   async componentDidMount() {
   
     const {año, periodo} = this.state;
-    let res = await axios.get(`http://127.0.0.1:8000/api/semestres/?año=${año}&periodo=${periodo}`);
+    let res = await axios.get(process.env.REACT_APP_API_URL + `/semestres/?año=${año}&periodo=${periodo}`);
 
     if(res.status !== 200 || res.data.length !== 1){
       this.setState( {"found": false });
@@ -97,7 +97,7 @@ export default class Calendar extends React.Component {
 
       // obtener cursos del semestre
       let coursesPre = await fetch(
-        `http://127.0.0.1:8000/api/semestres/${this.state.semestre_id}/cursos/`
+        process.env.REACT_APP_API_URL + `/semestres/${this.state.semestre_id}/cursos/`
       ).then(res => res.json());
 
       // ordenar los cursos por semestre malla - codigo - seccion
@@ -125,7 +125,7 @@ export default class Calendar extends React.Component {
       // obtener evaluaciones del semestre
       const semestre_id = this.state.semestre_id
       const evaluaciones = await fetch(
-        `http://127.0.0.1:8000/api/semestres/${semestre_id}/evaluaciones/`
+        process.env.REACT_APP_API_URL + `/semestres/${semestre_id}/evaluaciones/`
       ).then(res => res.json());
 
       this.setState({ courses: courses, evaluaciones: evaluaciones});

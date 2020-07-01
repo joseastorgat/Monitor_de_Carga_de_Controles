@@ -46,7 +46,7 @@ export class editarfecha extends React.Component {
         console.log("post fecha ...")
         const fecha_fin = this.state.fin_fecha === "" ? this.state.inicio_fecha : this.state.fin_fecha;
 
-        const url = `http://127.0.0.1:8000/api/fechas-especiales/${this.state.id}/`
+        const url = process.env.REACT_APP_API_URL + `/fechas-especiales/${this.state.id}/`
         let options = {
             method: 'PATCH',
             url: url,

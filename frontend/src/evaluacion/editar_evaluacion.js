@@ -41,7 +41,7 @@ export class editar_evaluacion extends React.Component {
         console.log(this.state.tipo)
         console.log(this.props.evaluacion.curso)
         console.log(this.state.titulo)
-        const url = `http://127.0.0.1:8000/api/evaluaciones/${this.state.id}/`
+        const url = process.env.REACT_APP_API_URL + `/evaluaciones/${this.state.id}/`
 		let options = {
 			method: 'PATCH',
 			url: url,

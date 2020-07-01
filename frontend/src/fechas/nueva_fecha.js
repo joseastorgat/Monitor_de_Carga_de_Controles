@@ -33,7 +33,7 @@ export class nuevafecha extends React.Component {
 
     create_fecha() {  
         console.log("post fecha ...")
-        const url = "http://127.0.0.1:8000/api/fechas-especiales/"
+        const url = process.env.REACT_APP_API_URL + "/fechas-especiales/"
         const fecha_fin = this.state.fin_fecha === "" ? this.state.inicio_fecha : this.state.fin_fecha;
 
         let options = {
