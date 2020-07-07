@@ -3,12 +3,13 @@ import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   Inp
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import {Pencil, Trashcan} from "@primer/octicons-react";
-import {LinkContainer } from "react-router-bootstrap";
+import {Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import NuevoProfesor from "./nuevo_profesor"
+import EditarProfesor from "./editar_profesor"
 
 export class lista_profesores extends React.Component {
   constructor(props) {
@@ -16,13 +17,15 @@ export class lista_profesores extends React.Component {
     this.handle_search = this.handle_search.bind(this);
     this.state = {
       profesores: [],
-      showModal: false,
+      showModalDelete: false,
+      showModalAdd:false,
+      showModalEdit:false,
       profesorPorEliminar: null,
+      profesorPorEditar:null,
       MostrarProfesores: [],
       search: ""
     };
 
-    this.deleteModalMsg = '¿Está seguro que desea eliminar el Profesor?';
   }
   static propTypes = {
     auth: PropTypes.object.isRequired,
@@ -63,13 +66,40 @@ export class lista_profesores extends React.Component {
   update_Search(e){
     this.setState({search: e.target.value});
   }
-
-  showModal(profesor) {
-    this.setState({ showModal: true, profesorPorEliminar: profesor });
+  showModalAdd() {
+    this.setState({ showModalAdd: true});
+  }
+  showModalDelete(profesor) {
+    this.setState({ 
+      showModalDelete: true, 
+      profesorPorEliminar: profesor,
+      deleteModalMsg: `¿Está seguro que desea eliminar el/la profesor/a: ${profesor.nombre}?`
+    });
+  }
+  showModalEdit(profesor) {
+    this.setState({ 
+      showModalEdit: true, 
+      profesorPorEditar: profesor
+    });
   }
 
-  handleCancel() {
-    this.setState({ showModal: false, ramoPorEliminar: null });
+  handleCancelDelete() {
+    this.setState({ showModalDelete: false, profesorPorEliminar: null });
+  }
+  handleCancelAdd(){
+    this.setState({ showModalAdd: false});
+  }
+  handleCancelEdit(){
+    this.setState({ showModalEdit: false, profesorPorEliminar: null});
+  }
+  handleAdd(){
+    this.setState({ showModalAdd: false});
+    this.fetchProfesores();
+  }
+
+  handleEdit(){
+    this.setState({ showModalEdit: false,profesorPorEditar:null});
+    this.fetchProfesores();
   }
 
   async handleDelete() {
@@ -87,7 +117,7 @@ export class lista_profesores extends React.Component {
     axios(options)
       .then( (res) => {
         this.setState({
-          showModal: false,
+          showModalDelete: false,
           profesorPorEliminar: null
         });
         this.fetchProfesores();
@@ -96,7 +126,7 @@ export class lista_profesores extends React.Component {
         console.log(err);
         alert("[ERROR] No se pudo eliminar el profesor! ");
         this.setState({
-          showModal: false,
+          showModalDelete: false,
           profesorPorEliminar: null
         });
       });
@@ -107,17 +137,30 @@ export class lista_profesores extends React.Component {
       return (
         <main>
         <Container>
+        <NuevoProfesor
+          show_form={this.state.showModalAdd} 
+          handleCancel={() => this.handleCancelAdd()}
+          handleAdd={() => this.handleAdd()}
+        />
+        {this.state.showModalEdit &&
+        <EditarProfesor
+          show_form={this.state.showModalEdit} 
+          handleCancel={() => this.handleCancelEdit()}
+          handleEdit={() => this.handleEdit()}
+          profesor={this.state.profesorPorEditar}
+        />}
           <DeleteModal
-            msg={this.deleteModalMsg}
-            show={this.state.showModal}
-            handleCancel={() => this.handleCancel()}
+            msg={this.state.deleteModalMsg}
+            show={this.state.showModalDelete}
+            handleCancel={() => this.handleCancelDelete()}
             handleDelete={() => this.handleDelete()}
         />
           <Container>
-            <ViewTitle>Profesores</ViewTitle>
+            <ViewTitle>
+            <Link to="/" ><OptionButton   icon={ArrowLeft} description="Volver a inicio" /></Link>
+            Profesores</ViewTitle>
             <Row className="mb-3">
-              <Col>
-
+              <Col  md={4}>
                 <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
                   <InputGroup
                     value={this.state.search}
@@ -128,10 +171,8 @@ export class lista_profesores extends React.Component {
                 </Form>
 
               </Col>
-              <Col xs="auto">
-                <Link to="/profesores/nuevo_profesor">
-                  <Button className="btn btn-primary">Nuevo Profesor</Button>
-                </Link>
+              <Col >
+                  <Button className="btn btn-primary float-right"  onClick={() => this.showModalAdd()}>Nuevo Profesor</Button>
               </Col>
             </Row>
               {this.state.MostrarProfesores.map(profesor => (
@@ -139,11 +180,11 @@ export class lista_profesores extends React.Component {
                   key={profesor.id}
                   id={profesor.id}
                   nombre={profesor.nombre}
-                  showModal={() => this.showModal(profesor)}
+                  showModalDelete={() => this.showModalDelete(profesor)}
+                  showModalEdit={() => this.showModalEdit(profesor)}
                   />
               ))}
           </Container>
-          
           </Container>
         </main>
       );
@@ -152,12 +193,7 @@ export class lista_profesores extends React.Component {
 
 
   class ProfesorItem extends React.Component {
-    constructor(props) {
-      super(props);
-    }
-
     render() {
-      const id = this.props.id
       const nombre =this.props.nombre;
       return (
         <Alert variant="secondary">
@@ -166,13 +202,10 @@ export class lista_profesores extends React.Component {
                 {nombre}
               </Col>
               <Col className="text-center"></Col>
-              <Col  xs="auto">
-                 
-                  <Link to={`./profesores/${id}/editar`}>
-                  <OptionButton icon={Pencil} description="Modificar profesor"/>
-                  </Link>
-
-                  <OptionButton   icon={Trashcan} description="Eliminar profesor"  onClick={() => this.props.showModal()}    last={true}   />
+              <Col xs="auto">
+                  <OptionButton icon={Pencil} description="Modificar profesor"  onClick={() => this.props.showModalEdit()} last={true} />
+                  <span style={{marginRight:'30px'}}></span> 
+                  <OptionButton   icon={Trashcan} description="Eliminar profesor" onClick={() => this.props.showModalDelete()} last={true} />
               </Col>
             </Row>
             </Alert>

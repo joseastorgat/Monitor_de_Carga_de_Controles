@@ -5,20 +5,22 @@ export default class DeleteModal extends React.Component {
   render() {
     const { show, handleCancel, handleDelete, msg } = this.props;
     return (
-      <Modal show={show} onHide={() => handleCancel()}>
-        <Modal.Header closeButton>
+      <Modal show={show}  centered onHide={() => handleCancel()}>
+        <Modal.Header className="header-delete" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Confirmación de eliminación
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>{msg}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => handleCancel()}>
-            Cancelar
-          </Button>
-          <Button variant="danger" onClick={() => handleDelete()}>
+        <Modal.Footer >
+        <div class="w-100" >
+          <Button  variant="danger" onClick={() => handleDelete()}>
             Eliminar
           </Button>
+          <Button variant="secondary" className="float-right" onClick={() => handleCancel()}>
+            Cancelar
+          </Button>
+          </div>
         </Modal.Footer>
       </Modal>
     );

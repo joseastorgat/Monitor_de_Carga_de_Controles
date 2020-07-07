@@ -1,9 +1,8 @@
 import React from "react";
-import {LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import { Button,Row,Col,Modal} from "react-bootstrap";
 
 export class editar_semestre extends React.Component {
     state={
@@ -22,28 +21,14 @@ export class editar_semestre extends React.Component {
     };
 
     async componentDidMount () {  
-        const { ano, semestre } = this.props.match.params;
-        this.paths = `/semestres/${ano}/${semestre}`;
-        const se= (semestre==="Otoño" ? 1 : 2)
-        console.log("Fetching Semestre...")
-        await fetch(`http://127.0.0.1:8000/api/semestres/?año=${ano}&periodo=${se}`)
-        .then( res=> res.json())
-        .then( res => {
-            this.setState({
-                id: res[0].id,
-                año_semestre: res[0].año,
-                periodo_semestre: res[0].periodo,
-                inicio_semestre: res[0].inicio,
-                fin_semestre: res[0].fin,
-                estado_semestre: res[0].estado,
-            })
-            if (res[0].periodo===1){
-                document.getElementById("otoño").checked = true;
-            }
-            else{
-                document.getElementById("primavera").checked = true;
-            }
-            
+        this.setState({
+            id:this.props.semestre.id,
+            año_semestre: this.props.semestre.año,
+            periodo_semestre: this.props.semestre.periodo,
+            inicio_semestre: this.props.semestre.inicio,
+            fin_semestre:this.props.semestre.fin,
+            estado_semestre:this.props.semestre.estado,
+            sacar_pop_up:this.props.handleEdit
         })
       }
 
@@ -81,9 +66,9 @@ export class editar_semestre extends React.Component {
         
         axios(options)
           .then( (res) => {
-            console.log(res);
             console.log("update semestre");
             this.setState({"semestre_modified": true});
+            this.state.sacar_pop_up()
 
           })
           .catch( (err) => {
@@ -91,106 +76,90 @@ export class editar_semestre extends React.Component {
             console.log(err);
             console.log("cant update semestre");
             alert("No se pudo actualizar semestre!");
+            this.state.sacar_pop_up()
           });
       }
     
 
     render() {
-        if (this.state.semestre_modified) {
-            return <Redirect to="/semestres" />;
-        }
+        const { show_form, handleCancel} = this.props;
         return (
-            <div>
-                <h4 className="titulo">Editar semestre</h4>
-                    <form className="" name="form" onSubmit={this.handleSubmit}>
-                        <div class="generic-form">
-                            <div class="row">
-                                <div class="col-sm-1"></div>
-                                <div class="col-sm-5" >
-                                    <div class="row">
-                                        <div class="col-sm-2" >
+            <Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
+                <Modal.Header className="header-edit" closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Editar Semestre
+                </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <form className="" name="form" onSubmit={this.handleSubmit}>
+                        <div>
+                            <Row>
+                                <Col xs="1"></Col>
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={2}>
                                             <label >Año</label>
-                                        </div>
-                                        <div class="col-sm-10" style={{textAlignLast:'center', textAlign:'center'}} >
-                                            <input type="number"  min="2019" max="2030" step="1" className="form-control" placeholder="2020" name="año_semestre" value={this.state.año_semestre} onChange={this.onChange}  />
-                                        </div>
-                                    </div>
-                                </div>  
+                                        </Col>
+                                        <Col lg={9} xs={12}>
+                                            <input type="number" required={this.state.required} min="2019" max="2030" step="1" className="form-control" placeholder="2020" value={this.state.año_semestre} name="año_semestre" onChange={this.onChange}  />
+                                        </Col>
+                                    </Row>
+                                </Col>  
 
-                                <div class="col-md-4">
-                                <div class="row" style={{justifyContent: 'center'}} >
-                                        <div class="col-md-2" >
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={2}>
                                             <label >Tipo</label>
-                                        </div>
+                                        </Col>
+                                        <Col lg={9} xs={12}>
+                                            <div  className="custom-control custom-radio custom-control-inline"  >
+                                                <input required={this.state.required} type="radio" id="otoño" name="periodo_semestre" value="1" onChange={this.onChange} className="custom-control-input" checked={this.state.periodo_semestre==1} />
+                                                <label className="custom-control-label" htmlFor="otoño" >Otoño</label>
+                                            </div>
+                                            <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
+                                                <input type="radio" id="primavera" name="periodo_semestre" value="2" onChange={this.onChange} className="custom-control-input" checked={this.state.periodo_semestre==2}/>
+                                                <label className="custom-control-label" htmlFor="primavera">Primavera</label>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
 
-                                    <div  class="custom-control custom-radio custom-control-inline" >
-                                        <input type="radio" id="otoño" name="periodo_semestre" value="1" onChange={this.onChange} class="custom-control-input" />
-                                        <label class="custom-control-label" htmlFor="otoño">Otoño</label>
-                                    </div>
-                                    <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                        <input type="radio" id="primavera" name="periodo_semestre" value="2" onChange={this.onChange} class="custom-control-input" />
-                                        <label class="custom-control-label" htmlFor="primavera" >Primavera</label>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row" >
-                                <div class="col-md-1" ></div>
-                                <div class="col-md-5" >
-                                    <div class="row">
-                                        <div class="col-md-2" >
+                            <Row>
+                                <Col xs="1"></Col>
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={2}>
                                         <label >Inicio</label>
-                                        </div>
-                                        <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                        <input type="date" className="form-control" name="inicio_semestre" onChange={this.onChange} value={this.state.inicio_semestre}/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-5" >
-                                    <div class="row" style={{justifyContent: 'center'}}>
-                                        <div class="col-md-2" >
+                                        </Col>
+                                        <Col lg={9} xs={12}>
+                                        <input required={this.state.required} type="date" className="form-control" name="inicio_semestre" onChange={this.onChange} value={this.state.inicio_semestre} />
+                                        </Col>
+                                    </Row>
+                                </Col>
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={2}>
                                             <label >Fin</label>
-                                        </div>
-                                        <div class="col-md-10" style={{textAlignLast:'center', textAlign:'center'}}>
-                                            <input type="date" className="form-control" name="fin_semestre" onChange={this.onChange} value={this.state.fin_semestre}  />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        </Col>
+                                        <Col lg={9} xs={12}>
+                                            <input required={this.state.required} type="date" className="form-control" name="fin_semestre" onChange={this.onChange} value={this.state.fin_semestre} />
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+
                        </div> 
-                        {/* <div class="row" style={{textAlign:'center', justifyContent:'center'}}>
-                            <div class="cuadrado-form">
-                            <div style={{textAlignLast:'center', textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                        <input type="radio" id="replicar_semestre" name="semestre_opcion" class="custom-control-input" />
-                                         <label class="custom-control-label" htmlFor="replicar_semestre" >Clonar Semestre</label>
-                                        <div class="col-sm-10" >
-                                        <input type="text" className="form-control" name="semestre_replicado" placeholder="Primavera 2020" />
-                                        </div>
-                                    </div>                                         
-                            </div>
-                            <div class="cuadrado-form">
-                                <div style={{textAlign:'center'}} class="custom-control custom-radio custom-control-inline" >
-                                        <input type="radio" id="archivo_excel" name="semestre_opcion" class="custom-control-input" />
-                                         <label class="custom-control-label" htmlFor="archivo_excel" >Subir desde archivo</label>
-                                        <div class="col-sm-10" >
-                                            <input type="file" className="form-control" name="archivo_excel"  />
-                                        </div>
-                                    </div>
-                            </div>
-                        </div> */}
-
-                        <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to="/semestres" className="float-left " style={{ 'marginLeft':"10vw"}}>
-                            <button className="btn btn-secondary" >Volver</button>
-                        </LinkContainer>
-
-                        {/* <LinkContainer activeClassName=""  to="/semestres" style={{'marginRight':"14vw"}}> */}
-                            <button className="btn btn-success" type="submit">Guardar</button>
-                        {/* </LinkContainer> */}
-                        </div>
-                    </form>
-            </div>
+                       <Row></Row><Row></Row>
+ 
+                       <Row></Row><Row></Row><Row></Row>
+                    <Row>
+                    <div className="col-md-6" > </div>
+                  <Button variant="success" center  type="submit"> Actualizar </Button> </Row>
+                    <Row></Row><Row></Row>
+                </form>
+        </Modal.Body>
+        </Modal>
         );
       } 
 }

@@ -1,24 +1,7 @@
 
-.week {
-  display: inline-flex;
-  width: 100%;
-}
-.day {
-  display:inline-block;
-  width: 12%;
-  height: 1em;
-  padding: 2em 0;
-  border: 1px solid #ddd;
-  text-align: center;
-}
-.day-header {
-  display:inline-block;
-  width: 12%;
-  height: 2em;
-  padding: 2em 0;
-  border: 1px solid #ddd;
-  text-align: center;
-  background-color: #ccc;
+.modal-backdrop
+{
+    opacity:0.0 !important;
 }
 
 .year-selection {
@@ -28,11 +11,6 @@
 .year-selection label {
   margin-left: 1em;
   margin-right: 0.25em;
-}
-
-.calendar {
-  max-width: 630px;
-  min-width: 400px;
 }
 
 .accordion-container {
@@ -110,9 +88,6 @@
   box-shadow: none !important;
 }
 
-.svg-container {
-  
-}
 
 .example {
   font-size: 14px;
@@ -141,17 +116,32 @@
   margin: 0 auto;
 } 
 
+/*                            Calendario                             */
 
-.leyenda{
-  width: 13em;
-  border: 1px solid #dddddd;
-  border-radius: 15px;
-  text-align: center;
+
+table{
+  border: 2px solid #ddd;
 }
 
-table.leyenda{
-  border-radius: 15px;
+td{
+  width:100px;
+  word-wrap: break-word;
+  border: 2px solid #ddd;
 }
+.sortable{
+  cursor: pointer;
+}
+
+th{
+  background-color: #ccc;
+  border: 2px solid #dddddd;
+  position: sticky; top: 0;
+}
+.gris{
+  background-color: #ccc;
+}
+
+/*                            Leyenda                               */
 
 .cuadrado {
   display: flex;
@@ -160,29 +150,20 @@ table.leyenda{
   height:20vh;
   max-height:20px;
   position:relative;
-  border: 1px solid #dddddd;
+ 
+  margin-right: 4px;
 }
 
 .espacio{
   width:4vh;
 }
 
-/* .right {
-  padding-top: 10px;
-  padding-left: 10px;
-  margin-left: 10px;
-  position: relative;
-  float: left;
-  width: 45%;
-  height: auto;
+.modal{
+  font-size:15px;
 }
-
-.left {
-  padding-left: 10px;
-  padding-top: 10px;
-  margin-left: 57px;
-  float: left;
-  position: relative;
-  width: 45%;
-  height: auto;
-} */
+.td_leyenda{
+  border:none;
+  margin-bottom: -15px;
+  width:155px;
+  display: flex;
+}

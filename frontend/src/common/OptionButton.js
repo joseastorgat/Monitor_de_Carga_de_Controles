@@ -9,7 +9,6 @@ class OptionButton extends React.Component {
 
   render() {
     const marginRight = this.props.last ? "mr-0" : "mr-2";
-    // console.log(this.props.on);
     const { onClick, icon } = this.props;
     function color_assigment(a) {
       if (a==='Pencil'){
@@ -26,7 +25,7 @@ class OptionButton extends React.Component {
     };
     let color= color_assigment(icon.name);
     return (
-      <OverlayTrigger placement="top" overlay={this.renderTooltip()}>
+      <OverlayTrigger size="medium" placement="top" overlay={this.renderTooltip()}>
         <Button
           variant={color}
           className={marginRight}

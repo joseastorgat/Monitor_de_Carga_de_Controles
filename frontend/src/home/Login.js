@@ -13,7 +13,7 @@ function ErrorMsg(props){
   if (error) {
     if(error.error_msg){
     return (
-      <span class="error text-danger"> {error.error_msg.non_field_errors} </span>
+      <span className="error text-danger"> {error.error_msg.non_field_errors} </span>
     );}
   }
   return ("");
@@ -48,9 +48,6 @@ export class LoginPage extends React.Component {
 
 
   render() {
-      
-    const {username, password} = this.state;
-
     if (this.props.isAuthenticated) {
       return <Redirect to="/" />;
     }
@@ -60,18 +57,18 @@ export class LoginPage extends React.Component {
           <Header />
           </div>
           <div className="wrap">
-            <form class="login-form" name="form" onSubmit={this.onSubmit} >
+            <form className="login-form" name="form" onSubmit={this.onSubmit} >
           
-              <div class="form-header">
-                <h2>U-Calendar</h2>
+              <div className="form-header">
+                <h2>Iniciar Sesión</h2>
               </div>
 
-              <div class="form-group">
+              <div className="form-group">
                 <label htmlFor="username">Usuario</label>
                 <input type="text" className="form-control" name="username" onChange={this.onChange} />
               </div>
 
-              <div class="form-group">
+              <div className="form-group">
                 <label htmlFor="password">Contraseña</label>
                 <input type="password" className="form-control" name="password" onChange={this.onChange} />
               </div>

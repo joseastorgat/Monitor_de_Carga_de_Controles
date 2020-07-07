@@ -5,16 +5,15 @@ import { connect } from "react-redux";
 import { Button, Modal } from "react-bootstrap";
 import { Row} from "react-bootstrap";
 
-export class editar_evaluacion extends React.Component {
+export class nueva_evaluacion extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-				titulo: this.props.evaluacion.titulo,
-                fecha: this.props.evaluacion.fecha,
-                tipo:this.props.evaluacion.tipo,
-                curso:this.props.evaluacion.curso,
-                evaluacion_update: false,
-                id:this.props.evaluacion.id,
+				titulo: "",
+                fecha: "",
+                tipo:"Control",
+                curso:null,
+                evaluacion_created: false,
                 nombre_curso:""
 		}
 	};
@@ -32,18 +31,20 @@ export class editar_evaluacion extends React.Component {
 	handleSubmit = e => {
 			e.preventDefault();
 			console.log("submit");
-			this.update_evaluacion();
+			this.create_evaluacion();
 	}
 
-    update_evaluacion() {  
-        console.log("post evaluacion ...")
-        console.log(this.state.fecha)
-        console.log(this.state.tipo)
-        console.log(this.props.evaluacion.curso)
-        console.log(this.state.titulo)
-        const url = `http://127.0.0.1:8000/api/evaluaciones/${this.state.id}/`
+    create_evaluacion() {  
+		console.log("post evaluacion ...")
+        const url = "http://127.0.0.1:8000/api/evaluaciones/"
+        let curso=this.state.curso
+        if(curso==null){
+            curso=this.props.curso_seleccionado.split("-")[0]
+        }
+        console.log(curso)
+
 		let options = {
-			method: 'PATCH',
+			method: 'POST',
 			url: url,
 			headers: {
 		
@@ -54,15 +55,15 @@ export class editar_evaluacion extends React.Component {
 				"fecha": this.state.fecha,
                 "tipo": this.state.tipo,
                 "titulo": this.state.titulo,
-                "curso": this.state.curso
+                "curso": curso
 				}
 		}
 		
 		axios(options)
 			.then( (res) => {
 				console.log(res);
-				console.log("update evauacion");
-				this.setState({"evaluacion_update": true});
+				console.log("create evauacion");
+				this.setState({"evaluacion_created": true});
                 this.state.sacar_pop_up()
                 this.state.titulo=""
                 this.state.fecha=""
@@ -70,8 +71,8 @@ export class editar_evaluacion extends React.Component {
 			})
 			.catch( (err) => {
 				console.log(err);
-				console.log("cant update evaluacion");
-				alert("No se pudo actualizar evaluacion!");
+				console.log("cant create evaluacion");
+				alert("No se pudo crear evaluacion!");
                 this.state.sacar_pop_up()
                 this.state.titulo=""
                 this.state.fecha=""
@@ -80,15 +81,15 @@ export class editar_evaluacion extends React.Component {
 	}
 
 	render() {
-        const { show_form, handleCancel, handleEdit} = this.props;
-        console.log(this.props.evaluacion)
-        this.state.sacar_pop_up=handleEdit;
-        var evaluacion=this.props.evaluacion
+        const { show_form, handleCancel, handleAdd} = this.props;
+        const curso_info=this.props.curso_seleccionado.split("-") //se recibe id- codigo-seccion y nombre de curso
+        this.state.sacar_pop_up=handleAdd;
+        console.log(curso_info)
 		return (
 			<Modal size="xl" centered show={show_form} onHide={() => handleCancel()}>
-        <Modal.Header className="header-edit" closeButton>
+        <Modal.Header className="header-add" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Editar evaluación
+            Agregar nueva evaluación 
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -101,10 +102,21 @@ export class editar_evaluacion extends React.Component {
                                     <div className="col-sm-2" >
                                     <label >Curso</label>
                                     </div>
-                                    <div className="col-sm-10" >
-                                        <select className='form-control' name='curso' value={this.state.curso} readOnly='readonly' placeholder={evaluacion.nombre_curso}>
-                                                <option > {evaluacion.codigo}-{evaluacion.seccion} {" "+evaluacion.nombre_curso}</option>
-                                        </select>
+                                    <div className="col-sm-10" >{
+                                        
+                                        (curso_info[0]!=0) ?                                              
+                                            <select className='form-control' name='curso' value={curso_info[0]} readOnly='readonly' placeholder={curso_info[1]}>
+                                                <option > {curso_info[1]}-{curso_info[2]}</option>
+                                            </select>
+                                            :
+                                            <select required className="form-control"  name="curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
+                                                <option value="" >Seleccione curso</option>
+                                                    {this.props.cursos.slice(1,this.props.cursos.length).map(curso=>
+                                                        <option value={curso.id} >{curso.ramo} {curso.nombre}</option>         
+                                                        )}
+                                            </select>
+                                    
+                                    }
                                             </div>
                                      </div>
                             </div>
@@ -117,7 +129,7 @@ export class editar_evaluacion extends React.Component {
                                     <label >Título</label>
                                     </div>
                                     <div className="col-sm-10" >
-                                        <input required type="text" className="form-control" name="titulo"  Value={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
+                                        <input required type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +139,7 @@ export class editar_evaluacion extends React.Component {
                                         <label >Fecha</label>
                                     </div>
                                     <div className="col-sm-10" >
-                                        <input required type="date" className="form-control" name="fecha"  value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
+                                        <input required type="date" className="form-control" name="fecha"  defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
                                     </div>
                                 </div>
                             </div>
@@ -153,7 +165,7 @@ export class editar_evaluacion extends React.Component {
                     </div>
                     <Row></Row>
                     <div style={{textAlign: 'center'}}>
-                        <Button variant="success" type="submit">  Actualizar </Button> 
+                        <Button variant="success" type="submit">  Agregar </Button> 
                     </div>
             </form>			
 					</div>
@@ -173,4 +185,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(editar_evaluacion);
+export default connect(mapStateToProps)(nueva_evaluacion);

@@ -3,12 +3,13 @@ import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   Inp
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
-import { Pencil, Trashcan} from "@primer/octicons-react";
-import { LinkContainer } from "react-router-bootstrap";
+import { Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import NuevaFecha from "./nueva_fecha"
+import EditarFecha from "./editar_fecha"
 
 export class lista_fechas extends React.Component {
   constructor(props) {
@@ -16,13 +17,14 @@ export class lista_fechas extends React.Component {
     this.handle_search = this.handle_search.bind(this);
     this.state = {
       fechas: [],
-      showModal: false,
+      showModalDelete: false,
+      showModalAdd: false,
+      showModalEdit: false,
       fechaPorEliminar: null,
+      fechaPorEditar: null,
       MostrarFechas: [],
-      search: ""
+      search: "",
     };
-
-    this.deleteModalMsg = `¿Está seguro que desea eliminar la fecha?`;
   }
 
   static propTypes = {
@@ -34,7 +36,7 @@ export class lista_fechas extends React.Component {
     console.log("Fetching...")
     await fetch(`http://127.0.0.1:8000/api/fechas-especiales/`)
     .then(response => response.json())
-    .then(fechas =>
+    .then(fechas =>{
       this.setState({
         fechas: fechas.sort((a, b) => {
           if (a.inicio < b.inicio)
@@ -45,8 +47,7 @@ export class lista_fechas extends React.Component {
         }),
         MostrarFechas: fechas
       })
-      )    
-    console.log(this.state.fechas)
+    })
   }
 
   async componentDidMount() {
@@ -57,10 +58,8 @@ export class lista_fechas extends React.Component {
     const busqueda= this.state.search;
     const fechas= this.state.fechas;
     const fechas_buscados= fechas.filter(o=>
-      (o.nombre.toString()+" " + o.tipo.toString() ).includes(busqueda)
+      (o.nombre.toString()+" " + o.tipo.toString() + " "+ o.inicio.toString()+ " "+ o.fin.toString() ).includes(busqueda)
     );
-    console.log("Buscados")
-    console.log(fechas_buscados)
     this.setState({MostrarFechas: fechas_buscados});
   }
 
@@ -82,7 +81,7 @@ export class lista_fechas extends React.Component {
     axios(options)
       .then( (res) => {
         this.setState({
-          showModal: false,
+          showModalDelete: false,
           fechaPorEliminar: null
         });
         this.fetchFechas();
@@ -91,35 +90,82 @@ export class lista_fechas extends React.Component {
         console.log(err);
         alert("[ERROR] No se pudo eliminar la fecha! ");
         this.setState({
-          showModal: false,
+          showModalDelete: false,
           fechaPorEliminar: null
         });
       });
   }
 
-  showModal(fecha) {
-    this.setState({ showModal: true, fechaPorEliminar: fecha });
+  showModalAdd() {
+    this.setState({ showModalAdd: true});
   }
 
-  handleCancel() {
-    this.setState({ showModal: false, fechaPorEliminar: null });
+  showModalDelete(fecha) {
+    this.setState({ 
+      showModalDelete: true, 
+      fechaPorEliminar: fecha,
+      deleteModalMsg: `¿Está seguro que desea eliminar la fecha: ${fecha.nombre}?`
+    });
+  }
+
+  showModalEdit(fecha) {
+    this.setState({ 
+      showModalEdit: true, 
+      fechaPorEditar: fecha,
+    });
+  }
+
+  handleCancelDelete() {
+    this.setState({ showModalDelete: false, fechaPorEliminar: null });
+  }
+
+  handleCancelAdd(){
+    this.setState({ showModalAdd: false});
+  }
+
+  handleCancelEdit() {
+    this.setState({ showModalEdit: false, fechaPorEditar: null });
+  }
+  handleAdd(){
+    this.setState({ showModalAdd: false});
+    this.fetchFechas();
+  }
+  handleEdit(){
+    this.setState({ showModalEdit: false,fechaPorEditar:null});
+    this.fetchFechas();
   }
 
   render() {
     return (
       <main>
       <Container>
+      <NuevaFecha
+          show_form={this.state.showModalAdd} 
+          handleCancel={() => this.handleCancelAdd()}
+          handleAdd={() => this.handleAdd()}
+        />
+
+      {this.state.showModalEdit &&
+        <EditarFecha
+          show_form={this.state.showModalEdit} 
+          handleCancel={() => this.handleCancelEdit()}
+          handleEdit={() => this.handleEdit()}
+          fecha={this.state.fechaPorEditar}
+        />}
+
       <DeleteModal
-          msg={this.deleteModalMsg}
-          show={this.state.showModal}
-          handleCancel={() => this.handleCancel()}
+          msg={this.state.deleteModalMsg}
+          show={this.state.showModalDelete}
+          handleCancel={() => this.handleCancelDelete()}
           handleDelete={() => this.handleDelete()}
         />
         <Container>
-          <ViewTitle>Fechas Especiales</ViewTitle>
+          <ViewTitle>
+          <Link to="/">
+          <OptionButton   icon={ArrowLeft} description="Volver a inicio" /></Link>
+          Fechas Especiales</ViewTitle>
             <Row className="mb-3">
-              <Col>
-
+              <Col  md={4}>
                 <Form inline className="mr-auto" onSubmit={e => {e.preventDefault(); this.handle_search();}} >
                   <InputGroup
                     value={this.state.search}
@@ -130,10 +176,8 @@ export class lista_fechas extends React.Component {
                 </Form>
 
               </Col>
-              <Col xs="auto">
-                <Link to="/fechas_especiales/nueva_fecha">
-                  <Button className="btn btn-primary">Nueva Fecha</Button>
-                </Link>
+              <Col>
+                  <Button className="btn btn-primary float-right" onClick={() => this.showModalAdd()}>Nueva Fecha</Button>
               </Col>
             </Row>
             {this.state.MostrarFechas.map(fecha => (
@@ -144,7 +188,8 @@ export class lista_fechas extends React.Component {
               fin={fecha.fin}
               nombre={fecha.nombre}
               tipo={fecha.tipo}
-              showModal={() => this.showModal(fecha)}
+              showModalDelete={() => this.showModalDelete(fecha)}
+              showModalEdit={() => this.showModalEdit(fecha)}
             />
           ))}
 
@@ -174,21 +219,14 @@ export class lista_fechas extends React.Component {
             <Row>
               <Col xs="auto">
               <h6> {nombre}  </h6> 
-               <p > <span style={{'font-weight': "500"}} >Inicio: </span>{inicio} <span style={{'font-weight': "500"}}>   Fin: </span>{fin} </p>
+               <p > <span style={{'fontWeight': "500"}} >Inicio: </span>{inicio} <span style={{'fontWeight': "500"}}>   Fin: </span>{fin} </p>
               </Col>
               <Col className="text-center"></Col>
-              <Col  xs="auto">
+              <Col xs="auto">
                  
-                  <Link to={`/fechas_especiales/${id}/editar`}>
-                  <OptionButton icon={Pencil} description="Modificar fecha" />
-                  </Link>
-
-                  <OptionButton
-                  icon={Trashcan}
-                  description="Eliminar fecha"
-                  onClick={() => this.props.showModal()} 
-                  last={true} 
-                  />
+                  <OptionButton icon={Pencil} description="Modificar fecha"  onClick={() => this.props.showModalEdit()} last={true} />
+                  <span style={{marginRight:'30px'}}></span> 
+                  <OptionButton icon={Trashcan} description="Eliminar fecha" onClick={() => this.props.showModalDelete()} last={true} />
               </Col>
             </Row>
             </Alert>

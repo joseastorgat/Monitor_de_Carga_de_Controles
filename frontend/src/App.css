@@ -17,6 +17,15 @@ div.row {
     margin-top: 16px;
 }
 
+/* ========================== nuevo_curso.js =============================== */
+.select_profesores{
+    height: 50px;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.select{
+    font-family: Arial, Helvetica, sans-serif;
+}
 /* ========================== Home.js =============================== */
 
 .centrar{
@@ -32,8 +41,8 @@ div.row {
     background-color: #2B96F7;
     display: block;
     padding: 15px 32px;
-    width: 25vw;
-    height: 3vw;
+    width: 17rem;
+    height: 2.3rem;
     margin: auto;
     margin-bottom: 1rem;
     margin-left: 2rem;
@@ -41,6 +50,10 @@ div.row {
     border-color: white;
 }
 
+.block-example {
+    border: 1px solid #ddd;
+    display: inline-block;
+}
 .rectangulo_azul_admin{
     display: block;
     background-color: #0E71DE;
@@ -65,6 +78,16 @@ div.row {
 .color-nav {
     background-color:#007BFF;
 }
+
+.inactive {
+    color:white;
+    text-decoration: none;
+}
+
+.active {
+    color: yellow;
+    text-decoration: none;
+  }
 
 
 /* ========================== Login.js =============================== */
@@ -112,20 +135,6 @@ div.row {
 }
 
 
-.titulo{ 
-    background-color:#007BFF;
-    border: solid 1px #ddd;
-    color: white;
-    padding: 15px 32px;
-    width: 80vw;
-    margin: auto;
-    margin-bottom: 1rem;
-    margin-top: 2rem;
-    border-radius: 8px;
-}
-
-
-
 /* ========================== Semestre.js =============================== */
 
 .generic-form{
@@ -142,19 +151,19 @@ div.row {
     font-size: large;
 }
 
-
 .cuadrado-form{
     display:flex;
     text-align: center;
     justify-content: center;
     align-items: center;
-    width:40vw;
+    width:55vw;
     border: 1px solid #ddd;
     background: #ffffff;
     font-size: large;
     padding: 40px 10px ;
 }
 
+/* ========================== Footer.js =============================== */
 
 footer {
     text-align: center;
@@ -168,12 +177,35 @@ footer {
     right:0;
 }
 
-.inactive {
-    color:white;
-    text-decoration: none;
+.modal-add-ramo{
+    max-height: 800px;
+    width: 800px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+.custom-modal-style {
+    width: 1597px;
+    height: 802px;
+    }
+  /* ========================== lista_evaluaciones.js =============================== */
+.dropdown-menu {
+    right: 0;
+    left: auto;
 }
 
-.active {
-    color: yellow;
-    text-decoration: none;
-  }
+
+  /* ========================== Modals =============================== */
+.header-add{
+    background-color:#007BFF;
+    color:black;
+}
+.header-edit{
+    background-color:#ffcc00;
+    color:black;
+}
+
+.header-delete{
+    background-color:#dc3545;
+    color:black;
+}
