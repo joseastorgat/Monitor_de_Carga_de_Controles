@@ -163,11 +163,11 @@ export class nuevosemestre extends React.Component {
                                         </Col>
                                         <Col lg={9} xs={12}>
                                             <div  className="custom-control custom-radio custom-control-inline"  >
-                                                <input required={this.state.required} type="radio" id="otoño" name="periodo_semestre" value="1" onChange={this.onChange} className="custom-control-input" checked={this.state.periodo_semestre==1} />
+                                                <input required={this.state.required} type="radio" id="otoño" name="periodo_semestre" value="1" onChange={this.onChange} className="custom-control-input" checked={parseInt(this.state.periodo_semestre)===1} />
                                                 <label className="custom-control-label" htmlFor="otoño" >Otoño</label>
                                             </div>
                                             <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
-                                                <input type="radio" id="primavera" name="periodo_semestre" value="2" onChange={this.onChange} className="custom-control-input" checked={this.state.periodo_semestre==2}/>
+                                                <input type="radio" id="primavera" name="periodo_semestre" value="2" onChange={this.onChange} className="custom-control-input" checked={parseInt(this.state.periodo_semestre)===2}/>
                                                 <label className="custom-control-label" htmlFor="primavera">Primavera</label>
                                             </div>
                                         </Col>

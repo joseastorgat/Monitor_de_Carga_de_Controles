@@ -229,8 +229,8 @@ export class lista_semestre extends React.Component {
       console.log(this.state.eliminar_año)
       console.log(semestre.periodo)
       console.log(periodo)
-      if(semestre.año == this.state.eliminar_año && semestre.periodo === periodo){
-        this.state.semestre_deleted = true
+      if(semestre.año === parseInt(this.state.eliminar_año) && semestre.periodo === periodo){
+        this.setState({semestre_deleted: true});
         return true
       }
       alert("Los datos ingresados no coinciden con el semestre que se desea eliminar")
@@ -263,7 +263,7 @@ export class lista_semestre extends React.Component {
         </Modal.Body>
         <Modal.Footer>
         <div class="w-100" >
-          <Button variant="danger" onClick={() => this.deleteValidation(semestre) ? handleDelete() : this.state.semestre_deleted = false}>
+          <Button variant="danger" onClick={() => this.deleteValidation(semestre) ? handleDelete() : this.setState({semestre_deleted: false})}>
             Eliminar
           </Button>
           <Button variant="secondary" className="float-right" onClick={() => handleCancel()}>
@@ -277,9 +277,6 @@ export class lista_semestre extends React.Component {
   } 
 
   class SemesterItem extends React.Component {
-    constructor(props) {
-      super(props);
-    }
 
     render() {
       const año=this.props.año;

@@ -57,7 +57,7 @@ export class lista_ramos extends React.Component {
     const busqueda= this.state.search;
     const ramos= this.state.ramos;
     const ramos_buscados= ramos.filter(o=>
-      (o.nombre.toString()+" " + o.codigo.toString()+" "+ "Semestre "+o.semestre_malla.toString() ).includes(busqueda)
+      (o.nombre.toString() + " " + o.codigo.toString() + " Semestre " + o.semestre_malla.toString()).includes(busqueda)
     );
     console.log("Buscados")
     console.log(ramos_buscados)

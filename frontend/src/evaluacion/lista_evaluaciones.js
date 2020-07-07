@@ -7,8 +7,8 @@ import axios from "axios";
 import DeleteModal from "../common/DeleteModal";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Nueva_evaluacion from "./nueva_evaluacion"
-import Editar_evaluacion from "./editar_evaluacion"
+import NuevaEvaluacion from "./nueva_evaluacion"
+import EditarEvaluacion from "./editar_evaluacion"
 
 export class lista_evaluaciones extends React.Component {
     constructor(props) {
@@ -63,7 +63,7 @@ export class lista_evaluaciones extends React.Component {
       console.log("Fetching Evaluaciones ...")
       let url
       var curso=this.state.curso_busqueda.split("-")[0]
-      if (curso==0){//Traer todas las evaluaciones de ese semestre
+      if (curso===0){//Traer todas las evaluaciones de ese semestre
         url=`http://127.0.0.1:8000/api/semestres/${this.state.semestre_busqueda}/evaluaciones/`;
       }
       else{
@@ -232,7 +232,7 @@ export class lista_evaluaciones extends React.Component {
                 handleDelete={() => this.handleDelete()}
                 />}
 
-                <Nueva_evaluacion
+                <NuevaEvaluacion
                     show_form={this.state.showModalAdd} 
                     handleCancel={() => this.handleCancelAdd()}
                     handleAdd={() => this.handleAdd()}
@@ -240,7 +240,7 @@ export class lista_evaluaciones extends React.Component {
                     curso_seleccionado={this.state.curso_busqueda}
                 />
                 {this.state.showModalEdit &&
-                <Editar_evaluacion
+                <EditarEvaluacion
                     show_form={this.state.showModalEdit} 
                     handleCancel={() => this.handleCancelEdit()}
                     handleEdit={() => this.handleEdit()}
@@ -295,10 +295,6 @@ export class lista_evaluaciones extends React.Component {
 
 
   class EvaluacionItem extends React.Component {
-    constructor(props) {
-      super(props);
-    }
-
     render() {
       const titulo =this.props.titulo;
       const fecha = this.props.fecha.split("-");
