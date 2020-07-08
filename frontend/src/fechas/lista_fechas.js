@@ -203,9 +203,6 @@ export class lista_fechas extends React.Component {
 
 
   class FechaItem extends React.Component {
-    constructor(props) {
-      super(props);
-    }
 
     render() {
       const nombre =this.props.nombre;
@@ -213,7 +210,7 @@ export class lista_fechas extends React.Component {
       const inicio= fec_i[2]+"-"+fec_i[1]+"-"+fec_i[0]
       const fec_f=this.props.fin.split("-")
       const fin= fec_f[2]+"-"+fec_f[1]+"-"+fec_f[0]
-      const id = this.props.id;
+      // const id = this.props.id;
       return (
         <Alert variant="secondary">
             <Row>
