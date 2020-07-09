@@ -39,6 +39,17 @@ class SemestreViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'],
             permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def fechas_especiales(self, request, pk=None):
+        sem = Semestre.objects.get(pk=pk)
+        inicio_sem = sem.inicio
+        fin_sem = sem.fin
+        fechas = Fechas_especiales.objects.filter(inicio__lte=fin_sem)
+        fechas = fechas.filter(fin__gte=inicio_sem)
+        serializer = FechaSerializer(fechas, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'],
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def evaluaciones(self, request, pk=None):
         evaluaciones = Evaluacion.objects.filter(curso__semestre=pk)
         serializer = EvaluacionSerializer(evaluaciones, many=True)
