@@ -108,12 +108,24 @@ class Curso(models.Model):
     seccion = models.IntegerField(default=0)
     profesor = models.ManyToManyField(Profesor)
 
+    def __str__(self):
+        return f'{self.ramo.codigo}-{self.seccion} {str(self.semestre)}'
+
+    class Meta:
+        unique_together = (("ramo", "semestre", "seccion"))
+
 
 class Evaluacion(models.Model):
     fecha = models.DateField()
     tipo = models.CharField(max_length=45)
     titulo = models.CharField(max_length=45)
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Evaluación: {self.titulo} {self.curso}'
+
+    class Meta:
+        unique_together = (("titulo", "curso"))
 
 
 class Semana(models.Model):

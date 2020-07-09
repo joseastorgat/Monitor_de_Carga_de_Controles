@@ -78,6 +78,7 @@ class EvaluacionSerializer(serializers.ModelSerializer):
         current = obj.fecha
         semana = Semana.objects.filter(inicio__lte=current)
         semana = semana.filter(fin__gte=current)
+        semana = semana.filter(semestre=obj.curso.semestre)
         return semana
 
     def get_semana(self, obj):
