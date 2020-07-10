@@ -1,4 +1,6 @@
-from api.models import Semestre, Ramo, Profesor, Curso, Evaluacion
+from api.models import Semestre, Ramo, Profesor, Curso, Evaluacion, Semana
+
+import datetime
 
 EVALS = 3
 CURSOS = 2
@@ -38,7 +40,8 @@ completar un semestre ya existente?'}
                 ramo = Ramo.objects.create(
                     nombre=curso['nombre_ramo'], codigo=curso['codigo'],
                     semestre_malla=curso['semestre_malla'])
-                response['ramos status'].append(f'{ramo} agregado a la base de datos de ramos.')
+                response['ramos status'].append(
+                    f'{ramo} agregado a la base de datos de ramos.')
             else:
                 ramo = ramo.get()
                 response['ramos status'].append(f'{ramo.codigo} ya existe en la base de datos \
@@ -60,7 +63,8 @@ no agregada.')
             else:
                 curso_inst = Curso.objects.create(
                     ramo=ramo, semestre=sem, seccion=curso['seccion'])
-                response['curso status'].append(f'{curso_inst}, agregado correctamente.')
+                response['curso status'].append(
+                    f'{curso_inst}, agregado correctamente.')
             for profe in curso['profesor']:
                 # profe_nombre, profe_apellido = profe['nombre'].replace(
                 #     ' ', '').split('.')
@@ -102,3 +106,50 @@ def add_courses_to_semester(semester):
 
 def add_evals_to_semester(semester):
     return create_semester(semester, level=EVALS)
+
+
+def clonar_semestre(s_data):
+    año = s_data['año']
+    estado = s_data['estado']
+    inicio = s_data['inicio']
+    fin = s_data['fin']
+    periodo = s_data['periodo']
+    from_año = s_data['from_año']
+    from_periodo = s_data['from_periodo']
+
+    one_day = datetime.timedelta(days=1)
+    new_sem = Semestre.objects.create(año=año, inicio=inicio,
+                                      fin=fin, periodo=periodo, estado=estado)
+    old_sem = Semestre.objects.filter(año=from_año, periodo=from_periodo).get()
+    old_cursos = Curso.objects.filter(semestre=old_sem)
+    for curso in old_cursos:
+        profes = []
+        evaluaciones = Evaluacion.objects.filter(curso=curso)
+        for prof in curso.profesor.all():
+            profes.append(prof)
+        new_curso = curso
+        new_curso.pk = None
+        new_curso.semestre = new_sem
+        new_curso.save()
+        for prof in profes:
+            new_curso.profesor.add(prof)
+        for evalu in evaluaciones:
+            current = evalu.fecha
+            dia_semana = current.weekday()
+            semana = Semana.objects.filter(inicio__lte=current)
+            semana = semana.filter(fin__gte=current)
+            semana = semana.filter(semestre=evalu.curso.semestre)
+            if semana:
+                semana = semana.get()
+            else:
+                continue
+            nro_semana = semana.numero
+            new_semana = Semana.objects.filter(
+                numero=nro_semana, semestre=new_sem).get()
+            new_eval_day = new_semana.inicio
+            while dia_semana:
+                new_eval_day += one_day
+                dia_semana -= 1
+            Evaluacion.objects.create(
+                fecha=new_eval_day, tipo=evalu.tipo, titulo=evalu.titulo, curso=new_curso)
+    return new_sem.pk
