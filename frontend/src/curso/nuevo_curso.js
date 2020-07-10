@@ -84,7 +84,7 @@ export class nuevo_curso extends React.Component {
     onChange = e => {
         if (e.target.name==="ramo"){
             this.setState({
-                ["codigo"]: 
+                codigo: 
                 e.target.value
             })
         }
@@ -302,7 +302,7 @@ export class nuevo_curso extends React.Component {
                                             <label >Profesor</label>
                                         </Col>
                                         <Col lg={9} xs={12}>
-                                        <Select placeholder="Selecciona profesor" className={this.state.form_errors["profesores_curso"] ? "select_profesores is-invalid" : this.state.errors_checked["profesores_curso"] ? "select_profesores is-valid" : "select_profesores"}  style={{ color: "red",fontSize:"12px" }}   isMulti options={options} label="Seleccione profesores" value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected}/>
+                                        <Select placeholder="Selecciona profesor" className={this.state.form_errors["profesores_curso"] ? "select_profesores is-invalid" : this.state.errors_checked["profesores_curso"] ? "select_profesores is-valid" : "select_profesores"}  style={{ color: "red",fontSize:"12px", textAlignLast:'center', textAlign:'center' }}   isMulti options={options} label="Seleccione profesores" value={this.state.profesores_curso} name="profesores_curso" onChange={this.onChangeSelected}/>
                                         <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["profesores_curso"]}</span>
                                         </Col>
                                     </Row>

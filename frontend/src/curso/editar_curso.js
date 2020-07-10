@@ -62,7 +62,7 @@ export class editar_curso extends React.Component {
       }
     
     async fetchCurso() {
-        const { año, periodo ,codigo,seccion} = this.props
+        const { año, periodo, codigo, seccion} = this.props
         console.log(this.props)
         this.setState({ semestre_año: año, semestre_periodo:periodo})
         await fetch(`http://127.0.0.1:8000/api/cursos/?ramo=${codigo}&seccion=${seccion}&semestre=${año}&periodo=${periodo}` )
@@ -81,7 +81,7 @@ export class editar_curso extends React.Component {
                     fetch(`http://127.0.0.1:8000/api/profesores/${profesor}/` )
                     .then(response=> response.json())
                     .then(response=> 
-                        {profesores_selected.push({value:response.id,label:response.nombre})}) 
+                        {profesores_selected.push({value:response.id, label:response.nombre})}) 
                   }));   
                   this.setState({profesores_curso:profesores_selected})               
               })
@@ -96,7 +96,7 @@ export class editar_curso extends React.Component {
     onChange = e => {
         if (e.target.name==="ramo"){
             this.setState({
-                ["codigo"]: 
+                codigo: 
                 e.target.value
             })
         }

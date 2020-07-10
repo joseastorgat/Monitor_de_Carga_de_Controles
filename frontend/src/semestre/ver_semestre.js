@@ -183,7 +183,7 @@ export class ver_semestre extends React.Component {
 
   render(){
     const { ano, semestre } = this.props.match.params;
-    const path= this.props.match.url
+    // const path= this.props.match.url
 
     return(
           <main>

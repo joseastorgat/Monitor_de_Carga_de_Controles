@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { Button, Modal } from "react-bootstrap";
 import { Row} from "react-bootstrap";
 
-export class nueva_evaluacion extends React.Component {
+export class NuevaEvaluacion extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -246,4 +246,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(nueva_evaluacion);
+export default connect(mapStateToProps)(NuevaEvaluacion);
