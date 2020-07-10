@@ -17,7 +17,8 @@ from rest_framework.request import Request
 from rest_framework.parsers import FormParser, MultiPartParser
 
 from api.parser import parse_excel
-from api.utils import create_full_semester
+from api.utils import create_full_semester, add_courses_to_semester,\
+    add_evals_to_semester
 
 
 class SemestreViewSet(viewsets.ModelViewSet):
@@ -34,6 +35,17 @@ class SemestreViewSet(viewsets.ModelViewSet):
         # print(request.query_params)
         cursos = Curso.objects.filter(semestre=pk)
         serializer = CursoDetailSerializer(cursos, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'],
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def fechas_especiales(self, request, pk=None):
+        sem = Semestre.objects.get(pk=pk)
+        inicio_sem = sem.inicio
+        fin_sem = sem.fin
+        fechas = Fechas_especiales.objects.filter(inicio__lte=fin_sem)
+        fechas = fechas.filter(fin__gte=inicio_sem)
+        serializer = FechaSerializer(fechas, many=True)
         return Response(serializer.data)
 
     @action(detail=True, methods=['get'],
@@ -77,9 +89,63 @@ class SemestreViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             bin_file = request.data['file']
             parsed = parse_excel(bin_file)
-            create_full_semester(parsed)
+            response = create_full_semester(parsed)
+            print(response)
             # ver bien el response a dar
-            return Response({'status': 'Semestre creado!'})
+            return Response(response)
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False,
+            methods=['POST'],
+            serializer_class=SemestreFileSerializer,
+            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
+            parser_classes=[
+                FormParser,
+                MultiPartParser,
+            ]
+            )
+    def from_xlsx2(self, request, *args, **kwargs):
+        '''
+        Crear semestre mediante archivo excel xlsx
+        '''
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            bin_file = request.data['file']
+            parsed = parse_excel(bin_file)
+            response = add_courses_to_semester(parsed)
+            print(response)
+            # ver bien el response a dar
+            return Response(response)
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
+    
+    @action(detail=False,
+            methods=['POST'],
+            serializer_class=SemestreFileSerializer,
+            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
+            parser_classes=[
+                FormParser,
+                MultiPartParser,
+            ]
+            )
+    def from_xlsx3(self, request, *args, **kwargs):
+        '''
+        Crear semestre mediante archivo excel xlsx
+        '''
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            bin_file = request.data['file']
+            parsed = parse_excel(bin_file)
+            response = add_evals_to_semester(parsed)
+            print(response)
+            # ver bien el response a dar
+            return Response(response)
         else:
             print(serializer.errors)
             return Response(serializer.errors,
