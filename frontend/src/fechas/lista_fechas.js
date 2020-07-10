@@ -1,5 +1,5 @@
 import React from "react";
-import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
+import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   InputGroup,Gir } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
@@ -138,7 +138,7 @@ export class lista_fechas extends React.Component {
   render() {
     return (
       <main>
-      <Container>
+      <Container fixed>
       <NuevaFecha
           show_form={this.state.showModalAdd} 
           handleCancel={() => this.handleCancelAdd()}
