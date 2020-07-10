@@ -45,7 +45,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             clonar_semestre(serializer.validated_data)
             return Response({'status': 'clonado'})
-        return Response({'status':'info no valida :C'})
+        return Response({'status': 'info no valida :C'})
 
     @action(detail=True, methods=['get'],
             permission_classes=[permissions.IsAuthenticatedOrReadOnly])
