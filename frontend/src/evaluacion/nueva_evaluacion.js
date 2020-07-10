@@ -14,7 +14,9 @@ export class nueva_evaluacion extends React.Component {
                 tipo:"Control",
                 curso:null,
                 evaluacion_created: false,
-                nombre_curso:""
+                nombre_curso:"",
+                form_errors: {},
+                errors_checked: {},
 		}
 	};
 	static propTypes = {
@@ -22,20 +24,64 @@ export class nueva_evaluacion extends React.Component {
     };
 
 	onChange = e => {
-			this.setState({
-				[e.target.name]: 
-				e.target.value
-			})
-	};
+        let errors_checked = this.state.errors_checked
+        let form_errors = this.state.form_errors
+        errors_checked[e.target.name] = false
+        form_errors[e.target.name] = ""
+        this.setState({
+          [e.target.name]: e.target.value,
+          errors_checked: errors_checked,
+          form_errors: form_errors
+        })
+    };
 
 	handleSubmit = e => {
 			e.preventDefault();
 			console.log("submit");
 			this.create_evaluacion();
 	}
+    validateForm(){
+        let errores = {}
+        let isValid = true
+        let titulo = this.state.titulo
+        let fecha = this.state.fecha
+        let tipo = this.state.tipo
+        let errors_checked = {
+            titulo: true,
+            fecha: true,
+            tipo: true,
+        }
 
+        if(titulo === ""){
+            errores["titulo"] = "Debe ingresar un titulo para la evaluación"
+            isValid = false
+        }
+        if(tipo != "Control" && tipo != "Tarea"){
+            errores["tipo"] = "Debe elegir uno de los dos tipos"
+            isValid = false
+        }
+        if(fecha === ""){
+            errores["fecha"] = "Debe ingresar una fecha"
+            isValid = false
+        }
+
+        let dateformat = (/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/)|(/^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/);
+        if(!fecha.match(dateformat) && fecha !== ""){
+            errores["fecha"] = "El formato de la fecha es incorrecto"
+            isValid = false
+        }
+        this.setState({
+            form_errors: errores,
+            errors_checked: errors_checked
+        })
+        return isValid
+
+    }
     create_evaluacion() {  
-		console.log("post evaluacion ...")
+        console.log("post evaluacion ...")
+        if(!this.validateForm()){
+            return;
+        }
         const url = "http://127.0.0.1:8000/api/evaluaciones/"
         let curso=this.state.curso
         if(curso==null){
@@ -85,8 +131,20 @@ export class nueva_evaluacion extends React.Component {
         const curso_info=this.props.curso_seleccionado.split("-") //se recibe id- codigo-seccion y nombre de curso
         this.state.sacar_pop_up=handleAdd;
         console.log(curso_info)
+        let resetState = () => {
+			this.setState({
+				titulo: "",
+                fecha: "",
+                tipo:"Control",
+                curso:null,
+                evaluacion_created: false,
+                nombre_curso:"",
+                form_errors: {},
+                errors_checked: {}
+			  })
+		}
 		return (
-			<Modal size="xl" centered show={show_form} onHide={() => handleCancel()}>
+			<Modal size="xl" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
         <Modal.Header className="header-add" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Agregar nueva evaluación 
@@ -125,25 +183,27 @@ export class nueva_evaluacion extends React.Component {
                         <div className="col-sm-1"></div>        
                             <div className="col-sm-5">
                                 <div className="row" >
-                                    <div className="col-sm-2" >
+                                <div className="col-sm-2" >
                                     <label >Título</label>
-                                    </div>
-                                    <div className="col-sm-10" >
-                                        <input required type="text" className="form-control" name="titulo"  defaultValue={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
-                                    </div>
                                 </div>
-                            </div>
-                            <div className="col-sm-5">
-                                <div className="row" >
-                                    <div className="col-sm-2" >
-                                        <label >Fecha</label>
-                                    </div>
-                                    <div className="col-sm-10" >
-                                        <input required type="date" className="form-control" name="fecha"  defaultValue={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
-                                    </div>
+                                <div className="col-sm-10" >
+                                    <input type="text" className={this.state.form_errors["titulo"] ? "form-control is-invalid" : this.state.errors_checked["titulo"] ? "form-control is-valid" : "form-control"} name="titulo"  value={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
+                                    <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["titulo"]}</span>
                                 </div>
                             </div>
                         </div>
+                        <div className="col-sm-5">
+                            <div className="row" >
+                                <div className="col-sm-2" >
+                                    <label >Fecha</label>
+                                </div>
+                                <div className="col-sm-10" >
+                                    <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha"  value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
+                                    <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["fecha"]}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div className="row">
                         <div className="col-sm-1"></div>
                         <div className="col-sm-5" >
@@ -153,13 +213,14 @@ export class nueva_evaluacion extends React.Component {
                                 </div>
     
                                 <div className="custom-control custom-radio custom-control-inline"  >
-                                    <input required type="radio" id="control" name="tipo" value="Control"  className="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Control"}/>
+                                    <input type="radio" id="control" name="tipo" value="Control"  className={this.state.form_errors["tipo"] ? "custom-control-input is-invalid" : this.state.errors_checked["tipo"] ? "custom-control-input is-valid" : "custom-control-input"} onChange={this.onChange} checked={this.state.tipo == "Control"}/>
                                     <label className="custom-control-label" htmlFor="control">Control</label>
                                 </div>
                                 <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
-                                    <input type="radio" id="tarea" name="tipo" value="Tarea"  className="custom-control-input" onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
+                                    <input type="radio" id="tarea" name="tipo" value="Tarea"  className={this.state.form_errors["tipo"] ? "custom-control-input is-invalid" : this.state.errors_checked["tipo"] ? "custom-control-input is-valid" : "custom-control-input"} onChange={this.onChange} checked={this.state.tipo == "Tarea"}/>
                                     <label className="custom-control-label" htmlFor="tarea" >Tarea</label>
                                 </div>
+                                <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["tipo"]}</span>
                             </div>
                         </div>  
                     </div>
