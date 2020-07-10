@@ -30,8 +30,10 @@ export default class Calendar extends React.Component {
       courses: [],
       evaluaciones: [],
       evaluaciones_a_mostrar: [],
+      fechas_especiales:[],
       dias: [],
-      dia_mostrar_modal:[]
+      dia_mostrar_modal:[],
+      dia_mostrar_modal_fecha:[]
     }
     
     this.weeks = [];
@@ -94,6 +96,10 @@ export default class Calendar extends React.Component {
           }
           return week_format;
       })
+      // obtener fechas especiales del semestre
+      let fechas_especiales = await fetch(
+        `http://127.0.0.1:8000/api/semestres/${this.state.semestre_id}/fechas_especiales/`
+      ).then(res => res.json());
 
       // obtener cursos del semestre
       let coursesPre = await fetch(
@@ -128,7 +134,7 @@ export default class Calendar extends React.Component {
         `http://127.0.0.1:8000/api/semestres/${semestre_id}/evaluaciones/`
       ).then(res => res.json());
 
-      this.setState({ courses: courses, evaluaciones: evaluaciones});
+      this.setState({ courses: courses, evaluaciones: evaluaciones,fechas_especiales:fechas_especiales});
     }
   }
   
@@ -151,14 +157,25 @@ export default class Calendar extends React.Component {
   mostrar_evaluaciones_dia(evaluaciones_del_dia,dia,dia_n,semana,color){
     this.showModal(evaluaciones_del_dia,dia,dia_n,semana,color)
   }
+  mostrar_fechas_dia(fechas_del_dia,dia,dia_n,semana,color){
+    this.showModal_fechas(fechas_del_dia,dia,dia_n,semana,color)
+  }
   
   showModal(evaluaciones_del_dia,dia,dia_n,semana,color) {
+
     this.setState({ show_evaluaciones_dia_Modal: true, evaluaciones_dia: evaluaciones_del_dia, dia_mostrar_modal:[dia,dia_n,semana,color]})
+  }
+  showModal_fechas(fechas_del_dia,dia,dia_n,semana,color) {
+    this.setState({ show_fechas_dia_Modal: true, fechas_dia: fechas_del_dia, dia_mostrar_modal_fecha:[dia,dia_n,semana,color]})
   }
 
   handleCancel() {
     this.setState({ show_evaluaciones_dia_Modal: false,  evaluaciones_dia: [] , dia_mostrar_modal:[]})
-    }
+  }
+
+  handleCancel_fechas() {
+      this.setState({ show_fechas_dia_Modal: false,  fechas_dia: [] , dia_mostrar_modal_fecha:[]})
+  }
 
   render() {
     
@@ -181,6 +198,14 @@ export default class Calendar extends React.Component {
             handleCancel={() => this.handleCancel()}
             evaluaciones={this.state.evaluaciones_dia}
             info={this.state.dia_mostrar_modal}
+          />
+        }
+        { this.state.show_fechas_dia_Modal &&
+          <FechaDiaModal 
+            show={this.state.show_fechas_dia_Modal}
+            handleCancel={() => this.handleCancel_fechas()}
+            fechas={this.state.fechas_dia}
+            info={this.state.dia_mostrar_modal_fecha}
           />
         }
         <Row >
@@ -214,6 +239,11 @@ export default class Calendar extends React.Component {
               <td className="gris"><h6>{ this.encontrar_mes(week)}</h6></td>
               <td  className="gris">S{i+1}</td>
                 {week.map((day, di ) => {
+                    const fechas_del_dia=this.state.fechas_especiales.filter(fecha => (fecha.inicio <= day && fecha.fin >= day ))
+                    const hay_fecha= fechas_del_dia.length
+                    if(hay_fecha>0){
+                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#46A5A7"}} onClick={this.mostrar_fechas_dia.bind(this,fechas_del_dia ,day,di,i+1,"#46A5A7")}>{day.split("-")[2] || "\u00a0" }  </td>)
+                    }
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha === day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
                     if(cantidad_evaluaciones_dia===1){
@@ -261,6 +291,9 @@ export default class Calendar extends React.Component {
               <tr className="tr_leyenda" >
               <td className="td_leyenda"> <div className="cuadrado" style={{background:"#800000"}}></div> 4+Evaluaciones</td>
               </tr>
+              <tr className="tr_leyenda" >
+              <td className="td_leyenda"> <div className="cuadrado" style={{background:"#46A5A7"}}></div> Fecha especial</td>
+              </tr>
               </tbody>
             </Table>
             </Col>
@@ -272,7 +305,46 @@ export default class Calendar extends React.Component {
   }
 }
 }
+export class FechaDiaModal extends React.Component {
+  render() {
+    const { show, handleCancel, fechas, info} = this.props;
+    const semana = info[2];
+    const color = info[3];
+    const divStyle = {
+      backgroundColor: color,
+      color:"white"
+    };
+    
+    var dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+    var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  
+    const fecha = info[0];
+    const dia = fecha.split("-")[2];
+    const mes = fecha.split("-")[1];
+    const dia_nombre = dias[info[1]];
+    return (
+      <Modal size="sm" centered show={show} onHide={() => handleCancel()} className="modal_calendar">
+        <Modal.Header style={divStyle} closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            <h6>Semana {semana}: {dia_nombre} {dia} de {meses[mes - 1]}</h6>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body> 
+        {fechas.map(fecha=>
+          <Row>
+          <Container>
+          <h6>{fecha.nombre}</h6>
 
+          </Container>
+        </Row>
+        )}
+        
+        </Modal.Body>
+
+      </Modal>
+     );
+  }
+}
 
 export class EvaluacionDiaModal extends React.Component {
   render() {
@@ -293,7 +365,7 @@ export class EvaluacionDiaModal extends React.Component {
     const dia_nombre = dias[info[1]];
 
     return (
-      <Modal size="sm" centered show={show} onHide={() => handleCancel()}>
+      <Modal transparent={true} size="sm" centered show={show} onHide={() => handleCancel()} className="modal_calendar">
         <Modal.Header style={divStyle} closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             <h6>Semana {semana}: {dia_nombre} {dia} de {meses[mes - 1]}</h6>
