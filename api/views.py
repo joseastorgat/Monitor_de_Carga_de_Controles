@@ -8,7 +8,7 @@ from .models import Semestre, Ramo, Curso, Profesor, Calendario,\
 from api.serializers import SemestreSerializer, RamoSerializer,\
     CursoSerializer, ProfesorSerializer, CalendarioSerializer,\
     FechaSerializer, EvaluacionSerializer, CursoDetailSerializer,\
-    SemestreFileSerializer
+    SemestreFileSerializer, SemestreClonarSerializer
 
 from rest_framework.views import APIView
 from django.http import Http404
@@ -18,7 +18,7 @@ from rest_framework.parsers import FormParser, MultiPartParser
 
 from api.parser import parse_excel
 from api.utils import create_full_semester, add_courses_to_semester,\
-    add_evals_to_semester
+    add_evals_to_semester, clonar_semestre
 
 
 class SemestreViewSet(viewsets.ModelViewSet):
@@ -27,7 +27,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
     """
     queryset = Semestre.objects.all()
     serializer_class = SemestreSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @action(detail=True, methods=['get'],
             permission_classes=[permissions.IsAuthenticatedOrReadOnly])
@@ -36,6 +36,16 @@ class SemestreViewSet(viewsets.ModelViewSet):
         cursos = Curso.objects.filter(semestre=pk)
         serializer = CursoDetailSerializer(cursos, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=['post'],
+            serializer_class=SemestreClonarSerializer)
+    def clonar(self, request, pk=None):
+        # print(request.query_params)
+        serializer = SemestreClonarSerializer(data=request.data)
+        if serializer.is_valid():
+            clonar_semestre(serializer.validated_data)
+            return Response({'status': 'clonado'})
+        return Response({'status':'info no valida :C'})
 
     @action(detail=True, methods=['get'],
             permission_classes=[permissions.IsAuthenticatedOrReadOnly])
