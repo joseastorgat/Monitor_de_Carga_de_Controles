@@ -42,7 +42,13 @@ export class lista_profesores extends React.Component {
     .then(response => response.json())
     .then(profesores =>
       this.setState({
-        profesores: profesores,
+        profesores: profesores.sort((a, b) => {
+          if (a.nombre < b.nombre)
+            return -1;
+          if (a.nombre > b.nombre)
+            return 1;
+          return 0;
+        }),
         MostrarProfesores: profesores
       })
       )    

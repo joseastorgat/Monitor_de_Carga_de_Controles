@@ -25,10 +25,11 @@ export class editarprofesor extends React.Component {
     };
 
     async componentDidMount () {  
+      let posicion=this.props.profesor.nombre.indexOf(" ")
       this.setState({
         id: this.props.profesor.id,
-        nombre: this.props.profesor.nombre, 
-        apellido: "",
+        nombre: this.props.profesor.nombre.slice(0,posicion), 
+        apellido:this.props.profesor.nombre.slice(posicion),
         profesor_modified: false,
         sacar_pop_up:this.props.handleEdit})
     }
