@@ -68,6 +68,12 @@ class CalendarioSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class NuevoCalendarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Calendario
+        fields = ['nombre', 'cursos']
+
+
 class FechaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fechas_especiales

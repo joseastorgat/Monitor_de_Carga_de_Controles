@@ -3,12 +3,15 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework import status
 
+import datetime
+
 from .models import Semestre, Ramo, Curso, Profesor, Calendario,\
     Fechas_especiales, Evaluacion
 from api.serializers import SemestreSerializer, RamoSerializer,\
     CursoSerializer, ProfesorSerializer, CalendarioSerializer,\
     FechaSerializer, EvaluacionSerializer, CursoDetailSerializer,\
-    SemestreFileSerializer, SemestreClonarSerializer
+    SemestreFileSerializer, SemestreClonarSerializer,\
+    NuevoCalendarioSerializer
 
 from rest_framework.views import APIView
 from django.http import Http404
@@ -134,7 +137,6 @@ class SemestreViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
 
-    
     @action(detail=False,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
@@ -269,7 +271,27 @@ class CalendarioViewSet(viewsets.ModelViewSet):
     """
     queryset = Calendario.objects.all()
     serializer_class = CalendarioSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=False, methods=['post'],
+            #permission_classes=[permissions.IsAuthenticatedOrReadOnly],
+            serializer_class=NuevoCalendarioSerializer)
+    def auto_token(self, request, *args, **kwargs):
+        while True:
+            token = Calendario.new_token()
+            if Calendario.objects.filter(token=token):
+                continue
+            break
+        data = {}
+        data['token'] = token
+        data['fecha_creacion'] = str(datetime.date.today())
+        data['nombre'] = request.data['nombre']
+        data['cursos'] = request.data.getlist('cursos')
+        serializer = CalendarioSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class FechasEspecialesViewSet(viewsets.ModelViewSet):

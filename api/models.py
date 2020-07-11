@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.crypto import get_random_string
 import datetime
 
 año_actual = 2020
@@ -226,5 +227,9 @@ class Fechas_especiales(models.Model):
 class Calendario(models.Model):
     fecha_creacion = models.DateField()
     nombre = models.CharField(max_length=45)
-    token = models.CharField(max_length=45)
+    token = models.CharField(max_length=45, default=0, primary_key=True)
     cursos = models.ManyToManyField(Curso)
+
+    @staticmethod
+    def new_token():
+        return get_random_string(length=40)
