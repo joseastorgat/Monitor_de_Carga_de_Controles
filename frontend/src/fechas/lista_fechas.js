@@ -58,7 +58,7 @@ export class lista_fechas extends React.Component {
     const busqueda= this.state.search;
     const fechas= this.state.fechas;
     const fechas_buscados= fechas.filter(o=>
-      (o.nombre.toString()+" " + o.tipo.toString() + " "+ o.inicio.toString()+ " "+ o.fin.toString() ).includes(busqueda)
+      (o.nombre.toString().toLowerCase() +" " + o.tipo.toString().toLowerCase() + " "+ o.inicio.toString().toLowerCase() + " "+ o.fin.toString().toLowerCase() ).includes(busqueda.toLowerCase())
     );
     this.setState({MostrarFechas: fechas_buscados});
   }

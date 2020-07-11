@@ -62,7 +62,7 @@ export class lista_profesores extends React.Component {
     const busqueda= this.state.search;
     const profesores= this.state.profesores;
     const profesores_buscados= profesores.filter(o=>
-      (o.nombre.toString()).includes(busqueda)
+      (o.nombre.toString().toLowerCase()).includes(busqueda.toLowerCase())
     );
     console.log("Buscados")
     console.log(profesores_buscados)
