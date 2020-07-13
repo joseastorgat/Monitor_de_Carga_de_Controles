@@ -34,7 +34,7 @@ export class lista_fechas extends React.Component {
 
   async fetchFechas() {
     console.log("Fetching...")
-    await fetch(`http://127.0.0.1:8000/api/fechas-especiales/`)
+    await fetch(process.env.REACT_APP_API_URL + `/fechas-especiales/`)
     .then(response => response.json())
     .then(fechas =>{
       this.setState({
@@ -58,7 +58,7 @@ export class lista_fechas extends React.Component {
     const busqueda= this.state.search;
     const fechas= this.state.fechas;
     const fechas_buscados= fechas.filter(o=>
-      (o.nombre.toString()+" " + o.tipo.toString() + " "+ o.inicio.toString()+ " "+ o.fin.toString() ).includes(busqueda)
+      (o.nombre.toString().toLowerCase() +" " + o.tipo.toString().toLowerCase() + " "+ o.inicio.toString().toLowerCase() + " "+ o.fin.toString().toLowerCase() ).includes(busqueda.toLowerCase())
     );
     this.setState({MostrarFechas: fechas_buscados});
   }
@@ -69,7 +69,7 @@ export class lista_fechas extends React.Component {
 
   async handleDelete() {
     let e = this.state.fechaPorEliminar.id
-    const url = `http://127.0.0.1:8000/api/fechas-especiales/${e}/`
+    const url = process.env.REACT_APP_API_URL + `/fechas-especiales/${e}/`
     let options = {
       method: 'DELETE',
       url: url,

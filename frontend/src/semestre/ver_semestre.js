@@ -85,7 +85,7 @@ export class ver_semestre extends React.Component {
   async fetchCursos() {
     const { ano, semestre } = this.props.match.params;
     const periodo= (semestre==="Otoño" ? "otoño" : "primavera")
-    await fetch(`http://127.0.0.1:8000/api/cursos/detalle/?semestre=${ano}&periodo=${periodo}`)
+    await fetch(process.env.REACT_APP_API_URL + `/cursos/detalle/?semestre=${ano}&periodo=${periodo}`)
     .then(response => response.json())
     .then(cursos =>
         this.setState({
@@ -98,7 +98,7 @@ export class ver_semestre extends React.Component {
   async handleDelete() {
     let e = this.state.cursoPorEliminar.id
     console.log(e)
-    const url = `http://127.0.0.1:8000/api/cursos/${e}/`
+    const url = process.env.REACT_APP_API_URL + `/cursos/${e}/`
     let options = {
       method: 'DELETE',
       url: url,
@@ -170,7 +170,7 @@ export class ver_semestre extends React.Component {
     const busqueda= this.state.search;
     const Cursos= this.state.cursos;
     const cursos_buscados= Cursos.filter(o=>
-      (o.ramo.toString()+" " + o.nombre.toString() + "Sección " + o.seccion.toString()+"Seccion " + o.seccion.toString()).includes(busqueda)
+      (o.ramo.toString().toLowerCase()+" " + o.nombre.toString().toLowerCase() + "sección " + o.seccion.toString().toLowerCase()+"seccion " + o.seccion.toString().toLowerCase()).includes(busqueda.toLowerCase())
     );
     console.log("Buscados")
     console.log(cursos_buscados)

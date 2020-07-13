@@ -78,9 +78,6 @@ export class LoginPage extends React.Component {
               <div className="form-group">
                 <button className="form-button" >Ingresar</button>
               </div>
-
-              
-
             </form>
           </div>
         </div>

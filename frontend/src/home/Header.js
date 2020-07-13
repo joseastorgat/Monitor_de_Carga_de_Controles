@@ -90,8 +90,6 @@ class Header extends React.Component {
     const { isAuthenticated, user } = this.props.auth;
     const { logout } = this.props;
 
-    console.log(this.props.auth.user);
-
     const authLinks = (
       <LogedInView user={user} logout={logout} />
     );

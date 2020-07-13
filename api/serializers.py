@@ -9,6 +9,16 @@ class SemestreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SemestreClonarSerializer(serializers.Serializer):
+    año= serializers.IntegerField()
+    inicio= serializers.DateField()
+    fin= serializers.DateField()
+    periodo= serializers.IntegerField()
+    estado= serializers.IntegerField()
+    from_año= serializers.IntegerField()
+    from_periodo= serializers.IntegerField()
+
+
 class SemestreFileSerializer(serializers.Serializer):
     file = serializers.FileField()
 
@@ -56,6 +66,12 @@ class CalendarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Calendario
         fields = '__all__'
+
+
+class NuevoCalendarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Calendario
+        fields = ['nombre', 'cursos']
 
 
 class FechaSerializer(serializers.ModelSerializer):

@@ -31,9 +31,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "webpack --mode development --env.REACT_APP_API_URL=http://localhost:8000/api ./src/index.js --output ./static/frontend/main.js",
+    "build": "webpack --mode production --env.REACT_APP_API_URL=http://ucalendar.dcc.uchile.cl/api ./src/index.js --output ./static/frontend/main.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -49,5 +48,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.3",
+    "@babel/plugin-proposal-class-properties": "^7.10.1",
+    "@babel/plugin-transform-runtime": "^7.10.3",
+    "@babel/preset-env": "^7.10.3",
+    "@babel/preset-react": "^7.10.1",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.6.0",
+    "style-loader": "^1.2.1",
+    "webpack-cli": "^3.3.12"
   }
 }

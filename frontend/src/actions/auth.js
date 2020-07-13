@@ -13,9 +13,8 @@ import {
 export const loadUser = () => (dispatch, getState) => {
   // User Loading
   dispatch({ type: USER_LOADING });
-
   axios
-    .get('http://127.0.0.1:8000/api/auth/user', tokenConfig(getState))
+    .get(process.env.REACT_APP_API_URL + '/auth/user', tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: USER_LOADED,
@@ -42,7 +41,7 @@ export const login = (username, password) => (dispatch) => {
   const body = JSON.stringify({ username, password });
 
   axios
-    .post('http://127.0.0.1:8000/api/auth/login', body, config)
+    .post(process.env.REACT_APP_API_URL + '/auth/login', body, config)
     .then((res) => {
       dispatch({
         type: LOGIN_SUCCESS,
@@ -73,7 +72,7 @@ export const login = (username, password) => (dispatch) => {
 // LOGOUT USER
 export const logout = () => (dispatch, getState) => {
   axios
-    .post('http://127.0.0.1:8000/api/auth/logout', null, tokenConfig(getState))
+    .post(process.env.REACT_APP_API_URL + '/auth/logout', null, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: LOGOUT_SUCCESS,

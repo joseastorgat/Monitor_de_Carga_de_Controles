@@ -9,14 +9,22 @@ export class editarprofesor extends React.Component {
         nombre:"",
         apellido: "",
         profesor_modified: false,
+
+        form_errors: {},
+				errors_checked: {},
     };
 
     onChange = e => {
-        this.setState({
-          [e.target.name]: 
-          e.target.value
-        })
-    };
+      let errors_checked = this.state.errors_checked
+      let form_errors = this.state.form_errors
+      errors_checked[e.target.name] = false
+      form_errors[e.target.name] = ""
+      this.setState({
+        [e.target.name]: e.target.value,
+        errors_checked: errors_checked,
+        form_errors: form_errors
+      })
+  };
 
     handleSubmit = e => {
         e.preventDefault();
@@ -34,9 +42,38 @@ export class editarprofesor extends React.Component {
         sacar_pop_up:this.props.handleEdit})
     }
     
+    validateForm(){
+      let errores = {}
+      let isValid = true
+      let nombre = this.state.nombre
+      let apellido =  this.state.apellido
+      let errors_checked = {
+        nombre: true,
+        apellido: true,
+      }
+    
+      if(nombre === ""){
+        errores["nombre"] = "Debe ingresar un nombre"
+        isValid = false
+      }
+      if(apellido === ""){
+        errores["apellido"] = "Debe ingresar un apellido"
+        isValid = false
+      }
+    
+      this.setState({
+        form_errors: errores,
+        errors_checked: errors_checked
+      })
+      return isValid
+    }
+
     update_profesor() {  
         console.log("post ramo ...")
-        const url = `http://127.0.0.1:8000/api/profesores/${this.state.id}/`
+        if(!this.validateForm()){
+          return;
+        }
+        const url = process.env.REACT_APP_API_URL + `/profesores/${this.state.id}/`
         let options = {
             method: 'PATCH',
             url: url,
@@ -62,9 +99,18 @@ export class editarprofesor extends React.Component {
             });
     }
     render() {
-		const { show_form, handleCancel} = this.props;
+    const { show_form, handleCancel} = this.props;
+    let resetState = () => {
+			this.setState({
+				nombre: "",
+				apellido: "",
+				profesor_modified: false,
+				form_errors: {},
+				errors_checked: {},
+			  })
+		}
 		return (
-			<Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
+			<Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
         <Modal.Header className="header-edit" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Editar profesor
@@ -82,8 +128,9 @@ export class editarprofesor extends React.Component {
 												<label>Nombre</label>
 										</Col>
 										<Col lg={8} xs={12}>
-                                            <input type="text" className="form-control" name="nombre" defaultValue={this.state.nombre} onChange={this.onChange} style={{textAlignLast:'center'}} />
-										</Col>
+                      <input type="text" className={this.state.form_errors["nombre"] ? "form-control is-invalid" : this.state.errors_checked["nombre"] ? "form-control is-valid" : "form-control"} name="nombre" defaultValue={this.state.nombre} onChange={this.onChange} style={{textAlignLast:'center'}} />
+                      <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["nombre"]}</span>
+                    </Col>
 									</Row>
 							</Col>  
 
@@ -93,8 +140,9 @@ export class editarprofesor extends React.Component {
 											<label >Apellido</label>
 									</Col>
 									<Col lg={8} xs={12}>
-                                        <input type="text" className="form-control" name="apellido" defaultValue={this.state.apellido} onChange={this.onChange} style={{textAlignLast:'center'}}  />
-									</Col>
+                    <input type="text" className={this.state.form_errors["apellido"] ? "form-control is-invalid" : this.state.errors_checked["apellido"] ? "form-control is-valid" : "form-control"} name="apellido" defaultValue={this.state.apellido} onChange={this.onChange} style={{textAlignLast:'center'}}  />
+                    <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["apellido"]}</span>
+                  </Col>
 								
 								</Row>
 							</Col>
