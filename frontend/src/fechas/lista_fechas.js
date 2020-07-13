@@ -1,5 +1,5 @@
 import React from "react";
-import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
+import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   InputGroup,Gir } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
@@ -58,7 +58,7 @@ export class lista_fechas extends React.Component {
     const busqueda= this.state.search;
     const fechas= this.state.fechas;
     const fechas_buscados= fechas.filter(o=>
-      (o.nombre.toString()+" " + o.tipo.toString() + " "+ o.inicio.toString()+ " "+ o.fin.toString() ).includes(busqueda)
+      (o.nombre.toString().toLowerCase() +" " + o.tipo.toString().toLowerCase() + " "+ o.inicio.toString().toLowerCase() + " "+ o.fin.toString().toLowerCase() ).includes(busqueda.toLowerCase())
     );
     this.setState({MostrarFechas: fechas_buscados});
   }
@@ -138,7 +138,7 @@ export class lista_fechas extends React.Component {
   render() {
     return (
       <main>
-      <Container>
+      <Container fixed>
       <NuevaFecha
           show_form={this.state.showModalAdd} 
           handleCancel={() => this.handleCancelAdd()}
@@ -203,9 +203,6 @@ export class lista_fechas extends React.Component {
 
 
   class FechaItem extends React.Component {
-    constructor(props) {
-      super(props);
-    }
 
     render() {
       const nombre =this.props.nombre;
@@ -213,7 +210,7 @@ export class lista_fechas extends React.Component {
       const inicio= fec_i[2]+"-"+fec_i[1]+"-"+fec_i[0]
       const fec_f=this.props.fin.split("-")
       const fin= fec_f[2]+"-"+fec_f[1]+"-"+fec_f[0]
-      const id = this.props.id;
+      // const id = this.props.id;
       return (
         <Alert variant="secondary">
             <Row>

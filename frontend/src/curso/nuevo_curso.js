@@ -18,6 +18,10 @@ export class nuevo_curso extends React.Component {
             seccion:"1",
             MostrarProfesores: [],
             MostrarRamos:[],
+
+            form_errors: {},
+            errors_checked: {},
+                
             semestre:null,
             curso_created: false,
             sacar_pop_up:this.props.handleAdd
@@ -74,19 +78,25 @@ export class nuevo_curso extends React.Component {
         this.fetchProfesores();
         this.fetchRamos();
         this.fetchSemestre();
+        
     }
     
     onChange = e => {
         if (e.target.name==="ramo"){
             this.setState({
-                ["codigo"]: 
+                codigo: 
                 e.target.value
             })
         }
+        let errors_checked = this.state.errors_checked
+        let form_errors = this.state.form_errors
+        errors_checked[e.target.name] = false
+        form_errors[e.target.name] = ""
         this.setState({
-            [e.target.name]: 
-            e.target.value
-      })
+        [e.target.name]: e.target.value,
+        errors_checked: errors_checked,
+        form_errors: form_errors
+        })
     };
 
     onChangeSelected = e => {
@@ -98,8 +108,70 @@ export class nuevo_curso extends React.Component {
         this.create_curso();
     }
 
+    validateForm(){
+        let errores = {}
+        let isValid = true
+        let ramo = this.state.ramo
+        let seccion = this.state.seccion
+        let profesores = this.state.profesores_curso
+        let errors_checked = {
+            ramo: true,
+            profesores: true,
+            seccion: true
+        }
+
+        if(ramo === ""){
+            errores["ramo"] = "Debe seleccionar un ramo"
+            isValid = false
+        }
+
+        if(!this.state.ramos.some(e => e.codigo === ramo)){
+            errores["ramo"]= "Ramo seleccionado no válido"
+            isValid = false
+        }
+        if(profesores === null || profesores === "" || profesores.length <= 0){
+            errores["profesores_curso"] = "Debe seleccionar al menos un profesor"
+            isValid = false
+        }
+        else{
+            profesores.forEach(p => {
+                if(!this.state.profesores.some(e => e.id === p.value)){
+                    errores["profesores_curso"] = "Profesor seleccionado no válido"
+                    isValid = false
+                }
+            })
+        }
+        if(seccion == ""){
+            errores["seccion"] = "Debe ingresar una sección"
+            isValid = false
+        }
+        if(isNaN(parseInt(seccion))){
+            errores["seccion"] ="La sección debe ser un número entero"
+            isValid = false
+        }
+        else{
+            console.log(seccion % 1 != 0)
+            if(parseInt(seccion) % 1 != 0){
+                errores["seccion"] ="La sección debe ser un número entero"
+                isValid = false
+            }
+            else if(parseInt(seccion) <= 0){
+                errores["seccion"] ="La sección debe ser un número entero positivo"
+                isValid = false
+            }
+        }
+        this.setState({
+            form_errors: errores,
+            errors_checked: errors_checked
+        })
+        return isValid
+
+    }
     create_curso() {  
-		console.log("post curso ...")
+        console.log("post curso ...")
+        if(!this.validateForm()){
+            return;
+        }
         // No pude encontrar otra forma de sacar el id, hay un problema con el formato del json
         let id="0";
         this.state.semestre.map(semestre => (
@@ -144,8 +216,19 @@ export class nuevo_curso extends React.Component {
            ))
         const { año, periodo} = this.props
         const { show_form, handleCancel} = this.props;
+        let resetState = () => {
+			this.setState({
+				ramos:[],
+                ramo:"",
+                codigo:"",
+                profesores_curso:[],
+                seccion:"1",
+				form_errors: {},
+				errors_checked: {},
+			  })
+		}
         return (
-            <Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
+            <Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
             <Modal.Header className="header-add" closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
                 Nuevo Curso
@@ -174,11 +257,12 @@ export class nuevo_curso extends React.Component {
                                             <label >Ramo</label>
                                         </Col>
                                         <Col lg={9} xs={12}>
-                                            <select className="form-control center" name="ramo" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
+                                            <select className={this.state.form_errors["ramo"] ? "form-control center is-invalid" : this.state.errors_checked["ramo"] ? "form-control center is-valid" : "form-control center"} name="ramo" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
                                                 {this.state.MostrarRamos.map(ramos => (
                                                 <option  value={ramos.codigo}>{ramos.nombre}</option>
                                                 ))}
                                             </select>
+                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["ramo"]}</span>
                                             
                                         </Col>
                                     </Row>
@@ -190,7 +274,8 @@ export class nuevo_curso extends React.Component {
                                             <label >Código</label>
                                         </Col>
                                         <Col lg={9} xs={12}>
-                                            <input type="text" className="form-control" name="codigo" value={this.state.codigo}  style={{textAlignLast:'center'}} readOnly="readonly"/>
+                                            <input type="text" className={this.state.form_errors["codigo"] ? "form-control is-invalid" : this.state.errors_checked["codigo"] ? "form-control is-valid" : "form-control"} name="codigo" value={this.state.codigo}  style={{textAlignLast:'center'}} readOnly="readonly"/>
+                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["codigo"]}</span>
                                         </Col>
                                     
                                     </Row>
@@ -205,7 +290,8 @@ export class nuevo_curso extends React.Component {
                                             <label >Sección</label>
                                         </Col>
                                         <Col lg={9} xs={12}>
-                                        <input type="number" required className="form-control" value={this.state.seccion} name="seccion"  min="1" max="10" style={{textAlignLast:'center'}}  onChange={this.onChange} />
+                                            <input type="number" className={this.state.form_errors["seccion"] ? "form-control is-invalid" : this.state.errors_checked["seccion"] ? "form-control is-valid" : "form-control"} value={this.state.seccion} name="seccion"  min="1" max="10" style={{textAlignLast:'center'}}  onChange={this.onChange} />
+                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["seccion"]}</span>
                                         </Col>
                                     </Row>
                                 </Col>
@@ -216,7 +302,8 @@ export class nuevo_curso extends React.Component {
                                             <label >Profesor</label>
                                         </Col>
                                         <Col lg={9} xs={12}>
-                                        <Select placeholder="Selecciona profesor" className="select_profesores"  style={{ color: "red",fontSize:"12px" }}   isMulti options={options} label="Seleccione profesores" value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} required />
+                                        <Select placeholder="Selecciona profesor" className={this.state.form_errors["profesores_curso"] ? "select_profesores is-invalid" : this.state.errors_checked["profesores_curso"] ? "select_profesores is-valid" : "select_profesores"}  style={{ color: "red",fontSize:"12px", textAlignLast:'center', textAlign:'center' }}   isMulti options={options} label="Seleccione profesores" value={this.state.profesores_curso} name="profesores_curso" onChange={this.onChangeSelected}/>
+                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["profesores_curso"]}</span>
                                         </Col>
                                     </Row>
                                 </Col>  

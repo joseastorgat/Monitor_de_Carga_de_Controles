@@ -170,7 +170,7 @@ export class ver_semestre extends React.Component {
     const busqueda= this.state.search;
     const Cursos= this.state.cursos;
     const cursos_buscados= Cursos.filter(o=>
-      (o.ramo.toString()+" " + o.nombre.toString() + "Sección " + o.seccion.toString()+"Seccion " + o.seccion.toString()).includes(busqueda)
+      (o.ramo.toString().toLowerCase()+" " + o.nombre.toString().toLowerCase() + "sección " + o.seccion.toString().toLowerCase()+"seccion " + o.seccion.toString().toLowerCase()).includes(busqueda.toLowerCase())
     );
     console.log("Buscados")
     console.log(cursos_buscados)
@@ -183,7 +183,7 @@ export class ver_semestre extends React.Component {
 
   render(){
     const { ano, semestre } = this.props.match.params;
-    const path= this.props.match.url
+    // const path= this.props.match.url
 
     return(
           <main>

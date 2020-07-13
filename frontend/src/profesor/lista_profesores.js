@@ -42,7 +42,13 @@ export class lista_profesores extends React.Component {
     .then(response => response.json())
     .then(profesores =>
       this.setState({
-        profesores: profesores,
+        profesores: profesores.sort((a, b) => {
+          if (a.nombre < b.nombre)
+            return -1;
+          if (a.nombre > b.nombre)
+            return 1;
+          return 0;
+        }),
         MostrarProfesores: profesores
       })
       )    
@@ -56,7 +62,7 @@ export class lista_profesores extends React.Component {
     const busqueda= this.state.search;
     const profesores= this.state.profesores;
     const profesores_buscados= profesores.filter(o=>
-      (o.nombre.toString()).includes(busqueda)
+      (o.nombre.toString().toLowerCase()).includes(busqueda.toLowerCase())
     );
     console.log("Buscados")
     console.log(profesores_buscados)

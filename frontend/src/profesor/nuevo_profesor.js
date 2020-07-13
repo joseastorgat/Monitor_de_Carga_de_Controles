@@ -11,6 +11,10 @@ export class nuevoprofesor extends React.Component {
 				nombre: "",
 				apellido: "",
 				profesor_created: false,
+
+				form_errors: {},
+				errors_checked: {},
+
 				sacar_pop_up: this.props.handleAdd
 		}
 	};
@@ -20,27 +24,54 @@ export class nuevoprofesor extends React.Component {
 
 	
 	onChange = e => {
-			this.setState({
-				[e.target.name]: 
-				e.target.value
-			})
-	};
+        let errors_checked = this.state.errors_checked
+        let form_errors = this.state.form_errors
+        errors_checked[e.target.name] = false
+        form_errors[e.target.name] = ""
+        this.setState({
+          [e.target.name]: e.target.value,
+          errors_checked: errors_checked,
+          form_errors: form_errors
+        })
+    };
 
 	handleSubmit = e => {
 			e.preventDefault();
 			console.log("submit");
-			if(this.state.nombre && this.state.apellido){
-				this.create_profesor();
-			}
-			else{
-				alert("Debe ingresar nombre y apellido")
-			}
-			
+			this.create_profesor();
 	}
 
+	validateForm(){
+		let errores = {}
+		let isValid = true
+		let nombre = this.state.nombre
+		let apellido =  this.state.apellido
+		let errors_checked = {
+			nombre: true,
+			apellido: true,
+		}
+	
+		if(nombre === ""){
+			errores["nombre"] = "Debe ingresar un nombre"
+			isValid = false
+		}
+		if(apellido === ""){
+			errores["apellido"] = "Debe ingresar un apellido"
+			isValid = false
+		}
+	
+		this.setState({
+			form_errors: errores,
+			errors_checked: errors_checked
+		})
+		return isValid
+	}
 
-create_profesor() {  
+	create_profesor() {  
 		console.log("post ramo ...")
+		if(!this.validateForm()){
+			return;
+		}
 		const url = process.env.REACT_APP_API_URL + '/profesores/';
 		let options = {
 			method: 'POST',
@@ -71,8 +102,17 @@ create_profesor() {
 
 	render() {
 		const { show_form, handleCancel} = this.props;
+		let resetState = () => {
+			this.setState({
+				nombre: "",
+				apellido: "",
+				profesor_created: false,
+				form_errors: {},
+				errors_checked: {},
+			  })
+		}
 		return (
-			<Modal size="lg" centered show={show_form} onHide={() => handleCancel()}>
+			<Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
         <Modal.Header className="header-add" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Agregar nuevo profesor
@@ -90,7 +130,8 @@ create_profesor() {
 												<label>Nombre</label>
 										</Col>
 										<Col lg={8} xs={12}>
-												<input required type="text" className="form-control" name="nombre" onChange={this.onChange} style={{textAlignLast:'center'}} />
+											<input  type="text" className={this.state.form_errors["nombre"] ? "form-control is-invalid" : this.state.errors_checked["nombre"] ? "form-control is-valid" : "form-control"} name="nombre" onChange={this.onChange} style={{textAlignLast:'center'}} />
+											<span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["nombre"]}</span>
 										</Col>
 									</Row>
 							</Col>  
@@ -101,7 +142,8 @@ create_profesor() {
 											<label >Apellido</label>
 									</Col>
 									<Col lg={8} xs={12}>
-										<input required type="text" className="form-control" name="apellido" onChange={this.onChange} style={{textAlignLast:'center'}}  />
+										<input  type="text" className={this.state.form_errors["apellido"] ? "form-control is-invalid" : this.state.errors_checked["apellido"] ? "form-control is-valid" : "form-control"} name="apellido" onChange={this.onChange} style={{textAlignLast:'center'}}  />
+										<span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["apellido"]}</span>
 									</Col>
 								
 								</Row>
