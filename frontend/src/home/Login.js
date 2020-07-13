@@ -76,7 +76,7 @@ export class LoginPage extends React.Component {
               <ErrorMsg error={this.props.error} /> 
 
               <div className="form-group">
-                <button className="form-button">Ingresar</button>
+                <button className="form-button" >Ingresar</button>
               </div>
 
               
