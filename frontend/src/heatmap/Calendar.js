@@ -98,7 +98,7 @@ export default class Calendar extends React.Component {
       })
       // obtener fechas especiales del semestre
       let fechas_especiales = await fetch(
-        `http://127.0.0.1:8000/api/semestres/${this.state.semestre_id}/fechas_especiales/`
+        process.env.REACT_APP_API_URL + `/semestres/${this.state.semestre_id}/fechas_especiales/`
       ).then(res => res.json());
 
       // obtener cursos del semestre
