@@ -31,8 +31,8 @@ export class lista_semestre extends React.Component {
   };
 
   async fetchSemestres() {
-    console.log("Fetching...")
-    await fetch(`http://127.0.0.1:8000/api/semestres/`)
+    console.log("Fetching semestres...");
+    await fetch(process.env.REACT_APP_API_URL + `/semestres/`)
     .then(response => response.json())
     .then(semestres =>
       this.setState({
@@ -108,8 +108,8 @@ export class lista_semestre extends React.Component {
 
   async handleDelete() {
     let e = this.state.semestrePorEliminar.id
-    console.log(e)
-    const url = `http://127.0.0.1:8000/api/semestres/${e}/`
+    console.log(e);
+    const url = process.env.REACT_APP_API_URL + `/semestres/${e}/`
     let options = {
       method: 'DELETE',
       url: url,

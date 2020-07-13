@@ -37,7 +37,7 @@ export class editar_curso extends React.Component {
 
     async fetchProfesores() {
         console.log("Fetching Profesores...")
-        await fetch(`http://127.0.0.1:8000/api/profesores/`)
+        await fetch(process.env.REACT_APP_API_URL + `/profesores/`)
         .then(response => response.json())
         .then(profesores =>
           this.setState({
@@ -52,7 +52,7 @@ export class editar_curso extends React.Component {
       
     async fetchRamos() {
         console.log("Fetching Ramos...")
-        await fetch(`http://127.0.0.1:8000/api/ramos/`)
+        await fetch(process.env.REACT_APP_API_URL + `/ramos/`)
         .then(response => response.json())
         .then(ramos =>
           this.setState({
@@ -63,9 +63,10 @@ export class editar_curso extends React.Component {
     
     async fetchCurso() {
         const { año, periodo, codigo, seccion} = this.props
-        console.log(this.props)
+        // console.log(this.props)
         this.setState({ semestre_año: año, semestre_periodo:periodo})
-        await fetch(`http://127.0.0.1:8000/api/cursos/?ramo=${codigo}&seccion=${seccion}&semestre=${año}&periodo=${periodo}` )
+        
+        await fetch(process.env.REACT_APP_API_URL + `/cursos/?ramo=${codigo}&seccion=${seccion}&semestre=${año}&periodo=${periodo}` )
         .then( res=> res.json())  
         .then( res => { 
                   this.setState({
@@ -78,7 +79,7 @@ export class editar_curso extends React.Component {
                   let profesores_selected=[]
                   let profesores=res[0].profesor
                   Promise.all(profesores.map(profesor => {
-                    fetch(`http://127.0.0.1:8000/api/profesores/${profesor}/` )
+                    fetch(process.env.REACT_APP_API_URL + `/profesores/${profesor}/` )
                     .then(response=> response.json())
                     .then(response=> 
                         {profesores_selected.push({value:response.id, label:response.nombre})}) 
@@ -116,7 +117,7 @@ export class editar_curso extends React.Component {
     
     handleSubmit = e => {
         e.preventDefault();
-        console.log("submit");
+        // console.log("submit");
         this.update_curso();
     }
     validateForm(){
@@ -186,13 +187,13 @@ export class editar_curso extends React.Component {
         }
         console.log(this.state.ramo)
         // No pude encontrar otra forma de sacar el id, hay un problema con el formato del json
-        console.log(this.state.seccion)
-        console.log(this.state.profesores_curso)
+        // console.log(this.state.seccion)
+        // console.log(this.state.profesores_curso)
         var profesores=[]
         this.state.profesores_curso.map(profesor => profesores.push(profesor.value))
-        console.log("Profes")
-        console.log(profesores)
-        const url = `http://127.0.0.1:8000/api/cursos/${this.state.id_curso}/`
+
+        // console.log(profesores)
+        const url = process.env.REACT_APP_API_URL + `/cursos/${this.state.id_curso}/`
 	    let options = {
 			method: 'PATCH',
 			url: url,

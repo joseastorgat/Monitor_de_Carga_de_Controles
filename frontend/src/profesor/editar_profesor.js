@@ -73,7 +73,7 @@ export class editarprofesor extends React.Component {
         if(!this.validateForm()){
           return;
         }
-        const url = `http://127.0.0.1:8000/api/profesores/${this.state.id}/`
+        const url = process.env.REACT_APP_API_URL + `/profesores/${this.state.id}/`
         let options = {
             method: 'PATCH',
             url: url,

@@ -25,7 +25,7 @@ class Bloque_Calendario extends React.Component {
 
   async fetchSemestres() {
     console.log("Fetching...")
-    await fetch(`http://127.0.0.1:8000/api/semestres/`)
+    await fetch(process.env.REACT_APP_API_URL + '/semestres/')
     .then(response => response.json())
     .then(semestres =>
         this.setState({

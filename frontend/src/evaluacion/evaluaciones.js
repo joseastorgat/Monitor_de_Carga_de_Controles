@@ -134,10 +134,10 @@ export class evaluaciones extends React.Component {
     async fetchEvaluaciones() {
         console.log("Fetching...")
         const params= this.props.match.params
-        var curso = await fetch(`http://127.0.0.1:8000/api/cursos/?semestre=${params.ano}&periodo=${params.semestre}&ramo=${params.cod}&seccion=${params.seccion}`)
+        var curso = await fetch(process.env.REACT_APP_API_URL + `/cursos/?semestre=${params.ano}&periodo=${params.semestre}&ramo=${params.cod}&seccion=${params.seccion}`)
                             .then(response => response.json())
         this.state.curso = curso[0]
-        await fetch(`http://127.0.0.1:8000/api/cursos/${this.state.curso.id}/evaluaciones/`)
+        await fetch(process.env.REACT_APP_API_URL + `/cursos/${this.state.curso.id}/evaluaciones/`)
         .then(response => response.json())
         .then(evaluaciones =>
             this.setState({
@@ -195,7 +195,7 @@ export class evaluaciones extends React.Component {
         if(!this.validateForm()){
             return;
         }
-        const url = `http://127.0.0.1:8000/api/evaluaciones/${this.state.id}/`
+        const url = process.env.REACT_APP_API_URL + `/evaluaciones/${this.state.id}/`
         let options = {
           method: 'PATCH',
           url: url,
@@ -249,7 +249,7 @@ export class evaluaciones extends React.Component {
         const tipo = evaluacion.tipo;
         console.log("Eliminar: ", evaluaciones[i]);
     
-        const url = `http://127.0.0.1:8000/api/evaluaciones/${e}/`
+        const url = process.env.REACT_APP_API_URL + `/evaluaciones/${e}/`
         let options = {
           method: 'DELETE',
           url: url,
@@ -289,7 +289,7 @@ export class evaluaciones extends React.Component {
             return;
         }
         var evaluaciones = this.state.evaluaciones
-        const url = "http://127.0.0.1:8000/api/evaluaciones/"
+        const url = process.env.REACT_APP_API_URL + "/evaluaciones/"
         let options = {
           method: 'POST',
           url: url,
@@ -332,7 +332,7 @@ export class evaluaciones extends React.Component {
     async componentDidMount() {
         this.fetchEvaluaciones();
         var id = this.state.id
-        axios.get(`http://127.0.0.1:8000/api/evaluaciones/${id}/`)
+        axios.get(process.env.REACT_APP_API_URL + `/evaluaciones/${id}/`)
         .then( (res) => { 
             this.setState({
                 id: res.data.id,

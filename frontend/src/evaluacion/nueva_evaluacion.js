@@ -82,7 +82,7 @@ export class NuevaEvaluacion extends React.Component {
         if(!this.validateForm()){
             return;
         }
-        const url = "http://127.0.0.1:8000/api/evaluaciones/"
+        const url = process.env.REACT_APP_API_URL + "/evaluaciones/"
         let curso=this.state.curso
         if(curso==null){
             curso=this.props.curso_seleccionado.split("-")[0]
