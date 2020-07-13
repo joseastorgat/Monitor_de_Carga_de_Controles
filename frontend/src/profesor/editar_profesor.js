@@ -1,50 +1,79 @@
 import React from "react";
-import { LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import { connect } from "react-redux";
-import {ArrowLeft} from "@primer/octicons-react";
-import ViewTitle from "../common/ViewTitle";
-import { Link } from "react-router-dom";
-import OptionButton from "../common/OptionButton";
-import { Container} from "react-bootstrap";
+import { Button,Row,Col,Modal} from "react-bootstrap";
 
-export class editar_profesor extends React.Component {
+export class editarprofesor extends React.Component {
     state = {
         id: "",
-        nombre: "", 
+        nombre:"",
         apellido: "",
         profesor_modified: false,
+
+        form_errors: {},
+				errors_checked: {},
     };
 
-    async componentDidMount () {  
-        const id  = this.props.match.params.id;
-        axios.get(`http://127.0.0.1:8000/api/profesores/${id}/`)
-          .then( (res) => { 
-            this.setState({
-                id: res.data.id,
-                nombre: res.data.nombre.split(" ")[0],
-                apellido: res.data.nombre.split(" ")[1]
-            })
-        })
-    };
     onChange = e => {
-        this.setState({
-          [e.target.name]: 
-          e.target.value
-        })
-    };
+      let errors_checked = this.state.errors_checked
+      let form_errors = this.state.form_errors
+      errors_checked[e.target.name] = false
+      form_errors[e.target.name] = ""
+      this.setState({
+        [e.target.name]: e.target.value,
+        errors_checked: errors_checked,
+        form_errors: form_errors
+      })
+  };
 
     handleSubmit = e => {
         e.preventDefault();
         console.log("submit");
         this.update_profesor();
     };
+
+    async componentDidMount () {  
+      let posicion=this.props.profesor.nombre.indexOf(" ")
+      this.setState({
+        id: this.props.profesor.id,
+        nombre: this.props.profesor.nombre.slice(0,posicion), 
+        apellido:this.props.profesor.nombre.slice(posicion),
+        profesor_modified: false,
+        sacar_pop_up:this.props.handleEdit})
+    }
     
+    validateForm(){
+      let errores = {}
+      let isValid = true
+      let nombre = this.state.nombre
+      let apellido =  this.state.apellido
+      let errors_checked = {
+        nombre: true,
+        apellido: true,
+      }
+    
+      if(nombre === ""){
+        errores["nombre"] = "Debe ingresar un nombre"
+        isValid = false
+      }
+      if(apellido === ""){
+        errores["apellido"] = "Debe ingresar un apellido"
+        isValid = false
+      }
+    
+      this.setState({
+        form_errors: errores,
+        errors_checked: errors_checked
+      })
+      return isValid
+    }
+
     update_profesor() {  
         console.log("post ramo ...")
-        console.log(this.state.id)
-        
-        const url = `http://127.0.0.1:8000/api/profesores/${this.state.id}/`
+        if(!this.validateForm()){
+          return;
+        }
+        const url = process.env.REACT_APP_API_URL + `/profesores/${this.state.id}/`
         let options = {
             method: 'PATCH',
             url: url,
@@ -59,10 +88,9 @@ export class editar_profesor extends React.Component {
         
         axios(options)
             .then( (res) => {
-                console.log(res);
                 console.log("profesor updated");
                 this.setState({"profesor_modified": true});
-                window.location.href = "/profesores"
+                this.state.sacar_pop_up()
             })
             .catch( (err) => {
                 console.log(err);
@@ -71,55 +99,77 @@ export class editar_profesor extends React.Component {
             });
     }
     render() {
-        return (
-            <Container>
-            <ViewTitle>
-					<Link  to="../../"><OptionButton icon={ArrowLeft} description="Volver a profesores" /></Link>Editar profesor</ViewTitle>
+    const { show_form, handleCancel} = this.props;
+    let resetState = () => {
+			this.setState({
+				nombre: "",
+				apellido: "",
+				profesor_modified: false,
+				form_errors: {},
+				errors_checked: {},
+			  })
+		}
+		return (
+			<Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
+        <Modal.Header className="header-edit" closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Editar profesor
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+			<div>
+				<form  onSubmit={this.handleSubmit}>
+					<div >
+						<Row>
+							<Col xs="1"></Col>
+							<Col lg={5}>
+									<Row>
+										<Col xs="auto">
+												<label>Nombre</label>
+										</Col>
+										<Col lg={8} xs={12}>
+                      <input type="text" className={this.state.form_errors["nombre"] ? "form-control is-invalid" : this.state.errors_checked["nombre"] ? "form-control is-valid" : "form-control"} name="nombre" defaultValue={this.state.nombre} onChange={this.onChange} style={{textAlignLast:'center'}} />
+                      <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["nombre"]}</span>
+                    </Col>
+									</Row>
+							</Col>  
+
+							<Col lg={5}>
+								<Row >
+									<Col  xs="auto">
+											<label >Apellido</label>
+									</Col>
+									<Col lg={8} xs={12}>
+                    <input type="text" className={this.state.form_errors["apellido"] ? "form-control is-invalid" : this.state.errors_checked["apellido"] ? "form-control is-valid" : "form-control"} name="apellido" defaultValue={this.state.apellido} onChange={this.onChange} style={{textAlignLast:'center'}}  />
+                    <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["apellido"]}</span>
+                  </Col>
+								
+								</Row>
+							</Col>
+						</Row>                    
+					</div>
+					<Row></Row><Row></Row><Row></Row>
+					<Row className="centrar_button">
+						<Button variant="success" type="submit"> Actualizar </Button>
+					</Row>
+					<Row></Row>
+				</form>
+			</div>
 					
-                {/* <h4 className="titulo">Editar Profesor</h4> */}
-                    <form className="" name="form" onSubmit={this.handleSubmit}>
-                        <div class="generic-form">
-                            <div class="row">
-                                <div class="col-sm-1"></div>
-                                <div class="col-sm-5" >
-                                    <div class="row">
-                                        <div class="col-sm-2" >
-                                            <label >Nombre</label>
-                                        </div>
-                                        <div class="col-sm-10" >
-                                            <input type="text" className="form-control" name="nombre" defaultValue={this.state.nombre} onChange={this.onChange} style={{textAlignLast:'center'}} />
-                                        </div>
-                                    </div>
-                                </div>  
+		</Modal.Body>
+        {/* <Modal.Footer>
+          <Button variant="secondary" onClick={() => handleCancel()}>
+            Cancelar
+          </Button>
 
-                                <div class="col-sm-5">
-                                    <div class="row" style={{justifyContent: 'center'}} >
-                                        <div class="col-sm-2" >
-                                            <label >Apellido</label>
-                                        </div>
-                                        <div class="col-sm-10" >
-                                        <input type="text" className="form-control" name="apellido" defaultValue={this.state.apellido} onChange={this.onChange} style={{textAlignLast:'center'}}  />
-                                        </div>
-                                    
-                                    </div>
-                                </div>
-                            </div>                    
-                        </div>
-                        <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to="/profesores/" className="float-left btn btn-secondary" style={{width: '7%', 'marginLeft':"10vw",borderRadius: '8px'}}>
-                            <button >Volver</button>
-                        </LinkContainer>
-
-                            <button className="btn btn-success"  type="submit">Guardar</button>
-                        </div>
-                    </form>
-            </Container>
-        );
-      } 
+        </Modal.Footer> */}
+      </Modal>
+			);
+		} 
 }
 
 const mapStateToProps = (state) => ({
     auth: state.auth
 }); 
 
-export default connect(mapStateToProps)(editar_profesor);
+export default connect(mapStateToProps)(editarprofesor);

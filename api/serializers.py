@@ -9,6 +9,16 @@ class SemestreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SemestreClonarSerializer(serializers.Serializer):
+    año= serializers.IntegerField()
+    inicio= serializers.DateField()
+    fin= serializers.DateField()
+    periodo= serializers.IntegerField()
+    estado= serializers.IntegerField()
+    from_año= serializers.IntegerField()
+    from_periodo= serializers.IntegerField()
+
+
 class SemestreFileSerializer(serializers.Serializer):
     file = serializers.FileField()
 
@@ -58,6 +68,12 @@ class CalendarioSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class NuevoCalendarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Calendario
+        fields = ['nombre', 'cursos']
+
+
 class FechaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fechas_especiales
@@ -78,6 +94,7 @@ class EvaluacionSerializer(serializers.ModelSerializer):
         current = obj.fecha
         semana = Semana.objects.filter(inicio__lte=current)
         semana = semana.filter(fin__gte=current)
+        semana = semana.filter(semestre=obj.curso.semestre)
         return semana
 
     def get_semana(self, obj):

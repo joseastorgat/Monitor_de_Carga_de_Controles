@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.crypto import get_random_string
 import datetime
 
 año_actual = 2020
@@ -108,12 +109,24 @@ class Curso(models.Model):
     seccion = models.IntegerField(default=0)
     profesor = models.ManyToManyField(Profesor)
 
+    def __str__(self):
+        return f'{self.ramo.codigo}-{self.seccion} {str(self.semestre)}'
+
+    class Meta:
+        unique_together = (("ramo", "semestre", "seccion"))
+
 
 class Evaluacion(models.Model):
     fecha = models.DateField()
     tipo = models.CharField(max_length=45)
     titulo = models.CharField(max_length=45)
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Evaluación: {self.titulo} {self.curso}'
+
+    class Meta:
+        unique_together = (("titulo", "curso"))
 
 
 class Semana(models.Model):
@@ -214,5 +227,9 @@ class Fechas_especiales(models.Model):
 class Calendario(models.Model):
     fecha_creacion = models.DateField()
     nombre = models.CharField(max_length=45)
-    token = models.CharField(max_length=45)
+    token = models.CharField(max_length=45, default=0, primary_key=True)
     cursos = models.ManyToManyField(Curso)
+
+    @staticmethod
+    def new_token():
+        return get_random_string(length=40)

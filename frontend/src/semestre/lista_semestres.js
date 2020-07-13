@@ -7,6 +7,8 @@ import { Pencil, Trashcan, Calendar,Book ,ArrowLeft} from "@primer/octicons-reac
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import NuevoSemestre from "./nuevo_semestre"
+import EditarSemestre from "./editar_semestre"
 
 export class lista_semestre extends React.Component {
   constructor(props) {
@@ -14,14 +16,14 @@ export class lista_semestre extends React.Component {
     this.handle_search = this.handle_search.bind(this);
     this.state = {
       semestres: [],
-      showModal: false,
+      showModalDelete: false,
+      showModalAdd: false,
+      showModalEdit: false,
       semestrePorEliminar: null,
+      semestrePorEditar: null,
       MostrarSemestres: [],
       search: ""
     };
-
-    this.deleteModalMsg = `¿Está seguro que desea eliminar el semestre?
-    Recuerde que esto borrara todos los cursos y evaluaciones asociadas.`;
   }
 
   static propTypes = {
@@ -29,8 +31,8 @@ export class lista_semestre extends React.Component {
   };
 
   async fetchSemestres() {
-    console.log("Fetching...")
-    await fetch(`http://127.0.0.1:8000/api/semestres/`)
+    console.log("Fetching semestres...");
+    await fetch(process.env.REACT_APP_API_URL + `/semestres/`)
     .then(response => response.json())
     .then(semestres =>
       this.setState({
@@ -69,18 +71,45 @@ export class lista_semestre extends React.Component {
     this.setState({search: e.target.value});
   }
 
-  showModal(semestre) {
-    this.setState({ showModal: true, semestrePorEliminar: semestre });
+  showModalDelete(semestre) {
+    this.setState({ showModalDelete: true, semestrePorEliminar: semestre });
   }
 
-  handleCancel() {
-    this.setState({ showModal: false, semestrePorEliminar: null });
+  showModalAdd() {
+    this.setState({ showModalAdd: true});
+  }
+
+  showModalEdit(semestre) {
+    this.setState({ showModalEdit: true,  semestrePorEditar: semestre
+    });
+  }
+
+  handleCancelDelete() {
+    this.setState({ showModalDelete: false, semestrePorEliminar: null });
+  }
+
+  handleCancelAdd(){
+    this.setState({ showModalAdd: false});
+  }
+
+  handleCancelEdit(){
+    this.setState({ showModalEdit: false, semestrePorEliminar: null});
+  }
+
+  handleAdd(){
+    this.setState({ showModalAdd: false});
+    this.fetchSemestres();
+  }
+
+  handleEdit(){
+    this.setState({ showModalEdit: false,semestrePorEditar:null});
+    this.fetchSemestres();
   }
 
   async handleDelete() {
     let e = this.state.semestrePorEliminar.id
-    console.log(e)
-    const url = `http://127.0.0.1:8000/api/semestres/${e}/`
+    console.log(e);
+    const url = process.env.REACT_APP_API_URL + `/semestres/${e}/`
     let options = {
       method: 'DELETE',
       url: url,
@@ -92,7 +121,7 @@ export class lista_semestre extends React.Component {
     axios(options)
       .then( (res) => {
         this.setState({
-          showModal: false,
+          showModalDelete: false,
           semestrePorEliminar: null
         });
         this.fetchSemestres();
@@ -101,7 +130,7 @@ export class lista_semestre extends React.Component {
         console.log(err);
         alert("[ERROR] No se pudo eliminar el semestre! ");
         this.setState({
-          showModal: false,
+          showModalDelete: false,
           semestrePorEliminar: null
         });
       });
@@ -112,13 +141,27 @@ export class lista_semestre extends React.Component {
         <Container>
           <DeleteSemestreModal
             semestre={this.state.semestrePorEliminar}
-            show={this.state.showModal}
-            handleCancel={() => this.handleCancel()}
+            show={this.state.showModalDelete}
+            handleCancel={() => this.handleCancelDelete()}
             handleDelete={() => this.handleDelete()}
           />
 
+          <NuevoSemestre
+          show_form={this.state.showModalAdd} 
+          handleCancel={() => this.handleCancelAdd()}
+          handleAdd={() => this.handleAdd()}
+          />
+          
+          {this.state.showModalEdit &&
+          <EditarSemestre
+          show_form={this.state.showModalEdit} 
+          handleCancel={() => this.handleCancelEdit()}
+          handleEdit={() => this.handleEdit()}
+          semestre={this.state.semestrePorEditar}
+          />}
+
             <ViewTitle>   
-            <Link to="/" exact path>
+            <Link to="/">
            <OptionButton   icon={ArrowLeft} description="Volver a inicio" /></Link>
       Semestres</ViewTitle>
             <Row className="mb-3">
@@ -134,9 +177,7 @@ export class lista_semestre extends React.Component {
                 </Form>
               </Col>
               <Col>
-                <Link to="/semestres/nuevo_semestre/">
-                  <Button className="btn btn-primary float-right">Nuevo Semestre</Button>
-                </Link>
+                  <Button className="btn btn-primary float-right" onClick={() => this.showModalAdd()}>Nuevo Semestre</Button>
               </Col>
             </Row>
 
@@ -145,7 +186,8 @@ export class lista_semestre extends React.Component {
               id={semestre.id}
               año={semestre.año}
               semestre={ semestre.periodo===1 ? ("Otoño") : ("Primavera")}
-              showModal={() => this.showModal(semestre)}
+              showModalDelete={() => this.showModalDelete(semestre)}
+              showModalEdit={() => this.showModalEdit(semestre)}
             />
           ))}
 
@@ -172,7 +214,6 @@ export class lista_semestre extends React.Component {
     };
 
     deleteValidation(semestre){
-      console.log(this.state.eliminar_año)
       if(this.state.eliminar_año === "" || this.state.eliminar_periodo === ""){
         alert("Debe ingresar tanto el año como el periodo del semestre que esta eliminando")
         return false
@@ -184,18 +225,22 @@ export class lista_semestre extends React.Component {
       if(this.state.eliminar_periodo.toLowerCase() === "otoño"){
         periodo = 1
       }
-      if(semestre.año === this.state.eliminar_año && semestre.periodo === periodo){
-        this.state.semestre_deleted = true
+      console.log(semestre.año)
+      console.log(this.state.eliminar_año)
+      console.log(semestre.periodo)
+      console.log(periodo)
+      if(semestre.año === parseInt(this.state.eliminar_año) && semestre.periodo === periodo){
+        this.setState({semestre_deleted: true});
         return true
       }
       alert("Los datos ingresados no coinciden con el semestre que se desea eliminar")
       return false
     }
     render(){
-      const{show, handleCancel, handleDelete, semestre, } = this.props;
+      const{show, handleCancel, handleDelete, semestre } = this.props;
       return (
         <Modal show={show} onHide={() => handleCancel()}>
-        <Modal.Header closeButton>
+        <Modal.Header className="header-delete" closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Confirmación de eliminación
           </Modal.Title>
@@ -218,7 +263,7 @@ export class lista_semestre extends React.Component {
         </Modal.Body>
         <Modal.Footer>
         <div class="w-100" >
-          <Button variant="danger" onClick={() => this.deleteValidation(semestre) ? handleDelete() : this.state.semestre_deleted = false}>
+          <Button variant="danger" onClick={() => this.deleteValidation(semestre) ? handleDelete() : this.setState({semestre_deleted: false})}>
             Eliminar
           </Button>
           <Button variant="secondary" className="float-right" onClick={() => handleCancel()}>
@@ -232,16 +277,13 @@ export class lista_semestre extends React.Component {
   } 
 
   class SemesterItem extends React.Component {
-    constructor(props) {
-      super(props);
-    }
 
     render() {
       const año=this.props.año;
       const semestre= this.props.semestre;
       const id_periodo=(semestre==="Otoño" ? 1 : 2)
       return (
-        <Link to={`${año}/${semestre}/`} style={{ textDecoration: "none" }}>   
+      
         <Alert variant="secondary">
             <Row>
                    <Col xs="auto">
@@ -253,19 +295,19 @@ export class lista_semestre extends React.Component {
                   <Link to={`/calendario/${año}/${id_periodo}/`} >
                     <OptionButton  icon={Calendar}  description="Visualizar semestre" />
                   </Link>
+                  <span style={{marginRight:'30px'}}></span> 
                   <Link  to={`${año}/${semestre}/`} >
                     <OptionButton  icon={Book}  description="Ver cursos" />
                   </Link>
-                  <Link to={`${año}/${semestre}/editar/`} >
-                    <OptionButton icon={Pencil} description="Modificar semestre" />
-                  </Link>
-                  <Link to="#">
-                  <OptionButton   icon={Trashcan} description="Eliminar semestre"  onClick={() => this.props.showModal()}    last={true}  />
-                  </Link>
+                  <span style={{marginRight:'30px'}}></span> 
+                    <OptionButton icon={Pencil} description="Modificar semestre"  onClick={() => this.props.showModalEdit()}    last={true}  />
+                  <span style={{marginRight:'30px'}}></span> 
+
+                  <OptionButton   icon={Trashcan} description="Eliminar semestre"  onClick={() => this.props.showModalDelete()}    last={true}  />
               </Col>
             </Row>
             </Alert>
-            </Link>
+     
             
       );
     }

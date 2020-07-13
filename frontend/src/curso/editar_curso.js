@@ -1,14 +1,10 @@
 import React from "react";
-import {LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Select from 'react-select'
-import {ArrowLeft} from "@primer/octicons-react";
-import ViewTitle from "../common/ViewTitle";
-import { Link } from "react-router-dom";
-import OptionButton from "../common/OptionButton";
-import { Container} from "react-bootstrap";
+import Select from 'react-select';
+import { Button,Row,Col,Modal} from "react-bootstrap";
+
 
 export class editar_curso extends React.Component {
     constructor(props) {
@@ -27,11 +23,12 @@ export class editar_curso extends React.Component {
             MostrarRamos:[],
             semestre_id:"",
             id_curso:"",
-            curso_update: false
+
+            form_errors: {},
+            errors_checked: {},
+            curso_update: false,
+            sacar_pop_up:this.props.handleEdit
           };
-    
-        const { ano, semestre } = this.props.match.params;
-        this.paths = `/semestres/${ano}/${semestre}/`;
     }
 
     static propTypes={
@@ -40,18 +37,22 @@ export class editar_curso extends React.Component {
 
     async fetchProfesores() {
         console.log("Fetching Profesores...")
-        await fetch(`http://127.0.0.1:8000/api/profesores/`)
+        await fetch(process.env.REACT_APP_API_URL + `/profesores/`)
         .then(response => response.json())
         .then(profesores =>
           this.setState({
             profesores: profesores,
-            MostrarProfesores: profesores
+            MostrarProfesores: profesores,
+            options:profesores.map(profesor => (
+                {value:profesor.id,label:profesor.nombre}
+               ))
           }))    
+          
       }
       
     async fetchRamos() {
         console.log("Fetching Ramos...")
-        await fetch(`http://127.0.0.1:8000/api/ramos/`)
+        await fetch(process.env.REACT_APP_API_URL + `/ramos/`)
         .then(response => response.json())
         .then(ramos =>
           this.setState({
@@ -61,9 +62,11 @@ export class editar_curso extends React.Component {
       }
     
     async fetchCurso() {
-        const { ano, semestre ,cod,seccion} = this.props.match.params;
-        this.setState({ semestre_año: ano, semestre_periodo:semestre })
-        await fetch(`http://127.0.0.1:8000/api/cursos/?ramo=${cod}&seccion=${seccion}&semestre=${ano}&periodo=${semestre}` )
+        const { año, periodo, codigo, seccion} = this.props
+        // console.log(this.props)
+        this.setState({ semestre_año: año, semestre_periodo:periodo})
+        
+        await fetch(process.env.REACT_APP_API_URL + `/cursos/?ramo=${codigo}&seccion=${seccion}&semestre=${año}&periodo=${periodo}` )
         .then( res=> res.json())  
         .then( res => { 
                   this.setState({
@@ -76,10 +79,10 @@ export class editar_curso extends React.Component {
                   let profesores_selected=[]
                   let profesores=res[0].profesor
                   Promise.all(profesores.map(profesor => {
-                    fetch(`http://127.0.0.1:8000/api/profesores/${profesor}/` )
+                    fetch(process.env.REACT_APP_API_URL + `/profesores/${profesor}/` )
                     .then(response=> response.json())
                     .then(response=> 
-                        {profesores_selected.push({value:response.id,label:response.nombre})}) 
+                        {profesores_selected.push({value:response.id, label:response.nombre})}) 
                   }));   
                   this.setState({profesores_curso:profesores_selected})               
               })
@@ -94,37 +97,103 @@ export class editar_curso extends React.Component {
     onChange = e => {
         if (e.target.name==="ramo"){
             this.setState({
-                ["codigo"]: 
+                codigo: 
                 e.target.value
             })
         }
+        let errors_checked = this.state.errors_checked
+        let form_errors = this.state.form_errors
+        errors_checked[e.target.name] = false
+        form_errors[e.target.name] = ""
         this.setState({
-            [e.target.name]: 
-            e.target.value
-      })
+        [e.target.name]: e.target.value,
+        errors_checked: errors_checked,
+        form_errors: form_errors
+        })
     };
-
     onChangeSelected = e => {
         this.setState({profesores_curso:e }); 
     }
     
     handleSubmit = e => {
         e.preventDefault();
-        console.log("submit");
+        // console.log("submit");
         this.update_curso();
     }
+    validateForm(){
+        let errores = {}
+        let isValid = true
+        let ramo = this.state.ramo
+        let seccion = this.state.seccion
+        let profesores = this.state.profesores_curso
+        let errors_checked = {
+            ramo: true,
+            profesores: true,
+            seccion: true
+        }
 
+        if(ramo === ""){
+            errores["ramo"] = "Debe seleccionar un ramo"
+            isValid = false
+        }
+
+        if(!this.state.ramos.some(e => e.codigo === ramo)){
+            errores["ramo"]= "Ramo seleccionado no válido"
+            isValid = false
+        }
+        if(profesores === null || profesores === "" || profesores.length <= 0){
+            errores["profesores_curso"] = "Debe seleccionar al menos un profesor"
+            isValid = false
+        }
+        else{
+            profesores.forEach(p => {
+                if(!this.state.profesores.some(e => e.id === p.value)){
+                    errores["profesores_curso"] = "Profesor seleccionado no válido"
+                    isValid = false
+                }
+            })
+        }
+        if(seccion == ""){
+            errores["seccion"] = "Debe ingresar una sección"
+            isValid = false
+        }
+        if(isNaN(parseInt(seccion))){
+            errores["seccion"] ="La sección debe ser un número entero"
+            isValid = false
+        }
+        else{
+            console.log(seccion % 1 != 0)
+            if(parseInt(seccion) % 1 != 0){
+                errores["seccion"] ="La sección debe ser un número entero"
+                isValid = false
+            }
+            else if(parseInt(seccion) <= 0){
+                errores["seccion"] ="La sección debe ser un número entero positivo"
+                isValid = false
+            }
+        }
+        this.setState({
+            form_errors: errores,
+            errors_checked: errors_checked
+        })
+        return isValid
+
+    }
+    
     update_curso() {  
-		console.log("post curso ...")
+        console.log("post curso ...")
+        if(!this.validateForm()){
+            return;
+        }
         console.log(this.state.ramo)
         // No pude encontrar otra forma de sacar el id, hay un problema con el formato del json
-        console.log(this.state.seccion)
-        console.log(this.state.profesores_curso)
+        // console.log(this.state.seccion)
+        // console.log(this.state.profesores_curso)
         var profesores=[]
         this.state.profesores_curso.map(profesor => profesores.push(profesor.value))
-        console.log("Profes")
-        console.log(profesores)
-        const url = `http://127.0.0.1:8000/api/cursos/${this.state.id_curso}/`
+
+        // console.log(profesores)
+        const url = process.env.REACT_APP_API_URL + `/cursos/${this.state.id_curso}/`
 	    let options = {
 			method: 'PATCH',
 			url: url,
@@ -144,113 +213,130 @@ export class editar_curso extends React.Component {
 			.then( (res) => {
 				console.log(res);
 				console.log("update curso");
-				this.setState({"curso_update": true});
-				window.location.href=this.paths;
+                this.setState({"curso_update": true});
+                this.state.sacar_pop_up();
 			})
 			.catch( (err) => {
                 console.log(this.state)
 				console.log(err);
 				console.log("cant update curso");
-				alert("No se pudo actualizar curso!");
+                alert("No se pudo actualizar curso!");
+                this.state.sacar_pop_up();
 			});
 	}
 
     render() {
-        console.log(this.state.profesores_curso)
-        const options=this.state.MostrarProfesores.map(profesor => (
-            {value:profesor.id,label:profesor.nombre}
-           ))
+        
         const customControlStyles = base => ({
             ...base,
             fontSize:"15px",
         });
+        const { show_form, handleCancel} = this.props;
+
+        let resetState = () => {
+			this.setState({
+				ramos:[],
+                ramo:"",
+                codigo:"",
+                profesores_curso:[],
+                seccion:"1",
+				form_errors: {},
+				errors_checked: {},
+			  })
+		}
         
         return (
-            <Container>
-            <ViewTitle>
-            <Link  to="../../../"><OptionButton icon={ArrowLeft} description="Volver a cursos" /></Link>Editar curso</ViewTitle>
-                
+            <Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
+                <Modal.Header className="header-edit" closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Editar curso
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
                     <form className="" name="form" onSubmit={this.handleSubmit}>
-                        <div class="generic-form">
-                            <div class="row">
-                            <div class="col-sm-1"></div>
-                                <div class="col-sm-6" >
-                                    <div class="row">
-                                        <div class="col-sm-2" >
+                            <Row>
+                                <Col xs="1"></Col>
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={3}>
                                             <label >Semestre</label>
-                                        </div>
-                                        <div class="col-sm-8" >
+                                        </Col>
+                                        <Col lg={9} xs={12}>
                                         <input className="form-control" style={{textAlignLast:'center'}}  placeholder={this.state.semestre_año+ "-"+ this.state.semestre_periodo} type="text" readOnly="readonly"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-1"></div>
-                                <div class="col-sm-6" >
-                                    <div class="row">
-                                        <div class="col-sm-2" >
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs="1"></Col>
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={3}>
                                             <label >Ramo</label>
-                                        </div>
-                                        <div class="col-sm-8" >
-                                            <select  className="form-control center" name="ramo" value={this.state.ramo} style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
+                                        </Col>
+                                        <Col lg={9} xs={12}>
+                                            <select  className={this.state.form_errors["ramo"] ? "form-control center is-invalid" : this.state.errors_checked["ramo"] ? "form-control center is-valid" : "form-control center"} name="ramo" value={this.state.ramo} style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
                                                 {this.state.MostrarRamos.map(ramos => (
                                                 <option value={ramos.codigo}>{ramos.nombre}</option>
                                                 ))}
                                             </select>
-                                            
-                                        </div>
-                                    </div>
-                                </div>  
+                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["ramo"]}</span>
+                                        </Col>
+                                    </Row>
+                                </Col>  
 
-                                <div class="col-md-4">
-                                    <div class="row" style={{justifyContent: 'center'}} >
-                                        <div class="col-md-3" >
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={3}>
                                             <label >Código</label>
-                                        </div>
-                                        <div class="col-sm-9" >
-                                            <input type="text" className="form-control" name="codigo" value={this.state.codigo}  style={{textAlignLast:'center'}} readOnly="readonly"/>
-                                        </div>
+                                        </Col>
+                                        <Col lg={9} xs={12}>
+                                            <input type="text" className={this.state.form_errors["codigo"] ? "form-control is-invalid" : this.state.errors_checked["codigo"] ? "form-control is-valid" : "form-control"} name="codigo" value={this.state.codigo}  style={{textAlignLast:'center'}} readOnly="readonly"/>
+                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["codigo"]}</span>
+                                        </Col>
                                     
-                                    </div>
-                                </div>
-                            </div>
+                                    </Row>
+                                </Col>
+                            </Row>
 
-                            <div class="row">
-                                <div class="col-sm-1"></div>
-                                <div class="col-md-6">
-                                    <div class="row"  >
-                                        <div class="col-md-2" >
+                            <Row>
+                                <Col xs="1"></Col>
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={3}>
                                             <label >Sección</label>
-                                        </div>
-                                        <div class="col-sm-8" >
-                                        <input type="number" required className="form-control" name="seccion"  value={this.state.seccion} min="1" max="10" style={{textAlignLast:'center'}}  onChange={this.onChange} />
-                                        </div>
-                                    </div>
-                                </div>
+                                        </Col>
+                                        <Col lg={9} xs={12}>
+                                            <input type="number" className={this.state.form_errors["seccion"] ? "form-control is-invalid" : this.state.errors_checked["seccion"] ? "form-control is-valid" : "form-control"} name="seccion"  value={this.state.seccion} min="1" max="10" style={{textAlignLast:'center'}}  onChange={this.onChange} />
+                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["seccion"]}</span>
+                                        </Col>
+                                    </Row>
+                                </Col>
 
-                                <div class="col-sm-4" >
-                                    <div class="row">
-                                        <div class="col-sm-3" >
+                                <Col lg={5} >
+                                    <Row>
+                                        <Col xs={3}>
                                             <label >Profesor</label>
-                                        </div>
-                                        <div class="col-sm-9" >
-                                            <Select placeholder="Seleccionar profesor" className="select_profesores" styles={{control: customControlStyles}}   isMulti options={options} defaultValue={this.state.profesores_curso} value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected} />
-                                        </div>
-                                    </div>
-                                </div>  
-                            </div>
+                                        </Col>
+                                        <Col lg={9} xs={12}>
+                                            <Select placeholder="Selecciona profesor" className={this.state.form_errors["profesores_curso"] ? "select_profesores is-invalid" : this.state.errors_checked["profesores_curso"] ? "select_profesores is-valid" : "select_profesores"}  style={{ color: "red",fontSize:"12px" }}   isMulti options={this.state.options}  value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected}/>
+                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["profesores_curso"]}</span>
+                                        </Col>
+                                    </Row>
+                                </Col>  
+                            </Row>
 
-                        </div>
-                        <div class="form-group" style={{'marginTop':"4rem"}}>
-                        <LinkContainer  activeClassName=""  to={this.paths} className="float-left " style={{'marginLeft':"10vw"}}>
-                            <button className="btn btn-secondary" >Volver a Semestre</button>
-                        </LinkContainer>
 
-                            <button className="btn btn-success" type="submit">Guardar Curso</button>
-                        </div>
-                    </form>
-            </Container>
+                    <Row></Row><Row></Row><Row></Row>
+                    <Row>
+                        <div className="col-md-6" > </div>
+                        <Button variant="success" type="submit">          Actualizar </Button>
+                    </Row>
+                <Row></Row><Row></Row>
+                </form>
+        </Modal.Body>
+      </Modal>
+            
         );
       } 
 }

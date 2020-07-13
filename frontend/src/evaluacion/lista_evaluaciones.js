@@ -1,15 +1,14 @@
 import React from "react";
 import { Alert,Button,   Container,   Col,   Row } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
-import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import {Pencil, Trashcan} from "@primer/octicons-react";
 import axios from "axios";
 import DeleteModal from "../common/DeleteModal";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Nueva_evaluacion from "./nueva_evaluacion"
-import Editar_evaluacion from "./editar_evaluacion"
+import NuevaEvaluacion from "./nueva_evaluacion"
+import EditarEvaluacion from "./editar_evaluacion"
 
 export class lista_evaluaciones extends React.Component {
     constructor(props) {
@@ -43,7 +42,7 @@ export class lista_evaluaciones extends React.Component {
         e.target.value
       })
       console.log("Fetching Cursos...")      
-      axios.get(`http://127.0.0.1:8000/api/semestres/${e.target.value}/cursos/`)
+      axios.get(process.env.REACT_APP_API_URL + `/semestres/${e.target.value}/cursos/`)
       .then(response => {
         // Primer valor default de ramos
         response.data.splice(0,0,{"id": 0, "ramo": "Todos","nombre": " ",semana:0})
@@ -64,12 +63,12 @@ export class lista_evaluaciones extends React.Component {
       console.log("Fetching Evaluaciones ...")
       let url
       var curso=this.state.curso_busqueda.split("-")[0]
-      if (curso==0){//Traer todas las evaluaciones de ese semestre
-        url=`http://127.0.0.1:8000/api/semestres/${this.state.semestre_busqueda}/evaluaciones/`;
+      if (curso===0){//Traer todas las evaluaciones de ese semestre
+        url=process.env.REACT_APP_API_URL + `/semestres/${this.state.semestre_busqueda}/evaluaciones/`;
       }
       else{
         console.log(curso)
-        url=`http://127.0.0.1:8000/api/cursos/${curso}/evaluaciones/`;
+        url=process.env.REACT_APP_API_URL + `/cursos/${curso}/evaluaciones/`;
       }
       await fetch(url)
       .then(response => response.json())
@@ -97,7 +96,7 @@ export class lista_evaluaciones extends React.Component {
 
     async fetchSemestres() {
       console.log("Fetching Semestres...")
-      await fetch(`http://127.0.0.1:8000/api/semestres/`)
+      await fetch(process.env.REACT_APP_API_URL + `/semestres/`)
       .then(response => response.json())
       .then(semestres =>
         this.setState({
@@ -159,7 +158,7 @@ export class lista_evaluaciones extends React.Component {
 
     async handleDelete() {
       let e = this.state.evaluacionPorEliminar.id
-      const url = `http://127.0.0.1:8000/api/evaluaciones/${e}/`
+      const url = process.env.REACT_APP_API_URL + `/evaluaciones/${e}/`
       let options = {
         method: 'DELETE',
         url: url,
@@ -233,7 +232,7 @@ export class lista_evaluaciones extends React.Component {
                 handleDelete={() => this.handleDelete()}
                 />}
 
-                <Nueva_evaluacion
+                <NuevaEvaluacion
                     show_form={this.state.showModalAdd} 
                     handleCancel={() => this.handleCancelAdd()}
                     handleAdd={() => this.handleAdd()}
@@ -241,7 +240,7 @@ export class lista_evaluaciones extends React.Component {
                     curso_seleccionado={this.state.curso_busqueda}
                 />
                 {this.state.showModalEdit &&
-                <Editar_evaluacion
+                <EditarEvaluacion
                     show_form={this.state.showModalEdit} 
                     handleCancel={() => this.handleCancelEdit()}
                     handleEdit={() => this.handleEdit()}
@@ -296,10 +295,6 @@ export class lista_evaluaciones extends React.Component {
 
 
   class EvaluacionItem extends React.Component {
-    constructor(props) {
-      super(props);
-    }
-
     render() {
       const titulo =this.props.titulo;
       const fecha = this.props.fecha.split("-");
@@ -311,17 +306,17 @@ export class lista_evaluaciones extends React.Component {
       return (
         <Alert variant="secondary">
             <Row>
-              <Col xs={5}>
+              <Col xs={6}>
                 <h6>{codigo_curso}-{seccion_curso} {nombre_curso} </h6> 
                 <p>{titulo}</p>
               </Col>
-              <Col xs={5} className="text-center"> 
-              <p>{fecha[2]}-{fecha[1]}-{fecha[0]}</p></Col>
-              <Col xs="auto" className="float-left">
-          
+              <Col xs={4} className="text-center"> 
+              <p>{fecha[2]}-{fecha[1]}-{fecha[0]}</p>
+              </Col>
+              <Col className="float-rigth">
                   <OptionButton icon={Pencil} description="Modificar evaluacion" onClick={() => this.props.showModalEdit()} />
-
-                  <OptionButton   icon={Trashcan} description="Eliminar evaluacion"  onClick={() => this.props.showModal()}     last={true}  />
+                  <span style={{marginRight:'30px'}}></span> 
+                  <OptionButton icon={Trashcan} description="Eliminar evaluacion"  onClick={() => this.props.showModal()}     last={true}  />
               </Col>
             </Row>
             </Alert>

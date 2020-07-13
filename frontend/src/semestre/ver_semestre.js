@@ -2,13 +2,14 @@ import React from "react";
 import {   Alert,Button,   Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
-import { LinkContainer } from "react-router-bootstrap";
 import OptionButton from "../common/OptionButton";
 import { File,  Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import DeleteModal from "../common/DeleteModal";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import NuevoCurso from "../curso/nuevo_curso"
+import EditarCurso from "../curso/editar_curso"
 
 class CursoItem extends React.Component {
     constructor(props) {
@@ -31,7 +32,6 @@ class CursoItem extends React.Component {
   
     render() {
       return (
-        <Link style={{ textDecoration: "none" }} to={`${this.info.codigo}/${this.info.seccion}/evaluaciones/`}>
           <Alert variant="secondary">
             <Row>
               <Col>
@@ -42,7 +42,7 @@ class CursoItem extends React.Component {
                 <div>Profesor:<ul> {this.props.profesor.map(profesor=> (<li>{profesor }</li>))}</ul></div>
               </Col>
               <Col xs="auto">
-
+                <span style={{marginRight:'30px'}}></span> 
                 <Link to={`${this.info.codigo}/${this.info.seccion}/evaluaciones/`}>
                   <OptionButton
                     icon={File}
@@ -50,24 +50,14 @@ class CursoItem extends React.Component {
                     
                   />
                 </Link>
-                <Link to={`${this.info.codigo}/${this.info.seccion}/editar/`}>
+                <span style={{marginRight:'30px'}}></span> 
+                  <OptionButton icon={Pencil} description={this.descriptions.edit} onClick={() => this.props.showModalEdit()}  />
+                <span style={{marginRight:'30px'}}></span> 
                   <OptionButton
-                    icon={Pencil}
-                    description={this.descriptions.edit}
-                  />
-                </Link>
-                <Link to="#">
-                  <OptionButton
-                    icon={Trashcan}
-                    description={this.descriptions.delete}
-                    last={true}
-                    onClick={() => this.props.showModal()}
-                  />
-                </Link>
+                    icon={Trashcan} description={this.descriptions.delete} last={true} onClick={() => this.props.showModalDelete()}  />
               </Col>
             </Row>
           </Alert>
-        </Link>
       );
     }
   }
@@ -79,12 +69,14 @@ export class ver_semestre extends React.Component {
     this.handle_search = this.handle_search.bind(this);
     this.state = {
       cursos: [],
-      showModal: false,
+      showModalDelete: false,
+      showModalAdd:false, 
+      showModalEdit:false,
       cursoPorEliminar: null,
+      cursoPorEditar: null,
       MostrarCursos: [],
-      search: ""
+      search: "",
     };
-    this.deleteModalMsg = `¿Está seguro que desea eliminar el curso?`;
   }
   static propTypes={
     auth: PropTypes.object.isRequired,
@@ -93,7 +85,7 @@ export class ver_semestre extends React.Component {
   async fetchCursos() {
     const { ano, semestre } = this.props.match.params;
     const periodo= (semestre==="Otoño" ? "otoño" : "primavera")
-    await fetch(`http://127.0.0.1:8000/api/cursos/detalle/?semestre=${ano}&periodo=${periodo}`)
+    await fetch(process.env.REACT_APP_API_URL + `/cursos/detalle/?semestre=${ano}&periodo=${periodo}`)
     .then(response => response.json())
     .then(cursos =>
         this.setState({
@@ -106,7 +98,7 @@ export class ver_semestre extends React.Component {
   async handleDelete() {
     let e = this.state.cursoPorEliminar.id
     console.log(e)
-    const url = `http://127.0.0.1:8000/api/cursos/${e}/`
+    const url = process.env.REACT_APP_API_URL + `/cursos/${e}/`
     let options = {
       method: 'DELETE',
       url: url,
@@ -118,7 +110,7 @@ export class ver_semestre extends React.Component {
     axios(options)
       .then( (res) => {
         this.setState({
-          showModal: false,
+          showModalDelete: false,
           rcursoPorEliminar: null
         });
         this.fetchCursos();
@@ -127,7 +119,7 @@ export class ver_semestre extends React.Component {
         console.log(err);
         alert("[ERROR] No se pudo eliminar el curso! ");
         this.setState({
-          showModal: false,
+          showModalDelete: false,
           cursoPorEliminar: null
         });
       });
@@ -137,18 +129,48 @@ export class ver_semestre extends React.Component {
     this.fetchCursos();
   }
 
-  showModal(curso) {
-    this.setState({ showModal: true, cursoPorEliminar: curso });
+  showModalAdd() {
+    this.setState({ showModalAdd: true});
   }
 
-  handleCancel() {
-    this.setState({ showModal: false, cursoPorEliminar: null });
+  showModalDelete(curso) {
+    this.setState({ 
+      showModalDelete: true, 
+      cursoPorEliminar: curso,
+      deleteModalMsg: `¿Está seguro que desea eliminar el curso: ${curso.ramo}-${curso.seccion}  ${curso.nombre}?`
+    });
+  }
+  showModalEdit(curso) {
+    this.setState({ 
+      showModalEdit: true, 
+      cursoPorEditar: curso
+    });
+  }
+
+  handleCancelAdd(){
+    this.setState({ showModalAdd: false});
+  }
+  handleCancelEdit(){
+    this.setState({ showModalEdit: false, cursoPorEditar: null});
+  }
+  handleAdd(){
+    this.setState({ showModalAdd: false});
+    this.fetchCursos();
+  }
+
+  handleEdit(){
+    this.setState({ showModalEdit: false,cursoPorEditar:null});
+    this.fetchCursos();
+  }
+
+  handleCancelDelete() {
+    this.setState({ showModalDelete: false, cursoPorEliminar: null });
   }
   handle_search(){
     const busqueda= this.state.search;
     const Cursos= this.state.cursos;
     const cursos_buscados= Cursos.filter(o=>
-      (o.ramo.toString()+" " + o.nombre.toString() + "Sección " + o.seccion.toString()+"Seccion " + o.seccion.toString()).includes(busqueda)
+      (o.ramo.toString().toLowerCase()+" " + o.nombre.toString().toLowerCase() + "sección " + o.seccion.toString().toLowerCase()+"seccion " + o.seccion.toString().toLowerCase()).includes(busqueda.toLowerCase())
     );
     console.log("Buscados")
     console.log(cursos_buscados)
@@ -161,16 +183,35 @@ export class ver_semestre extends React.Component {
 
   render(){
     const { ano, semestre } = this.props.match.params;
-    const path= this.props.match.url
+    // const path= this.props.match.url
 
     return(
           <main>
           <DeleteModal
-            msg={this.deleteModalMsg}
-            show={this.state.showModal}
-            handleCancel={() => this.handleCancel()}
+            msg={this.state.deleteModalMsg}
+            show={this.state.showModalDelete}
+            handleCancel={() => this.handleCancelDelete()}
             handleDelete={() => this.handleDelete()}
           />
+           <NuevoCurso
+          show_form={this.state.showModalAdd} 
+          handleCancel={() => this.handleCancelAdd()}
+          handleAdd={() => this.handleAdd()}
+          periodo={semestre}
+          año={ano}
+        />
+
+        {this.state.showModalEdit &&
+          <EditarCurso
+          show_form={this.state.showModalEdit} 
+          handleCancel={() => this.handleCancelEdit()}
+          handleEdit={() => this.handleEdit()}
+          curso={this.state.cursoPorEditar}
+          periodo={semestre}
+          año={ano}
+          seccion={this.state.cursoPorEditar.seccion}
+          codigo={this.state.cursoPorEditar.ramo}
+          />}
           <Container>
           <Container>
             <ViewTitle>
@@ -193,9 +234,8 @@ export class ver_semestre extends React.Component {
               <Button  className="btn btn-primary float-right">Exportar Semestre</Button>
             </Col>
               <Col xs="auto">
-                <Link to={path + "nuevo_curso/"}>
-                  <Button className="btn btn-primary float-right">Nuevo Curso</Button>
-                </Link>
+
+                  <Button className="btn btn-primary float-right" onClick={()=>this.showModalAdd()}>Nuevo Curso</Button>
               </Col>
             </Row>
             {this.state.MostrarCursos.map(curso => (
@@ -205,17 +245,14 @@ export class ver_semestre extends React.Component {
                 nombre={curso.nombre}
                 seccion={curso.seccion}
                 codigo={curso.ramo}
-                showModal={() => this.showModal(curso)}
+                showModalDelete={() => this.showModalDelete(curso)}
+                showModalEdit={() => this.showModalEdit(curso)}
                 semestre_malla={curso.semestre_malla}
                 profesor={curso.profesor}
                 />
             ))}  
 
           </Container>
-
-          <LinkContainer  to="/semestres/"  >
-              <button className="btn btn-secondary" >Volver a Semestres</button>
-          </LinkContainer>
           </Container>
         </main>
         );
