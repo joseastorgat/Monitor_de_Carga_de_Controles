@@ -27,9 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -146,3 +144,8 @@ CORS_ORIGIN_WHITELIST = [
     "http://127.0.0.1:8000",
     "https://ucalendar.dcc.uchile.cl"
 ]
+
+
+if "MCC" in os.environ and os.environ["MCC"] == "production":
+    from .production_settings import *
+    
