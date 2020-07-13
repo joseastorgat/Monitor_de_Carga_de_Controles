@@ -63,9 +63,18 @@ class CursoDetailSerializer(serializers.ModelSerializer):
 
 
 class CalendarioSerializer(serializers.ModelSerializer):
+    semestre = serializers.SerializerMethodField(read_only=True)
+
+    def get_semestre(self, obj):
+        if obj.cursos.all():
+            return obj.cursos.all()[0].semestre.pk
+        return None
+
     class Meta:
         model = Calendario
-        fields = '__all__'
+        fields = ['token', 'fecha_creacion','nombre','cursos', 'semestre']
+
+        
 
 
 class NuevoCalendarioSerializer(serializers.ModelSerializer):
