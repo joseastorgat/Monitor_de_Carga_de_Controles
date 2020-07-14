@@ -176,6 +176,9 @@ export class lista_semestre extends React.Component {
                   </InputGroup>
                 </Form>
               </Col>
+              <Col md={3}>
+                  <Button href={process.env.PUBLIC_URL + '/template.xlsx'} download="template.xlsx" target="_blank" >Descargar Template Excel</Button>
+              </Col>
               <Col>
                   <Button className="btn btn-primary float-right" onClick={() => this.showModalAdd()}>Nuevo Semestre</Button>
               </Col>
