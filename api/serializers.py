@@ -10,13 +10,13 @@ class SemestreSerializer(serializers.ModelSerializer):
 
 
 class SemestreClonarSerializer(serializers.Serializer):
-    año= serializers.IntegerField()
-    inicio= serializers.DateField()
-    fin= serializers.DateField()
-    periodo= serializers.IntegerField()
-    estado= serializers.IntegerField()
-    from_año= serializers.IntegerField()
-    from_periodo= serializers.IntegerField()
+    año = serializers.IntegerField()
+    inicio = serializers.DateField()
+    fin = serializers.DateField()
+    periodo = serializers.IntegerField()
+    estado = serializers.IntegerField()
+    from_año = serializers.IntegerField()
+    from_periodo = serializers.IntegerField()
 
 
 class SemestreFileSerializer(serializers.Serializer):
@@ -59,13 +59,21 @@ class CursoDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Curso
-        fields = ['id', 'ramo', 'nombre', 'seccion', 'semestre_malla', 'profesor', ]
+        fields = ['id', 'ramo', 'nombre', 'seccion',
+                  'semestre_malla', 'profesor', ]
 
 
 class CalendarioSerializer(serializers.ModelSerializer):
+    semestre = serializers.SerializerMethodField(read_only=True)
+
+    def get_semestre(self, obj):
+        if obj.cursos.all():
+            return obj.cursos.all()[0].semestre.pk
+        return None
+
     class Meta:
         model = Calendario
-        fields = '__all__'
+        fields = ['token', 'fecha_creacion', 'nombre', 'cursos', 'semestre']
 
 
 class NuevoCalendarioSerializer(serializers.ModelSerializer):
@@ -116,16 +124,5 @@ class EvaluacionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Evaluacion
-        fields = ['id', 'fecha', 'tipo', 'titulo', 'curso', 'seccion', 'nombre_curso', 'codigo', 'semana', 'dia']
-
-
-
-# class Calendario_CursoSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model=Calendario_Curso
-#         fields='__all__'
-
-# class Curso_ProfesorSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model=Curso_Profesor
-#         fields='__all__'
+        fields = ['id', 'fecha', 'tipo', 'titulo', 'curso',
+                  'seccion', 'nombre_curso', 'codigo', 'semana', 'dia']
