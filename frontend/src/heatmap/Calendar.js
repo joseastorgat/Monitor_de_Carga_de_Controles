@@ -11,6 +11,7 @@ import { extendMoment } from 'moment-range';
 import 'moment/locale/es';
 import axios from "axios"; //from "axios";
 import Sidebar from "./CourseSelector";
+import SaveCalendarModal from "./SaveCalendar";
 
 const moment = extendMoment(Moment);
 moment.locale("es");
@@ -20,6 +21,7 @@ export default class Calendar extends React.Component {
     super(props);
     this.state = {
       show_evaluaciones_dia_Modal:false,
+      show_guardar_calendario_Modal: false,
       evaluaciones_dia:[],
       found: true,
       semestre_id: -1,
@@ -160,6 +162,10 @@ export default class Calendar extends React.Component {
   mostrar_fechas_dia(fechas_del_dia,dia,dia_n,semana,color){
     this.showModal_fechas(fechas_del_dia,dia,dia_n,semana,color)
   }
+
+  mostrar_guardar_calendario(){
+    this.showModal_guardar();
+  }
   
   showModal(evaluaciones_del_dia,dia,dia_n,semana,color) {
 
@@ -167,6 +173,9 @@ export default class Calendar extends React.Component {
   }
   showModal_fechas(fechas_del_dia,dia,dia_n,semana,color) {
     this.setState({ show_fechas_dia_Modal: true, fechas_dia: fechas_del_dia, dia_mostrar_modal_fecha:[dia,dia_n,semana,color]})
+  }
+  showModal_guardar(){
+    this.setState({ show_guardar_calendario_Modal: true})
   }
 
   handleCancel() {
@@ -176,6 +185,9 @@ export default class Calendar extends React.Component {
   handleCancel_fechas() {
       this.setState({ show_fechas_dia_Modal: false,  fechas_dia: [] , dia_mostrar_modal_fecha:[]})
   }
+  handleCancel_guardar() {
+    this.setState({ show_guardar_calendario_Modal: false})
+}
 
   render() {
     
@@ -208,12 +220,21 @@ export default class Calendar extends React.Component {
             info={this.state.dia_mostrar_modal_fecha}
           />
         }
+        { this.state.show_guardar_calendario_Modal &&
+          <SaveCalendarModal 
+            show={this.state.show_guardar_calendario_Modal}
+            handleCancel={() => this.handleCancel_guardar()}
+            semestre={this.state.semestre_id}
+            cursos={this.state.courses}
+          />
+        }
         <Row >
         
         <Col xs={9} md={3}>
             <Sidebar 
               courses={courses}
               handleChange={(i, t) => this.handleChange(i, t)}
+              handleGuardar={() => this.mostrar_guardar_calendario()}
             />
         </Col>
         <Col xs="auto" md={7} style={{textAlign:'center'}} >
