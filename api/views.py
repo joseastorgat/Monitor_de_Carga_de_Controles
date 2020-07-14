@@ -286,7 +286,7 @@ class CalendarioViewSet(viewsets.ModelViewSet):
         data['token'] = token
         data['fecha_creacion'] = str(datetime.date.today())
         data['nombre'] = request.data['nombre']
-        data['cursos'] = request.data.getlist('cursos')
+        data['cursos'] =  request.data['cursos']
         serializer = CalendarioSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
