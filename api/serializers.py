@@ -103,7 +103,10 @@ class EvaluacionSerializer(serializers.ModelSerializer):
         fe = Fechas_especiales.objects.filter(inicio__lte=obj.fecha)
         fe = fe.filter(fin__gte=obj.fecha)
         if fe:
-            return 'Evaluación sobre una fecha especial!'
+            res = []
+            for f in fe:
+                res.append(str(f))
+            return res
         else:
             return None
 

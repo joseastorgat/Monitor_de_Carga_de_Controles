@@ -223,6 +223,9 @@ class Fechas_especiales(models.Model):
         # del semestre y cuales no 
         return True
 
+    def __str__(self):
+        return f'{self.nombre}'
+
 
 class Calendario(models.Model):
     fecha_creacion = models.DateField()
