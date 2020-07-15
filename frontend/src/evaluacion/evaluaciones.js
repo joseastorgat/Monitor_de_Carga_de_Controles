@@ -41,6 +41,8 @@ export class evaluaciones extends React.Component {
             fecha: "",
             tipo: "Control",
             titulo: "",
+            fecha_inicio_semestre:"",
+            fecha_fin_semestre:"",
             
             evaluacion_modified: false,
             evaluacion_created: false,
@@ -331,6 +333,7 @@ export class evaluaciones extends React.Component {
 
     async componentDidMount() {
         this.fetchEvaluaciones();
+        this.fetch_semestre();
         var id = this.state.id
         axios.get(process.env.REACT_APP_API_URL + `/evaluaciones/${id}/`)
         .then( (res) => { 
@@ -340,6 +343,17 @@ export class evaluaciones extends React.Component {
                 fecha: res.data.fecha,
                 tipo: res.data.tipo,
                 eliminar_index: -1,
+            })
+        })      
+    }
+    async fetch_semestre(){
+        const {ano,semestre}= this.props.match.params
+        const periodo= semestre==="Otoño"? 1: 2;
+        axios.get(process.env.REACT_APP_API_URL + `/semestres/?año=${ano}&periodo=${periodo}`)
+        .then( (res) => { 
+            this.setState({
+                fecha_inicio_semestre:res.data[0].inicio,
+                fecha_fin_semestre:res.data[0].fin
             })
         })      
     }
@@ -389,7 +403,7 @@ export class evaluaciones extends React.Component {
                                     <label >Fecha</label>
                                 </div>
                                 <div className="col-sm-10" >
-                                    <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha"  value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
+                                    <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha"  value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange} min={this.state.fecha_inicio_semestre} max={this.state.fecha_fin_semestre}/>
                                     <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["fecha"]}</span>
                                 </div>
                             </div>
@@ -450,7 +464,7 @@ export class evaluaciones extends React.Component {
                                     <label >Fecha</label>
                                 </div>
                                 <div className="col-sm-10" >
-                                    <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha" value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
+                                    <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha" value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange} min={this.state.fecha_inicio_semestre} max={this.state.fecha_fin_semestre}/>
                                     <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["fecha"]}</span>
                                 </div>
                             </div>

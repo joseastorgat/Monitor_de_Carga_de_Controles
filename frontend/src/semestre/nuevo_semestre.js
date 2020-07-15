@@ -3,6 +3,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Modal,Col,Row} from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export class nuevosemestre extends React.Component {
     state={
@@ -330,6 +331,7 @@ export class nuevosemestre extends React.Component {
                                     <div className="col-sm-10" >
                                         <input type="file" className="form-control" name="archivo_excel" onChange={this.onFile } />
                                         <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["archivo_excel"]}</span>
+                                        <a href={process.env.PUBLIC_URL + '/template.xlsx'} download="template.xlsx" target="_blank" >Descargar Template</a>
                                     </div>
                                 </div>
                             </Col>

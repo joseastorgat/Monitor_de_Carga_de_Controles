@@ -10,6 +10,7 @@ import {lista_ramos} from "../ramo/index_ramo";
 import {lista_fechas} from "../fechas/index_fecha";
 import {evaluaciones,lista_evaluaciones} from "../evaluacion/index_evaluacion";
 import {lista_profesores} from "../profesor/index_profesor";
+import About from "./About";
 import Calendar from "../heatmap/Calendar";
 import FooterPage from "./Footer";
 import {  Container } from "react-bootstrap";
@@ -99,6 +100,9 @@ export default class Home extends React.Component {
 
           {/* VISTAS DE FECHAS ESPECIALES */}
           <PrivateRoute exact path="/fechas_especiales/" component={lista_fechas} />
+
+           {/* VISTAS DE ABOUT */}
+           <Route exact path="/acerca-de/" component={About} />
 
         </Switch>
       </div>

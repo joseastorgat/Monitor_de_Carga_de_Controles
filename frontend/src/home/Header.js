@@ -29,7 +29,7 @@ class LogedInView extends React.Component {
         </NavLink>
         </LinkContainer>
         <LinkContainer to="/profesores/">
-        <NavLink   eventKey="3">
+        <NavLink eventKey="3">
          
             <h5>Profesores</h5>
           
@@ -49,8 +49,13 @@ class LogedInView extends React.Component {
          
         </NavLink>
         </LinkContainer>
-     <NavDropdown alignRight title={user ? `${user.username}` : ''} >
+     <NavDropdown style={{fontSize:"1.8em !important"}} alignRight title={user ? `${user.username}` : ''} >
+          <NavDropdown.Item > <LinkContainer to="/acerca-de/">
+            <div>Acerca de</div>
+        </LinkContainer></NavDropdown.Item>
+          <NavDropdown.Divider />
           <NavDropdown.Item onClick={logout}>  Cerrar Sesión  </NavDropdown.Item>
+          
       </NavDropdown> 
       </Nav>
       </Navbar.Collapse>
@@ -61,9 +66,14 @@ class LogedInView extends React.Component {
 class LogedOutView extends React.Component {
   render() {
     return (
+      <Nav className="ml-auto" >
+      <LinkContainer to="/acerca-de/">
+      <Nav.Link><h5 style={{color:'white'}}>Acerca de</h5></Nav.Link>
+    </LinkContainer>
       <LinkContainer to="/login/">
-        <Nav.Link><h5 style={{color:'Black'}}>Ingresar</h5></Nav.Link>
+        <Nav.Link><h5 style={{color:'white'}}>Ingresar</h5></Nav.Link>
       </LinkContainer>
+      </Nav>
     );
   }
 }
