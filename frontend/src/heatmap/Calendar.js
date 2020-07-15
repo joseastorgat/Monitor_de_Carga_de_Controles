@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Col,
-  Row,Table,
-  Container,Modal
-} from "react-bootstrap";
-
+import { Col,  Row,Table,  Container,Modal,Alert} from "react-bootstrap";
 import "./Calendar.css";
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
@@ -30,6 +25,7 @@ export default class Calendar extends React.Component {
       inicio: "",
       fin: "",
       courses: [],
+      selectedCourses:[],
       evaluaciones: [],
       evaluaciones_a_mostrar: [],
       fechas_especiales:[],
@@ -45,27 +41,28 @@ export default class Calendar extends React.Component {
 
 
   handleChange(checks, target) {
-
     const courses = this.state.courses.slice();
     const evaluaciones = this.state.evaluaciones.slice();
     let evaluaciones_a_mostrar = this.state.evaluaciones_a_mostrar.slice();
-
+    let selected_courses=this.state.selectedCourses
     checks.forEach(i => {
       if(courses[i].checked !== target){
         courses[i].checked = target !== undefined ? target : !courses[i].checked;
         if(courses[i].checked){
           const evaluaciones_curso = evaluaciones.filter( evaluacion => evaluacion.curso === courses[i].id);
           evaluaciones_a_mostrar = evaluaciones_a_mostrar.concat(evaluaciones_curso);
+          selected_courses.push(courses[i])
         }
         else{
           evaluaciones_a_mostrar = evaluaciones_a_mostrar.filter(evaluacion => evaluacion.curso !== courses[i].id);
+          selected_courses = selected_courses.filter(course => course.ramo !== courses[i].ramo);
         }
       }
     });
 
     const dias = evaluaciones_a_mostrar.map(evaluacion => evaluacion.fecha);
 
-    this.setState({ courses: courses, evaluaciones_a_mostrar: evaluaciones_a_mostrar, dias: dias});
+    this.setState({ courses: courses, evaluaciones_a_mostrar: evaluaciones_a_mostrar, dias: dias, selectedCourses:selected_courses});
   }
 
   async componentDidMount() {
@@ -320,6 +317,16 @@ export default class Calendar extends React.Component {
             </Col>
 
          
+        </Row>
+        <Row>
+          <Col>
+            <Alert variant="secondary" >
+              <h5>Cursos Seleccionados</h5>
+              <ul>
+              {this.state.selectedCourses.map( (course, i) => (<li>{course.ramo}-{course.seccion} {course.nombre}</li>))}
+              </ul>
+            </Alert>
+          </Col>
         </Row>
       </Container>
     );
