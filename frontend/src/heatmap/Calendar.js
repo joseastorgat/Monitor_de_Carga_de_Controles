@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  Col,
-  Row,Table,
-  Container,Modal,Alert
-} from "react-bootstrap";
+import { Col,  Row,Table,  Container,Modal,Alert} from "react-bootstrap";
 import "./Calendar.css";
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
@@ -45,29 +41,28 @@ export default class Calendar extends React.Component {
 
 
   handleChange(checks, target) {
-    console.log(checks)
     const courses = this.state.courses.slice();
     const evaluaciones = this.state.evaluaciones.slice();
     let evaluaciones_a_mostrar = this.state.evaluaciones_a_mostrar.slice();
-    let selected_couses=this.state.selectedCourses
+    let selected_courses=this.state.selectedCourses
     checks.forEach(i => {
       if(courses[i].checked !== target){
         courses[i].checked = target !== undefined ? target : !courses[i].checked;
         if(courses[i].checked){
           const evaluaciones_curso = evaluaciones.filter( evaluacion => evaluacion.curso === courses[i].id);
           evaluaciones_a_mostrar = evaluaciones_a_mostrar.concat(evaluaciones_curso);
-          selected_couses.push(courses[i])
+          selected_courses.push(courses[i])
         }
         else{
           evaluaciones_a_mostrar = evaluaciones_a_mostrar.filter(evaluacion => evaluacion.curso !== courses[i].id);
-          selected_couses = selected_couses.filter(course => course.ramo !== courses[i].ramo);
+          selected_courses = selected_courses.filter(course => course.ramo !== courses[i].ramo);
         }
       }
     });
 
     const dias = evaluaciones_a_mostrar.map(evaluacion => evaluacion.fecha);
 
-    this.setState({ courses: courses, evaluaciones_a_mostrar: evaluaciones_a_mostrar, dias: dias, selectedCourses:selected_couses});
+    this.setState({ courses: courses, evaluaciones_a_mostrar: evaluaciones_a_mostrar, dias: dias, selectedCourses:selected_courses});
   }
 
   async componentDidMount() {

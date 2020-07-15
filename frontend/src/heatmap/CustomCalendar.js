@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  Col,
-  Row,Table,
-  Container,Modal
-} from "react-bootstrap";
+import {  Col,  Row,Table,  Container,Modal,Alert} from "react-bootstrap";
 
 import "./Calendar.css";
 import Moment from 'moment';
@@ -32,6 +28,7 @@ export default class CustomCalendar extends React.Component {
       inicio: "",
       fin: "",
       courses: [],
+      selectedCourses:[],
       evaluaciones: [],
       evaluaciones_a_mostrar: [],
       fechas_especiales:[],
@@ -51,6 +48,8 @@ export default class CustomCalendar extends React.Component {
     const courses = this.state.courses.slice();
     const evaluaciones = this.state.evaluaciones.slice();
     let evaluaciones_a_mostrar = this.state.evaluaciones_a_mostrar.slice();
+    let selected_courses=this.state.selectedCourses
+    console.log(this.state.selectedCourses)
 
     checks.forEach(i => {
       if(courses[i].checked !== target){
@@ -58,16 +57,18 @@ export default class CustomCalendar extends React.Component {
         if(courses[i].checked){
           const evaluaciones_curso = evaluaciones.filter( evaluacion => evaluacion.curso === courses[i].id);
           evaluaciones_a_mostrar = evaluaciones_a_mostrar.concat(evaluaciones_curso);
+          selected_courses.push(courses[i])
         }
         else{
           evaluaciones_a_mostrar = evaluaciones_a_mostrar.filter(evaluacion => evaluacion.curso !== courses[i].id);
+          selected_courses = selected_courses.filter(course => course.ramo !== courses[i].ramo);
         }
       }
     });
 
     const dias = evaluaciones_a_mostrar.map(evaluacion => evaluacion.fecha);
 
-    this.setState({ courses: courses, evaluaciones_a_mostrar: evaluaciones_a_mostrar, dias: dias});
+    this.setState({ courses: courses, evaluaciones_a_mostrar: evaluaciones_a_mostrar, dias: dias,selectedCourses:selected_courses});
   }
 
   async componentDidMount() {
@@ -148,8 +149,6 @@ export default class CustomCalendar extends React.Component {
         process.env.REACT_APP_API_URL + `/semestres/${semestre_id}/evaluaciones/`
       ).then(res => res.json());
       
-      console.log(coursesPre)
-      console.log(selected_courses)
       let courses = coursesPre.map( (course, i) => 
       (
         { 
@@ -157,6 +156,11 @@ export default class CustomCalendar extends React.Component {
           checked: selected_courses.some(c => c === course.id) ? true : false
         })
       );
+      
+      let selected_courses_list = [];
+      selected_courses.forEach(i => {
+          selected_courses_list.push(coursesPre.filter(c=> c.id==i)[0])
+        })
 
       let evaluaciones_a_mostrar = []
       courses.forEach(c =>{
@@ -167,7 +171,7 @@ export default class CustomCalendar extends React.Component {
       )
 
       this.setState({evaluaciones_a_mostrar: evaluaciones_a_mostrar})
-      this.setState({ courses: courses, evaluaciones: evaluaciones,fechas_especiales:fechas_especiales});
+      this.setState({ courses: courses, evaluaciones: evaluaciones,fechas_especiales:fechas_especiales,selectedCourses:selected_courses_list});
       }
     }
   
@@ -347,9 +351,19 @@ export default class CustomCalendar extends React.Component {
               </tr>
               </tbody>
             </Table>
-            </Col>
-
-         
+            </Col>         
+        </Row>
+        <Row>
+          <Col>
+            <Alert variant="secondary" >
+              <h5>Cursos Seleccionados</h5>
+              <ul>{
+                console.log(this.state.selectedCourses)
+              }
+              {this.state.selectedCourses.map( (course, i) => (<li>{course.ramo}-{course.seccion} {course.nombre}</li>))}
+              </ul>
+            </Alert>
+          </Col>
         </Row>
       </Container>
     );
