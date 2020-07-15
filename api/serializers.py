@@ -94,9 +94,18 @@ class EvaluacionSerializer(serializers.ModelSerializer):
     nombre_curso = serializers.SerializerMethodField(read_only=True)
     codigo = serializers.SerializerMethodField(read_only=True)
     seccion = serializers.SerializerMethodField(read_only=True)
+    warning = serializers.SerializerMethodField(read_only=True)
 
     def get_seccion(self, obj):
         return obj.curso.seccion
+    
+    def get_warning(self, obj):
+        fe = Fechas_especiales.objects.filter(inicio__lte=obj.fecha)
+        fe = fe.filter(fin__gte=obj.fecha)
+        if fe:
+            return 'Evaluación sobre una fecha especial!'
+        else:
+            return None
 
     def get_semana_obj(self, obj):
         current = obj.fecha
@@ -125,4 +134,4 @@ class EvaluacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evaluacion
         fields = ['id', 'fecha', 'tipo', 'titulo', 'curso',
-                  'seccion', 'nombre_curso', 'codigo', 'semana', 'dia']
+                  'seccion', 'nombre_curso', 'codigo', 'semana', 'dia', 'warning']

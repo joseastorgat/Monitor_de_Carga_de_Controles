@@ -37,7 +37,6 @@ completar un semestre ya existente?'
                 fin=semester['finish'],
                 periodo=semester['period'], estado=3)
         # ingresar cada curso al semestre
-        raise Exception
         for curso in semester["cursos"]:
             # hacer filtro por código de ramo, para evitar confución de nombre
             ramo = Ramo.objects.filter(codigo=curso['codigo'])
