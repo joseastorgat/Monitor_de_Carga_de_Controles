@@ -188,3 +188,15 @@ footer {
     background-color:#dc3545;
     color:black;
 }
+
+.block{
+    text-align:center;
+    background-color:lightgray;
+}
+    
+ /* ========================== About =============================== */
+.list{
+    text-align: left;
+    display:inline-block;
+    list-style: none;
+}
