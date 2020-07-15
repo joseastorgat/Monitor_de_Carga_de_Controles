@@ -85,14 +85,15 @@ de datos, se ha agregado una nueva entrada para {prof}')
                 eval_inst = Evaluacion.objects.filter(
                     titulo=eval['titulo'],
                     curso=curso_inst)
-                if level == EVALS:
-                    if eval_inst:
+                if eval_inst:
+                    if level == EVALS:
                         response['warning'].append(
                             f'{eval} ya existente, no agregada')
-                    else:
-                        eval_inst = Evaluacion.objects.create(
-                            fecha=eval['fecha'], tipo=eval['tipo'], titulo=eval['titulo'],
-                            curso=curso_inst)
+                else:
+                    eval_inst = Evaluacion.objects.create(
+                        fecha=eval['fecha'], tipo=eval['tipo'], titulo=eval['titulo'],
+                        curso=curso_inst)
+                    if level == EVALS:
                         response['eval status'].append(
                                 f'{eval_inst} agregada correctamente')
         response['status'] = "Todo correcto!"
