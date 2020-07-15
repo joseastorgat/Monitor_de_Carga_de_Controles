@@ -8,6 +8,7 @@ FULL = 1
 
 
 def create_semester(semester, level=EVALS):
+    semester, errores = semester
     # response vacio, solo con warnings
     response = {'warning': []}
     response['prof status'] = []
@@ -92,6 +93,7 @@ de datos, se ha agregado una nueva entrada para {prof}')
         print(e)
         response['status'] = 'Error no identificado, se ha detenido\
  la carga del semestre en un punto indeterminado'
+    response['errores'] = errores
     return response
     # return {'status': 'Semestre creado!'}
 
