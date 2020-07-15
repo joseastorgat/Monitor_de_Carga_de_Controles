@@ -131,7 +131,7 @@ export default class Sidebar extends React.Component {
       }
 
     render() {
-      const { courses, handleChange} = this.props;
+      const { courses, handleChange, handleGuardar} = this.props;
       return (
         <Alert variant="secondary" >
           <h4>Seleccione Cursos</h4>
@@ -153,7 +153,7 @@ export default class Sidebar extends React.Component {
         <Row></Row><Row></Row>
         <Row></Row>
          <Row className="justify-content-md-center"> 
-          <Button >Guardar Calendario</Button>
+          <Button onClick={() => handleGuardar()}>Guardar Calendario</Button>
           </Row>
         </Alert>
       );
