@@ -1,18 +1,24 @@
 import React from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button,Row,Col,Modal} from "react-bootstrap";
+import OptionButton from "../common/OptionButton";
 import axios from "axios"; //from "axios";
+import { Clippy} from "@primer/octicons-react";
 export default  class SaveCalendarModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             nombre: "",
+            token: "",
             cursos: this.props.cursos.filter(c => c.checked),
             semestre: this.props.semestre,
             form_errors: {},
             errors_checked: {},
+            coppied: false,
 
             calendario_created: false
         }
+        // this.url = React.createRef()
+        // this.button = React.createRef()
     }
 
     onChange = e => {
@@ -57,6 +63,8 @@ export default  class SaveCalendarModal extends React.Component {
 				this.setState({"calendario_created": true});
                 this.setState({
                     nombre: "",
+                    calendario_created: true,
+                    token: res.data.token,
                     cursos: [],
                     form_errors: {},
                     errors_checked: {},
@@ -75,34 +83,65 @@ export default  class SaveCalendarModal extends React.Component {
 
                 })
 		});
-	};
+  };
+  
+  copyText = () =>{
+    if(!this.state.coppied){
+      var aux = document.createElement("input");
+      aux.setAttribute("value", window.location.origin + "/calendario/" + this.state.token + "/");
+      document.body.appendChild(aux);
+      aux.select();
+      document.execCommand("copy");
+      document.body.removeChild(aux);
+      
+      this.setState({
+        coppied: true
+      })
+    }
+    
+
+  }
 
     render() {
-        
       const { show, handleCancel, handleGuardar} = this.props;
       const divStyle = {
         backgroundColor: "blue",
         color:"white"
       };
       return (
-        <Modal transparent={true} size="x" centered show={show} onHide={() => handleCancel()} className="modal_calendar">
-          <Modal.Header style={divStyle} className="header-add" closeButton>
+        <Modal transparent={true} size="" centered show={show} onHide={() => handleCancel()} >
+          <Modal.Header  className="header-add" closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-              <h6>Guardar Calendario</h6>
+              Guardar Calendario
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-                <div class="col-sm-6" >
+              <Row>
+                <Col xs="auto">
                     <label >Nombre <font color="red">*</font> </label>
-                </div>
-                <div class="col-sm-9" >
+                </Col>
+                <Col lg={9} xs={12}>
                     <input type="text" className="form-control" name="nombre" onChange={this.onChange} style={{textAlignLast:'center'}} />
-                </div>
+                </Col>
+              </Row>
 
-                <div class="col-sm-6" >
-                    <label> (<font color="red">*</font>) No ingresar nombre generará un nombre aleatorio para el calendario </label>
-                </div>
-          
+                <Col>
+                    {/* <label> <span style={{fontSize:"14px"}}>(<font color="red">*</font>) No ingresar nombre generará un nombre aleatorio para el calendario </span></label> */}
+                </Col>
+
+                {this.state.calendario_created &&
+                <Row>
+                    <Col xs={2}>
+                        <label >url </label>
+                    </Col>
+                    <Col lg={9} xs={12}>
+                        <input type="text"  className="form-control" value={window.location.origin + "/calendario/" + this.state.token + "/"} name="url" onChange={this.onChange} style={{textAlignLast:'center'}} readOnly="readOnly"/>
+                        <OptionButton icon={Clippy} description={this.state.coppied ? "Copiado!!": "Copiar"} onClick={() => this.copyText()} last={true}  />
+                    </Col>
+  
+                </Row>
+                }
+
           </Modal.Body>
           <Modal.Footer>
             <div class="w-100" >
