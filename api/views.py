@@ -46,9 +46,13 @@ class SemestreViewSet(viewsets.ModelViewSet):
         # print(request.query_params)
         serializer = SemestreClonarSerializer(data=request.data)
         if serializer.is_valid():
-            clonar_semestre(serializer.validated_data)
-            return Response({'status': 'clonado'})
-        return Response({'status': 'info no valida :C'})
+            new_sem, errors = clonar_semestre(serializer.validated_data)
+            if errors:
+                return Response(errors, status=status.HTTP_206_PARTIAL_CONTENT)
+            else:
+                serializer_sem = SemestreSerializer(new_sem)
+                return Response(serializer_sem.data, status=status.HTTP_201_CREATED)
+        return Response({'status': 'info no valida :C'}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['get'],
             permission_classes=[permissions.IsAuthenticatedOrReadOnly])
@@ -98,7 +102,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
                 return response['status'], status.HTTP_500_INTERNAL_SERVER_ERROR
             if response['status_warning']:
                 return response, status.HTTP_304_NOT_MODIFIED
-            return response, status.HTTP_200_OK
+            return response, status.HTTP_201_CREATED
         else:
             return serializer.errors, status.HTTP_400_BAD_REQUEST
 
@@ -111,7 +115,8 @@ class SemestreViewSet(viewsets.ModelViewSet):
         '''
         Crear semestre mediante archivo excel xlsx
         '''
-        response, status = self.from_xlsx_std(create_full_semester, request.data)
+        response, status = self.from_xlsx_std(
+            create_full_semester, request.data)
         return Response(response, status=status)
 
     @action(detail=False,
@@ -123,7 +128,8 @@ class SemestreViewSet(viewsets.ModelViewSet):
         '''
         Crear semestre mediante archivo excel xlsx
         '''
-        response, status = self.from_xlsx_std(add_courses_to_semester, request.data)
+        response, status = self.from_xlsx_std(
+            add_courses_to_semester, request.data)
         return Response(response, status=status)
 
     @action(detail=False,
@@ -135,8 +141,10 @@ class SemestreViewSet(viewsets.ModelViewSet):
         '''
         Crear semestre mediante archivo excel xlsx
         '''
-        response, status = self.from_xlsx_std(add_evals_to_semester, request.data)
+        response, status = self.from_xlsx_std(
+            add_evals_to_semester, request.data)
         return Response(response, status=status)
+
 
 class EvaluationViewSet(viewsets.ModelViewSet):
     """
