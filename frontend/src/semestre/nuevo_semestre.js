@@ -63,15 +63,15 @@ export class nuevosemestre extends React.Component {
         console.log(clonar_semestre, subir_archivo);
         if(e === "clonar"){
             this.setState({
-                clonar_semestre: !clonar_semestre,
-                subir_archivo: false,
+                clonar: !clonar_semestre,
+                archivo: false,
                 required: clonar_semestre? "required" : ""
             })
         }
         else{
             this.setState({
-                subir_archivo: !subir_archivo,
-                clonar_semestre: false,
+                archivo: !subir_archivo,
+                clonar: false,
                 required: subir_archivo? "required" : "",
                 form_errors: {},
                 errors_checked: {},
@@ -203,18 +203,21 @@ export class nuevosemestre extends React.Component {
                     };
 
                 url += "clonar/";
-                this.setState({"clonando_semestre": true});
+                this.setState({clonar_procesando: true});
                   
                 axios(options)
                 .then( (res) => {
-                    this.setState({"semestre_cloned": true,  "clonando_semestre": false});
+                    this.setState({clonar_listo: true,  clonar_procesando: false});
                 })
                 .catch( (err) =>{
                     console.log(err);
                     console.log("No se pudo clonar semestre");
-                    alert("No se pudo clonar semestre!");
-                  } )
+                    this.setState({clonar_error: true, clonar_error_msg: String(err), clonar_procesando: false});
                     
+                  } )
+                
+                return;
+
               }
               
               
@@ -319,7 +322,7 @@ export class nuevosemestre extends React.Component {
         else if(this.state.archivo_procesando){
             body = (
                 <div>
-                <h2> Estamos procesando el archivo de semestre, espera un poco porfavor</h2>
+                <h2> Estamos procesando el archivo de semestre, espere un poco porfavor</h2>
                 </div>
             );
         }
@@ -338,11 +341,42 @@ export class nuevosemestre extends React.Component {
                 </div>
             );
         }
-        
 
-        
+        else if(this.state.clonar_listo){
 
+            body = (
+                <div>
+                <h2> Semestre Clonado exitosamente</h2>
+                <div className="form-group" style={{'marginTop':"4rem"}}>
+                    <button className="btn btn-success" type="button" onClick={() => {this.sacar_pop_up()}}>Ok</button>
+                </div>
+                </div>
+            );
+        }
 
+        else if(this.state.clonar_procesando){
+            body = (
+                <div>
+                <h2> Estamos clonando el semestre seleccionado, espere un poco porfavor</h2>
+                </div>
+            );
+        }
+
+        else if(this.state.clonar_error){
+            body = (
+                <div>
+                <h2> Hubo un error al clonar el semestre</h2>
+                
+                {this.state.clonar_error_msg}
+                
+                <div className="form-group" style={{'marginTop':"4rem"}}>
+                    <button className="btn btn-danger" type="button" onClick={() => {this.sacar_pop_up()}}>Ok</button>
+                    <button className="btn btn-primary" type="button" onClick={() => {this.setState({clonar_error: false});}}>Probar denuevo</button>
+                </div>
+                </div>
+            );
+        }
+    
         else{
 
             body = (
@@ -435,7 +469,7 @@ export class nuevosemestre extends React.Component {
                         </Col>
                         <Col>
                             <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
-                                <input type="radio" id="archivo_excel" name="archivo" className="custom-control-input" checked={this.state.archivo} onClick={e => this.onSelect("subir")} />
+                                <input type="radio" id="archivo_excel" name="archivo" className="custom-control-input" checked={this.state.archivo} onClick={e => this.onSelect("archivo")} />
                                 <label className="custom-control-label" htmlFor="archivo_excel" >Subir desde archivo</label>
                                 
                                 <div className="col-sm-10" >
