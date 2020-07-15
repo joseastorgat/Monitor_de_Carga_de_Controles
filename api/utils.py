@@ -39,7 +39,7 @@ completar un semestre ya existente?'}
             if not ramo:
                 # si el ramo no existe, se crea uno nuevo, se agrega al response
                 ramo = Ramo.objects.create(
-                    nombre=curso['nombre_ramo'], codigo=curso['codigo'],
+                    nombre=curso['nombre'], codigo=curso['codigo'],
                     semestre_malla=curso['semestre_malla'])
                 response['ramos status'].append(
                     f'{ramo} agregado a la base de datos de ramos.')
@@ -78,16 +78,19 @@ no agregada.')
 de datos, se ha agregado una nueva entrada para {prof}')
                 curso_inst.profesor.add(prof)
             for eval in curso['evaluaciones']:
-                eval_inst, eval_is_created = Evaluacion.objects.get_or_create(
-                    fecha=eval['fecha'], tipo=eval['tipo'], titulo=eval['titulo'],
+                eval_inst = Evaluacion.objects.filter(
+                    titulo=eval['titulo'],
                     curso=curso_inst)
                 if level == EVALS:
-                    if eval_is_created:
-                        response['eval status'].append(
-                            f'{eval_inst} agregada correctamente')
-                    else:
+                    if eval_inst:
                         response['warning'].append(
-                            f'{eval_inst} ya existente, no agregada')
+                            f'{eval} ya existente, no agregada')
+                    else:
+                        eval_inst = Evaluacion.objects.create(
+                            fecha=eval['fecha'], tipo=eval['tipo'], titulo=eval['titulo'],
+                            curso=curso_inst)
+                        response['eval status'].append(
+                                f'{eval_inst} agregada correctamente')
         response['status'] = "Todo correcto!"
     except Exception as e:
         print(e)
