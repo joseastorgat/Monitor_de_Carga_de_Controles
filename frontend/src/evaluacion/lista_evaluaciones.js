@@ -25,7 +25,7 @@ export class lista_evaluaciones extends React.Component {
         MostrarEvaluaciones: [],
         MostrarSemestres: [],
         MostrarCursos: [],
-        semestre_busqueda:"",
+        semestre_busqueda:null,
         curso_busqueda:"",
         search: false
       };
@@ -41,6 +41,7 @@ export class lista_evaluaciones extends React.Component {
         [e.target.name]: 
         e.target.value
       })
+      if(e.target.value != ""){
       console.log("Fetching Cursos...")      
       axios.get(process.env.REACT_APP_API_URL + `/semestres/${e.target.value}/cursos/`)
       .then(response => {
@@ -51,6 +52,13 @@ export class lista_evaluaciones extends React.Component {
               MostrarCursos: response.data
             })
           })
+      }
+      else{
+        this.setState({
+          cursos: [],
+          MostrarCursos:[]
+        })
+      }
   };
     onChange_Curso = (e) => {  
         this.setState({
@@ -61,13 +69,13 @@ export class lista_evaluaciones extends React.Component {
 
     async fetchEvaluaciones() {
       console.log("Fetching Evaluaciones ...")
+      let id_semestre=this.state.semestre_busqueda.toString();
       let url
       var curso=this.state.curso_busqueda.split("-")[0]
-      if (curso===0){//Traer todas las evaluaciones de ese semestre
-        url=process.env.REACT_APP_API_URL + `/semestres/${this.state.semestre_busqueda}/evaluaciones/`;
+      if (curso==='0'){//Traer todas las evaluaciones de ese semestre
+        url=process.env.REACT_APP_API_URL + `/semestres/${id_semestre}/evaluaciones/`;
       }
       else{
-        console.log(curso)
         url=process.env.REACT_APP_API_URL + `/cursos/${curso}/evaluaciones/`;
       }
       await fetch(url)
@@ -231,20 +239,22 @@ export class lista_evaluaciones extends React.Component {
                 handleCancel={() => this.handleCancel()}
                 handleDelete={() => this.handleDelete()}
                 />}
-
+                {this.state.showModalAdd &&
                 <NuevaEvaluacion
                     show_form={this.state.showModalAdd} 
                     handleCancel={() => this.handleCancelAdd()}
                     handleAdd={() => this.handleAdd()}
                     cursos={this.state.cursos}
                     curso_seleccionado={this.state.curso_busqueda}
-                />
+                    semestre={this.state.semestre_busqueda}
+                />}
                 {this.state.showModalEdit &&
                 <EditarEvaluacion
                     show_form={this.state.showModalEdit} 
                     handleCancel={() => this.handleCancelEdit()}
                     handleEdit={() => this.handleEdit()}
                     evaluacion={this.state.evaluacionPorEditar}
+                    semestre={this.state.semestre_busqueda}
                 />}
 
                 <Container>
