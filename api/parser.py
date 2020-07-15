@@ -12,7 +12,7 @@ def parse_date(date, errores, pos):
             if date.rfind('/') >= 0:
                 dia, mes, año = date.split('/')
             elif date.rfind('-') >= 0:
-                dia, mes, año = date.split('/')
+                dia, mes, año = date.split('-')
             else:
                 raise Exception
         elif type(date) is datetime.datetime:
