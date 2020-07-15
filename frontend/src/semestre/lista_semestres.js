@@ -150,6 +150,7 @@ export class lista_semestre extends React.Component {
           show_form={this.state.showModalAdd} 
           handleCancel={() => this.handleCancelAdd()}
           handleAdd={() => this.handleAdd()}
+          semestres={this.state.semestres}
           />
           
           {this.state.showModalEdit &&
