@@ -35,6 +35,9 @@ export default  class SaveCalendarModal extends React.Component {
 
     handleGuardar = () => {
         console.log("post calendario ...")
+        if(this.state.cursos.length === 0){
+          return 
+        }
         // if(!this.validateForm()){
         //     return;
         // }
@@ -116,28 +119,32 @@ export default  class SaveCalendarModal extends React.Component {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
+              {
+                this.state.calendario_created && !this.state.already_created &&
+                <label> <span style={{color:"green", fontSize:"13px"}}>¡Calendario creado exitosamente!</span> </label>
+              }
+              {
+                this.state.cursos.length === 0 && !this.state.calendario_created &&
+                <label> <span style={{color:"red", fontSize:"13px"}}>Se debe seleccionar al menos un curso para guardar el calendario</span> </label>
+              }
               <Row>
                 <Col xs="auto">
-                    <label >Nombre <font color="red">*</font> </label>
+                    <label >Nombre <span style={{color:"red"}}>*</span> </label>
                 </Col>
-                <Col lg={9} xs={12}>
+                <Col lg={8} xs={12}>
                     <input type="text" className="form-control" name="nombre" onChange={this.onChange} style={{textAlignLast:'center'}} />
                 </Col>
               </Row>
 
-                <Col>
-                    {/* <label> <span style={{fontSize:"14px"}}>(<font color="red">*</font>) No ingresar nombre generará un nombre aleatorio para el calendario </span></label> */}
-                </Col>
-
                 {this.state.calendario_created &&
                 <Row>
                     <Col xs={2}>
-                        <label >url </label>
+                        <label >Url </label>
                     </Col>
-                    <Col lg={9} xs={12}>
+                    <Col lg={8} xs={12}>
                         <input type="text"  className="form-control" value={window.location.origin + "/calendario/" + this.state.token + "/"} name="url" onChange={this.onChange} style={{textAlignLast:'center'}} readOnly="readOnly"/>
-                        <OptionButton icon={Clippy} description={this.state.coppied ? "Copiado!!": "Copiar"} onClick={() => this.copyText()} last={true}  />
                     </Col>
+                    <Col lg={1} ><OptionButton icon={Clippy} description={this.state.coppied ? "Copiado!!": "Copiar"} onClick={() => this.copyText()} last={true}  /></Col>
   
                 </Row>
                 }
