@@ -14,6 +14,8 @@ def create_semester(semester, level=EVALS):
     response['prof status'] = []
     response['curso status'] = []
     response['ramos status'] = []
+    response['status_error'] = 0
+    response['status_warning'] = 0
     try:
         if level == EVALS:
             response['eval status'] = []
@@ -22,8 +24,10 @@ def create_semester(semester, level=EVALS):
             año=semester['year'], periodo=semester['period'])
         if sem:
             if level == FULL:  # si se quiere crear un semestre totalmente nuevo, pero ya está.
-                return {'status': 'Semestre ya existe en base de datos. ¿Desea \
-completar un semestre ya existente?'}
+                response['status'] = 'Semestre ya existe en base de datos. ¿Desea \
+completar un semestre ya existente?'
+                response['status_warning'] = 1
+                return response
             else:
                 sem = sem.get()
         # sino, crear un semestre nuevo
@@ -33,6 +37,7 @@ completar un semestre ya existente?'}
                 fin=semester['finish'],
                 periodo=semester['period'], estado=3)
         # ingresar cada curso al semestre
+        raise Exception
         for curso in semester["cursos"]:
             # hacer filtro por código de ramo, para evitar confución de nombre
             ramo = Ramo.objects.filter(codigo=curso['codigo'])
@@ -96,6 +101,10 @@ de datos, se ha agregado una nueva entrada para {prof}')
         print(e)
         response['status'] = 'Error no identificado, se ha detenido\
  la carga del semestre en un punto indeterminado'
+        if level == FULL:
+            sem.delete()
+        response['status_error'] = 1
+        return response
     response['errores'] = errores
     return response
     # return {'status': 'Semestre creado!'}
