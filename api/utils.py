@@ -14,6 +14,8 @@ def create_semester(semester, level=EVALS):
     response['prof status'] = []
     response['curso status'] = []
     response['ramos status'] = []
+    response['status_error'] = 0
+    response['status_warning'] = 0
     try:
         if level == EVALS:
             response['eval status'] = []
@@ -22,8 +24,10 @@ def create_semester(semester, level=EVALS):
             año=semester['year'], periodo=semester['period'])
         if sem:
             if level == FULL:  # si se quiere crear un semestre totalmente nuevo, pero ya está.
-                return {'status': 'Semestre ya existe en base de datos. ¿Desea \
-completar un semestre ya existente?'}
+                response['status'] = 'Semestre ya existe en base de datos. ¿Desea \
+completar un semestre ya existente?'
+                response['status_warning'] = 1
+                return response
             else:
                 sem = sem.get()
         # sino, crear un semestre nuevo
@@ -39,7 +43,7 @@ completar un semestre ya existente?'}
             if not ramo:
                 # si el ramo no existe, se crea uno nuevo, se agrega al response
                 ramo = Ramo.objects.create(
-                    nombre=curso['nombre_ramo'], codigo=curso['codigo'],
+                    nombre=curso['nombre'], codigo=curso['codigo'],
                     semestre_malla=curso['semestre_malla'])
                 response['ramos status'].append(
                     f'{ramo} agregado a la base de datos de ramos.')
@@ -78,21 +82,28 @@ no agregada.')
 de datos, se ha agregado una nueva entrada para {prof}')
                 curso_inst.profesor.add(prof)
             for eval in curso['evaluaciones']:
-                eval_inst, eval_is_created = Evaluacion.objects.get_or_create(
-                    fecha=eval['fecha'], tipo=eval['tipo'], titulo=eval['titulo'],
+                eval_inst = Evaluacion.objects.filter(
+                    titulo=eval['titulo'],
                     curso=curso_inst)
                 if level == EVALS:
-                    if eval_is_created:
-                        response['eval status'].append(
-                            f'{eval_inst} agregada correctamente')
-                    else:
+                    if eval_inst:
                         response['warning'].append(
-                            f'{eval_inst} ya existente, no agregada')
+                            f'{eval} ya existente, no agregada')
+                    else:
+                        eval_inst = Evaluacion.objects.create(
+                            fecha=eval['fecha'], tipo=eval['tipo'], titulo=eval['titulo'],
+                            curso=curso_inst)
+                        response['eval status'].append(
+                                f'{eval_inst} agregada correctamente')
         response['status'] = "Todo correcto!"
     except Exception as e:
         print(e)
         response['status'] = 'Error no identificado, se ha detenido\
  la carga del semestre en un punto indeterminado'
+        if level == FULL:
+            sem.delete()
+        response['status_error'] = 1
+        return response
     response['errores'] = errores
     return response
     # return {'status': 'Semestre creado!'}
@@ -111,6 +122,7 @@ def add_evals_to_semester(semester):
 
 
 def clonar_semestre(s_data):
+    errores = []
     año = s_data['año']
     estado = s_data['estado']
     inicio = s_data['inicio']
@@ -120,38 +132,47 @@ def clonar_semestre(s_data):
     from_periodo = s_data['from_periodo']
 
     one_day = datetime.timedelta(days=1)
-    new_sem = Semestre.objects.create(año=año, inicio=inicio,
-                                      fin=fin, periodo=periodo, estado=estado)
+    try:
+        new_sem = Semestre.objects.create(año=año, inicio=inicio,
+                                        fin=fin, periodo=periodo, estado=estado)
+    except Exception as e:
+        errores.append(str(e))
+        return None, errores
     old_sem = Semestre.objects.filter(año=from_año, periodo=from_periodo).get()
     old_cursos = Curso.objects.filter(semestre=old_sem)
-    for curso in old_cursos:
-        profes = []
-        evaluaciones = Evaluacion.objects.filter(curso=curso)
-        for prof in curso.profesor.all():
-            profes.append(prof)
-        new_curso = curso
-        new_curso.pk = None
-        new_curso.semestre = new_sem
-        new_curso.save()
-        for prof in profes:
-            new_curso.profesor.add(prof)
-        for evalu in evaluaciones:
-            current = evalu.fecha
-            dia_semana = current.weekday()
-            semana = Semana.objects.filter(inicio__lte=current)
-            semana = semana.filter(fin__gte=current)
-            semana = semana.filter(semestre=evalu.curso.semestre)
-            if semana:
-                semana = semana.get()
-            else:
-                continue
-            nro_semana = semana.numero
-            new_semana = Semana.objects.filter(
-                numero=nro_semana, semestre=new_sem).get()
-            new_eval_day = new_semana.inicio
-            while dia_semana:
-                new_eval_day += one_day
-                dia_semana -= 1
-            Evaluacion.objects.create(
-                fecha=new_eval_day, tipo=evalu.tipo, titulo=evalu.titulo, curso=new_curso)
-    return new_sem.pk
+    try:
+        for curso in old_cursos:
+            profes = []
+            evaluaciones = Evaluacion.objects.filter(curso=curso)
+            for prof in curso.profesor.all():
+                profes.append(prof)
+            new_curso = curso
+            new_curso.pk = None
+            new_curso.semestre = new_sem
+            new_curso.save()
+            for prof in profes:
+                new_curso.profesor.add(prof)
+            for evalu in evaluaciones:
+                current = evalu.fecha
+                dia_semana = current.weekday()
+                semana = Semana.objects.filter(inicio__lte=current)
+                semana = semana.filter(fin__gte=current)
+                semana = semana.filter(semestre=evalu.curso.semestre)
+                if semana:
+                    semana = semana.get()
+                else:
+                    continue
+                nro_semana = semana.numero
+                new_semana = Semana.objects.filter(
+                    numero=nro_semana, semestre=new_sem).get()
+                new_eval_day = new_semana.inicio
+                while dia_semana:
+                    new_eval_day += one_day
+                    dia_semana -= 1
+                Evaluacion.objects.create(
+                    fecha=new_eval_day, tipo=evalu.tipo, titulo=evalu.titulo, curso=new_curso)
+    except Exception as ex:
+        errores.append(str(ex))
+        new_sem.delete()
+        return None, errores
+    return new_sem, errores
