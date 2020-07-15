@@ -12,6 +12,7 @@ import {evaluaciones,lista_evaluaciones} from "../evaluacion/index_evaluacion";
 import {lista_profesores} from "../profesor/index_profesor";
 import About from "./About";
 import Calendar from "../heatmap/Calendar";
+import CustomCalendar from "../heatmap/CustomCalendar"
 import FooterPage from "./Footer";
 import {  Container } from "react-bootstrap";
 
@@ -83,6 +84,7 @@ export default class Home extends React.Component {
         <Switch>
           <Route exact path="/" component={Bloque_Calendario_con} />
           <Route exact path="/calendario/:anho/:periodo/" component={Calendar} />
+          <Route exact path="/calendario/:token/" component={CustomCalendar} />
 
           {/* VISTAS DE SEMESTRE */}
           <PrivateRoute exact path="/semestres/" component={lista_semestres} />
