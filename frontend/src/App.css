@@ -200,3 +200,8 @@ footer {
     display:inline-block;
     list-style: none;
 }
+.Equipo{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap:wrap;
+}
