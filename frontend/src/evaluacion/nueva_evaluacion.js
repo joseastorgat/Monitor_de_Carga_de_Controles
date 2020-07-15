@@ -17,11 +17,24 @@ export class NuevaEvaluacion extends React.Component {
                 nombre_curso:"",
                 form_errors: {},
                 errors_checked: {},
+                fecha_inicio_semestre:"",
+                fecha_fin_semestre:"",
+                semestre_id:this.props.semestre
 		}
 	};
 	static propTypes = {
 			auth: PropTypes.object.isRequired,
     };
+
+    componentDidMount(){
+        axios.get(process.env.REACT_APP_API_URL + `/semestres/${this.state.semestre_id}/`)
+        .then( (res) => { 
+            this.setState({
+                fecha_inicio_semestre:res.data.inicio,
+                fecha_fin_semestre:res.data.fin
+            })
+        })      
+    }
 
 	onChange = e => {
         let errors_checked = this.state.errors_checked
@@ -87,13 +100,15 @@ export class NuevaEvaluacion extends React.Component {
         if(curso==null){
             curso=this.props.curso_seleccionado.split("-")[0]
         }
-        console.log(curso)
 
+        console.log(curso)
+        console.log(this.state.fecha)
+        console.log(this.state.tipo)
+        console.log(this.state.titulo)
 		let options = {
 			method: 'POST',
 			url: url,
 			headers: {
-		
 				'Content-Type': 'application/json',
 				'Authorization': `Token ${this.props.auth.token}`
 			},
@@ -111,18 +126,12 @@ export class NuevaEvaluacion extends React.Component {
 				console.log("create evauacion");
 				this.setState({"evaluacion_created": true});
                 this.state.sacar_pop_up()
-                this.state.titulo=""
-                this.state.fecha=""
-                this.state.tipo="Control"
 			})
 			.catch( (err) => {
 				console.log(err);
 				console.log("cant create evaluacion");
 				alert("No se pudo crear evaluacion!");
                 this.state.sacar_pop_up()
-                this.state.titulo=""
-                this.state.fecha=""
-                this.state.tipo="Control"
 			});
 	}
 
@@ -130,7 +139,6 @@ export class NuevaEvaluacion extends React.Component {
         const { show_form, handleCancel, handleAdd} = this.props;
         const curso_info=this.props.curso_seleccionado.split("-") //se recibe id- codigo-seccion y nombre de curso
         this.state.sacar_pop_up=handleAdd;
-        console.log(curso_info)
         let resetState = () => {
 			this.setState({
 				titulo: "",
@@ -198,7 +206,7 @@ export class NuevaEvaluacion extends React.Component {
                                     <label >Fecha</label>
                                 </div>
                                 <div className="col-sm-10" >
-                                    <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha"  value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
+                                    <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha"  value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}  min={this.state.fecha_inicio_semestre} max={this.state.fecha_fin_semestre}/>
                                     <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["fecha"]}</span>
                                 </div>
                             </div>

@@ -144,7 +144,8 @@ th{
   height:20vh;
   max-height:20px;
   position:relative;
- 
+  text-align: center;
+  align-items: center;
   margin-right: 4px;
 }
 
