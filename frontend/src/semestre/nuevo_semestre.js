@@ -2,7 +2,9 @@ import React from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Modal,Col,Row} from "react-bootstrap";
+import { Modal, Col, Row, Container} from "react-bootstrap";
+// import ReactAnimatedEllipsis from 'react-animated-ellipsis';
+import EllipsisAnimation from "../common/EllipsisAnimation";
 
 export class nuevosemestre extends React.Component {
     state={
@@ -196,13 +198,13 @@ export class nuevosemestre extends React.Component {
               if(this.state.clonar){
                 
                 const sem = this.props.semestres[this.state.clonar_id];
-
+                console.log(sem.año, sem.periodo);
                 options.data = {...data, 
                     "from_año": sem.año,
                     "from_periodo": sem.periodo
                     };
 
-                url += "clonar/";
+                options.url = process.env.REACT_APP_API_URL + "/semestres/clonar/";
                 this.setState({clonar_procesando: true});
                   
                 axios(options)
@@ -217,11 +219,9 @@ export class nuevosemestre extends React.Component {
                   } )
                 
                 return;
-
               }
               
-              
-              axios(options)
+            axios(options)
               .then( (res) => {
                 console.log("create semestre");
                 this.setState({"semestre_created": true});
@@ -302,16 +302,18 @@ export class nuevosemestre extends React.Component {
     }
 
 
-
     render() {
         const { show_form, handleCancel, semestres} = this.props;
 
         let body;
         if(this.state.archivo_listo){
-
             body = (
                 <div>
-                <h2> Semestre cargado exitosamente</h2>
+        
+                <Row><Col/><Col md="auto">
+                    <h5> Semestre cargado exitosamente</h5>        
+                </Col><Col/></Row>
+
                 <div className="form-group" style={{'marginTop':"4rem"}}>
                     <button className="btn btn-success" type="button" onClick={() => {this.sacar_pop_up()}}>Ok</button>
                 </div>
@@ -322,7 +324,18 @@ export class nuevosemestre extends React.Component {
         else if(this.state.archivo_procesando){
             body = (
                 <div>
-                <h2> Estamos procesando el archivo de semestre, espere un poco porfavor</h2>
+                <Row> 
+                <Col/><Col md="auto">
+                    <h5>Estamos procesando tu archivo, espera un poco porfavor</h5>
+                </Col><Col/>
+                </Row>
+                <Row>
+                <Col/><Col md="auto">
+                <h1>
+                <EllipsisAnimation/>
+                </h1>
+                </Col><Col/>
+                </Row>
                 </div>
             );
         }
@@ -330,12 +343,17 @@ export class nuevosemestre extends React.Component {
         else if(this.state.archivo_error){
             body = (
                 <div>
-                <h2> Hubo un error al procesar tu archivo</h2>
+                    <Row><Col/><Col md="auto">
+                    <h5> Hubo un error al procesar tu archivo</h5>
                 
-                {this.state.archivo_error_msg}
+                    {this.state.archivo_error_msg}
+                
+                    </Col><Col></Col></Row>
                 
                 <div className="form-group" style={{'marginTop':"4rem"}}>
+                    <span style={{marginRight:'30px'}}></span> 
                     <button className="btn btn-danger" type="button" onClick={() => {this.sacar_pop_up()}}>Ok</button>
+                    <span style={{marginRight:'30px'}}></span> 
                     <button className="btn btn-primary" type="button" onClick={() => {this.setState({archivo_error: false});}}>Probar denuevo</button>
                 </div>
                 </div>
@@ -346,7 +364,10 @@ export class nuevosemestre extends React.Component {
 
             body = (
                 <div>
-                <h2> Semestre Clonado exitosamente</h2>
+                <Row><Col/><Col md="auto">
+                <h5> Semestre Clonado exitosamente</h5>
+                </Col><Col></Col></Row>
+
                 <div className="form-group" style={{'marginTop':"4rem"}}>
                     <button className="btn btn-success" type="button" onClick={() => {this.sacar_pop_up()}}>Ok</button>
                 </div>
@@ -357,7 +378,18 @@ export class nuevosemestre extends React.Component {
         else if(this.state.clonar_procesando){
             body = (
                 <div>
-                <h2> Estamos clonando el semestre seleccionado, espere un poco porfavor</h2>
+                <Row><Col/><Col md="auto">
+                    <h5>Estamos clonando tu archivo, espera un poco porfavor</h5>
+                </Col><Col/>
+                </Row>
+                <Row>
+                <Col/><Col md="auto">
+                <h1>
+                <EllipsisAnimation/>
+
+                </h1>
+                </Col><Col/>
+                </Row>
                 </div>
             );
         }
@@ -365,13 +397,17 @@ export class nuevosemestre extends React.Component {
         else if(this.state.clonar_error){
             body = (
                 <div>
-                <h2> Hubo un error al clonar el semestre</h2>
-                
+                <Row><Col/><Col md="auto">
+                <h5> Hubo un error al clonar el semestre</h5>
                 {this.state.clonar_error_msg}
-                
+                </Col><Col></Col></Row>
+
                 <div className="form-group" style={{'marginTop':"4rem"}}>
+                    <span style={{marginRight:'30px'}}></span> 
                     <button className="btn btn-danger" type="button" onClick={() => {this.sacar_pop_up()}}>Ok</button>
+                    <span style={{marginRight:'30px'}}></span> 
                     <button className="btn btn-primary" type="button" onClick={() => {this.setState({clonar_error: false});}}>Probar denuevo</button>
+
                 </div>
                 </div>
             );
