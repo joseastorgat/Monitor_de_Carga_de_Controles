@@ -89,7 +89,13 @@ export class nuevoprofesor extends React.Component {
 			.then( (res) => {
 				console.log(res);
 				console.log("create profesor");
-				this.setState({"profesor_created": true});
+				this.setState(
+					{
+						"profesor_created": true,
+						"form_errors": {},
+						"errors_checked": {}
+					}
+				);
 				this.state.sacar_pop_up()
 			})
 			.catch( (err) => {

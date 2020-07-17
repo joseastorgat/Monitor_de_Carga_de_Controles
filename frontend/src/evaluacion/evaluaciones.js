@@ -41,6 +41,7 @@ export class evaluaciones extends React.Component {
             fecha: "",
             tipo: "Control",
             titulo: "",
+
             fecha_inicio_semestre:"",
             fecha_fin_semestre:"",
             
@@ -185,6 +186,15 @@ export class evaluaciones extends React.Component {
             errores["fecha"] = "El formato de la fecha es incorrecto"
             isValid = false
         }
+        else if(fecha !== ""){
+            let inicio = new Date(this.state.fecha_inicio_semestre)
+            let fin = new Date(this.state.fecha_fin_semestre)
+            let fecha_evaluacion = new Date(fecha)
+            if( fin - fecha_evaluacion < 0 || fecha_evaluacion - inicio < 0){
+                errores["fecha"] = "Fecha de evaluacion debe estar en el rango de fechas del semestre"
+                isValid = false
+            }
+        }
         this.setState({
             form_errors: errores,
             errors_checked: errors_checked
@@ -286,6 +296,7 @@ export class evaluaciones extends React.Component {
     }
 
     create_evaluacion() {  
+        console.log(this.state)
         console.log("post evaluaciones ...")
         if(!this.validateForm()){
             return;
@@ -335,16 +346,18 @@ export class evaluaciones extends React.Component {
         this.fetchEvaluaciones();
         this.fetch_semestre();
         var id = this.state.id
-        axios.get(process.env.REACT_APP_API_URL + `/evaluaciones/${id}/`)
-        .then( (res) => { 
-            this.setState({
-                id: res.data.id,
-                titulo: res.data.titulo,
-                fecha: res.data.fecha,
-                tipo: res.data.tipo,
-                eliminar_index: -1,
+        if (id !== ""){
+            axios.get(process.env.REACT_APP_API_URL + `/evaluaciones/${id}/`)
+            .then( (res) => { 
+                this.setState({
+                    id: res.data.id,
+                    titulo: res.data.titulo,
+                    fecha: res.data.fecha,
+                    tipo: res.data.tipo,
+                    eliminar_index: -1,
+                })
             })
-        })      
+        }      
     }
     async fetch_semestre(){
         const {ano,semestre}= this.props.match.params
@@ -432,8 +445,8 @@ export class evaluaciones extends React.Component {
                     <div className="row">
                         <div className="col-sm-2"></div> 
                         <button type="submit" className="float-right btn btn-success col-sm-2">Guardar</button>                 
-                        <div className="col-sm-5"></div>
-                        <button className="btn btn-secondary col-sm-2 float-left" onClick={this.onClickCancel}> Cancelar</button>
+                        <div className="col-sm-4"></div>
+                        <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
                     </div>
                 </div>
             </form>
@@ -492,9 +505,7 @@ export class evaluaciones extends React.Component {
                     </div>
                     <div className="row">
                         <div className="col-sm-2"></div>
-                        {/* <LinkContainer activeClassName="" type="submit"  className="float-left btn btn-primary col-sm-2" to="./evaluaciones" style={{width: '7%','marginLeft':"14vw",borderRadius: '8px'}}> */}
                             <button className="btn btn-primary col-sm-2" type="submit">Actualizar Evaluación</button>
-                        {/* </LinkContainer> */}
                         <div className="col-sm-4"></div>
                         <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
 

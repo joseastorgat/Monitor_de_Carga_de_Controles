@@ -224,8 +224,14 @@ export class nuevosemestre extends React.Component {
             axios(options)
               .then( (res) => {
                 console.log("create semestre");
-                this.setState({"semestre_created": true});
-                this.sacar_pop_up()
+                this.setState(
+                    {
+                        "semestre_created": true,
+                        "form_errors": {},
+                        "errors_checked": {},
+                    }
+                );
+                this.state.sacar_pop_up()
               })
               .catch( (err) => {
                 console.log(err);
