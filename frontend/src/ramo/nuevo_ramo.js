@@ -97,7 +97,12 @@ export class Nuevoramo extends React.Component {
       .then( (res) => {
         console.log(res);
         console.log("create ramo");
-        this.setState({"ramo_created": true});
+        this.setState(
+          {
+            "ramo_created": true,
+            "form_errors": {},
+            "errors_checked": {},
+          });
         this.state.sacar_pop_up()
       })
       .catch( (err) => {
