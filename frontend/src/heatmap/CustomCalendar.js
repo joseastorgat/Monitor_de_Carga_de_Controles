@@ -1,27 +1,30 @@
 import React from "react";
-import { Col,  Row,Table,  Container,Modal,Alert} from "react-bootstrap";
+import {  Col,  Row,Table,  Container,Modal,Alert} from "react-bootstrap";
+
 import "./Calendar.css";
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 import 'moment/locale/es';
 import axios from "axios"; //from "axios";
 import Sidebar from "./CourseSelector";
+import {EvaluacionDiaModal, FechaDiaModal} from "./Calendar"
 import SaveCalendarModal from "./SaveCalendar";
 
 const moment = extendMoment(Moment);
 moment.locale("es");
 
-export default class Calendar extends React.Component {
+export default class CustomCalendar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       show_evaluaciones_dia_Modal:false,
-      show_guardar_calendario_Modal: false,
       evaluaciones_dia:[],
       found: true,
+      nombre_calendario: "",
       semestre_id: -1,
-      año: this.props.match.params.anho,
-      periodo: this.props.match.params.periodo,
+      año: "",
+      periodo: "",
+      token: this.props.match.params.token,
       inicio: "",
       fin: "",
       courses: [],
@@ -41,10 +44,13 @@ export default class Calendar extends React.Component {
 
 
   handleChange(checks, target) {
+
     const courses = this.state.courses.slice();
     const evaluaciones = this.state.evaluaciones.slice();
     let evaluaciones_a_mostrar = this.state.evaluaciones_a_mostrar.slice();
     let selected_courses=this.state.selectedCourses
+    console.log(this.state.selectedCourses)
+
     checks.forEach(i => {
       if(courses[i].checked !== target){
         courses[i].checked = target !== undefined ? target : !courses[i].checked;
@@ -62,20 +68,30 @@ export default class Calendar extends React.Component {
 
     const dias = evaluaciones_a_mostrar.map(evaluacion => evaluacion.fecha);
 
-    this.setState({ courses: courses, evaluaciones_a_mostrar: evaluaciones_a_mostrar, dias: dias, selectedCourses:selected_courses});
+    this.setState({ courses: courses, evaluaciones_a_mostrar: evaluaciones_a_mostrar, dias: dias,selectedCourses:selected_courses});
   }
 
   async componentDidMount() {
   
-    const {año, periodo} = this.state;
-    let res = await axios.get(process.env.REACT_APP_API_URL + `/semestres/?año=${año}&periodo=${periodo}`);
+    const {token} = this.state;
+    let res = await axios.get(process.env.REACT_APP_API_URL + `/calendario/${token}/`);
+    let selected_courses = []
+    // let res = await axios.get(process.env.REACT_APP_API_URL + `/semestres/?año=${año}&periodo=${periodo}`);
 
-    if(res.status !== 200 || res.data.length !== 1){
+    if(res.status !== 200 || !res.data.token === token){
       this.setState( {"found": false });
     }
 
     else{
-      this.setState({"inicio": res.data[0].inicio, "fin": res.data[0].fin, "semestre_id": res.data[0].id})
+
+      let sem = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${res.data.semestre}/`);
+      if(res.status !== 200){
+        this.setState( {"found": false });
+      }
+      else{
+        this.setState({"inicio": sem.data.inicio, "fin": sem.data.fin,"año": sem.data.año, "periodo": sem.data.periodo, "semestre_id": sem.data.id, "nombre_calendario": res.data.nombre})
+        selected_courses = res.data.cursos
+      }
     }
 
     if(this.state.found){
@@ -125,17 +141,39 @@ export default class Calendar extends React.Component {
         return 1;
       })
 
-      let courses = coursesPre.map( (course, i) => ({ ...course, index: i, checked: false }));
+      
 
       // obtener evaluaciones del semestre
       const semestre_id = this.state.semestre_id
       const evaluaciones = await fetch(
         process.env.REACT_APP_API_URL + `/semestres/${semestre_id}/evaluaciones/`
       ).then(res => res.json());
+      
+      let courses = coursesPre.map( (course, i) => 
+      (
+        { 
+          ...course, index: i, 
+          checked: selected_courses.some(c => c === course.id) ? true : false
+        })
+      );
+      
+      let selected_courses_list = [];
+      selected_courses.forEach(i => {
+          selected_courses_list.push(coursesPre.filter(c=> c.id==i)[0])
+        })
 
-      this.setState({ courses: courses, evaluaciones: evaluaciones,fechas_especiales:fechas_especiales});
+      let evaluaciones_a_mostrar = []
+      courses.forEach(c =>{
+
+        const evaluaciones_curso = evaluaciones.filter( evaluacion => evaluacion.curso === c.id && c.checked);
+        evaluaciones_a_mostrar = evaluaciones_a_mostrar.concat(evaluaciones_curso);
+        }
+      )
+
+      this.setState({evaluaciones_a_mostrar: evaluaciones_a_mostrar})
+      this.setState({ courses: courses, evaluaciones: evaluaciones,fechas_especiales:fechas_especiales,selectedCourses:selected_courses_list});
+      }
     }
-  }
   
   encontrar_mes(arreglo_semana){
     let mes=0
@@ -185,7 +223,6 @@ export default class Calendar extends React.Component {
   handleCancel_guardar() {
     this.setState({ show_guardar_calendario_Modal: false})
 }
-
   render() {
     
     const { courses } = this.state;
@@ -193,7 +230,7 @@ export default class Calendar extends React.Component {
     if(!this.state.found){
 
       return (
-        <h1>Año / Semestre no válido </h1> 
+        <h1>Calendario no válido </h1> 
       );
 
     }
@@ -228,14 +265,14 @@ export default class Calendar extends React.Component {
         <Row >
         
         <Col xs={9} md={3}>
-            <Sidebar 
+          <Sidebar 
               courses={courses}
               handleChange={(i, t) => this.handleChange(i, t)}
               handleGuardar={() => this.mostrar_guardar_calendario()}
             />
         </Col>
         <Col xs="auto" md={7} style={{textAlign:'center'}} >
-          <h4 >Heatmap Semestre {this.state.periodo===1 ? "Otoño": "Primavera"}  {this.state.año} </h4>
+          <h4 >Calendario: {this.state.nombre_calendario} - {this.state.periodo===1 ? "Otoño": "Primavera"}  {this.state.año} </h4>
           <div > 
           <Table className="calendar" size="sm" responsive style={{display: 'block',maxHeight:"400px",maxWidth:"800px",overflowY:'scroll'}}>
              <thead>
@@ -314,15 +351,15 @@ export default class Calendar extends React.Component {
               </tr>
               </tbody>
             </Table>
-            </Col>
-
-         
+            </Col>         
         </Row>
         <Row>
           <Col>
             <Alert variant="secondary" >
               <h5>Cursos Seleccionados</h5>
-              <ul>
+              <ul>{
+                console.log(this.state.selectedCourses)
+              }
               {this.state.selectedCourses.map( (course, i) => (<li>{course.ramo}-{course.seccion} {course.nombre}</li>))}
               </ul>
             </Alert>
@@ -332,90 +369,4 @@ export default class Calendar extends React.Component {
     );
   }
 }
-}
-export class FechaDiaModal extends React.Component {
-  render() {
-    const { show, handleCancel, fechas, info} = this.props;
-    const semana = info[2];
-    const color = info[3];
-    const divStyle = {
-      backgroundColor: "gray",
-      color:"white"
-    };
-    
-    var dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
-    var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  
-    const fecha = info[0];
-    const dia = fecha.split("-")[2];
-    const mes = fecha.split("-")[1];
-    const dia_nombre = dias[info[1]];
-    return (
-      <Modal size="sm" centered show={show} onHide={() => handleCancel()} className="modal_calendar">
-        <Modal.Header style={divStyle} closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            <h6>Semana {semana}: {dia_nombre} {dia} de {meses[mes - 1]}</h6>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body> 
-        {fechas.map(fecha=>
-          <Row>
-          <Container>
-          <h6 style={{color:"red"}}>{fecha.nombre}</h6>
-
-          </Container>
-        </Row>
-        )}
-        
-        </Modal.Body>
-
-      </Modal>
-     );
-  }
-}
-
-export class EvaluacionDiaModal extends React.Component {
-  render() {
-    const { show, handleCancel, evaluaciones, info} = this.props;
-    const semana = info[2];
-    const color = info[3];
-    const divStyle = {
-      backgroundColor: color,
-      color:"white"
-    };
-    
-    var dias = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
-    var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  
-    const fecha = info[0];
-    const dia = fecha.split("-")[2];
-    const mes = fecha.split("-")[1];
-    const dia_nombre = dias[info[1]];
-
-    return (
-      <Modal transparent={true} size="sm" centered show={show} onHide={() => handleCancel()} className="modal_calendar">
-        <Modal.Header style={divStyle} closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            <h6>Semana {semana}: {dia_nombre} {dia} de {meses[mes - 1]}</h6>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-        {evaluaciones.map(evaluacion=>
-          <Row>
-          <Container>
-          <h6>{evaluacion.codigo}-{evaluacion.seccion} {evaluacion.nombre_curso}</h6>
-            
-            {/* <p>{evaluacion.titulo} ({evaluacion.tipo})</p> */}
-            
-            <p>{evaluacion.titulo} </p>
-
-          </Container>
-        </Row>
-        )}
-        
-        </Modal.Body>
-
-      </Modal>
-     );
-  }
 }
