@@ -199,7 +199,12 @@ export class nuevo_curso extends React.Component {
 			.then( (res) => {
 				console.log(res);
 				console.log("create curso");
-				this.setState({"curso_created": true});
+                this.setState(
+                {   
+                    "curso_created": true,
+                    "form_errors": {},
+                    "errors_checked": {}
+                });
                 this.state.sacar_pop_up();
 			})
 			.catch( (err) => {

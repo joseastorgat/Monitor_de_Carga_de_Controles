@@ -117,8 +117,14 @@ export class nuevafecha extends React.Component {
           .then( (res) => {
             console.log(res);
             console.log("create fecha");
-            this.setState({"fecha_created": true});
-            this.setState({"nombre_fecha": ""});
+            this.setState(
+                {
+                    "fecha_created": true, 
+                    "nombre_fecha": "",
+                    "form_errors": {},
+                    "errors_checked": {},
+                }
+            );
             this.state.sacar_pop_up()
           })
           .catch( (err) => {
