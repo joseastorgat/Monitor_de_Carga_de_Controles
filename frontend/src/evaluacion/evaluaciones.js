@@ -445,8 +445,8 @@ export class evaluaciones extends React.Component {
                     <div className="row">
                         <div className="col-sm-2"></div> 
                         <button type="submit" className="float-right btn btn-success col-sm-2">Guardar</button>                 
-                        <div className="col-sm-5"></div>
-                        <button className="btn btn-secondary col-sm-2 float-left" onClick={this.onClickCancel}> Cancelar</button>
+                        <div className="col-sm-4"></div>
+                        <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
                     </div>
                 </div>
             </form>
@@ -505,9 +505,7 @@ export class evaluaciones extends React.Component {
                     </div>
                     <div className="row">
                         <div className="col-sm-2"></div>
-                        {/* <LinkContainer activeClassName="" type="submit"  className="float-left btn btn-primary col-sm-2" to="./evaluaciones" style={{width: '7%','marginLeft':"14vw",borderRadius: '8px'}}> */}
                             <button className="btn btn-primary col-sm-2" type="submit">Actualizar Evaluación</button>
-                        {/* </LinkContainer> */}
                         <div className="col-sm-4"></div>
                         <button className="btn btn-secondary col-sm-2" onClick={this.onClickCancel}> Cancelar</button>
 
