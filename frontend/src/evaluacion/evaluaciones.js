@@ -41,6 +41,7 @@ export class evaluaciones extends React.Component {
             fecha: "",
             tipo: "Control",
             titulo: "",
+
             fecha_inicio_semestre:"",
             fecha_fin_semestre:"",
             
@@ -185,6 +186,15 @@ export class evaluaciones extends React.Component {
             errores["fecha"] = "El formato de la fecha es incorrecto"
             isValid = false
         }
+        else if(fecha !== ""){
+            let inicio = new Date(this.state.fecha_inicio_semestre)
+            let fin = new Date(this.state.fecha_fin_semestre)
+            let fecha_evaluacion = new Date(fecha)
+            if( fin - fecha_evaluacion < 0 || fecha_evaluacion - inicio < 0){
+                errores["fecha"] = "Fecha de evaluacion debe estar en el rango de fechas del semestre"
+                isValid = false
+            }
+        }
         this.setState({
             form_errors: errores,
             errors_checked: errors_checked
@@ -286,6 +296,7 @@ export class evaluaciones extends React.Component {
     }
 
     create_evaluacion() {  
+        console.log(this.state)
         console.log("post evaluaciones ...")
         if(!this.validateForm()){
             return;
@@ -335,16 +346,18 @@ export class evaluaciones extends React.Component {
         this.fetchEvaluaciones();
         this.fetch_semestre();
         var id = this.state.id
-        axios.get(process.env.REACT_APP_API_URL + `/evaluaciones/${id}/`)
-        .then( (res) => { 
-            this.setState({
-                id: res.data.id,
-                titulo: res.data.titulo,
-                fecha: res.data.fecha,
-                tipo: res.data.tipo,
-                eliminar_index: -1,
+        if (id !== ""){
+            axios.get(process.env.REACT_APP_API_URL + `/evaluaciones/${id}/`)
+            .then( (res) => { 
+                this.setState({
+                    id: res.data.id,
+                    titulo: res.data.titulo,
+                    fecha: res.data.fecha,
+                    tipo: res.data.tipo,
+                    eliminar_index: -1,
+                })
             })
-        })      
+        }      
     }
     async fetch_semestre(){
         const {ano,semestre}= this.props.match.params
