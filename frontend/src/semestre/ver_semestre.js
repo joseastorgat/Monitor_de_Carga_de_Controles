@@ -235,9 +235,9 @@ export class ver_semestre extends React.Component {
                 </Form>
 
               </Col>
-              <Col md="auto">
+              {/* <Col md="auto">
               <Button  className="btn btn-primary float-right">Exportar Semestre</Button>
-            </Col>
+            </Col> */}
               <Col xs="auto">
 
                   <Button className="btn btn-primary float-right" onClick={()=>this.showModalAdd()}>Nuevo Curso</Button>
