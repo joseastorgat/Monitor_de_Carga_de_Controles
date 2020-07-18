@@ -64,8 +64,17 @@ export class NuevaEvaluacion extends React.Component {
             titulo: true,
             fecha: true,
             tipo: true,
+            curso: true
         }
-
+        console.log(curso==="")
+        if(curso === "" || curso=== null){
+            errores["curso"] = "Debe seleccionar un curso"
+            isValid = false
+        }
+        else if (!this.props.cursos.some(c => c.id === parseInt(curso))){
+            errores["curso"] = "Debe seleccionar un curso válido"
+            isValid = false
+        }
         if(titulo === ""){
             errores["titulo"] = "Debe ingresar un titulo para la evaluación"
             isValid = false
@@ -176,16 +185,18 @@ export class NuevaEvaluacion extends React.Component {
                                                 <option > {curso_info[1]}-{curso_info[2]}</option>
                                             </select>
                                             :
-                                            <select className="form-control"  name="curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
-                                                <option value="" >Seleccione curso</option>
+                                            <select className={this.state.form_errors["curso"] ? "form-control is-invalid" : this.state.errors_checked["curso"] ? "form-control is-valid" : "form-control"}  name="curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
+                                                <option value="" hidden >Seleccione curso</option>
                                                     {this.props.cursos.slice(1,this.props.cursos.length).map(curso=>
                                                         <option value={curso.id} >{curso.ramo}-{curso.seccion} {curso.nombre}</option>         
                                                         )}
                                             </select>
                                     
                                     }
-                                            </div>
-                                     </div>
+                                    <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["curso"]}</span>
+                                    </div>
+                                    </div>
+                
                             </div>
                     </div>
                     <div className="row">
