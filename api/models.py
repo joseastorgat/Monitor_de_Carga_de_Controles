@@ -128,20 +128,6 @@ class Evaluacion(models.Model):
     class Meta:
         unique_together = (("titulo", "curso"))
 
-    def save(self, *args, **kwargs):
-        if self.sin_feriado():
-            super(Evaluacion, self).save(*args, **kwargs)
-        else:
-            raise Exception("Hay una fecha especial aqui")
-
-    def sin_feriado(self):
-        fe = Fechas_especiales.objects.filter(inicio__lte=self.fecha)
-        fe = fe.filter(fin__gte=self.fecha)
-        if fe:
-            return False
-        else:
-            return True
-
 
 class Semana(models.Model):
     numero = models.IntegerField()
@@ -234,11 +220,20 @@ class Fechas_especiales(models.Model):
         # ver bien los casos aqui
         # definir que tipos de fechas
         # especiales remueven dias
-        # del semestre y cuales no 
+        # del semestre y cuales no
         return True
 
     def __str__(self):
         return f'{self.nombre}'
+
+    @staticmethod
+    def sin_feriado(fecha):
+        fe = Fechas_especiales.objects.filter(inicio__lte=fecha)
+        fe = fe.filter(fin__gte=fecha)
+        if fe:
+            return False
+        else:
+            return True
 
 
 class Calendario(models.Model):

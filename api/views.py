@@ -155,10 +155,15 @@ class EvaluationViewSet(viewsets.ModelViewSet):
     #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
-        try:
-            super().create(request, *args, **kwargs)
-        except Exception as e:
-            return Response({'error': f'{e}'}, status=status.HTTP_401_UNAUTHORIZED)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        if Fechas_especiales.sin_feriado(data['fecha']):
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            return Response({'error': 'hay una fecha especial aqui'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class RamoViewSet(viewsets.ModelViewSet):
