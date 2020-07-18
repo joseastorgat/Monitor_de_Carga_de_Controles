@@ -247,9 +247,22 @@ export class evaluaciones extends React.Component {
             // window.location.reload(false);
         })
         .catch( (err) => {
+            if (err.response.status===401){// Fecha choca con fecha especial
+                var errores=this.state.form_errors
+                var errors_checked=this.state.errors_checked
+                errores["fecha"]="Fecha ingresada no es válida, ya que choca con fecha especial"
+                errors_checked["fecha"]=false
+                this.setState({
+                    form_errors: errores,
+                    errors_checked: errors_checked
+                })
+                return false
+            }
+            else{
             console.log(err);
             console.log("cant update evaluacion");
             alert("[ERROR] No se puedo actualizar la evaluación! ");
+        }
         });
     }
 
@@ -339,9 +352,22 @@ export class evaluaciones extends React.Component {
             });
       })
       .catch( (err) => {
-        console.log("cant create evaluacion");
-        console.log(err);
-        alert("[ERROR] No se pudo crear la evaluacion!");
+        if (err.response.status===401){// Fecha choca con fecha especial
+            var errores=this.state.form_errors
+            var errors_checked=this.state.errors_checked
+            errores["fecha"]="Fecha ingresada no es válida, ya que choca con fecha especial"
+            errors_checked["fecha"]=false
+            this.setState({
+                form_errors: errores,
+                errors_checked: errors_checked
+            })
+            return false
+        }
+        else{
+            console.log("cant create evaluacion");
+            console.log(err);
+            alert("[ERROR] No se pudo crear la evaluacion!");
+        }
       });
     }
 
