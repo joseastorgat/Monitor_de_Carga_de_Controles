@@ -214,8 +214,8 @@ export class lista_evaluaciones extends React.Component {
                 <p>Curso
                 <select required className="form-control"  name="curso_busqueda" style={{textAlignLast:'center',textAlign:'center'}} value={this.state.curso_busqueda} onChange={this.onChange_Curso} >
                     <option value="" >Seleccione curso</option>
-                    {this.state.MostrarCursos.map(curso=>
-                          <option value={curso.id+"-"+curso.ramo+"-"+curso.seccion + " "+curso.nombre} >{curso.ramo} {curso.nombre}</option>         
+                    {this.state.MostrarCursos.map( (curso, i) =>
+                          <option value={curso.id+"-"+curso.ramo+"-"+curso.seccion + " "+curso.nombre} >{curso.ramo}{i > 0 ? "-" : ""}{curso.seccion} {curso.nombre}</option>         
                         )}
                     
                 </select>
