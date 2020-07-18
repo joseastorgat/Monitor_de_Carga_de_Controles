@@ -165,6 +165,24 @@ class EvaluationViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'hay una fecha especial aqui'}, status=status.HTTP_401_UNAUTHORIZED)
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        if Fechas_especiales.sin_feriado(data['fecha']):
+            self.perform_update(serializer)
+
+            if getattr(instance, '_prefetched_objects_cache', None):
+                # If 'prefetch_related' has been applied to a queryset, we need to
+                # forcibly invalidate the prefetch cache on the instance.
+                instance._prefetched_objects_cache = {}
+
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'hay una fecha especial aqui'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 class RamoViewSet(viewsets.ModelViewSet):
     """
