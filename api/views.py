@@ -101,7 +101,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
             if response['status_error']:
                 return response['status'], status.HTTP_500_INTERNAL_SERVER_ERROR
             if response['status_warning']:
-                return response, status.HTTP_304_NOT_MODIFIED
+                return response, status.HTTP_412_PRECONDITION_FAILED
             return response, status.HTTP_201_CREATED
         else:
             return serializer.errors, status.HTTP_400_BAD_REQUEST
@@ -109,7 +109,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
     @action(detail=False,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
-            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
+            permission_classes=[],#[permissions.IsAuthenticatedOrReadOnly],
             )
     def from_xlsx(self, request, *args, **kwargs):
         '''
@@ -122,7 +122,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
     @action(detail=False,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
-            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
+            permission_classes=[],#[permissions.IsAuthenticatedOrReadOnly],
             )
     def from_xlsx2(self, request, *args, **kwargs):
         '''
@@ -135,7 +135,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
     @action(detail=False,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
-            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
+            permission_classes=[],#[permissions.IsAuthenticatedOrReadOnly],
             )
     def from_xlsx3(self, request, *args, **kwargs):
         '''
@@ -152,7 +152,7 @@ class EvaluationViewSet(viewsets.ModelViewSet):
     """
     queryset = Evaluacion.objects.all()
     serializer_class = EvaluacionSerializer
-    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -228,16 +228,6 @@ class CursoViewSet(viewsets.ModelViewSet):
             model = model.filter(ftr)
         return model.filter()
 
-    # def retrieve(self, request, pk, *args, **kwargs):
-    #     # instance = self.get_object()
-    #     instance = Curso.objects.filter(id=pk).get()
-    #     print(pk)
-    #     print(instance)
-
-    #     serializer = self.get_serializer(instance)
-    #     # serializer = CursoDetailSerializer(instance)
-    #     return Response(serializer.data)
-
     @action(detail=False, methods=['get'],
             permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def detalle(self, request):
@@ -264,10 +254,8 @@ class CalendarioViewSet(viewsets.ModelViewSet):
     """
     queryset = Calendario.objects.all()
     serializer_class = CalendarioSerializer
-    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @action(detail=False, methods=['post'],
-            # permission_classes=[permissions.IsAuthenticatedOrReadOnly],
             serializer_class=NuevoCalendarioSerializer)
     def auto_token(self, request, *args, **kwargs):
         while True:
