@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import {Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import DeleteModal from "../common/DeleteModal";
-import { Table, Container} from "react-bootstrap";
+import { Table, Container, Alert} from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import ViewTitle from "../common/ViewTitle";
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class evaluaciones extends React.Component {
     constructor(props) {
@@ -43,6 +44,8 @@ export class evaluaciones extends React.Component {
             titulo: "",
             fecha_inicio_semestre:"",
             fecha_fin_semestre:"",
+
+            fechas_especiales_semestre:[],
             
             evaluacion_modified: false,
             evaluacion_created: false,
@@ -344,7 +347,12 @@ export class evaluaciones extends React.Component {
                 tipo: res.data.tipo,
                 eliminar_index: -1,
             })
-        })      
+        })
+        axios.get(process.env.REACT_APP_API_URL + `/fechas-especiales/?semestre=1/`)
+        .then( (res) => { 
+            this.setState({fechas_especiales_semestre:res})
+        })
+        console.log(this.state)
     }
     async fetch_semestre(){
         const {ano,semestre}= this.props.match.params
@@ -553,6 +561,7 @@ export class evaluaciones extends React.Component {
                                 id_curso={evaluacion.curso}
                                 tipo={evaluacion.tipo}
                                 titulo={evaluacion.titulo}
+                                warning={evaluacion.warning}
                                 handleUpdate={() => this.handleClickEditarEvaluacion(_index)}
                                 showModal={() => this.showModal(evaluacion, _index)}
                                 />
@@ -586,6 +595,7 @@ class EvaluacionItem extends React.Component {
       const titulo =this.props.titulo;
       const fecha = this.props.fecha;
       const tipo= this.props.tipo;
+      const warning= this.props.warning;
       const id = this.props.id;
       const id_curso = this.props.id_curso;
       const handleDelete = this.props.handleDelete;
@@ -598,7 +608,7 @@ class EvaluacionItem extends React.Component {
         <thead >
             <tr >
             <td scope="col">{titulo}</td>
-            <td scope="col">{fecha_formato_m_d_y}</td>
+            <td scope="col">{fecha_formato_m_d_y}{warning==null? "": <Alert_2 style={{size: "10"}} variant="outlined" severity="warning" >{warning}</Alert_2>}            </td>
             <td scope="col">{tipo}</td>
             <td scope="col">
                 <Link to="#" onClick={e => handleUpdate(i)}>
