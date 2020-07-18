@@ -45,8 +45,6 @@ export class evaluaciones extends React.Component {
 
             fecha_inicio_semestre:"",
             fecha_fin_semestre:"",
-
-            fechas_especiales_semestre:[],
             
             evaluacion_modified: false,
             evaluacion_created: false,
@@ -387,11 +385,6 @@ export class evaluaciones extends React.Component {
                 })
             })
         }
-        
-        axios.get(process.env.REACT_APP_API_URL + `/fechas-especiales/?semestre=1/`)
-        .then( (res) => { 
-            this.setState({fechas_especiales_semestre:res})
-        })
         console.log(this.state)
     }
     async fetch_semestre(){
