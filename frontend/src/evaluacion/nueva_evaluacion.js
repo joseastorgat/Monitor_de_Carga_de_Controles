@@ -59,6 +59,7 @@ export class NuevaEvaluacion extends React.Component {
         let titulo = this.state.titulo
         let fecha = this.state.fecha
         let tipo = this.state.tipo
+        let curso = this.state.curso
         let errors_checked = {
             titulo: true,
             fecha: true,
@@ -166,7 +167,7 @@ export class NuevaEvaluacion extends React.Component {
                             <div className="col-sm-5">
                                 <div className="row" >
                                     <div className="col-sm-2" >
-                                    <label >Curso</label>
+                                    <label >Curso<span style={{color:"red"}}>*</span></label>
                                     </div>
                                     <div className="col-sm-10" >{
                                         
@@ -175,10 +176,10 @@ export class NuevaEvaluacion extends React.Component {
                                                 <option > {curso_info[1]}-{curso_info[2]}</option>
                                             </select>
                                             :
-                                            <select required className="form-control"  name="curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
+                                            <select className="form-control"  name="curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
                                                 <option value="" >Seleccione curso</option>
                                                     {this.props.cursos.slice(1,this.props.cursos.length).map(curso=>
-                                                        <option value={curso.id} >{curso.ramo} {curso.nombre}</option>         
+                                                        <option value={curso.id} >{curso.ramo}-{curso.seccion} {curso.nombre}</option>         
                                                         )}
                                             </select>
                                     
@@ -192,7 +193,7 @@ export class NuevaEvaluacion extends React.Component {
                             <div className="col-sm-5">
                                 <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Título</label>
+                                    <label >Título<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="text" className={this.state.form_errors["titulo"] ? "form-control is-invalid" : this.state.errors_checked["titulo"] ? "form-control is-valid" : "form-control"} name="titulo"  value={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
@@ -203,7 +204,7 @@ export class NuevaEvaluacion extends React.Component {
                         <div className="col-sm-5">
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Fecha</label>
+                                    <label >Fecha<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha"  value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}  min={this.state.fecha_inicio_semestre} max={this.state.fecha_fin_semestre}/>
@@ -217,7 +218,7 @@ export class NuevaEvaluacion extends React.Component {
                         <div className="col-sm-5" >
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Tipo</label>
+                                    <label >Tipo<span style={{color:"red"}}>*</span></label>
                                 </div>
     
                                 <div className="custom-control custom-radio custom-control-inline"  >
