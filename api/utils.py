@@ -118,15 +118,22 @@ def clonar_semestre(s_data):
     periodo = s_data['periodo']
     from_año = s_data['from_año']
     from_periodo = s_data['from_periodo']
+    lista_periodo=['Otoño', 'Primavera']
 
     one_day = datetime.timedelta(days=1)
     try:
+        if Semestre.objects.filter(año=año, periodo=periodo):
+            raise Exception(f'El semestre {lista_periodo[periodo]} {año} ya existe.')
         new_sem = Semestre.objects.create(año=año, inicio=inicio,
                                         fin=fin, periodo=periodo, estado=estado)
     except Exception as e:
         errores.append(str(e))
         return None, errores
     old_sem = Semestre.objects.filter(año=from_año, periodo=from_periodo).get()
+    if new_sem.cantidad_semanas() != old_sem.cantidad_semanas():
+        errores.append(f'La cantidad de semanas difiere entre {old_sem} y {new_sem}, se detiene la carga')
+        new_sem.delete()
+        return None, errores
     old_cursos = Curso.objects.filter(semestre=old_sem)
     try:
         for curso in old_cursos:

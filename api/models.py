@@ -35,6 +35,9 @@ class Semestre(models.Model):
         return "Semestre "+self._PERIODOS[self.periodo-1][1]+" " +\
             str(self.año)
 
+    def cantidad_semanas(self):
+        return len(Semana.objects.filter(semestre=self))
+
     def save(self, *args, **kwargs):
         super(Semestre, self).save(*args, **kwargs)
         semanas = {}
@@ -82,6 +85,8 @@ class Semestre(models.Model):
         if dias_lectivos:
             return True
         return False
+
+    
 
 
 class Ramo(models.Model):
