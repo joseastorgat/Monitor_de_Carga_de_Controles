@@ -128,6 +128,20 @@ class Evaluacion(models.Model):
     class Meta:
         unique_together = (("titulo", "curso"))
 
+    def save(self, *args, **kwargs):
+        if self.sin_feriado():
+            super(Evaluacion, self).save(*args, **kwargs)
+        else:
+            raise Exception("Hay una fecha especial aqui")
+
+    def sin_feriado(self):
+        fe = Fechas_especiales.objects.filter(inicio__lte=self.fecha)
+        fe = fe.filter(fin__gte=self.fecha)
+        if fe:
+            return False
+        else:
+            return True
+
 
 class Semana(models.Model):
     numero = models.IntegerField()

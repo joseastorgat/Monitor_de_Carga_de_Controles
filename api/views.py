@@ -152,7 +152,13 @@ class EvaluationViewSet(viewsets.ModelViewSet):
     """
     queryset = Evaluacion.objects.all()
     serializer_class = EvaluacionSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def create(self, request, *args, **kwargs):
+        try:
+            super().create(request, *args, **kwargs)
+        except Exception as e:
+            return Response({'error': f'{e}'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class RamoViewSet(viewsets.ModelViewSet):
@@ -268,7 +274,7 @@ class CalendarioViewSet(viewsets.ModelViewSet):
         data['token'] = token
         data['fecha_creacion'] = str(datetime.date.today())
         data['nombre'] = request.data['nombre']
-        data['cursos'] =  request.data['cursos']
+        data['cursos'] = request.data['cursos']
         serializer = CalendarioSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
