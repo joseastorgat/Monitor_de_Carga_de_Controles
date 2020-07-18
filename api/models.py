@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.crypto import get_random_string
 import datetime
 
-año_actual = 2020
+año_actual = datetime.date.today().year
 
 
 class Profesor(models.Model):
@@ -34,6 +34,9 @@ class Semestre(models.Model):
     def __str__(self):
         return "Semestre "+self._PERIODOS[self.periodo-1][1]+" " +\
             str(self.año)
+
+    def cantidad_semanas(self):
+        return len(Semana.objects.filter(semestre=self))
 
     def save(self, *args, **kwargs):
         super(Semestre, self).save(*args, **kwargs)
@@ -82,6 +85,8 @@ class Semestre(models.Model):
         if dias_lectivos:
             return True
         return False
+
+    
 
 
 class Ramo(models.Model):
@@ -220,11 +225,20 @@ class Fechas_especiales(models.Model):
         # ver bien los casos aqui
         # definir que tipos de fechas
         # especiales remueven dias
-        # del semestre y cuales no 
+        # del semestre y cuales no
         return True
 
     def __str__(self):
         return f'{self.nombre}'
+
+    @staticmethod
+    def sin_feriado(fecha):
+        fe = Fechas_especiales.objects.filter(inicio__lte=fecha)
+        fe = fe.filter(fin__gte=fecha)
+        if fe:
+            return False
+        else:
+            return True
 
 
 class Calendario(models.Model):
