@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.crypto import get_random_string
 import datetime
 
-año_actual = 2020
+año_actual = datetime.date.today().year
 
 
 class Profesor(models.Model):
@@ -107,7 +107,7 @@ class Curso(models.Model):
     ramo = models.ForeignKey(Ramo, on_delete=models.CASCADE)
     semestre = models.ForeignKey(Semestre, on_delete=models.CASCADE)
     seccion = models.IntegerField(default=0)
-    profesor = models.ManyToManyField(Profesor)
+    profesor = models.ManyToManyField(Profesor, blank=True)
 
     def __str__(self):
         return f'{self.ramo.codigo}-{self.seccion} {str(self.semestre)}'
