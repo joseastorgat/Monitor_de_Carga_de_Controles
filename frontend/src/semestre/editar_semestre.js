@@ -196,7 +196,7 @@ export class editar_semestre extends React.Component {
                                             <label >Año<span style={{color:"red"}}>*</span></label>
                                         </Col>
                                         <Col lg={8} xs={11}>
-                                            <input type="number"  min="2019" max="2030" step="1" className={this.state.form_errors["año"] ? "form-control is-invalid" : this.state.errors_checked["año"] ? "form-control is-valid" : "form-control"} placeholder="2020" value={this.state.año} name="año" onChange={this.onChange}  />
+                                            <input type="number"  min="2019" max="2030" step="1" className={this.state.form_errors["año"] ? "form-control is-invalid" : this.state.errors_checked["año"] ? "form-control is-valid" : "form-control"} placeholder="Ej.: 2020" value={this.state.año} name="año" onChange={this.onChange}  />
                                             <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["año"]}</span>
                                         </Col>
                                     </Row>
