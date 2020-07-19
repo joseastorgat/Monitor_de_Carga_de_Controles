@@ -1,5 +1,5 @@
 import React from "react";
-import {   Alert,Button,  Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
+import { Alert,Button, Modal,Container,   Col,   Row,   Form,   FormControl,   InputGroup } from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
 import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import NuevoRamo from "./nuevo_ramo"
 import EditarRamo from "./editar_ramo"
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class lista_ramos extends React.Component {
   constructor(props) {
@@ -22,6 +23,7 @@ export class lista_ramos extends React.Component {
       showModalEdit:false,
       ramoPorEliminar: null,
       ramoPorEditar: null,
+      cursosPorEliminar: [],
       MostrarRamos: [],
       search: ""
     };
@@ -49,6 +51,18 @@ export class lista_ramos extends React.Component {
       )    
   }
 
+  async fetchCursosRamo(ramo){
+    let semestres = await axios.get(process.env.REACT_APP_API_URL + `/semestres/`)
+    let cursos = await axios.get(process.env.REACT_APP_API_URL + `/cursos/?ramo=${ramo.codigo}`)
+    cursos.data.map(c => {
+      let semestre = semestres.data.find( s => s.id === c.semestre)
+      c["periodo"] = semestre.periodo
+      c["año"] = semestre.año
+      c["nombre"] = ramo.nombre
+    })
+    return cursos.data
+  }
+
   async componentDidMount() {
     this.fetchRamos();
   }
@@ -60,7 +74,6 @@ export class lista_ramos extends React.Component {
       (o.nombre.toString() + " " + o.codigo.toString() + " Semestre " + o.semestre_malla.toString()).includes(busqueda)
     );
     console.log("Buscados");
-    console.log(ramos_buscados);
     this.setState({MostrarRamos: ramos_buscados});
   }
 
@@ -89,7 +102,7 @@ export class lista_ramos extends React.Component {
       })
       .catch( (err) => {
         console.log(err);
-        alert("[ERROR] No se pudo eliminar la fecha! ");
+        alert("[ERROR] No se pudo eliminar el ramo! ");
         this.setState({
           showModalDelete: false,
           ramoPorEliminar: null
@@ -100,12 +113,13 @@ export class lista_ramos extends React.Component {
     this.setState({ showModalAdd: true});
   }
 
-  showModalDelete(ramo) {
+  async showModalDelete(ramo) {
+    let cursos = await this.fetchCursosRamo(ramo)
     this.setState({ 
       showModalDelete: true, 
       ramoPorEliminar: ramo,
+      cursosPorEliminar: cursos,
       deleteModalMsg: `¿Está seguro que desea eliminar el ramo: ${ramo.codigo} - ${ramo.nombre} ?`
-
     });
   }
   showModalEdit(ramo) {
@@ -116,7 +130,7 @@ export class lista_ramos extends React.Component {
   }
 
   handleCancelDelete() {
-    this.setState({ showModalDelete: false, ramoPorEliminar: null });
+    this.setState({ showModalDelete: false, ramoPorEliminar: null, cursosPorEliminar: [] });
   }
   handleCancelAdd(){
     this.setState({ showModalAdd: false});
@@ -152,9 +166,11 @@ export class lista_ramos extends React.Component {
           ramo={this.state.ramoPorEditar}
         />}
 
-      <DeleteModal
+      <RamoDeleteModal
           msg={this.state.deleteModalMsg}
           show={this.state.showModalDelete}
+          cursos={this.state.cursosPorEliminar}
+          ramo={this.state.ramoPorEliminar}
           handleCancel={() => this.handleCancelDelete()}
           handleDelete={() => this.handleDelete()}
         />
@@ -198,6 +214,58 @@ export class lista_ramos extends React.Component {
     }
   }
 
+  class RamoDeleteModal extends React.Component {
+    render() {
+      const { show, handleCancel, handleDelete, msg, cursos, ramo} = this.props;
+      if(cursos.length <= 0){
+        return (
+          <DeleteModal
+          msg={msg}
+          show={show}
+          handleCancel={() => handleCancel()}
+          handleDelete={() => handleDelete()}
+        />
+        )
+      }
+      else{
+        return (
+          <Modal show={show}  centered onHide={() => handleCancel()}>
+            <Modal.Header className="header-delete" closeButton>
+              <Modal.Title id="contained-modal-title-vcenter">
+                Confirmación de eliminación
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <label><font color="red">[ADVERTENCIA]</font> Al eliminar el ramo {ramo.codigo} los siguientes cursos asociados seran eliminados: </label>
+              {
+                cursos.map(c => {
+                  return (
+                    <Row>
+                      <Col xs="1"></Col>
+                      <Col> <Alert_2 severity="warning">{c.ramo}-{c.seccion} {c.nombre}  - {c.periodo === 1 ? "Otoño" : "Primavera"} {c.año}</Alert_2> </Col>
+                      <Col xs="1"></Col>
+                    </Row>)
+                })
+              }
+
+            </Modal.Body>
+            <Modal.Footer >
+            <div className="w-100"><label >¿Esta seguro de que desea proceder con la eliminación del ramo?</label></div>
+            <div className="w-100" >
+              <Button  variant="danger" onClick={() => handleDelete()}>
+                Eliminar
+              </Button>
+              <Button variant="secondary" className="float-right" onClick={() => handleCancel()}>
+                Cancelar
+              </Button>
+              </div>
+            </Modal.Footer>
+          </Modal>
+        )
+      }
+
+    }
+  }
 
   class RamoItem extends React.Component {
 
