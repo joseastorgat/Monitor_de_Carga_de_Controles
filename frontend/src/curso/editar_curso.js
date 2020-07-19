@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Select from 'react-select';
 import { Button,Row,Col,Modal} from "react-bootstrap";
+import Alert_2 from '@material-ui/lab/Alert';
 
 
 export class editar_curso extends React.Component {
@@ -17,7 +18,7 @@ export class editar_curso extends React.Component {
             ramos:[],
             ramo:"",
             codigo:"",
-            profesores_curso:[],
+            profesor:[],
             seccion:"1",
             MostrarProfesores: [],
             MostrarRamos:[],
@@ -84,7 +85,7 @@ export class editar_curso extends React.Component {
                     .then(response=> 
                         {profesores_selected.push({value:response.id, label:response.nombre})}) 
                   }));   
-                  this.setState({profesores_curso:profesores_selected})               
+                  this.setState({profesor:profesores_selected})               
               })
     }
 
@@ -112,7 +113,7 @@ export class editar_curso extends React.Component {
         })
     };
     onChangeSelected = e => {
-        this.setState({profesores_curso:e }); 
+        this.setState({profesor:e }); 
     }
     
     handleSubmit = e => {
@@ -125,7 +126,7 @@ export class editar_curso extends React.Component {
         let isValid = true
         let ramo = this.state.ramo
         let seccion = this.state.seccion
-        let profesores = this.state.profesores_curso
+        let profesores = this.state.profesor
         let errors_checked = {
             ramo: true,
             profesores: true,
@@ -142,13 +143,13 @@ export class editar_curso extends React.Component {
             isValid = false
         }
         if(profesores === null || profesores === "" || profesores.length <= 0){
-            errores["profesores_curso"] = "Debe seleccionar al menos un profesor"
+            errores["profesor"] = "Debe seleccionar al menos un profesor"
             isValid = false
         }
         else{
             profesores.forEach(p => {
                 if(!this.state.profesores.some(e => e.id === p.value)){
-                    errores["profesores_curso"] = "Profesor seleccionado no válido"
+                    errores["profesor"] = "Profesor seleccionado no válido"
                     isValid = false
                 }
             })
@@ -162,7 +163,6 @@ export class editar_curso extends React.Component {
             isValid = false
         }
         else{
-            console.log(seccion % 1 != 0)
             if(parseInt(seccion) % 1 != 0){
                 errores["seccion"] ="La sección debe ser un número entero"
                 isValid = false
@@ -188,9 +188,9 @@ export class editar_curso extends React.Component {
         console.log(this.state.ramo)
         // No pude encontrar otra forma de sacar el id, hay un problema con el formato del json
         // console.log(this.state.seccion)
-        // console.log(this.state.profesores_curso)
+        // console.log(this.state.profesor)
         var profesores=[]
-        this.state.profesores_curso.map(profesor => profesores.push(profesor.value))
+        this.state.profesor.map(profesor => profesores.push(profesor.value))
 
         // console.log(profesores)
         const url = process.env.REACT_APP_API_URL + `/cursos/${this.state.id_curso}/`
@@ -217,11 +217,15 @@ export class editar_curso extends React.Component {
                 this.state.sacar_pop_up();
 			})
 			.catch( (err) => {
-                console.log(this.state)
 				console.log(err);
 				console.log("cant update curso");
-                alert("No se pudo actualizar curso!");
-                this.state.sacar_pop_up();
+                let errors = this.state.form_errors
+                for (let [key, value] of Object.entries(err.response.data)){
+                    errors[key] = value[0]
+                }
+                this.setState({
+                    form_errors:errors
+                });
 			});
 	}
 
@@ -238,13 +242,13 @@ export class editar_curso extends React.Component {
 				ramos:[],
                 ramo:"",
                 codigo:"",
-                profesores_curso:[],
+                profesor:[],
                 seccion:"1",
 				form_errors: {},
 				errors_checked: {},
 			  })
 		}
-        
+        const campos = ["ramo", "seccion", "profesor"]
         return (
             <Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
                 <Modal.Header className="header-edit" closeButton>
@@ -253,6 +257,15 @@ export class editar_curso extends React.Component {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    { 
+                    Object.keys(this.state.form_errors).map(k => {
+                    if(!(campos.includes(k))){
+                        return (
+                        <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+                        )
+                    }
+                    })
+                    }
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                             <Row>
                                 <Col xs="1"></Col>
@@ -319,8 +332,8 @@ export class editar_curso extends React.Component {
                                             <label >Profesor</label>
                                         </Col>
                                         <Col lg={9} xs={12}>
-                                            <Select placeholder="Selecciona profesor" className={this.state.form_errors["profesores_curso"] ? "select_profesores is-invalid" : this.state.errors_checked["profesores_curso"] ? "select_profesores is-valid" : "select_profesores"}  style={{ color: "red",fontSize:"12px" }}   isMulti options={this.state.options}  value={this.state.profesores_curso} name="profesores_curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected}/>
-                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["profesores_curso"]}</span>
+                                            <Select placeholder="Selecciona profesor" className={this.state.form_errors["profesor"] ? "select_profesores is-invalid" : this.state.errors_checked["profesor"] ? "select_profesores is-valid" : "select_profesores"}  style={{ color: "red",fontSize:"12px" }}   isMulti options={this.state.options}  value={this.state.profesor} name="profesor" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChangeSelected}/>
+                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["profesor"]}</span>
                                         </Col>
                                     </Row>
                                 </Col>  

@@ -70,7 +70,6 @@ export class lista_ramos extends React.Component {
 
   async handleDelete() {
     let e = this.state.ramoPorEliminar.codigo;
-    console.log(e);
     const url = process.env.REACT_APP_API_URL + `/ramos/${e}/`;
     let options = {
       method: 'DELETE',

@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Select from 'react-select';
 import { Button,Row,Col,Modal} from "react-bootstrap";
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class nuevo_curso extends React.Component {
     constructor(props) {
@@ -14,7 +15,7 @@ export class nuevo_curso extends React.Component {
             ramos:[],
             ramo:"",
             codigo:"",
-            profesores_curso:[],
+            profesor:[],
             seccion:"1",
             MostrarProfesores: [],
             MostrarRamos:[],
@@ -100,7 +101,7 @@ export class nuevo_curso extends React.Component {
     };
 
     onChangeSelected = e => {
-        this.setState({profesores_curso:e }); 
+        this.setState({profesor:e }); 
     }
     handleSubmit = e => {
         e.preventDefault();
@@ -113,13 +114,12 @@ export class nuevo_curso extends React.Component {
         let isValid = true
         let ramo = this.state.ramo
         let seccion = this.state.seccion
-        let profesores = this.state.profesores_curso
+        let profesores = this.state.profesor
         let errors_checked = {
             ramo: true,
             profesores: true,
             seccion: true
         }
-        console.log(ramo)
 
         if(ramo === ""){
             errores["ramo"] = "Debe seleccionar un ramo"
@@ -131,13 +131,13 @@ export class nuevo_curso extends React.Component {
             isValid = false
         }
         if(profesores === null || profesores === "" || profesores.length <= 0){
-            errores["profesores_curso"] = "Debe seleccionar al menos un profesor"
+            errores["profesor"] = "Debe seleccionar al menos un profesor"
             isValid = false
         }
         else{
             profesores.forEach(p => {
                 if(!this.state.profesores.some(e => e.id === p.value)){
-                    errores["profesores_curso"] = "Profesor seleccionado no válido"
+                    errores["profesor"] = "Profesor seleccionado no válido"
                     isValid = false
                 }
             })
@@ -151,7 +151,6 @@ export class nuevo_curso extends React.Component {
             isValid = false
         }
         else{
-            console.log(seccion % 1 != 0)
             if(parseInt(seccion) % 1 != 0){
                 errores["seccion"] ="La sección debe ser un número entero"
                 isValid = false
@@ -179,7 +178,7 @@ export class nuevo_curso extends React.Component {
             id=semestre.id
         ))
         var profesores=[]
-        this.state.profesores_curso.map(profesor => profesores.push(profesor.value))
+        this.state.profesor.map(profesor => profesores.push(profesor.value))
 		const url = process.env.REACT_APP_API_URL + "/cursos/"
 		let options = {
 			method: 'POST',
@@ -211,8 +210,13 @@ export class nuevo_curso extends React.Component {
 			.catch( (err) => {
 				console.log(err);
 				console.log("cant create curso");
-                alert("No se pudo crear curso!");
-                this.state.sacar_pop_up();
+                let errors = this.state.form_errors
+                for (let [key, value] of Object.entries(err.response.data)){
+                    errors[key] = value[0]
+                }
+                this.setState({
+                    form_errors:errors
+                })
 			});
 	}
 
@@ -227,12 +231,13 @@ export class nuevo_curso extends React.Component {
 				ramos:[],
                 ramo:"",
                 codigo:"",
-                profesores_curso:[],
+                profesor:[],
                 seccion:"1",
 				form_errors: {},
 				errors_checked: {},
 			  })
-		}
+        }
+        const campos = ["ramo", "seccion", "profesor"]
         return (
             <Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
             <Modal.Header className="header-add" closeButton>
@@ -241,6 +246,15 @@ export class nuevo_curso extends React.Component {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                { 
+                Object.keys(this.state.form_errors).map(k => {
+                if(!(campos.includes(k))){
+                    return (
+                    <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+                    )
+                }
+                })
+                }
                     <form className="" name="form" onSubmit={this.handleSubmit}>
                             <Row>
                                 <Col xs="1"></Col>
@@ -309,8 +323,8 @@ export class nuevo_curso extends React.Component {
                                             <label >Profesor</label>
                                         </Col>
                                         <Col lg={9} xs={12}>
-                                        <Select placeholder="Selecciona profesor" className={this.state.form_errors["profesores_curso"] ? "select_profesores is-invalid" : this.state.errors_checked["profesores_curso"] ? "select_profesores is-valid" : "select_profesores"}  style={{ color: "red",fontSize:"12px", textAlignLast:'center', textAlign:'center' }}   isMulti options={options} label="Seleccione profesores" value={this.state.profesores_curso} name="profesores_curso" onChange={this.onChangeSelected}/>
-                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["profesores_curso"]}</span>
+                                        <Select placeholder="Selecciona profesor" className={this.state.form_errors["profesor"] ? "select_profesores is-invalid" : this.state.errors_checked["profesor"] ? "select_profesores is-valid" : "select_profesores"}  style={{ color: "red",fontSize:"12px", textAlignLast:'center', textAlign:'center' }}   isMulti options={options} label="Seleccione profesores" value={this.state.profesor} name="profesor" onChange={this.onChangeSelected}/>
+                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["profesor"]}</span>
                                         </Col>
                                     </Row>
                                 </Col>  

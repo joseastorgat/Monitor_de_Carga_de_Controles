@@ -4,13 +4,14 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Modal,Col,Row} from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class nuevosemestre extends React.Component {
     state={
-        año_semestre: "",
-        periodo_semestre: "1",
-        inicio_semestre: "",
-        fin_semestre:"",
+        año: "",
+        periodo: "1",
+        inicio: "",
+        fin:"",
         estado_semestre:"1",
         forma_creacion_semestre:0,
 
@@ -80,61 +81,60 @@ export class nuevosemestre extends React.Component {
     validateForm(){
         let errores = {}
         let isValid = true
-        let año_semestre = this.state.año_semestre
-        let periodo_semestre =  this.state.periodo_semestre
-        let inicio_semestre = this.state.inicio_semestre
-        let fin_semestre = this.state.fin_semestre
+        let año = this.state.año
+        let periodo =  this.state.periodo
+        let inicio = this.state.inicio
+        let fin = this.state.fin
         let errors_checked = {
-            año_semestre: true,
-            periodo_semestre: true,
-            inicio_semestre: true,
-            fin_semestre: true
+            año: true,
+            periodo: true,
+            inicio: true,
+            fin: true
         }
 
-        if(año_semestre === ""){
-            errores["año_semestre"] = "Debe ingresar un año para el semestre"
+        if(año === ""){
+            errores["año"] = "Debe ingresar un año para el semestre"
             isValid = false
         }
-        else if(isNaN(parseInt(año_semestre))){
-            errores["año_semestre"] = "Debe ingresar un año válido"
+        else if(isNaN(parseInt(año))){
+            errores["año"] = "Debe ingresar un año válido"
             isValid = false
         }
-        if(periodo_semestre != 1 && periodo_semestre != 2){
-            errores["periodo_semestre"] = "Debe elegir uno de los dos periodos"
+        if(periodo != 1 && periodo != 2){
+            errores["periodo"] = "Debe elegir uno de los dos periodos"
             isValid = false
         }
-        if(inicio_semestre === ""){
-            errores["inicio_semestre"] = "Debe ingresar una fecha de inicio"
+        if(inicio === ""){
+            errores["inicio"] = "Debe ingresar una fecha de inicio"
             isValid = false
         }
-        if(fin_semestre === ""){
-            errores["fin_semestre"] = "Debe ingresar una fecha de fin"
+        if(fin === ""){
+            errores["fin"] = "Debe ingresar una fecha de fin"
             isValid = false
         }
 
-        if(inicio_semestre !== "" && fin_semestre !== ""){
-            let inicio = new Date(inicio_semestre)
-            let fin = new Date(fin_semestre)
-            if(fin - inicio <= 0){
-                errores["fin_semestre"] = "Debe ingresar una fecha fin posterior a la fecha de inicio"
+        if(inicio !== "" && fin !== ""){
+            let inicio_fecha = new Date(inicio)
+            let fin_fecha = new Date(fin)
+            if(fin_fecha - inicio_fecha <= 0){
+                errores["fin"] = "Debe ingresar una fecha fin posterior a la fecha de inicio"
                 isValid = false
             }
         }
         let dateformat = (/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/)|(/^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/);
-        console.log(inicio_semestre)
-        if(!inicio_semestre.match(dateformat) && inicio_semestre !== ""){
-            errores["inicio_semestre"] = "El formato de la fecha es incorrecto"
+        if(!inicio.match(dateformat) && inicio !== ""){
+            errores["inicio"] = "El formato de la fecha es incorrecto"
             isValid = false
         }
-        else if(inicio_semestre !== ""){
-            let inicio = new Date(inicio_semestre)
-            if(inicio.getFullYear() != año_semestre){
-                errores["inicio_semestre"] = "El año de la fecha de inicio no coincide con el año del semestre"
+        else if(inicio !== ""){
+            let inicio_fecha = new Date(inicio)
+            if(inicio_fecha.getFullYear() != año){
+                errores["inicio"] = "El año de la fecha de inicio no coincide con el año del semestre"
                 isValid = false
             }
         }
-        if(!fin_semestre.match(dateformat) && fin_semestre !== ""){
-            errores["fin_semestre"] = "El formato de la fecha es incorrecto"
+        if(!fin.match(dateformat) && fin !== ""){
+            errores["fin"] = "El formato de la fecha es incorrecto"
             isValid = false
         }
         this.setState({
@@ -158,11 +158,11 @@ export class nuevosemestre extends React.Component {
             url = process.env.REACT_APP_API_URL + "/semestres/";
 
             data = {
-                "año": parseInt(this.state.año_semestre),
+                "año": parseInt(this.state.año),
                 "estado": parseInt(this.state.estado_semestre),
-                "periodo": parseInt(this.state.periodo_semestre),
-                "inicio":this.state.inicio_semestre,
-                "fin": this.state.fin_semestre
+                "periodo": parseInt(this.state.periodo),
+                "inicio":this.state.inicio,
+                "fin": this.state.fin
             }
             options = {
                 method: 'POST',
@@ -187,10 +187,14 @@ export class nuevosemestre extends React.Component {
                 this.state.sacar_pop_up()
               })
               .catch( (err) => {
-                console.log(err);
                 console.log("cant create semestre");
-                alert("No se pudo crear semestre!");
-                this.state.sacar_pop_up()
+                let errors = this.state.form_errors
+                for (let [key, value] of Object.entries(err.response.data)){
+                errors[key] = value[0]
+                }
+                this.setState({
+                form_errors:errors
+                })
               });
 
         }
@@ -225,10 +229,10 @@ export class nuevosemestre extends React.Component {
         const { show_form, handleCancel} = this.props;
         let resetState = () =>{
             this.setState({
-                año_semestre: "",
-                periodo_semestre: "1",
-                inicio_semestre: "",
-                fin_semestre:"",
+                año: "",
+                periodo: "1",
+                inicio: "",
+                fin:"",
                 estado_semestre:"1",
                 forma_creacion_semestre:0,
         
@@ -244,7 +248,7 @@ export class nuevosemestre extends React.Component {
                 archivo_cargado: false,
             })
         }
-
+        const campos = ["año", "periodo", "inicio", "fin"]
         return (
             <Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
             <Modal.Header className="header-add" closeButton>
@@ -253,6 +257,15 @@ export class nuevosemestre extends React.Component {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                { 
+				Object.keys(this.state.form_errors).map(k => {
+				if(!(campos.includes(k))){
+					return (
+                        <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+					)
+				}
+				})
+				}
                     <form className="has-warning" name="form" onSubmit={this.handleSubmit}>
                         <div>
                             <Row>
@@ -263,8 +276,8 @@ export class nuevosemestre extends React.Component {
                                             <label >Año<span style={{color:"red"}}>*</span></label>
                                         </Col>
                                         <Col lg={8} xs={11}>
-                                            <input type="number" min="2019" max="2030" step="1" className={this.state.form_errors["año_semestre"] ? "form-control is-invalid" : this.state.errors_checked["año_semestre"] ? "form-control is-valid" : "form-control"} placeholder="2020" name="año_semestre" onChange={this.onChange}  />
-                                            <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["año_semestre"]}</span>
+                                            <input type="number" min="2019" max="2030" step="1" className={this.state.form_errors["año"] ? "form-control is-invalid" : this.state.errors_checked["año"] ? "form-control is-valid" : "form-control"} placeholder="2020" name="año" onChange={this.onChange}  />
+                                            <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["año"]}</span>
                                         </Col>
                                     </Row>
                                 </Col>  
@@ -276,14 +289,14 @@ export class nuevosemestre extends React.Component {
                                         </Col>
                                         <Col lg={8} xs={11}>
                                             <div  className="custom-control custom-radio custom-control-inline">
-                                                <input type="radio" id="otoño" name="periodo_semestre" value="1" onChange={this.onChange} className={this.state.form_errors["periodo_semestre"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo_semestre"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo_semestre)===1} />
+                                                <input type="radio" id="otoño" name="periodo" value="1" onChange={this.onChange} className={this.state.form_errors["periodo"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo)===1} />
                                                 <label className="custom-control-label" htmlFor="otoño" >Otoño</label>
                                             </div>
                                             <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
-                                                <input type="radio" id="primavera" name="periodo_semestre" value="2" onChange={this.onChange} className={this.state.form_errors["periodo_semestre"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo_semestre"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo_semestre)===2}/>
+                                                <input type="radio" id="primavera" name="periodo" value="2" onChange={this.onChange} className={this.state.form_errors["periodo"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo)===2}/>
                                                 <label className="custom-control-label" htmlFor="primavera">Primavera</label>
                                             </div>
-                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["periodo_semestre"]}</span>
+                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["periodo"]}</span>
                                         </Col>
                                     </Row>
                                 </Col>
@@ -297,8 +310,8 @@ export class nuevosemestre extends React.Component {
                                         <label >Inicio<span style={{color:"red"}}>*</span></label>
                                         </Col>
                                         <Col lg={8} xs={11}>
-                                        <input type="date" className={this.state.form_errors["inicio_semestre"] ? "form-control is-invalid" : this.state.errors_checked["inicio_semestre"] ? "form-control is-valid" : "form-control"} name="inicio_semestre" onChange={this.onChange} />
-                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["inicio_semestre"]}</span>
+                                        <input type="date" className={this.state.form_errors["inicio"] ? "form-control is-invalid" : this.state.errors_checked["inicio"] ? "form-control is-valid" : "form-control"} name="inicio" onChange={this.onChange} />
+                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["inicio"]}</span>
                                         </Col>
                                     </Row>
                                 </Col>
@@ -308,8 +321,8 @@ export class nuevosemestre extends React.Component {
                                             <label >Fin<span style={{color:"red"}}>*</span></label>
                                         </Col>
                                         <Col lg={8} xs={11}>
-                                            <input type="date" className={this.state.form_errors["fin_semestre"] ? "form-control is-invalid" : this.state.errors_checked["fin_semestre"] ? "form-control is-valid" : "form-control"} name="fin_semestre" onChange={this.onChange} />
-                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["fin_semestre"]}</span>
+                                            <input type="date" className={this.state.form_errors["fin"] ? "form-control is-invalid" : this.state.errors_checked["fin"] ? "form-control is-valid" : "form-control"} name="fin" onChange={this.onChange} />
+                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["fin"]}</span>
                                         </Col>
                                     </Row>
                                 </Col>

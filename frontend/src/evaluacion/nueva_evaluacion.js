@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button, Modal } from "react-bootstrap";
 import { Row} from "react-bootstrap";
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class NuevaEvaluacion extends React.Component {
 	constructor(props) {
@@ -30,6 +31,7 @@ export class NuevaEvaluacion extends React.Component {
         axios.get(process.env.REACT_APP_API_URL + `/semestres/${this.state.semestre_id}/`)
         .then( (res) => { 
             this.setState({
+                curso: this.props.curso_seleccionado.split("-")[0],
                 fecha_inicio_semestre:res.data.inicio,
                 fecha_fin_semestre:res.data.fin
             })
@@ -66,8 +68,7 @@ export class NuevaEvaluacion extends React.Component {
             tipo: true,
             curso: true
         }
-        console.log(curso==="")
-        if(curso === "" || curso=== null){
+        if(curso === "" || curso=== null || curso=== '0'){
             errores["curso"] = "Debe seleccionar un curso"
             isValid = false
         }
@@ -102,19 +103,18 @@ export class NuevaEvaluacion extends React.Component {
     }
     create_evaluacion() {  
         console.log("post evaluacion ...")
+        let curso=this.state.curso
         if(!this.validateForm()){
             return;
         }
-        const url = process.env.REACT_APP_API_URL + "/evaluaciones/"
-        let curso=this.state.curso
         if(curso==null){
             curso=this.props.curso_seleccionado.split("-")[0]
         }
+        
+        
+        const url = process.env.REACT_APP_API_URL + "/evaluaciones/"
+        
 
-        console.log(curso)
-        console.log(this.state.fecha)
-        console.log(this.state.tipo)
-        console.log(this.state.titulo)
 		let options = {
 			method: 'POST',
 			url: url,
@@ -140,8 +140,13 @@ export class NuevaEvaluacion extends React.Component {
 			.catch( (err) => {
 				console.log(err);
 				console.log("cant create evaluacion");
-				alert("No se pudo crear evaluacion!");
-                this.state.sacar_pop_up()
+				let errors = this.state.form_errors
+                for (let [key, value] of Object.entries(err.response.data)){
+                    errors[key] = value[0]
+                }
+                this.setState({
+                    form_errors:errors
+                })
 			});
 	}
 
@@ -160,7 +165,8 @@ export class NuevaEvaluacion extends React.Component {
                 form_errors: {},
                 errors_checked: {}
 			  })
-		}
+        }
+        const campos = ["fecha", "titulo", "tipo", "curso"]
 		return (
 			<Modal size="xl" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
         <Modal.Header className="header-add" closeButton>
@@ -170,6 +176,15 @@ export class NuevaEvaluacion extends React.Component {
         </Modal.Header>
         <Modal.Body>
 					<div>
+                    { 
+                    Object.keys(this.state.form_errors).map(k => {
+                    if(!(campos.includes(k))){
+                        return (
+                        <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+                        )
+                    }
+                    })
+                    }
                     <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                     <div className="row">
                         <div className="col-sm-1"></div>        

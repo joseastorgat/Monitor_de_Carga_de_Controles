@@ -9,6 +9,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import ViewTitle from "../common/ViewTitle";
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class evaluaciones extends React.Component {
     constructor(props) {
@@ -60,7 +61,6 @@ export class evaluaciones extends React.Component {
     }
 
     onChange = e => {
-        console.log("change")
         let errors_checked = this.state.errors_checked
         let form_errors = this.state.form_errors
         errors_checked[e.target.name] = false
@@ -246,7 +246,13 @@ export class evaluaciones extends React.Component {
         .catch( (err) => {
             console.log(err);
             console.log("cant update evaluacion");
-            alert("[ERROR] No se puedo actualizar la evaluación! ");
+            let errors = this.state.form_errors
+            for (let [key, value] of Object.entries(err.response.data)){
+                errors[key] = value[0]
+            }
+            this.setState({
+                form_errors:errors
+            })
         });
     }
 
@@ -296,7 +302,6 @@ export class evaluaciones extends React.Component {
     }
 
     create_evaluacion() {  
-        console.log(this.state)
         console.log("post evaluaciones ...")
         if(!this.validateForm()){
             return;
@@ -320,7 +325,6 @@ export class evaluaciones extends React.Component {
       axios(options)
       .then( (res) => {
         console.log("create evaluacion");
-        console.log(res);
         evaluaciones.push(res.data)
         this.form.reset()
         this.setState(
@@ -338,7 +342,13 @@ export class evaluaciones extends React.Component {
       .catch( (err) => {
         console.log("cant create evaluacion");
         console.log(err);
-        alert("[ERROR] No se pudo crear la evaluacion!");
+        let errors = this.state.form_errors
+        for (let [key, value] of Object.entries(err.response.data)){
+            errors[key] = value[0]
+        }
+        this.setState({
+            form_errors:errors
+        })
       });
     }
 
@@ -391,12 +401,22 @@ export class evaluaciones extends React.Component {
     handleCancel() {
         this.setState({ showModal: false, ramoPorEliminar: null });
     }
-
+    
     createFormRender(){
+        const campos = ["fecha", "titulo", "tipo"]
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                 <div className="generic-form" ref={this.divToFocus}>  
                     <h4>Nueva Evaluación</h4>
+                    { 
+                    Object.keys(this.state.form_errors).map(k => {
+                    if(!(campos.includes(k))){
+                        return (
+                        <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+                        )
+                    }
+                    })
+                    }
                     <div className="row">
                     <div className="col-sm-1"></div>        
                         <div className="col-sm-5">
@@ -454,10 +474,20 @@ export class evaluaciones extends React.Component {
     }
     updateFormRender(){
         var ev = this.state.evaluaciones[this.state.editar_index];
+        const campos = ["fecha", "titulo", "tipo"]
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                 <div className="generic-form" ref={this.divToFocus}>  
                     <h4>Editar {ev.tipo}: {ev.titulo}</h4>
+                    { 
+                    Object.keys(this.state.form_errors).map(k => {
+                    if(!(campos.includes(k))){
+                        return (
+                        <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+                        )
+                    }
+                    })
+                    }
                     <div className="row">
                     <div className="col-sm-1"></div>        
                         <div className="col-sm-5">
