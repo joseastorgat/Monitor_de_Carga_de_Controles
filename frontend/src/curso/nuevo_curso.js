@@ -52,11 +52,11 @@ export class nuevo_curso extends React.Component {
             ramos: res,
             MostrarRamos:res,
             })
-            if (res.length>0){//Setear primero por default, pero ver si existe al menos un ramo creado
-                this.setState({
-                codigo:res[0].codigo,
-                ramo:res[0].nombre})
-            }
+            // if (res.length>0){//Setear primero por default, pero ver si existe al menos un ramo creado
+            //     this.setState({
+            //     codigo:res[0].codigo,
+            //     ramo:res[0].nombre})
+            // }
         }
           )
       }
@@ -119,13 +119,14 @@ export class nuevo_curso extends React.Component {
             profesores: true,
             seccion: true
         }
+        console.log(ramo)
 
         if(ramo === ""){
             errores["ramo"] = "Debe seleccionar un ramo"
             isValid = false
         }
 
-        if(!this.state.ramos.some(e => e.codigo === ramo)){
+        else if(!this.state.ramos.some(e => e.codigo === ramo)){
             errores["ramo"]= "Ramo seleccionado no válido"
             isValid = false
         }
@@ -259,10 +260,11 @@ export class nuevo_curso extends React.Component {
                                 <Col lg={5} >
                                     <Row>
                                         <Col xs={3}>
-                                            <label >Ramo</label>
+                                            <label >Ramo<span style={{color:"red"}}>*</span></label>
                                         </Col>
-                                        <Col lg={9} xs={12}>
+                                        <Col lg={8} xs={11}>
                                             <select className={this.state.form_errors["ramo"] ? "form-control center is-invalid" : this.state.errors_checked["ramo"] ? "form-control center is-valid" : "form-control center"} name="ramo" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
+                                                <option disabled="disabled" selected="selected" hidden>Seleccione Ramo</option>
                                                 {this.state.MostrarRamos.map(ramos => (
                                                 <option  value={ramos.codigo}>{ramos.nombre}</option>
                                                 ))}
@@ -292,9 +294,9 @@ export class nuevo_curso extends React.Component {
                                 <Col lg={5} >
                                     <Row>
                                         <Col xs={3}>
-                                            <label >Sección</label>
+                                            <label >Sección<span style={{color:"red"}}>*</span></label>
                                         </Col>
-                                        <Col lg={9} xs={12}>
+                                        <Col lg={8} xs={11}>
                                             <input type="number" className={this.state.form_errors["seccion"] ? "form-control is-invalid" : this.state.errors_checked["seccion"] ? "form-control is-valid" : "form-control"} value={this.state.seccion} name="seccion"  min="1" max="10" style={{textAlignLast:'center'}}  onChange={this.onChange} />
                                             <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["seccion"]}</span>
                                         </Col>

@@ -272,9 +272,9 @@ export class editar_curso extends React.Component {
                                 <Col lg={5} >
                                     <Row>
                                         <Col xs={3}>
-                                            <label >Ramo</label>
+                                            <label >Ramo<span style={{color:"red"}}>*</span></label>
                                         </Col>
-                                        <Col lg={9} xs={12}>
+                                        <Col lg={8} xs={11}>
                                             <select  className={this.state.form_errors["ramo"] ? "form-control center is-invalid" : this.state.errors_checked["ramo"] ? "form-control center is-valid" : "form-control center"} name="ramo" value={this.state.ramo} style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
                                                 {this.state.MostrarRamos.map(ramos => (
                                                 <option value={ramos.codigo}>{ramos.nombre}</option>
@@ -304,9 +304,9 @@ export class editar_curso extends React.Component {
                                 <Col lg={5} >
                                     <Row>
                                         <Col xs={3}>
-                                            <label >Sección</label>
+                                            <label >Sección<span style={{color:"red"}}>*</span></label>
                                         </Col>
-                                        <Col lg={9} xs={12}>
+                                        <Col lg={8} xs={11}>
                                             <input type="number" className={this.state.form_errors["seccion"] ? "form-control is-invalid" : this.state.errors_checked["seccion"] ? "form-control is-valid" : "form-control"} name="seccion"  value={this.state.seccion} min="1" max="10" style={{textAlignLast:'center'}}  onChange={this.onChange} />
                                             <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["seccion"]}</span>
                                         </Col>

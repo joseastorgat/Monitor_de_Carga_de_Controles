@@ -260,21 +260,21 @@ export class nuevosemestre extends React.Component {
                                 <Col lg={5} >
                                     <Row>
                                         <Col xs={2}>
-                                            <label >Año</label>
+                                            <label >Año<span style={{color:"red"}}>*</span></label>
                                         </Col>
-                                        <Col lg={9} xs={12}>
+                                        <Col lg={8} xs={11}>
                                             <input type="number" min="2019" max="2030" step="1" className={this.state.form_errors["año_semestre"] ? "form-control is-invalid" : this.state.errors_checked["año_semestre"] ? "form-control is-valid" : "form-control"} placeholder="2020" name="año_semestre" onChange={this.onChange}  />
                                             <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["año_semestre"]}</span>
                                         </Col>
                                     </Row>
                                 </Col>  
 
-                                <Col lg={5} >
+                                <Col lg={6} >
                                     <Row>
                                         <Col xs={2}>
-                                            <label>Tipo</label>
+                                            <label>Tipo<span style={{color:"red"}}>*</span></label>
                                         </Col>
-                                        <Col lg={9} xs={12}>
+                                        <Col lg={8} xs={11}>
                                             <div  className="custom-control custom-radio custom-control-inline">
                                                 <input type="radio" id="otoño" name="periodo_semestre" value="1" onChange={this.onChange} className={this.state.form_errors["periodo_semestre"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo_semestre"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo_semestre)===1} />
                                                 <label className="custom-control-label" htmlFor="otoño" >Otoño</label>
@@ -294,9 +294,9 @@ export class nuevosemestre extends React.Component {
                                 <Col lg={5} >
                                     <Row>
                                         <Col xs={2}>
-                                        <label >Inicio</label>
+                                        <label >Inicio<span style={{color:"red"}}>*</span></label>
                                         </Col>
-                                        <Col lg={9} xs={12}>
+                                        <Col lg={8} xs={11}>
                                         <input type="date" className={this.state.form_errors["inicio_semestre"] ? "form-control is-invalid" : this.state.errors_checked["inicio_semestre"] ? "form-control is-valid" : "form-control"} name="inicio_semestre" onChange={this.onChange} />
                                         <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["inicio_semestre"]}</span>
                                         </Col>
@@ -305,9 +305,9 @@ export class nuevosemestre extends React.Component {
                                 <Col lg={5} >
                                     <Row>
                                         <Col xs={2}>
-                                            <label >Fin</label>
+                                            <label >Fin<span style={{color:"red"}}>*</span></label>
                                         </Col>
-                                        <Col lg={9} xs={12}>
+                                        <Col lg={8} xs={11}>
                                             <input type="date" className={this.state.form_errors["fin_semestre"] ? "form-control is-invalid" : this.state.errors_checked["fin_semestre"] ? "form-control is-valid" : "form-control"} name="fin_semestre" onChange={this.onChange} />
                                             <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["fin_semestre"]}</span>
                                         </Col>

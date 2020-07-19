@@ -402,7 +402,7 @@ export class evaluaciones extends React.Component {
                         <div className="col-sm-5">
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Título</label>
+                                    <label >Título<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="text" className={this.state.form_errors["titulo"] ? "form-control is-invalid" : this.state.errors_checked["titulo"] ? "form-control is-valid" : "form-control"} name="titulo"  value={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
@@ -413,7 +413,7 @@ export class evaluaciones extends React.Component {
                         <div className="col-sm-5">
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Fecha</label>
+                                    <label >Fecha<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha"  value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange} min={this.state.fecha_inicio_semestre} max={this.state.fecha_fin_semestre}/>
@@ -427,7 +427,7 @@ export class evaluaciones extends React.Component {
                         <div className="col-sm-5" >
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Tipo</label>
+                                    <label >Tipo<span style={{color:"red"}}>*</span></label>
                                 </div>
     
                                 <div className="custom-control custom-radio custom-control-inline"  >
@@ -463,7 +463,7 @@ export class evaluaciones extends React.Component {
                         <div className="col-sm-5">
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Título</label>
+                                    <label >Título<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="text" className={this.state.form_errors["titulo"] ? "form-control is-invalid" : this.state.errors_checked["titulo"] ? "form-control is-valid" : "form-control"} name="titulo"  value={this.state.titulo} placeholder="Título" style={{textAlignLast:'center'}} onChange={this.onChange} />
@@ -474,7 +474,7 @@ export class evaluaciones extends React.Component {
                         <div className="col-sm-5">
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Fecha</label>
+                                    <label >Fecha<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha" value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange} min={this.state.fecha_inicio_semestre} max={this.state.fecha_fin_semestre}/>
@@ -488,7 +488,7 @@ export class evaluaciones extends React.Component {
                         <div className="col-sm-5" >
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Tipo</label>
+                                    <label >Tipo<span style={{color:"red"}}>*</span></label>
                                 </div>
     
                                 <div className="custom-control custom-radio custom-control-inline"  >

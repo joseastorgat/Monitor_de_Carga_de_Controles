@@ -164,9 +164,9 @@ export class nuevafecha extends React.Component {
                                 <Col lg={5}>
                                     <Row>
                                         <Col xs={3}>
-                                            <label >Nombre</label>
+                                            <label >Nombre<span style={{color:"red"}}>*</span></label>
                                         </Col>
-                                        <Col lg={8} xs={12}>
+                                        <Col lg={8} xs={11}>
                                             <input type="text" className={this.state.form_errors["nombre_fecha"] ? "form-control is-invalid" : this.state.errors_checked["nombre_fecha"] ? "form-control is-valid" : "form-control"} name="nombre_fecha" onChange={this.onChange} placeholder="Nombre Feriado" style={{textAlignLast:'center'}} />
                                             <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["nombre_fecha"]}</span>
                                         </Col>
@@ -176,10 +176,10 @@ export class nuevafecha extends React.Component {
                                 <Col lg={5}>
                                     <Row>
                                         <Col xs={2}>
-                                            <label >Tipo</label>
+                                            <label >Tipo<span style={{color:"red"}}>*</span></label>
                                         </Col>
                     
-                                        <Col lg={8} xs={12}>
+                                        <Col lg={8} xs={11}>
                                         {/* No pude centrarlo, hay un problema con prioridades de css de react */}
                                             <select className={this.state.form_errors["tipo_fecha"] ? "form-control is-invalid" : this.state.errors_checked["tipo_fecha"] ? "form-control is-valid" : "form-control"}  onChange={this.onChange} name="tipo_fecha" style={{textAlignLast:'center',textAlign:'center'}}  >
                                                 <option value="1" selected>Feriado</option>
@@ -200,9 +200,9 @@ export class nuevafecha extends React.Component {
                                 <Col lg={5} >
                                     <Row>
                                         <Col xs={3}>
-                                        <label >Inicio</label>
+                                        <label >Inicio<span style={{color:"red"}}>*</span></label>
                                         </Col>
-                                        <Col lg={8} xs={12}>
+                                        <Col lg={8} xs={11}>
                                             <input type="date" onChange={this.onChange} className={this.state.form_errors["inicio_fecha"] ? "form-control is-invalid" : this.state.errors_checked["inicio_fecha"] ? "form-control is-valid" : "form-control"} name="inicio_fecha" />
                                             <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["inicio_fecha"]}</span>
                                         </Col>

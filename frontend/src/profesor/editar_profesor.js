@@ -125,9 +125,9 @@ export class editarprofesor extends React.Component {
 							<Col lg={5}>
 									<Row>
 										<Col xs="auto">
-												<label>Nombre</label>
+												<label>Nombre <span style={{color:"red"}}>*</span> </label>
 										</Col>
-										<Col lg={8} xs={12}>
+										<Col lg={8} xs={11}>
                       <input type="text" className={this.state.form_errors["nombre"] ? "form-control is-invalid" : this.state.errors_checked["nombre"] ? "form-control is-valid" : "form-control"} name="nombre" defaultValue={this.state.nombre} onChange={this.onChange} style={{textAlignLast:'center'}} />
                       <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["nombre"]}</span>
                     </Col>
@@ -137,9 +137,9 @@ export class editarprofesor extends React.Component {
 							<Col lg={5}>
 								<Row >
 									<Col  xs="auto">
-											<label >Apellido</label>
+											<label >Apellido<span style={{color:"red"}}>*</span></label>
 									</Col>
-									<Col lg={8} xs={12}>
+									<Col lg={8} xs={11}>
                     <input type="text" className={this.state.form_errors["apellido"] ? "form-control is-invalid" : this.state.errors_checked["apellido"] ? "form-control is-valid" : "form-control"} name="apellido" defaultValue={this.state.apellido} onChange={this.onChange} style={{textAlignLast:'center'}}  />
                     <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["apellido"]}</span>
                   </Col>
