@@ -3,7 +3,6 @@ import Header from "../home/Header";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { login } from "../actions/auth";
-import ResetPass from "./ResetPass";
 import {Link, Redirect } from "react-router-dom";
 
 
