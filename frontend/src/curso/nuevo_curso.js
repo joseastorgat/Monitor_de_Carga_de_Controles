@@ -178,7 +178,7 @@ export class nuevo_curso extends React.Component {
             id=semestre.id
         ))
         var profesores=[]
-        this.state.profesores_curso.map(profesor => profesores.push(profesor.value))
+        this.state.profesor.map(profesor => profesores.push(profesor.value))
         if (profesores==[]){
             profesores=null
         }

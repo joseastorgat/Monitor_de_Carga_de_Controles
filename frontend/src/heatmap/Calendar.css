@@ -118,7 +118,6 @@ table{
 }
 
 td{
-  width:100px;
   word-wrap: break-word;
   border: 2px solid #ddd;
 }
@@ -131,10 +130,19 @@ th{
   background-color: #ccc;
   border: 2px solid #dddddd;
   position: sticky; top: 0;
+  box-sizing: border-box;
+  width: 100px;
 }
 .gris{
   background-color: #ccc;
 }
+.calendar{
+  display: inline-block; 
+  overflow: auto; 
+  max-height:370px;
+  max-width: 800px;
+}
+
 
 /*                            Leyenda                               */
 
