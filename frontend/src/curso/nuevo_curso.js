@@ -130,10 +130,10 @@ export class nuevo_curso extends React.Component {
             errores["ramo"]= "Ramo seleccionado no válido"
             isValid = false
         }
-        if(profesores === null || profesores === "" || profesores.length <= 0){
-            errores["profesor"] = "Debe seleccionar al menos un profesor"
-            isValid = false
-        }
+        // if(profesores === null || profesores === "" || profesores.length <= 0){
+        //     errores["profesores_curso"] = "Debe seleccionar al menos un profesor"
+        //     isValid = false
+        // }
         else{
             profesores.forEach(p => {
                 if(!this.state.profesores.some(e => e.id === p.value)){
@@ -178,7 +178,10 @@ export class nuevo_curso extends React.Component {
             id=semestre.id
         ))
         var profesores=[]
-        this.state.profesor.map(profesor => profesores.push(profesor.value))
+        this.state.profesores_curso.map(profesor => profesores.push(profesor.value))
+        if (profesores==[]){
+            profesores=null
+        }
 		const url = process.env.REACT_APP_API_URL + "/cursos/"
 		let options = {
 			method: 'POST',

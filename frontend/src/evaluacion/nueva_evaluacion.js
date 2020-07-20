@@ -138,15 +138,28 @@ export class NuevaEvaluacion extends React.Component {
                 this.state.sacar_pop_up()
 			})
 			.catch( (err) => {
-				console.log(err);
-				console.log("cant create evaluacion");
-				let errors = this.state.form_errors
-                for (let [key, value] of Object.entries(err.response.data)){
-                    errors[key] = value[0]
+                if (err.response.status===401){// Fecha choca con fecha especial
+                    var errores=this.state.form_errors
+                    var errors_checked=this.state.errors_checked
+                    errores["fecha"]="Fecha ingresada no es válida, ya que choca con fecha especial"
+                    errors_checked["fecha"]=false
+                    this.setState({
+                        form_errors: errores,
+                        errors_checked: errors_checked
+                    })
+                    return false
                 }
-                this.setState({
-                    form_errors:errors
-                })
+                else{
+                    console.log(err);
+                    console.log("cant create evaluacion");
+                    let errors = this.state.form_errors
+                    for (let [key, value] of Object.entries(err.response.data)){
+                        errors[key] = value[0]
+                    }
+                    this.setState({
+                        form_errors:errors
+                    })
+                    }
 			});
 	}
 

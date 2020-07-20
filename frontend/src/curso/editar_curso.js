@@ -142,10 +142,10 @@ export class editar_curso extends React.Component {
             errores["ramo"]= "Ramo seleccionado no válido"
             isValid = false
         }
-        if(profesores === null || profesores === "" || profesores.length <= 0){
-            errores["profesor"] = "Debe seleccionar al menos un profesor"
-            isValid = false
-        }
+        // if(profesores === null || profesores === "" || profesores.length <= 0){
+        //     errores["profesores_curso"] = "Debe seleccionar al menos un profesor"
+        //     isValid = false
+        // }
         else{
             profesores.forEach(p => {
                 if(!this.state.profesores.some(e => e.id === p.value)){
@@ -192,7 +192,9 @@ export class editar_curso extends React.Component {
         var profesores=[]
         this.state.profesor.map(profesor => profesores.push(profesor.value))
 
-        // console.log(profesores)
+        if (profesores==[]){
+            profesores=null
+        }
         const url = process.env.REACT_APP_API_URL + `/cursos/${this.state.id_curso}/`
 	    let options = {
 			method: 'PATCH',
