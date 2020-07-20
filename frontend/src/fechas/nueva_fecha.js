@@ -95,7 +95,8 @@ export class nuevafecha extends React.Component {
         console.log("post fecha ...")
         if(!this.validateForm()){
 			return;
-		}
+        }
+        console.log(this.state)
         const url = process.env.REACT_APP_API_URL + "/fechas-especiales/"
         const fecha_fin = this.state.fin === "" ? this.state.inicio : this.state.fin;
 
@@ -109,8 +110,8 @@ export class nuevafecha extends React.Component {
           data: {
             "nombre": this.state.nombre,
             "tipo":this.state.tipo,
-            "inicio_date": this.state.inicio,
-            "fin_date": fecha_fin,
+            "inicio": this.state.inicio,
+            "fin": fecha_fin,
            }
         }
         
@@ -132,6 +133,7 @@ export class nuevafecha extends React.Component {
             console.log(err);
             console.log("cant create fecha");
             let errors = this.state.form_errors
+            console.log(err.response)
             for (let [key, value] of Object.entries(err.response.data)){
                 errors[key] = value[0]
             }
@@ -154,7 +156,7 @@ export class nuevafecha extends React.Component {
                 fecha_created: false,
 			  })
         }
-        const campos = ["nombre", "tipo", "inicio", "fin"]
+        const campos = ["nombre", "tipo", "inicio"]
         return (
             <Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
         <Modal.Header className="header-add" closeButton>
