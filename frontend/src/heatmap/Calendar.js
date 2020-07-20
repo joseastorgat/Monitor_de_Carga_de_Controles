@@ -238,26 +238,26 @@ export default class Calendar extends React.Component {
         </Col>
         <Col xs="auto" md={7}  >
           <h4 >Heatmap Semestre {this.state.periodo===1 ? "Otoño": "Primavera"}  {this.state.año} </h4>
-          <div style={{textAlign:'center'}} > 
-          <Table className="calendar" size="sm" responsive style={{display: 'block',maxHeight:"370px",maxWidth:"800px",overflowY:'scroll'}}>
+          <Container style={{textAlign:'center'}} > 
+          <Table className="calendar" size="sm" responsive>
              <thead>
                 <tr>
-                <th><h6>Mes</h6></th>
-                <th> <h6>Sem</h6> </th>
-                <th> <h6>Lun</h6> </th>
-                <th> <h6>Mar</h6> </th>
-                <th> <h6>Mie </h6></th>
-                <th> <h6>Jue</h6> </th>
-                <th> <h6>Vie</h6></th>
-                <th> <h6>Sáb </h6></th>
-                <th>  <h6>Dom</h6> </th>
+                  <th><h6>Mes</h6></th>
+                  <th> <h6>Sem</h6> </th>
+                  <th> <h6>Lun</h6> </th>
+                  <th> <h6>Mar</h6> </th>
+                  <th> <h6>Mie </h6></th>
+                  <th> <h6>Jue</h6> </th>
+                  <th> <h6>Vie</h6></th>
+                  <th> <h6>Sáb </h6></th>
+                  <th>  <h6>Dom</h6> </th>
               </tr>
             </thead>
             <tbody>
             { this.weeks.map( (week, i) => (
               <tr>
-              <td className="gris"><h6>{ this.encontrar_mes(week)}</h6></td>
-              <td  className="gris">S{i+1}</td>
+                <td className="gris"><h6>{ this.encontrar_mes(week)}</h6></td>
+                <td className="gris" >S{i+1}</td>
                 {week.map((day, di ) => {
                     const fechas_del_dia=this.state.fechas_especiales.filter(fecha => (fecha.inicio <= day && fecha.fin >= day ))
                     const hay_fecha= fechas_del_dia.length
@@ -268,20 +268,20 @@ export default class Calendar extends React.Component {
                    
 
                     if(hay_fecha>0 && cantidad_evaluaciones_dia==0){
-                      return (<td className="sortable"  key={di} id={day} style={{fontWeight:"600",color: color}} onClick={this.mostrar_fechas_dia.bind(this,fechas_del_dia ,day,di,i+1,"#46A5A7")}>{day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td className="sortable" key={di} id={day} style={{fontWeight:"600",color: color}} onClick={this.mostrar_fechas_dia.bind(this,fechas_del_dia ,day,di,i+1,"#46A5A7")}>{day.split("-")[2] || "\u00a0" }  </td>)
                     }
                     
                     if(cantidad_evaluaciones_dia===1){
-                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#FDBC5F",color: color}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia ,day,di,i+1,"#FDBC5F")}> {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td className="sortable" key={di} id={day} style={{backgroundColor: "#FDBC5F",color: color}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia ,day,di,i+1,"#FDBC5F")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     }
                     else if(cantidad_evaluaciones_dia===2){
-                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A",color: color}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia ,day,di, i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
+                      return (<td className="sortable" key={di} id={day} style={{backgroundColor: "#F9680A",color: color}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia ,day,di, i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
                     } 
                     else if(cantidad_evaluaciones_dia===3){
                       return (<td className="sortable" key={di} id={day} style={{backgroundColor: "#FF0000",color: color}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia ,day,di,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else if(cantidad_evaluaciones_dia>3){
-                      return (<td  className="sortable" key={di} id={day} style={{backgroundColor: "#800000",color: color}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia ,day,di,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td className="sortable" key={di} id={day} style={{backgroundColor: "#800000",color: color}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia ,day,di,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else{
                       return <td key={di} id={day}> {day.split("-")[2] || "\u00a0" } </td>
@@ -294,7 +294,7 @@ export default class Calendar extends React.Component {
             } 
             </tbody>
           </Table>
-          </div>  
+          </Container>  
           <Alert variant="secondary" >
               <h5>Cursos Seleccionados</h5>
               <ul>
