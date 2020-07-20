@@ -46,9 +46,13 @@ class SemestreViewSet(viewsets.ModelViewSet):
         # print(request.query_params)
         serializer = SemestreClonarSerializer(data=request.data)
         if serializer.is_valid():
-            clonar_semestre(serializer.validated_data)
-            return Response({'status': 'clonado'})
-        return Response({'status': 'info no valida :C'})
+            new_sem, errors = clonar_semestre(serializer.validated_data)
+            if errors:
+                return Response(errors, status=status.HTTP_206_PARTIAL_CONTENT)
+            else:
+                serializer_sem = SemestreSerializer(new_sem)
+                return Response(serializer_sem.data, status=status.HTTP_201_CREATED)
+        return Response({'status': 'info no valida :C'}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['get'],
             permission_classes=[permissions.IsAuthenticatedOrReadOnly])
@@ -85,83 +89,61 @@ class SemestreViewSet(viewsets.ModelViewSet):
             model = model.filter(ftr)
         return model.filter()
 
+    def from_xlsx_std(self, func_creator, data):
+        serializer = SemestreFileSerializer(data=data)
+        if serializer.is_valid():
+            bin_file = data['file']
+            parsed = parse_excel(bin_file)
+            pars, errs = parsed
+            if errs:
+                return errs, status.HTTP_406_NOT_ACCEPTABLE
+            response = func_creator(parsed)
+            if response['status_error']:
+                return response['status'], status.HTTP_500_INTERNAL_SERVER_ERROR
+            if response['status_warning']:
+                return response, status.HTTP_412_PRECONDITION_FAILED
+            return response, status.HTTP_201_CREATED
+        else:
+            return serializer.errors, status.HTTP_400_BAD_REQUEST
+
     @action(detail=False,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
-            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
-            parser_classes=[
-                FormParser,
-                MultiPartParser,
-            ]
+            permission_classes=[],#[permissions.IsAuthenticatedOrReadOnly],
             )
     def from_xlsx(self, request, *args, **kwargs):
         '''
         Crear semestre mediante archivo excel xlsx
         '''
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            bin_file = request.data['file']
-            parsed = parse_excel(bin_file)
-            response = create_full_semester(parsed)
-            print(response)
-            # ver bien el response a dar
-            return Response(response)
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+        response, status = self.from_xlsx_std(
+            create_full_semester, request.data)
+        return Response(response, status=status)
 
     @action(detail=False,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
-            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
-            parser_classes=[
-                FormParser,
-                MultiPartParser,
-            ]
+            permission_classes=[],#[permissions.IsAuthenticatedOrReadOnly],
             )
     def from_xlsx2(self, request, *args, **kwargs):
         '''
         Crear semestre mediante archivo excel xlsx
         '''
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            bin_file = request.data['file']
-            parsed = parse_excel(bin_file)
-            response = add_courses_to_semester(parsed)
-            print(response)
-            # ver bien el response a dar
-            return Response(response)
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+        response, status = self.from_xlsx_std(
+            add_courses_to_semester, request.data)
+        return Response(response, status=status)
 
     @action(detail=False,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
-            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
-            parser_classes=[
-                FormParser,
-                MultiPartParser,
-            ]
+            permission_classes=[],#[permissions.IsAuthenticatedOrReadOnly],
             )
     def from_xlsx3(self, request, *args, **kwargs):
         '''
         Crear semestre mediante archivo excel xlsx
         '''
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            bin_file = request.data['file']
-            parsed = parse_excel(bin_file)
-            response = add_evals_to_semester(parsed)
-            print(response)
-            # ver bien el response a dar
-            return Response(response)
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+        response, status = self.from_xlsx_std(
+            add_evals_to_semester, request.data)
+        return Response(response, status=status)
 
 
 class EvaluationViewSet(viewsets.ModelViewSet):
@@ -171,6 +153,35 @@ class EvaluationViewSet(viewsets.ModelViewSet):
     queryset = Evaluacion.objects.all()
     serializer_class = EvaluacionSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        if Fechas_especiales.sin_feriado(data['fecha']):
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            return Response({'error': 'hay una fecha especial aqui'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        if Fechas_especiales.sin_feriado(data['fecha']):
+            self.perform_update(serializer)
+
+            if getattr(instance, '_prefetched_objects_cache', None):
+                # If 'prefetch_related' has been applied to a queryset, we need to
+                # forcibly invalidate the prefetch cache on the instance.
+                instance._prefetched_objects_cache = {}
+
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'hay una fecha especial aqui'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class RamoViewSet(viewsets.ModelViewSet):
@@ -235,16 +246,6 @@ class CursoViewSet(viewsets.ModelViewSet):
             model = model.filter(ftr)
         return model.filter()
 
-    # def retrieve(self, request, pk, *args, **kwargs):
-    #     # instance = self.get_object()
-    #     instance = Curso.objects.filter(id=pk).get()
-    #     print(pk)
-    #     print(instance)
-
-    #     serializer = self.get_serializer(instance)
-    #     # serializer = CursoDetailSerializer(instance)
-    #     return Response(serializer.data)
-
     @action(detail=False, methods=['get'],
             permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def detalle(self, request):
@@ -271,10 +272,8 @@ class CalendarioViewSet(viewsets.ModelViewSet):
     """
     queryset = Calendario.objects.all()
     serializer_class = CalendarioSerializer
-    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @action(detail=False, methods=['post'],
-            #permission_classes=[permissions.IsAuthenticatedOrReadOnly],
             serializer_class=NuevoCalendarioSerializer)
     def auto_token(self, request, *args, **kwargs):
         while True:
@@ -286,7 +285,7 @@ class CalendarioViewSet(viewsets.ModelViewSet):
         data['token'] = token
         data['fecha_creacion'] = str(datetime.date.today())
         data['nombre'] = request.data['nombre']
-        data['cursos'] = request.data.getlist('cursos')
+        data['cursos'] = request.data['cursos']
         serializer = CalendarioSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

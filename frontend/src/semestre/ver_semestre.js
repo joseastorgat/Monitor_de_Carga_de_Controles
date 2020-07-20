@@ -10,6 +10,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import NuevoCurso from "../curso/nuevo_curso"
 import EditarCurso from "../curso/editar_curso"
+import Alert_2 from '@material-ui/lab/Alert';
+import ClonarCursos from "./subir_cursos";
 
 class CursoItem extends React.Component {
     constructor(props) {
@@ -39,7 +41,11 @@ class CursoItem extends React.Component {
                   {this.props.codigo} {this.props.nombre}
                 </span>
                 <p className="mb-0">Sección {this.props.seccion}</p>
-                <div>Profesor:<ul> {this.props.profesor.map(profesor=> (<li>{profesor }</li>))}</ul></div>
+                <div>Profesor:
+                
+                <ul> {
+                  this.props.profesor.length==0 ? ( <Alert_2 variant="outlined" severity="warning">No hay profesor asignado</Alert_2>):
+                  this.props.profesor.map(profesor=> (<li>{profesor }</li>))}</ul></div>
               </Col>
               <Col xs="auto">
                 <span style={{marginRight:'30px'}}></span> 
@@ -69,9 +75,11 @@ export class ver_semestre extends React.Component {
     this.handle_search = this.handle_search.bind(this);
     this.state = {
       cursos: [],
+      cursos_listos: false,
       showModalDelete: false,
       showModalAdd:false, 
       showModalEdit:false,
+      showModalClonar: false,
       cursoPorEliminar: null,
       cursoPorEditar: null,
       MostrarCursos: [],
@@ -90,7 +98,8 @@ export class ver_semestre extends React.Component {
     .then(cursos =>
         this.setState({
         cursos: cursos,
-        MostrarCursos: cursos
+        MostrarCursos: cursos,
+        cursos_listos: true
         })
     )    
   }
@@ -162,10 +171,26 @@ export class ver_semestre extends React.Component {
     this.setState({ showModalEdit: false,cursoPorEditar:null});
     this.fetchCursos();
   }
-
+  
   handleCancelDelete() {
     this.setState({ showModalDelete: false, cursoPorEliminar: null });
   }
+  
+  
+  handleClonar(){
+    this.fetchCursos();
+    this.setState({ showModalClonar: false});
+  }
+
+  handleCancelClonar(){
+    this.setState({ showModalClonar: false});
+  }
+  
+  showModalClonar(){
+    this.setState({ showModalClonar: true});
+  }
+  
+  
   handle_search(){
     const busqueda= this.state.search;
     const Cursos= this.state.cursos;
@@ -200,6 +225,17 @@ export class ver_semestre extends React.Component {
           periodo={semestre}
           año={ano}
         />
+        
+        {this.state.cursos.length === 0 && this.state.cursos_listos &&
+          <ClonarCursos
+            show_form={this.state.showModalClonar} 
+            handleCancel={() => this.handleCancelClonar()}
+            handleAdd={() => this.handleClonar()}
+            periodo={semestre}
+            año={ano}
+          />
+
+        }
 
         {this.state.showModalEdit &&
           <EditarCurso
@@ -230,13 +266,19 @@ export class ver_semestre extends React.Component {
                 </Form>
 
               </Col>
-              <Col md="auto">
-              <Button  className="btn btn-primary float-right">Exportar Semestre</Button>
-            </Col>
+
+              {
+                this.state.cursos.length === 0 && this.state.cursos_listos? 
+              (<Col md="auto">
+              <Button  className="btn btn-primary float-right" onClick={()=> this.showModalClonar()}> Importar Cursos desde Archivo</Button>
+              </Col>) : ""
+              }
               <Col xs="auto">
 
                   <Button className="btn btn-primary float-right" onClick={()=>this.showModalAdd()}>Nuevo Curso</Button>
               </Col>
+
+              
             </Row>
             {this.state.MostrarCursos.map(curso => (
                 <CursoItem

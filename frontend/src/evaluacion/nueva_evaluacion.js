@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button, Modal } from "react-bootstrap";
 import { Row} from "react-bootstrap";
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class NuevaEvaluacion extends React.Component {
 	constructor(props) {
@@ -17,11 +18,25 @@ export class NuevaEvaluacion extends React.Component {
                 nombre_curso:"",
                 form_errors: {},
                 errors_checked: {},
+                fecha_inicio_semestre:"",
+                fecha_fin_semestre:"",
+                semestre_id:this.props.semestre
 		}
 	};
 	static propTypes = {
 			auth: PropTypes.object.isRequired,
     };
+
+    componentDidMount(){
+        axios.get(process.env.REACT_APP_API_URL + `/semestres/${this.state.semestre_id}/`)
+        .then( (res) => { 
+            this.setState({
+                curso: this.props.curso_seleccionado.split("-")[0],
+                fecha_inicio_semestre:res.data.inicio,
+                fecha_fin_semestre:res.data.fin
+            })
+        })      
+    }
 
 	onChange = e => {
         let errors_checked = this.state.errors_checked
@@ -46,12 +61,21 @@ export class NuevaEvaluacion extends React.Component {
         let titulo = this.state.titulo
         let fecha = this.state.fecha
         let tipo = this.state.tipo
+        let curso = this.state.curso
         let errors_checked = {
             titulo: true,
             fecha: true,
             tipo: true,
+            curso: true
         }
-
+        if(curso === "" || curso=== null || curso=== '0'){
+            errores["curso"] = "Debe seleccionar un curso"
+            isValid = false
+        }
+        else if (!this.props.cursos.some(c => c.id === parseInt(curso))){
+            errores["curso"] = "Debe seleccionar un curso válido"
+            isValid = false
+        }
         if(titulo === ""){
             errores["titulo"] = "Debe ingresar un titulo para la evaluación"
             isValid = false
@@ -79,21 +103,22 @@ export class NuevaEvaluacion extends React.Component {
     }
     create_evaluacion() {  
         console.log("post evaluacion ...")
+        let curso=this.state.curso
         if(!this.validateForm()){
             return;
         }
-        const url = process.env.REACT_APP_API_URL + "/evaluaciones/"
-        let curso=this.state.curso
         if(curso==null){
             curso=this.props.curso_seleccionado.split("-")[0]
         }
-        console.log(curso)
+        
+        
+        const url = process.env.REACT_APP_API_URL + "/evaluaciones/"
+        
 
 		let options = {
 			method: 'POST',
 			url: url,
 			headers: {
-		
 				'Content-Type': 'application/json',
 				'Authorization': `Token ${this.props.auth.token}`
 			},
@@ -111,18 +136,30 @@ export class NuevaEvaluacion extends React.Component {
 				console.log("create evauacion");
 				this.setState({"evaluacion_created": true});
                 this.state.sacar_pop_up()
-                this.state.titulo=""
-                this.state.fecha=""
-                this.state.tipo="Control"
 			})
 			.catch( (err) => {
-				console.log(err);
-				console.log("cant create evaluacion");
-				alert("No se pudo crear evaluacion!");
-                this.state.sacar_pop_up()
-                this.state.titulo=""
-                this.state.fecha=""
-                this.state.tipo="Control"
+                if (err.response.status===401){// Fecha choca con fecha especial
+                    var errores=this.state.form_errors
+                    var errors_checked=this.state.errors_checked
+                    errores["fecha"]="Fecha ingresada no es válida, ya que choca con fecha especial"
+                    errors_checked["fecha"]=false
+                    this.setState({
+                        form_errors: errores,
+                        errors_checked: errors_checked
+                    })
+                    return false
+                }
+                else{
+                    console.log(err);
+                    console.log("cant create evaluacion");
+                    let errors = this.state.form_errors
+                    for (let [key, value] of Object.entries(err.response.data)){
+                        errors[key] = value[0]
+                    }
+                    this.setState({
+                        form_errors:errors
+                    })
+                    }
 			});
 	}
 
@@ -130,7 +167,6 @@ export class NuevaEvaluacion extends React.Component {
         const { show_form, handleCancel, handleAdd} = this.props;
         const curso_info=this.props.curso_seleccionado.split("-") //se recibe id- codigo-seccion y nombre de curso
         this.state.sacar_pop_up=handleAdd;
-        console.log(curso_info)
         let resetState = () => {
 			this.setState({
 				titulo: "",
@@ -142,7 +178,8 @@ export class NuevaEvaluacion extends React.Component {
                 form_errors: {},
                 errors_checked: {}
 			  })
-		}
+        }
+        const campos = ["fecha", "titulo", "tipo", "curso"]
 		return (
 			<Modal size="xl" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
         <Modal.Header className="header-add" closeButton>
@@ -152,13 +189,22 @@ export class NuevaEvaluacion extends React.Component {
         </Modal.Header>
         <Modal.Body>
 					<div>
+                    { 
+                    Object.keys(this.state.form_errors).map(k => {
+                    if(!(campos.includes(k))){
+                        return (
+                        <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+                        )
+                    }
+                    })
+                    }
                     <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                     <div className="row">
                         <div className="col-sm-1"></div>        
                             <div className="col-sm-5">
                                 <div className="row" >
                                     <div className="col-sm-2" >
-                                    <label >Curso</label>
+                                    <label >Curso<span style={{color:"red"}}>*</span></label>
                                     </div>
                                     <div className="col-sm-10" >{
                                         
@@ -167,16 +213,18 @@ export class NuevaEvaluacion extends React.Component {
                                                 <option > {curso_info[1]}-{curso_info[2]}</option>
                                             </select>
                                             :
-                                            <select required className="form-control"  name="curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
-                                                <option value="" >Seleccione curso</option>
+                                            <select className={this.state.form_errors["curso"] ? "form-control is-invalid" : this.state.errors_checked["curso"] ? "form-control is-valid" : "form-control"}  name="curso" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
+                                                <option value="" hidden >Seleccione curso</option>
                                                     {this.props.cursos.slice(1,this.props.cursos.length).map(curso=>
-                                                        <option value={curso.id} >{curso.ramo} {curso.nombre}</option>         
+                                                        <option value={curso.id} >{curso.ramo}-{curso.seccion} {curso.nombre}</option>         
                                                         )}
                                             </select>
                                     
                                     }
-                                            </div>
-                                     </div>
+                                    <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["curso"]}</span>
+                                    </div>
+                                    </div>
+                
                             </div>
                     </div>
                     <div className="row">
@@ -184,7 +232,7 @@ export class NuevaEvaluacion extends React.Component {
                             <div className="col-sm-5">
                                 <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Título</label>
+                                    <label >Título<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="text" className={this.state.form_errors["titulo"] ? "form-control is-invalid" : this.state.errors_checked["titulo"] ? "form-control is-valid" : "form-control"} name="titulo"  value={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
@@ -195,10 +243,10 @@ export class NuevaEvaluacion extends React.Component {
                         <div className="col-sm-5">
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Fecha</label>
+                                    <label >Fecha<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
-                                    <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha"  value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}/>
+                                    <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha"  value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}  min={this.state.fecha_inicio_semestre} max={this.state.fecha_fin_semestre}/>
                                     <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["fecha"]}</span>
                                 </div>
                             </div>
@@ -209,7 +257,7 @@ export class NuevaEvaluacion extends React.Component {
                         <div className="col-sm-5" >
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Tipo</label>
+                                    <label >Tipo<span style={{color:"red"}}>*</span></label>
                                 </div>
     
                                 <div className="custom-control custom-radio custom-control-inline"  >

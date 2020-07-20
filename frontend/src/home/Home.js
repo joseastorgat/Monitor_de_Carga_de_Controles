@@ -10,9 +10,12 @@ import {lista_ramos} from "../ramo/index_ramo";
 import {lista_fechas} from "../fechas/index_fecha";
 import {evaluaciones,lista_evaluaciones} from "../evaluacion/index_evaluacion";
 import {lista_profesores} from "../profesor/index_profesor";
+import About from "./About";
 import Calendar from "../heatmap/Calendar";
+import CustomCalendar from "../heatmap/CustomCalendar"
 import FooterPage from "./Footer";
-import {  Container } from "react-bootstrap";
+import {  Container,Row } from "react-bootstrap";
+import ViewTitle from "../common/ViewTitle";
 
 class Bloque_Calendario extends React.Component {
   state = {
@@ -53,7 +56,12 @@ class Bloque_Calendario extends React.Component {
     <main>
       <Container >
       <div>
-        <div className="centrar" style={{marginTop:"130px"}}>
+        <div className="centrar" style={{marginTop:"80px"}}>
+        <h2  style={{fontWeight:"600"}}>
+      Calendarios disponibles para visualizar
+      </h2>
+      <Row></Row>
+      <Row></Row>
         {this.state.MostrarSemestres.map(semestre=>(
           <Link to={`/calendario/${semestre.año}/${semestre.periodo}/`} >
             <button className="btn btn-dark botones_hacia_abajo" >Calendario Semestre {semestre.año} {semestre.periodo===1 ? "Otoño": "Primavera"}</button>
@@ -82,6 +90,7 @@ export default class Home extends React.Component {
         <Switch>
           <Route exact path="/" component={Bloque_Calendario_con} />
           <Route exact path="/calendario/:anho/:periodo/" component={Calendar} />
+          <Route exact path="/calendario/:token/" component={CustomCalendar} />
 
           {/* VISTAS DE SEMESTRE */}
           <PrivateRoute exact path="/semestres/" component={lista_semestres} />
@@ -99,6 +108,9 @@ export default class Home extends React.Component {
 
           {/* VISTAS DE FECHAS ESPECIALES */}
           <PrivateRoute exact path="/fechas_especiales/" component={lista_fechas} />
+
+           {/* VISTAS DE ABOUT */}
+           <Route exact path="/acerca-de/" component={About} />
 
         </Switch>
       </div>

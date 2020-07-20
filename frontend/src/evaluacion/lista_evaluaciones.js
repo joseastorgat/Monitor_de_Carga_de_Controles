@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import NuevaEvaluacion from "./nueva_evaluacion"
 import EditarEvaluacion from "./editar_evaluacion"
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class lista_evaluaciones extends React.Component {
     constructor(props) {
@@ -25,7 +26,7 @@ export class lista_evaluaciones extends React.Component {
         MostrarEvaluaciones: [],
         MostrarSemestres: [],
         MostrarCursos: [],
-        semestre_busqueda:"",
+        semestre_busqueda:null,
         curso_busqueda:"",
         search: false
       };
@@ -41,6 +42,7 @@ export class lista_evaluaciones extends React.Component {
         [e.target.name]: 
         e.target.value
       })
+      if(e.target.value != ""){
       console.log("Fetching Cursos...")      
       axios.get(process.env.REACT_APP_API_URL + `/semestres/${e.target.value}/cursos/`)
       .then(response => {
@@ -51,6 +53,13 @@ export class lista_evaluaciones extends React.Component {
               MostrarCursos: response.data
             })
           })
+      }
+      else{
+        this.setState({
+          cursos: [],
+          MostrarCursos:[]
+        })
+      }
   };
     onChange_Curso = (e) => {  
         this.setState({
@@ -61,13 +70,13 @@ export class lista_evaluaciones extends React.Component {
 
     async fetchEvaluaciones() {
       console.log("Fetching Evaluaciones ...")
+      let id_semestre=this.state.semestre_busqueda.toString();
       let url
       var curso=this.state.curso_busqueda.split("-")[0]
-      if (curso===0){//Traer todas las evaluaciones de ese semestre
-        url=process.env.REACT_APP_API_URL + `/semestres/${this.state.semestre_busqueda}/evaluaciones/`;
+      if (curso==='0'){//Traer todas las evaluaciones de ese semestre
+        url=process.env.REACT_APP_API_URL + `/semestres/${id_semestre}/evaluaciones/`;
       }
       else{
-        console.log(curso)
         url=process.env.REACT_APP_API_URL + `/cursos/${curso}/evaluaciones/`;
       }
       await fetch(url)
@@ -206,8 +215,8 @@ export class lista_evaluaciones extends React.Component {
                 <p>Curso
                 <select required className="form-control"  name="curso_busqueda" style={{textAlignLast:'center',textAlign:'center'}} value={this.state.curso_busqueda} onChange={this.onChange_Curso} >
                     <option value="" >Seleccione curso</option>
-                    {this.state.MostrarCursos.map(curso=>
-                          <option value={curso.id+"-"+curso.ramo+"-"+curso.seccion + " "+curso.nombre} >{curso.ramo} {curso.nombre}</option>         
+                    {this.state.MostrarCursos.map( (curso, i) =>
+                          <option value={curso.id+"-"+curso.ramo+"-"+curso.seccion + " "+curso.nombre} >{curso.ramo}{i > 0 ? "-" : ""}{curso.seccion} {curso.nombre}</option>         
                         )}
                     
                 </select>
@@ -231,20 +240,22 @@ export class lista_evaluaciones extends React.Component {
                 handleCancel={() => this.handleCancel()}
                 handleDelete={() => this.handleDelete()}
                 />}
-
+                {this.state.showModalAdd &&
                 <NuevaEvaluacion
                     show_form={this.state.showModalAdd} 
                     handleCancel={() => this.handleCancelAdd()}
                     handleAdd={() => this.handleAdd()}
                     cursos={this.state.cursos}
                     curso_seleccionado={this.state.curso_busqueda}
-                />
+                    semestre={this.state.semestre_busqueda}
+                />}
                 {this.state.showModalEdit &&
                 <EditarEvaluacion
                     show_form={this.state.showModalEdit} 
                     handleCancel={() => this.handleCancelEdit()}
                     handleEdit={() => this.handleEdit()}
                     evaluacion={this.state.evaluacionPorEditar}
+                    semestre={this.state.semestre_busqueda}
                 />}
 
                 <Container>
@@ -278,6 +289,7 @@ export class lista_evaluaciones extends React.Component {
                     fecha={evaluacion.fecha}
                     tipo={evaluacion.tipo}
                     titulo={evaluacion.titulo}
+                    warning={evaluacion.warning}
                     showModal={() => this.showModal(evaluacion, i)}
                     showModalEdit={() => this.showModalEdit(evaluacion, i)}
                     handleDelete = {this.handleDelete}
@@ -303,12 +315,14 @@ export class lista_evaluaciones extends React.Component {
       const codigo_curso = this.props.codigo_curso;
       const nombre_curso= this.props.nombre_curso;
       const seccion_curso=this.props.seccion_curso;
+      const warning=this.props.warning;
       return (
         <Alert variant="secondary">
             <Row>
               <Col xs={6}>
                 <h6>{codigo_curso}-{seccion_curso} {nombre_curso} </h6> 
                 <p>{titulo}</p>
+                {warning==null? "": <Alert_2 style={{size: "10"}} variant="outlined" severity="warning" >{warning}</Alert_2>}
               </Col>
               <Col xs={4} className="text-center"> 
               <p>{fecha[2]}-{fecha[1]}-{fecha[0]}</p>

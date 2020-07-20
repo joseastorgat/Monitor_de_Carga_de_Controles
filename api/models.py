@@ -2,11 +2,11 @@ from django.db import models
 from django.utils.crypto import get_random_string
 import datetime
 
-año_actual = 2020
+año_actual = datetime.date.today().year
 
 
 class Profesor(models.Model):
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.nombre
@@ -34,6 +34,9 @@ class Semestre(models.Model):
     def __str__(self):
         return "Semestre "+self._PERIODOS[self.periodo-1][1]+" " +\
             str(self.año)
+
+    def cantidad_semanas(self):
+        return len(Semana.objects.filter(semestre=self))
 
     def save(self, *args, **kwargs):
         super(Semestre, self).save(*args, **kwargs)
@@ -83,6 +86,8 @@ class Semestre(models.Model):
             return True
         return False
 
+    
+
 
 class Ramo(models.Model):
     _SEMESTRES = (
@@ -107,7 +112,7 @@ class Curso(models.Model):
     ramo = models.ForeignKey(Ramo, on_delete=models.CASCADE)
     semestre = models.ForeignKey(Semestre, on_delete=models.CASCADE)
     seccion = models.IntegerField(default=0)
-    profesor = models.ManyToManyField(Profesor)
+    profesor = models.ManyToManyField(Profesor, blank=True)
 
     def __str__(self):
         return f'{self.ramo.codigo}-{self.seccion} {str(self.semestre)}'
@@ -220,8 +225,20 @@ class Fechas_especiales(models.Model):
         # ver bien los casos aqui
         # definir que tipos de fechas
         # especiales remueven dias
-        # del semestre y cuales no 
+        # del semestre y cuales no
         return True
+
+    def __str__(self):
+        return f'{self.nombre}'
+
+    @staticmethod
+    def sin_feriado(fecha):
+        fe = Fechas_especiales.objects.filter(inicio__lte=fecha)
+        fe = fe.filter(fin__gte=fecha)
+        if fe:
+            return False
+        else:
+            return True
 
 
 class Calendario(models.Model):
