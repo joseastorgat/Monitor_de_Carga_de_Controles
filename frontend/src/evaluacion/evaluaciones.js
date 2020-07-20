@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import {Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import DeleteModal from "../common/DeleteModal";
-import { Table, Container} from "react-bootstrap";
+import { Table, Container, Alert} from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import ViewTitle from "../common/ViewTitle";
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class evaluaciones extends React.Component {
     constructor(props) {
@@ -244,9 +245,22 @@ export class evaluaciones extends React.Component {
             // window.location.reload(false);
         })
         .catch( (err) => {
+            if (err.response.status===401){// Fecha choca con fecha especial
+                var errores=this.state.form_errors
+                var errors_checked=this.state.errors_checked
+                errores["fecha"]="Fecha ingresada no es válida, ya que choca con fecha especial"
+                errors_checked["fecha"]=false
+                this.setState({
+                    form_errors: errores,
+                    errors_checked: errors_checked
+                })
+                return false
+            }
+            else{
             console.log(err);
             console.log("cant update evaluacion");
             alert("[ERROR] No se puedo actualizar la evaluación! ");
+        }
         });
     }
 
@@ -336,9 +350,22 @@ export class evaluaciones extends React.Component {
             });
       })
       .catch( (err) => {
-        console.log("cant create evaluacion");
-        console.log(err);
-        alert("[ERROR] No se pudo crear la evaluacion!");
+        if (err.response.status===401){// Fecha choca con fecha especial
+            var errores=this.state.form_errors
+            var errors_checked=this.state.errors_checked
+            errores["fecha"]="Fecha ingresada no es válida, ya que choca con fecha especial"
+            errors_checked["fecha"]=false
+            this.setState({
+                form_errors: errores,
+                errors_checked: errors_checked
+            })
+            return false
+        }
+        else{
+            console.log("cant create evaluacion");
+            console.log(err);
+            alert("[ERROR] No se pudo crear la evaluacion!");
+        }
       });
     }
 
@@ -357,7 +384,8 @@ export class evaluaciones extends React.Component {
                     eliminar_index: -1,
                 })
             })
-        }      
+        }
+        console.log(this.state)
     }
     async fetch_semestre(){
         const {ano,semestre}= this.props.match.params
@@ -564,6 +592,7 @@ export class evaluaciones extends React.Component {
                                 id_curso={evaluacion.curso}
                                 tipo={evaluacion.tipo}
                                 titulo={evaluacion.titulo}
+                                warning={evaluacion.warning}
                                 handleUpdate={() => this.handleClickEditarEvaluacion(_index)}
                                 showModal={() => this.showModal(evaluacion, _index)}
                                 />
@@ -597,6 +626,7 @@ class EvaluacionItem extends React.Component {
       const titulo =this.props.titulo;
       const fecha = this.props.fecha;
       const tipo= this.props.tipo;
+      const warning= this.props.warning;
       const id = this.props.id;
       const id_curso = this.props.id_curso;
       const handleDelete = this.props.handleDelete;
@@ -609,7 +639,7 @@ class EvaluacionItem extends React.Component {
         <thead >
             <tr >
             <td scope="col">{titulo}</td>
-            <td scope="col">{fecha_formato_m_d_y}</td>
+            <td scope="col">{fecha_formato_m_d_y}{warning==null? "": <Alert_2 style={{size: "10"}} variant="outlined" severity="warning" >{warning}</Alert_2>}            </td>
             <td scope="col">{tipo}</td>
             <td scope="col">
                 <Link to="#" onClick={e => handleUpdate(i)}>

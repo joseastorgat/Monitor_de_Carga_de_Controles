@@ -126,13 +126,26 @@ export class EditarEvaluacion extends React.Component {
                 this.state.tipo="Control"
 			})
 			.catch( (err) => {
-				console.log(err);
-				console.log("cant update evaluacion");
-				alert("No se pudo actualizar evaluacion!");
-                this.state.sacar_pop_up()
-                this.state.titulo=""
-                this.state.fecha=""
-                this.state.tipo="Control"
+                if (err.response.status===401){// Fecha choca con fecha especial
+                    var errores=this.state.form_errors
+                    var errors_checked=this.state.errors_checked
+                    errores["fecha"]="Fecha ingresada no es válida, ya que choca con fecha especial"
+                    errors_checked["fecha"]=false
+                    this.setState({
+                        form_errors: errores,
+                        errors_checked: errors_checked
+                    })
+                    return false
+                }
+                else{
+                    console.log(err);
+                    console.log("cant update evaluacion");
+                    alert("No se pudo actualizar evaluacion!");
+                    this.state.sacar_pop_up()
+                    this.state.titulo=""
+                    this.state.fecha=""
+                    this.state.tipo="Control"
+                }
 			});
 	}
 
