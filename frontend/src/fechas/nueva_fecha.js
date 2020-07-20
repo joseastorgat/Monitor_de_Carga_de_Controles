@@ -96,7 +96,6 @@ export class nuevafecha extends React.Component {
         if(!this.validateForm()){
 			return;
         }
-        console.log(this.state)
         const url = process.env.REACT_APP_API_URL + "/fechas-especiales/"
         const fecha_fin = this.state.fin === "" ? this.state.inicio : this.state.fin;
 
@@ -133,7 +132,6 @@ export class nuevafecha extends React.Component {
             console.log(err);
             console.log("cant create fecha");
             let errors = this.state.form_errors
-            console.log(err.response)
             for (let [key, value] of Object.entries(err.response.data)){
                 errors[key] = value[0]
             }
