@@ -203,7 +203,8 @@ export class SubirCursos extends React.Component {
                             <div className="col-sm-10" >
                                 <input type="file" className="form-control" name="archivo_excel" onChange={this.onFile }/>
                                 {/* <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["archivo_excel"]}</span> */}
-                                <a href={process.env.PUBLIC_URL + '/static/template.xlsx'} download="template.xlsx" target="_blank" >Descargar Template</a>
+                                {/* <a href={process.env.PUBLIC_URL + '/static/template.xlsx'} download="template.xlsx" target="_blank" >Descargar Template</a> */}
+                                <a href={'/static/template.xlsx'} download="template.xlsx" target="_blank" >Descargar Template</a>
                             </div>
                         </div>
                         </Col>
