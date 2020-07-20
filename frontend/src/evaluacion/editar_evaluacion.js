@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button, Modal } from "react-bootstrap";
 import { Row} from "react-bootstrap";
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class EditarEvaluacion extends React.Component {
 	constructor(props) {
@@ -94,10 +95,6 @@ export class EditarEvaluacion extends React.Component {
         if(!this.validateForm()){
             return;
         }
-        console.log(this.state.fecha)
-        console.log(this.state.tipo)
-        console.log(this.props.evaluacion.curso)
-        console.log(this.state.titulo)
         const url = process.env.REACT_APP_API_URL + `/evaluaciones/${this.state.id}/`
 		let options = {
 			method: 'PATCH',
@@ -126,14 +123,29 @@ export class EditarEvaluacion extends React.Component {
                 this.state.tipo="Control"
 			})
 			.catch( (err) => {
-				console.log(err);
-				console.log("cant update evaluacion");
-				alert("No se pudo actualizar evaluacion!");
-                this.state.sacar_pop_up()
-                this.state.titulo=""
-                this.state.fecha=""
-                this.state.tipo="Control"
-			});
+                if (err.response.status===401){// Fecha choca con fecha especial
+                    var errores=this.state.form_errors
+                    var errors_checked=this.state.errors_checked
+                    errores["fecha"]="Fecha ingresada no es válida, ya que choca con fecha especial"
+                    errors_checked["fecha"]=false
+                    this.setState({
+                        form_errors: errores,
+                        errors_checked: errors_checked
+                    })
+                    return false
+                }
+                else{
+                    console.log(err);
+                    console.log("cant update evaluacion");
+                    let errors = this.state.form_errors
+                    for (let [key, value] of Object.entries(err.response.data)){
+                        errors[key] = value[0]
+                    }
+                    this.setState({
+                        form_errors:errors
+                    })
+                }
+            });
 	}
 
 	render() {
@@ -141,7 +153,7 @@ export class EditarEvaluacion extends React.Component {
         console.log(this.props.evaluacion)
         this.state.sacar_pop_up=handleEdit;
         var evaluacion=this.props.evaluacion
-
+        const campos = ["fecha", "titulo", "tipo"]
 		return (
 			<Modal size="xl" centered show={show_form} onHide={() => handleCancel()}>
         <Modal.Header className="header-edit" closeButton>
@@ -151,6 +163,15 @@ export class EditarEvaluacion extends React.Component {
         </Modal.Header>
         <Modal.Body>
 					<div>
+                    { 
+                    Object.keys(this.state.form_errors).map(k => {
+                    if(!(campos.includes(k))){
+                        return (
+                        <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+                        )
+                    }
+                    })
+                    }
                     <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                     <div className="row">
                         <div className="col-sm-1"></div>        
@@ -172,7 +193,7 @@ export class EditarEvaluacion extends React.Component {
                             <div className="col-sm-5">
                                 <div className="row" >
                                     <div className="col-sm-2" >
-                                    <label >Título</label>
+                                    <label >Título<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="text" className={this.state.form_errors["titulo"] ? "form-control is-invalid" : this.state.errors_checked["titulo"] ? "form-control is-valid" : "form-control"} name="titulo"  value={this.state.titulo} placeholder="Título" style={{textAlignLast:'center'}} onChange={this.onChange} />
@@ -183,7 +204,7 @@ export class EditarEvaluacion extends React.Component {
                         <div className="col-sm-5">
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Fecha</label>
+                                    <label >Fecha<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha" value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange}  min={this.state.fecha_inicio_semestre} max={this.state.fecha_fin_semestre}/>
@@ -197,7 +218,7 @@ export class EditarEvaluacion extends React.Component {
                         <div className="col-sm-5" >
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Tipo</label>
+                                    <label >Tipo<span style={{color:"red"}}>*</span></label>
                                 </div>
     
                                 <div className="custom-control custom-radio custom-control-inline"  >

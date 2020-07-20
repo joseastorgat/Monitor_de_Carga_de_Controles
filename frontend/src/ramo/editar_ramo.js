@@ -2,6 +2,7 @@ import React from "react";
 import axios from 'axios';
 import { connect } from "react-redux";
 import { Button,Row,Col,Modal} from "react-bootstrap";
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class editar_ramo extends React.Component {
   state = {
@@ -102,7 +103,13 @@ export class editar_ramo extends React.Component {
       .catch( (err) => {
         console.log(err);
         console.log("cant update ramo");
-        alert("No se pudo actualizar el ramo!");
+        let errors = this.state.form_errors
+        for (let [key, value] of Object.entries(err.response.data)){
+          errors[key] = value[0]
+        }
+        this.setState({
+          form_errors:errors
+        })
       });
   }
 
@@ -114,7 +121,7 @@ export class editar_ramo extends React.Component {
         errors_checked: {},
       })
     }
-
+    const campos = ["codigo", "nombre", "semestre_malla"]
     return (
       <Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
         <Modal.Header className="header-edit" closeButton>
@@ -124,15 +131,24 @@ export class editar_ramo extends React.Component {
         </Modal.Header>
         <Modal.Body>
         <div>
+          { 
+              Object.keys(this.state.form_errors).map(k => {
+                if(!(campos.includes(k))){
+                  return (
+                    <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+                  )
+                }
+              })
+            }
           <form className="" name="form" onSubmit={this.handleSubmit}>
               <Row>
                 <Col xs="1"></Col>
                   <Col lg={5} >
                       <Row>
                           <Col xs="auto">
-                              <label >Ramo</label>
+                              <label >Ramo<span style={{color:"red"}}>*</span></label>
                           </Col>
-                          <Col lg={9} xs={12}>
+                          <Col lg={8} xs={11}>
                               <input type="text" className={this.state.form_errors["nombre_ramo"] ? "form-control is-invalid" : this.state.errors_checked["nombre_ramo"] ? "form-control is-valid" : "form-control"} name="nombre_ramo" value={this.state.nombre_ramo} onChange={this.onChange} placeholder="Ingrese Nombre Ramo" style={{textAlignLast:'center'}} />
                               <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["nombre_ramo"]}</span>
                           </Col>
@@ -142,9 +158,9 @@ export class editar_ramo extends React.Component {
                   <Col lg={5}>
                       <Row>
                           <Col xs="auto">
-                              <label >Código</label>
+                              <label >Código<span style={{color:"red"}}>*</span></label>
                           </Col>
-                          <Col lg={9} xs={12}>
+                          <Col lg={8} xs={11}>
                           <input type="text" className={this.state.form_errors["codigo_ramo"] ? "form-control is-invalid" : this.state.errors_checked["codigo_ramo"] ? "form-control is-valid" : "form-control"} name="codigo_ramo" value={this.state.codigo_ramo} onChange={this.onChange} placeholder="Ingrese Código CCXXXX" style={{textAlignLast:'center'}} readOnly={true}  />
                           <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["codigo_ramo"]}</span>
                           </Col>                          
@@ -157,9 +173,9 @@ export class editar_ramo extends React.Component {
                   <Col lg={5}>
                       <Row> 
                           <Col xs="auto" >
-                              <label >Semestre</label>
+                              <label >Semestre<span style={{color:"red"}}>*</span></label>
                           </Col>
-                          <Col lg={8} xs={12}>
+                          <Col lg={8} xs={11}>
                           {/* No pude centrarlo, hay un problema con prioridades de css de react */}
                               <select className={this.state.form_errors["semestre_malla"] ? "form-control is-invalid" : this.state.errors_checked["semestre_malla"] ? "form-control is-valid" : "form-control"} name="semestre_malla" onChange={this.onChange} value={this.state.semestre_malla} style={{textAlignLast:'center',textAlign:'center'}}  >
                                   <option value="5" selected>Quinto</option>

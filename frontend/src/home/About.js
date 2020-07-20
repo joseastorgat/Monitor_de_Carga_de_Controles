@@ -2,6 +2,8 @@ import React from "react";
 import { Container} from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
 import style from '../members.module.css';
+import {Card} from "react-bootstrap";
+
 
 export default class About extends React.Component {
     render() {
@@ -10,14 +12,16 @@ export default class About extends React.Component {
           <Container >
            <ViewTitle>Acerca de </ViewTitle>
            <div>
-            <h3 style={{backgroundColor:"gray",color:"white", textAlign:"center"}}>Versión 1.0</h3>
+            <Card bg="primary" className={style.version}>
+            <Card.Title>Versión 1.0</Card.Title>
+            </Card>
             <Container >
-            <h4 textAlign="left">Descripción </h4>
+            <h5 textAlign="left">Descripción </h5>
             <p>Software realizado en el semestre otoño del año 2020, para el curso de Ingeniería de Software II
              del Departamento de Ciencias de la Computación (DCC), que tiene como objetivo la organización y planificación 
              de la carga académica (controles y tareas) de los cursos del DCC antes de la inscripción académica realizada 
              por los estudiantes cada semestre.</p>
-            <h4 textAlign="left">Equipo </h4>
+            <h5 textAlign="left">Equipo </h5>
             <div className="Equipo">
               <Member 
                 img="hola"
@@ -79,11 +83,11 @@ export default class About extends React.Component {
   }
     render(){
       return(
-        <div className={style.member}>
+        <Card border="dark" bg="secondary" className={style.member}>
             {/* <img className={style.image} src={this.state.img} alt="" /> */}
-            <h6 style={{fontWeight:"700"}}>{this.state.nombre}</h6>
+            <h6 className={style.nombre}>{this.state.nombre}</h6>
             <i className={style.letra}> {this.state.cargo} </i>
             <i className={style.letra}> {this.state.correo} </i>     
-        </div>
+        </Card>
     )}
 }

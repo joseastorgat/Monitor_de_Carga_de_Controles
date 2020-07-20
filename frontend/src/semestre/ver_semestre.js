@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import NuevoCurso from "../curso/nuevo_curso"
 import EditarCurso from "../curso/editar_curso"
+import Alert_2 from '@material-ui/lab/Alert';
 
 class CursoItem extends React.Component {
     constructor(props) {
@@ -39,7 +40,11 @@ class CursoItem extends React.Component {
                   {this.props.codigo} {this.props.nombre}
                 </span>
                 <p className="mb-0">Sección {this.props.seccion}</p>
-                <div>Profesor:<ul> {this.props.profesor.map(profesor=> (<li>{profesor }</li>))}</ul></div>
+                <div>Profesor:
+                
+                <ul> {
+                  this.props.profesor.length==0 ? ( <Alert_2 variant="outlined" severity="warning">No hay profesor asignado</Alert_2>):
+                  this.props.profesor.map(profesor=> (<li>{profesor }</li>))}</ul></div>
               </Col>
               <Col xs="auto">
                 <span style={{marginRight:'30px'}}></span> 
@@ -230,9 +235,9 @@ export class ver_semestre extends React.Component {
                 </Form>
 
               </Col>
-              <Col md="auto">
+              {/* <Col md="auto">
               <Button  className="btn btn-primary float-right">Exportar Semestre</Button>
-            </Col>
+            </Col> */}
               <Col xs="auto">
 
                   <Button className="btn btn-primary float-right" onClick={()=>this.showModalAdd()}>Nuevo Curso</Button>

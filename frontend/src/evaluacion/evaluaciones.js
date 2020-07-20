@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import OptionButton from "../common/OptionButton";
 import {Pencil, Trashcan,ArrowLeft} from "@primer/octicons-react";
 import DeleteModal from "../common/DeleteModal";
-import { Table, Container} from "react-bootstrap";
+import { Table, Container, Alert} from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import ViewTitle from "../common/ViewTitle";
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class evaluaciones extends React.Component {
     constructor(props) {
@@ -60,7 +61,6 @@ export class evaluaciones extends React.Component {
     }
 
     onChange = e => {
-        console.log("change")
         let errors_checked = this.state.errors_checked
         let form_errors = this.state.form_errors
         errors_checked[e.target.name] = false
@@ -244,9 +244,28 @@ export class evaluaciones extends React.Component {
             // window.location.reload(false);
         })
         .catch( (err) => {
-            console.log(err);
-            console.log("cant update evaluacion");
-            alert("[ERROR] No se puedo actualizar la evaluación! ");
+            if (err.response.status===401){// Fecha choca con fecha especial
+                var errores=this.state.form_errors
+                var errors_checked=this.state.errors_checked
+                errores["fecha"]="Fecha ingresada no es válida, ya que choca con fecha especial"
+                errors_checked["fecha"]=false
+                this.setState({
+                    form_errors: errores,
+                    errors_checked: errors_checked
+                })
+                return false
+            }
+            else{
+                console.log(err);
+                console.log("cant update evaluacion");
+                let errors = this.state.form_errors
+                for (let [key, value] of Object.entries(err.response.data)){
+                    errors[key] = value[0]
+                }
+                this.setState({
+                    form_errors:errors
+                })
+            }
         });
     }
 
@@ -296,7 +315,6 @@ export class evaluaciones extends React.Component {
     }
 
     create_evaluacion() {  
-        console.log(this.state)
         console.log("post evaluaciones ...")
         if(!this.validateForm()){
             return;
@@ -320,7 +338,6 @@ export class evaluaciones extends React.Component {
       axios(options)
       .then( (res) => {
         console.log("create evaluacion");
-        console.log(res);
         evaluaciones.push(res.data)
         this.form.reset()
         this.setState(
@@ -338,7 +355,28 @@ export class evaluaciones extends React.Component {
       .catch( (err) => {
         console.log("cant create evaluacion");
         console.log(err);
-        alert("[ERROR] No se pudo crear la evaluacion!");
+        if (err.response.status===401){// Fecha choca con fecha especial
+            var errores=this.state.form_errors
+            var errors_checked=this.state.errors_checked
+            errores["fecha"]="Fecha ingresada no es válida, ya que choca con fecha especial"
+            errors_checked["fecha"]=false
+            this.setState({
+                form_errors: errores,
+                errors_checked: errors_checked
+            })
+            return false
+        }
+        else{
+            console.log("cant create evaluacion");
+            console.log(err);
+            let errors = this.state.form_errors
+            for (let [key, value] of Object.entries(err.response.data)){
+                errors[key] = value[0]
+            }
+            this.setState({
+                form_errors:errors
+            })
+            }
       });
     }
 
@@ -357,7 +395,8 @@ export class evaluaciones extends React.Component {
                     eliminar_index: -1,
                 })
             })
-        }      
+        }
+        console.log(this.state)
     }
     async fetch_semestre(){
         const {ano,semestre}= this.props.match.params
@@ -391,18 +430,28 @@ export class evaluaciones extends React.Component {
     handleCancel() {
         this.setState({ showModal: false, ramoPorEliminar: null });
     }
-
+    
     createFormRender(){
+        const campos = ["fecha", "titulo", "tipo"]
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                 <div className="generic-form" ref={this.divToFocus}>  
                     <h4>Nueva Evaluación</h4>
+                    { 
+                    Object.keys(this.state.form_errors).map(k => {
+                    if(!(campos.includes(k))){
+                        return (
+                        <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+                        )
+                    }
+                    })
+                    }
                     <div className="row">
                     <div className="col-sm-1"></div>        
                         <div className="col-sm-5">
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Título</label>
+                                    <label >Título<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="text" className={this.state.form_errors["titulo"] ? "form-control is-invalid" : this.state.errors_checked["titulo"] ? "form-control is-valid" : "form-control"} name="titulo"  value={this.state.titulo} style={{textAlignLast:'center'}} onChange={this.onChange} />
@@ -413,7 +462,7 @@ export class evaluaciones extends React.Component {
                         <div className="col-sm-5">
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Fecha</label>
+                                    <label >Fecha<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha"  value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange} min={this.state.fecha_inicio_semestre} max={this.state.fecha_fin_semestre}/>
@@ -427,7 +476,7 @@ export class evaluaciones extends React.Component {
                         <div className="col-sm-5" >
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Tipo</label>
+                                    <label >Tipo<span style={{color:"red"}}>*</span></label>
                                 </div>
     
                                 <div className="custom-control custom-radio custom-control-inline"  >
@@ -454,16 +503,26 @@ export class evaluaciones extends React.Component {
     }
     updateFormRender(){
         var ev = this.state.evaluaciones[this.state.editar_index];
+        const campos = ["fecha", "titulo", "tipo"]
         return (
             <form className="" name="form" ref={(e) => this.form = e} onSubmit={this.handleSubmit}> 
                 <div className="generic-form" ref={this.divToFocus}>  
                     <h4>Editar {ev.tipo}: {ev.titulo}</h4>
+                    { 
+                    Object.keys(this.state.form_errors).map(k => {
+                    if(!(campos.includes(k))){
+                        return (
+                        <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+                        )
+                    }
+                    })
+                    }
                     <div className="row">
                     <div className="col-sm-1"></div>        
                         <div className="col-sm-5">
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Título</label>
+                                    <label >Título<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="text" className={this.state.form_errors["titulo"] ? "form-control is-invalid" : this.state.errors_checked["titulo"] ? "form-control is-valid" : "form-control"} name="titulo"  value={this.state.titulo} placeholder="Título" style={{textAlignLast:'center'}} onChange={this.onChange} />
@@ -474,7 +533,7 @@ export class evaluaciones extends React.Component {
                         <div className="col-sm-5">
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Fecha</label>
+                                    <label >Fecha<span style={{color:"red"}}>*</span></label>
                                 </div>
                                 <div className="col-sm-10" >
                                     <input type="date" className={this.state.form_errors["fecha"] ? "form-control is-invalid" : this.state.errors_checked["fecha"] ? "form-control is-valid" : "form-control"} name="fecha" value={this.state.fecha} style={{textAlignLast:'center'}} onChange={this.onChange} min={this.state.fecha_inicio_semestre} max={this.state.fecha_fin_semestre}/>
@@ -488,7 +547,7 @@ export class evaluaciones extends React.Component {
                         <div className="col-sm-5" >
                             <div className="row" >
                                 <div className="col-sm-2" >
-                                    <label >Tipo</label>
+                                    <label >Tipo<span style={{color:"red"}}>*</span></label>
                                 </div>
     
                                 <div className="custom-control custom-radio custom-control-inline"  >
@@ -564,6 +623,7 @@ export class evaluaciones extends React.Component {
                                 id_curso={evaluacion.curso}
                                 tipo={evaluacion.tipo}
                                 titulo={evaluacion.titulo}
+                                warning={evaluacion.warning}
                                 handleUpdate={() => this.handleClickEditarEvaluacion(_index)}
                                 showModal={() => this.showModal(evaluacion, _index)}
                                 />
@@ -597,6 +657,7 @@ class EvaluacionItem extends React.Component {
       const titulo =this.props.titulo;
       const fecha = this.props.fecha;
       const tipo= this.props.tipo;
+      const warning= this.props.warning;
       const id = this.props.id;
       const id_curso = this.props.id_curso;
       const handleDelete = this.props.handleDelete;
@@ -609,7 +670,7 @@ class EvaluacionItem extends React.Component {
         <thead >
             <tr >
             <td scope="col">{titulo}</td>
-            <td scope="col">{fecha_formato_m_d_y}</td>
+            <td scope="col">{fecha_formato_m_d_y}{warning==null? "": <Alert_2 style={{size: "10"}} variant="outlined" severity="warning" >{warning}</Alert_2>}            </td>
             <td scope="col">{tipo}</td>
             <td scope="col">
                 <Link to="#" onClick={e => handleUpdate(i)}>

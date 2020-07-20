@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import NuevaEvaluacion from "./nueva_evaluacion"
 import EditarEvaluacion from "./editar_evaluacion"
+import Alert_2 from '@material-ui/lab/Alert';
 
 export class lista_evaluaciones extends React.Component {
     constructor(props) {
@@ -214,8 +215,8 @@ export class lista_evaluaciones extends React.Component {
                 <p>Curso
                 <select required className="form-control"  name="curso_busqueda" style={{textAlignLast:'center',textAlign:'center'}} value={this.state.curso_busqueda} onChange={this.onChange_Curso} >
                     <option value="" >Seleccione curso</option>
-                    {this.state.MostrarCursos.map(curso=>
-                          <option value={curso.id+"-"+curso.ramo+"-"+curso.seccion + " "+curso.nombre} >{curso.ramo} {curso.nombre}</option>         
+                    {this.state.MostrarCursos.map( (curso, i) =>
+                          <option value={curso.id+"-"+curso.ramo+"-"+curso.seccion + " "+curso.nombre} >{curso.ramo}{i > 0 ? "-" : ""}{curso.seccion} {curso.nombre}</option>         
                         )}
                     
                 </select>
@@ -288,6 +289,7 @@ export class lista_evaluaciones extends React.Component {
                     fecha={evaluacion.fecha}
                     tipo={evaluacion.tipo}
                     titulo={evaluacion.titulo}
+                    warning={evaluacion.warning}
                     showModal={() => this.showModal(evaluacion, i)}
                     showModalEdit={() => this.showModalEdit(evaluacion, i)}
                     handleDelete = {this.handleDelete}
@@ -313,12 +315,14 @@ export class lista_evaluaciones extends React.Component {
       const codigo_curso = this.props.codigo_curso;
       const nombre_curso= this.props.nombre_curso;
       const seccion_curso=this.props.seccion_curso;
+      const warning=this.props.warning;
       return (
         <Alert variant="secondary">
             <Row>
               <Col xs={6}>
                 <h6>{codigo_curso}-{seccion_curso} {nombre_curso} </h6> 
                 <p>{titulo}</p>
+                {warning==null? "": <Alert_2 style={{size: "10"}} variant="outlined" severity="warning" >{warning}</Alert_2>}
               </Col>
               <Col xs={4} className="text-center"> 
               <p>{fecha[2]}-{fecha[1]}-{fecha[0]}</p>

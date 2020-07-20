@@ -44,15 +44,15 @@ class LogedInView extends React.Component {
         </LinkContainer>
         <LinkContainer to="/evaluaciones/">
         <NavLink eventKey="5">
-         
             <h5>Evaluaciones</h5>
-         
         </NavLink>
         </LinkContainer>
      <NavDropdown style={{fontSize:"1.8em !important"}} alignRight title={user ? `${user.username}` : ''} >
-          <NavDropdown.Item > <LinkContainer to="/acerca-de/">
+          <NavDropdown.Item eventKey="6">
+           <LinkContainer to="/acerca-de/">
             <div>Acerca de</div>
-        </LinkContainer></NavDropdown.Item>
+          </LinkContainer>
+          </NavDropdown.Item>
           <NavDropdown.Divider />
           <NavDropdown.Item onClick={logout}>  Cerrar Sesión  </NavDropdown.Item>
           
@@ -66,20 +66,21 @@ class LogedInView extends React.Component {
 class LogedOutView extends React.Component {
   render() {
     return (
-      <Nav className="ml-auto" >
-      <LinkContainer to="/acerca-de/">
-      <Nav.Link><h5 style={{color:'white'}}>Acerca de</h5></Nav.Link>
-    </LinkContainer>
-      <LinkContainer to="/login/">
-        <Nav.Link><h5 style={{color:'white'}}>Ingresar</h5></Nav.Link>
-      </LinkContainer>
-      </Nav>
+      <Navbar.Collapse className="mr-auto">
+        <Nav className="ml-auto" >
+        <LinkContainer to="/acerca-de/" >
+            <Nav.Link><h5 style={{color:'white'}}>Acerca de</h5></Nav.Link>
+        </LinkContainer>
+        <LinkContainer to="/login/">
+          <Nav.Link><h5 style={{color:'white'}}>Ingresar</h5></Nav.Link>
+        </LinkContainer>
+        </Nav>
+      </Navbar.Collapse>
     );
   }
 }
 
 class Header extends React.Component {
-  
   static propTypes = {
     auth: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
