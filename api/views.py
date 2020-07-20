@@ -7,12 +7,12 @@ from rest_framework.serializers import ValidationError
 import datetime
 
 from .models import Semestre, Ramo, Curso, Profesor, Calendario,\
-    Fechas_especiales, Evaluacion
+    Fechas_especiales, Evaluacion, Semana
 from api.serializers import SemestreSerializer, RamoSerializer,\
     CursoSerializer, ProfesorSerializer, CalendarioSerializer,\
     FechaSerializer, EvaluacionSerializer, CursoDetailSerializer,\
     SemestreFileSerializer, SemestreClonarSerializer,\
-    NuevoCalendarioSerializer
+    NuevoCalendarioSerializer, SemanaSerializer
 
 from rest_framework.views import APIView
 from django.http import Http404
@@ -39,6 +39,15 @@ class SemestreViewSet(viewsets.ModelViewSet):
         # print(request.query_params)
         cursos = Curso.objects.filter(semestre=pk)
         serializer = CursoDetailSerializer(cursos, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'],
+            #permission_classes=[permissions.IsAuthenticatedOrReadOnly]
+            )
+    def semanas(self, request, pk=None):
+        # print(request.query_params)
+        semanas = Semana.objects.filter(semestre=pk)
+        serializer = SemanaSerializer(semanas, many=True)
         return Response(serializer.data)
 
     @action(detail=False, methods=['post'],
