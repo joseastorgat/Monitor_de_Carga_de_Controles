@@ -72,8 +72,8 @@ export class editar_semestre extends React.Component {
             "año": parseInt(this.state.año),
             "estado": parseInt(this.state.estado_semestre),
             "periodo": parseInt(this.state.periodo),
-            "inicio_fecha":this.state.inicio,
-            "fin_fecha": this.state.fin
+            "inicio":this.state.inicio,
+            "fin": this.state.fin
            }
         }
         
