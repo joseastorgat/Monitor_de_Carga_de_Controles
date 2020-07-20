@@ -31,7 +31,7 @@ export class nuevosemestre extends React.Component {
         // archivo_error_msg: "",
         
         clonar: false,
-        clonar_id: 0,
+        clonar_id: -1,
         clonar_procesando: false,
         clonar_listo: false,
         clonar_listo_msg: "",
@@ -42,7 +42,7 @@ export class nuevosemestre extends React.Component {
 
     static propTypes={
         auth: PropTypes.object.isRequired,
-    };
+    }; 
 
     resetState(){
 
@@ -54,12 +54,12 @@ export class nuevosemestre extends React.Component {
             fin_semestre:"",
             estado_semestre:"1",
             forma_creacion_semestre: 0,
-    
+
             form_errors: {},
             errors_checked: {},
             semestre_created: false,
             // sacar_pop_up: () => {this.props.handleAdd(); this.resetState()},
-    
+
             required: "required",
             
             archivo: false,
@@ -72,7 +72,7 @@ export class nuevosemestre extends React.Component {
             // archivo_error_msg: "",
             
             clonar: false,
-            clonar_id: 0,
+            clonar_id: -1,
             clonar_procesando: false,
             clonar_listo: false,
             clonar_listo_msg: "",
@@ -100,22 +100,23 @@ export class nuevosemestre extends React.Component {
     };
 
     onSelect = e => {
-        const {clonar: clonar_semestre, archivo: subir_archivo} = this.state;
-        console.log(clonar_semestre, subir_archivo);
+        // const {clonar, archivo} = this.state;
         if(e === "clonar"){
             this.setState({
-                clonar: !clonar_semestre,
+                clonar: !this.state.clonar,
                 archivo: false,
-                required: clonar_semestre? "required" : ""
+                required: this.state.clonar? "required" : ""
             })
         }
         else{
             this.setState({
-                archivo: !subir_archivo,
+                archivo: !this.state.archivo,
                 clonar: false,
-                required: subir_archivo? "required" : "",
+                clonar_id: -1,
+                required: this.state.archivo? "required" : "",
             })
         }
+
     };
 
     onFile = e => {
@@ -205,7 +206,7 @@ export class nuevosemestre extends React.Component {
         let url = "";
         let data = {};
         let options = {};
-       
+
        if(!this.state.archivo){
         
             if(!this.validateForm()){
@@ -394,8 +395,6 @@ export class nuevosemestre extends React.Component {
             })
         }
       }
-    
-    
  
     shouldComponentUpdate(prevProps, prevState){
         if( 
@@ -513,7 +512,7 @@ export class nuevosemestre extends React.Component {
                                         <label >Año<span style={{color:"red"}}>*</span></label>
                                     </Col>
                                     <Col lg={8} xs={11}>
-                                        <input value={this.state.año} type="number" min="2019" max="2030" step="1" className={this.state.form_errors["año"] ? "form-control is-invalid" : this.state.errors_checked["año"] ? "form-control is-valid" : "form-control"} placeholder="Ej.: 2020" name="año" onChange={this.onChange}  />
+                                        <input value={this.state.año} type="number" min="2019" max="2030" step="1" className={this.state.form_errors["año"] ? "form-control is-invalid" : this.state.errors_checked["año"] ? "form-control is-valid" : "form-control"} placeholder="Ej.: 2020" name="año" onChange={this.onChange} disabled={this.state.archivo} />
                                         <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["año"]}</span>
                                     </Col>
                                 </Row>
@@ -526,11 +525,11 @@ export class nuevosemestre extends React.Component {
                                     </Col>
                                     <Col lg={8} xs={11}>
                                         <div  className="custom-control custom-radio custom-control-inline">
-                                            <input type="radio" id="otoño" name="periodo" value="1" onChange={this.onChange} className={this.state.form_errors["periodo"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo)===1} />
+                                            <input type="radio" id="otoño" name="periodo" value="1" onChange={this.onChange} className={this.state.form_errors["periodo"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo)===1} disabled={this.state.archivo} />
                                             <label className="custom-control-label" htmlFor="otoño" >Otoño</label>
                                         </div>
                                         <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
-                                            <input type="radio" id="primavera" name="periodo" value="2" onChange={this.onChange} className={this.state.form_errors["periodo"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo)===2}/>
+                                            <input type="radio" id="primavera" name="periodo" value="2" onChange={this.onChange} className={this.state.form_errors["periodo"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo)===2} disabled={this.state.archivo}/>
                                             <label className="custom-control-label" htmlFor="primavera">Primavera</label>
                                         </div>
                                         <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["periodo"]}</span>
@@ -547,7 +546,7 @@ export class nuevosemestre extends React.Component {
                                     <label >Inicio<span style={{color:"red"}}>*</span></label>
                                     </Col>
                                     <Col lg={8} xs={11}>
-                                    <input value={this.state.inicio} type="date" className={this.state.form_errors["inicio"] ? "form-control is-invalid" : this.state.errors_checked["inicio"] ? "form-control is-valid" : "form-control"} name="inicio" onChange={this.onChange} />
+                                    <input value={this.state.inicio} type="date" className={this.state.form_errors["inicio"] ? "form-control is-invalid" : this.state.errors_checked["inicio"] ? "form-control is-valid" : "form-control"} name="inicio" onChange={this.onChange} disabled={this.state.archivo}/>
                                     <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["inicio"]}</span>
                                     </Col>
                                 </Row>
@@ -558,7 +557,7 @@ export class nuevosemestre extends React.Component {
                                         <label >Fin<span style={{color:"red"}}>*</span></label>
                                     </Col>
                                     <Col lg={8} xs={11}>
-                                        <input value={this.state.fin} type="date" className={this.state.form_errors["fin"] ? "form-control is-invalid" : this.state.errors_checked["fin"] ? "form-control is-valid" : "form-control"} name="fin" onChange={this.onChange} />
+                                        <input value={this.state.fin} type="date" className={this.state.form_errors["fin"] ? "form-control is-invalid" : this.state.errors_checked["fin"] ? "form-control is-valid" : "form-control"} name="fin" onChange={this.onChange} disabled={this.state.archivo} />
                                         <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["fin"]}</span>
                                     </Col>
                                 </Row>
@@ -580,9 +579,14 @@ export class nuevosemestre extends React.Component {
                             </div> */}
 
                             <div className="col-sm-10" >
-                                <select className={this.state.form_errors["clonar_id"] ? "form-control center is-invalid" : this.state.errors_checked["clonar_id"] ? "form-control center is-valid" : "form-control center"} name="clonar_id" style={{textAlignLast:'center',textAlign:'center'}} onChange={this.onChange} >
-                                    {semestres.map((semestre, i) => (
-                                    <option  value={i} selected={this.state.clonar_id==i} >{semestre.año} - {semestre.periodo === 1? "Otoño" : "Primavera"}</option>
+                                <select className={this.state.form_errors["clonar_id"] ? "form-control center is-invalid" : this.state.errors_checked["clonar_id"] ? "form-control center is-valid" : "form-control center"}
+                                    name="clonar_id" 
+                                    style={{textAlignLast:'center',textAlign:'center'}}
+                                    disabled={!this.state.clonar}
+                                    onChange={this.onChange} >
+                                        <option value="" selected disabled hidden> Semestre a clonar ...</option>
+                                    {   semestres.map((semestre, i) => (
+                                        <option  value={i} selected={this.state.clonar_id==i} >{semestre.año} - {semestre.periodo === 1? "Otoño" : "Primavera"}</option>
                                     ))}
                                 </select>
                                 <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["ramo"]}</span>            
@@ -598,7 +602,7 @@ export class nuevosemestre extends React.Component {
                                 <div className="col-sm-10" >
                                     <input type="file" className="form-control" name="archivo_excel" onChange={this.onFile }/>
                                     <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["archivo_excel"]}</span>
-                                    <a href={process.env.PUBLIC_URL + '/template.xlsx'} download="template.xlsx" target="_blank" >Descargar Template</a>
+                                    <a href={process.env.PUBLIC_URL + '/static/template.xlsx'} download="template.xlsx" target="_blank" >Descargar Template</a>
                                 </div>
                             </div>
                         </Col>
