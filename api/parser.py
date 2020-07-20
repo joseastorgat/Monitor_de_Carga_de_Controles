@@ -114,3 +114,20 @@ def parse_excel(file_stream):
         semestre['cursos'].append(curso)
     print(errores)
     return semestre, errores
+
+
+def validar_semestre_excel(sem, file_stream):
+    año = sem.año
+    periodo = sem.periodo
+    try:
+        read_xls = pd.read_excel(file_stream.file, index_col=None)
+    except Exception:
+        return False, {'Error de formato': 'el archivo entregado no tiene el formato correcto o está corrupto.'}
+    xls = read_xls.to_numpy()
+    año_xls = int(read_xls.to_csv(index=False).split(',')[1])
+    periodo_xls = xls[0][1]
+    if año != año_xls:
+        return False, {'error en año': f'el año del excel ({año_xls}) no coincide con el año del semestre al cual desea cargar evaluaciones ({año}).'}
+    if periodo != periodo_xls:
+        return False, {'error en periodo': f'el periodo del excel ({periodo_xls}) no coincide con el periodo del semestre al cual desea cargar evaluaciones ({periodo}).'}
+    return True, []
