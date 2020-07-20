@@ -2,16 +2,18 @@ import React from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Modal, Col, Row, Container} from "react-bootstrap";
-// import ReactAnimatedEllipsis from 'react-animated-ellipsis';
+
+import { Modal, Col, Row, ModalBody} from "react-bootstrap";
+import { Link } from "react-router-dom";
+import Alert_2 from '@material-ui/lab/Alert';
 import EllipsisAnimation from "../common/EllipsisAnimation";
 
 export class nuevosemestre extends React.Component {
     state={
-        año_semestre: "",
-        periodo_semestre: "1",
-        inicio_semestre: "",
-        fin_semestre:"",
+        año: "",
+        periodo: "1",
+        inicio: "",
+        fin:"",
         estado_semestre:"1",
         forma_creacion_semestre:0,
 
@@ -75,8 +77,6 @@ export class nuevosemestre extends React.Component {
                 archivo: !subir_archivo,
                 clonar: false,
                 required: subir_archivo? "required" : "",
-                form_errors: {},
-                errors_checked: {},
             })
         }
     };
@@ -99,61 +99,60 @@ export class nuevosemestre extends React.Component {
     validateForm(){
         let errores = {}
         let isValid = true
-        let año_semestre = this.state.año_semestre
-        let periodo_semestre =  this.state.periodo_semestre
-        let inicio_semestre = this.state.inicio_semestre
-        let fin_semestre = this.state.fin_semestre
+        let año = this.state.año
+        let periodo =  this.state.periodo
+        let inicio = this.state.inicio
+        let fin = this.state.fin
         let errors_checked = {
-            año_semestre: true,
-            periodo_semestre: true,
-            inicio_semestre: true,
-            fin_semestre: true
+            año: true,
+            periodo: true,
+            inicio: true,
+            fin: true
         }
 
-        if(año_semestre === ""){
-            errores["año_semestre"] = "Debe ingresar un año para el semestre"
+        if(año === ""){
+            errores["año"] = "Debe ingresar un año para el semestre"
             isValid = false
         }
-        else if(isNaN(parseInt(año_semestre))){
-            errores["año_semestre"] = "Debe ingresar un año válido"
+        else if(isNaN(parseInt(año))){
+            errores["año"] = "Debe ingresar un año válido"
             isValid = false
         }
-        if(periodo_semestre != 1 && periodo_semestre != 2){
-            errores["periodo_semestre"] = "Debe elegir uno de los dos periodos"
+        if(periodo != 1 && periodo != 2){
+            errores["periodo"] = "Debe elegir uno de los dos periodos"
             isValid = false
         }
-        if(inicio_semestre === ""){
-            errores["inicio_semestre"] = "Debe ingresar una fecha de inicio"
+        if(inicio === ""){
+            errores["inicio"] = "Debe ingresar una fecha de inicio"
             isValid = false
         }
-        if(fin_semestre === ""){
-            errores["fin_semestre"] = "Debe ingresar una fecha de fin"
+        if(fin === ""){
+            errores["fin"] = "Debe ingresar una fecha de fin"
             isValid = false
         }
 
-        if(inicio_semestre !== "" && fin_semestre !== ""){
-            let inicio = new Date(inicio_semestre)
-            let fin = new Date(fin_semestre)
-            if(fin - inicio <= 0){
-                errores["fin_semestre"] = "Debe ingresar una fecha fin posterior a la fecha de inicio"
+        if(inicio !== "" && fin !== ""){
+            let inicio_fecha = new Date(inicio)
+            let fin_fecha = new Date(fin)
+            if(fin_fecha - inicio_fecha <= 0){
+                errores["fin"] = "Debe ingresar una fecha fin posterior a la fecha de inicio"
                 isValid = false
             }
         }
         let dateformat = (/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/)|(/^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/);
-        console.log(inicio_semestre)
-        if(!inicio_semestre.match(dateformat) && inicio_semestre !== ""){
-            errores["inicio_semestre"] = "El formato de la fecha es incorrecto"
+        if(!inicio.match(dateformat) && inicio !== ""){
+            errores["inicio"] = "El formato de la fecha es incorrecto"
             isValid = false
         }
-        else if(inicio_semestre !== ""){
-            let inicio = new Date(inicio_semestre)
-            if(inicio.getFullYear() != año_semestre){
-                errores["inicio_semestre"] = "El año de la fecha de inicio no coincide con el año del semestre"
+        else if(inicio !== ""){
+            let inicio_fecha = new Date(inicio)
+            if(inicio_fecha.getFullYear() != año){
+                errores["inicio"] = "El año de la fecha de inicio no coincide con el año del semestre"
                 isValid = false
             }
         }
-        if(!fin_semestre.match(dateformat) && fin_semestre !== ""){
-            errores["fin_semestre"] = "El formato de la fecha es incorrecto"
+        if(!fin.match(dateformat) && fin !== ""){
+            errores["fin"] = "El formato de la fecha es incorrecto"
             isValid = false
         }
         this.setState({
@@ -175,12 +174,12 @@ export class nuevosemestre extends React.Component {
                 return;
             }
 
-             data = {
-                "año": parseInt(this.state.año_semestre),
+            data = {
+                "año": parseInt(this.state.año),
                 "estado": parseInt(this.state.estado_semestre),
-                "periodo": parseInt(this.state.periodo_semestre),
-                "inicio":this.state.inicio_semestre,
-                "fin": this.state.fin_semestre
+                "periodo": parseInt(this.state.periodo),
+                "inicio":this.state.inicio,
+                "fin": this.state.fin
             }
             
               url = process.env.REACT_APP_API_URL + "/semestres/";
@@ -231,13 +230,20 @@ export class nuevosemestre extends React.Component {
                         "errors_checked": {},
                     }
                 );
-                this.state.sacar_pop_up()
+                this.sacar_pop_up()
               })
               .catch( (err) => {
-                console.log(err);
-                console.log("No se pudo crear semestre");
-                alert("No se pudo crear semestre!");
-                this.sacar_pop_up()
+                console.log("WEIRD")
+                console.log("cant create semestre");
+                let errors = this.state.form_errors;
+                
+                for (let [key, value] of Object.entries(err.response.data)){
+                    errors[key] = value[0]
+                }
+                
+                this.setState({
+                    form_errors: errors
+                })
               });
 
         }
@@ -276,17 +282,17 @@ export class nuevosemestre extends React.Component {
     resetState(){
         this.setState({
 
-            año_semestre: "",
+            año: "",
             periodo_semestre: "1",
             inicio_semestre: "",
             fin_semestre:"",
             estado_semestre:"1",
-            forma_creacion_semestre:0,
+            forma_creacion_semestre: 0,
     
             form_errors: {},
             errors_checked: {},
             semestre_created: false,
-            sacar_pop_up: () => {this.props.handleAdd(); this.resetState()},
+            // sacar_pop_up: () => {this.props.handleAdd(); this.resetState()},
     
             required: "required",
             
@@ -413,15 +419,27 @@ export class nuevosemestre extends React.Component {
                     <button className="btn btn-danger" type="button" onClick={() => {this.sacar_pop_up()}}>Ok</button>
                     <span style={{marginRight:'30px'}}></span> 
                     <button className="btn btn-primary" type="button" onClick={() => {this.setState({clonar_error: false});}}>Probar denuevo</button>
-
                 </div>
                 </div>
             );
         }
-    
-        else{
 
-            body = (
+        else{
+        
+            const campos = ["año", "periodo", "inicio", "fin", "clonar_id"];
+           
+            body = ( 
+
+                <div>
+                { 
+				    Object.keys(this.state.form_errors).map(k => {
+				    if(!(campos.includes(k))){
+					    return (
+                            <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+					    )
+				    }})
+				}
+                
                 <form className="has-warning" name="form" onSubmit={this.handleSubmit}>
                     <div>
                         <Row>
@@ -429,30 +447,30 @@ export class nuevosemestre extends React.Component {
                             <Col lg={5} >
                                 <Row>
                                     <Col xs={2}>
-                                        <label >Año</label>
+                                        <label >Año<span style={{color:"red"}}>*</span></label>
                                     </Col>
-                                    <Col lg={9} xs={12}>
-                                        <input type="number" min="2019" max="2030" step="1" className={this.state.form_errors["año_semestre"] ? "form-control is-invalid" : this.state.errors_checked["año_semestre"] ? "form-control is-valid" : "form-control"} placeholder="2020" name="año_semestre" onChange={this.onChange}  />
-                                        <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["año_semestre"]}</span>
+                                    <Col lg={8} xs={11}>
+                                        <input type="number" min="2019" max="2030" step="1" className={this.state.form_errors["año"] ? "form-control is-invalid" : this.state.errors_checked["año"] ? "form-control is-valid" : "form-control"} placeholder="Ej.: 2020" name="año" onChange={this.onChange}  />
+                                        <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["año"]}</span>
                                     </Col>
                                 </Row>
                             </Col>  
 
-                            <Col lg={5} >
+                            <Col lg={6} >
                                 <Row>
                                     <Col xs={2}>
-                                        <label>Tipo</label>
+                                        <label>Tipo<span style={{color:"red"}}>*</span></label>
                                     </Col>
-                                    <Col lg={9} xs={12}>
+                                    <Col lg={8} xs={11}>
                                         <div  className="custom-control custom-radio custom-control-inline">
-                                            <input type="radio" id="otoño" name="periodo_semestre" value="1" onChange={this.onChange} className={this.state.form_errors["periodo_semestre"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo_semestre"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo_semestre)===1} />
+                                            <input type="radio" id="otoño" name="periodo" value="1" onChange={this.onChange} className={this.state.form_errors["periodo"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo)===1} />
                                             <label className="custom-control-label" htmlFor="otoño" >Otoño</label>
                                         </div>
                                         <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
-                                            <input type="radio" id="primavera" name="periodo_semestre" value="2" onChange={this.onChange} className={this.state.form_errors["periodo_semestre"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo_semestre"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo_semestre)===2}/>
+                                            <input type="radio" id="primavera" name="periodo" value="2" onChange={this.onChange} className={this.state.form_errors["periodo"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo)===2}/>
                                             <label className="custom-control-label" htmlFor="primavera">Primavera</label>
                                         </div>
-                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["periodo_semestre"]}</span>
+                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["periodo"]}</span>
                                     </Col>
                                 </Row>
                             </Col>
@@ -463,32 +481,32 @@ export class nuevosemestre extends React.Component {
                             <Col lg={5} >
                                 <Row>
                                     <Col xs={2}>
-                                    <label >Inicio</label>
+                                    <label >Inicio<span style={{color:"red"}}>*</span></label>
                                     </Col>
-                                    <Col lg={9} xs={12}>
-                                    <input type="date" className={this.state.form_errors["inicio_semestre"] ? "form-control is-invalid" : this.state.errors_checked["inicio_semestre"] ? "form-control is-valid" : "form-control"} name="inicio_semestre" onChange={this.onChange} />
-                                    <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["inicio_semestre"]}</span>
+                                    <Col lg={8} xs={11}>
+                                    <input type="date" className={this.state.form_errors["inicio"] ? "form-control is-invalid" : this.state.errors_checked["inicio"] ? "form-control is-valid" : "form-control"} name="inicio" onChange={this.onChange} />
+                                    <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["inicio"]}</span>
                                     </Col>
                                 </Row>
                             </Col>
                             <Col lg={5} >
                                 <Row>
                                     <Col xs={2}>
-                                        <label >Fin</label>
+                                        <label >Fin<span style={{color:"red"}}>*</span></label>
                                     </Col>
-                                    <Col lg={9} xs={12}>
-                                        <input type="date" className={this.state.form_errors["fin_semestre"] ? "form-control is-invalid" : this.state.errors_checked["fin_semestre"] ? "form-control is-valid" : "form-control"} name="fin_semestre" onChange={this.onChange} />
-                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["fin_semestre"]}</span>
+                                    <Col lg={8} xs={11}>
+                                        <input type="date" className={this.state.form_errors["fin"] ? "form-control is-invalid" : this.state.errors_checked["fin"] ? "form-control is-valid" : "form-control"} name="fin" onChange={this.onChange} />
+                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["fin"]}</span>
                                     </Col>
                                 </Row>
                             </Col>
                         </Row>
 
-                </div> 
-                <Row></Row><Row></Row>
+                    </div> 
+                    <Row></Row><Row></Row>
                     <Row>
                     <Col xs="1"></Col>
-                    <div className="cuadrado-form">
+                        <div className="cuadrado-form">
                         <Col>
                         <div style={{textAlignLast:'center', textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
                             <input type="radio" id="replicar_semestre" name="clonar" className="custom-control-input" checked={this.state.clonar} onClick={e => this.onSelect("clonar")}/>
@@ -528,9 +546,9 @@ export class nuevosemestre extends React.Component {
                         <button className="btn btn-success" type="submit">Guardar Semestre</button>
                     </div>
                 </form>
-            );
+                </div>
+                 );
         }
-
 
         return (
             <Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); this.resetState()}}>
@@ -539,13 +557,14 @@ export class nuevosemestre extends React.Component {
                 Agregar nuevo semestre
               </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                {body}       
-            </Modal.Body>
+            <ModalBody>
+                {body}
+            </ModalBody>
             </Modal>
         );
       } 
 }
+
 const mapStateToProps = (state) => ({
     auth: state.auth
 });

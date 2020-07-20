@@ -150,7 +150,6 @@ export default class Sidebar extends React.Component {
               />
             })}
           </Accordion>
-        <Row></Row><Row></Row>
         <Row></Row>
          <Row className="justify-content-md-center"> 
           <Button onClick={() => handleGuardar()}>Guardar Calendario</Button>

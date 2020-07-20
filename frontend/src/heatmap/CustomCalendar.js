@@ -191,8 +191,8 @@ export default class CustomCalendar extends React.Component {
     else if(mes==="11") return "Nov"
     else return "Dic"
   }
-  mostrar_evaluaciones_dia(evaluaciones_del_dia,dia,dia_n,semana,color){
-    this.showModal(evaluaciones_del_dia,dia,dia_n,semana,color)
+  mostrar_evaluaciones_dia(evaluaciones_del_dia,fechas_del_dia,dia,dia_n,semana,color){
+    this.showModal(evaluaciones_del_dia,fechas_del_dia,dia,dia_n,semana,color)
   }
   mostrar_fechas_dia(fechas_del_dia,dia,dia_n,semana,color){
     this.showModal_fechas(fechas_del_dia,dia,dia_n,semana,color)
@@ -202,9 +202,9 @@ export default class CustomCalendar extends React.Component {
     this.showModal_guardar();
   }
   
-  showModal(evaluaciones_del_dia,dia,dia_n,semana,color) {
+  showModal(evaluaciones_del_dia,fechas_del_dia,dia,dia_n,semana,color) {
 
-    this.setState({ show_evaluaciones_dia_Modal: true, evaluaciones_dia: evaluaciones_del_dia, dia_mostrar_modal:[dia,dia_n,semana,color]})
+    this.setState({ show_evaluaciones_dia_Modal: true, evaluaciones_dia: evaluaciones_del_dia, dia_mostrar_modal:[dia,dia_n,semana,color],fechas_dia: fechas_del_dia})
   }
   showModal_fechas(fechas_del_dia,dia,dia_n,semana,color) {
     this.setState({ show_fechas_dia_Modal: true, fechas_dia: fechas_del_dia, dia_mostrar_modal_fecha:[dia,dia_n,semana,color]})
@@ -214,7 +214,7 @@ export default class CustomCalendar extends React.Component {
   }
 
   handleCancel() {
-    this.setState({ show_evaluaciones_dia_Modal: false,  evaluaciones_dia: [] , dia_mostrar_modal:[]})
+    this.setState({ show_evaluaciones_dia_Modal: false,  evaluaciones_dia: [] , dia_mostrar_modal:[], fechas_dia: [] })
   }
 
   handleCancel_fechas() {
@@ -244,6 +244,7 @@ export default class CustomCalendar extends React.Component {
             handleCancel={() => this.handleCancel()}
             evaluaciones={this.state.evaluaciones_dia}
             info={this.state.dia_mostrar_modal}
+            fechas={this.state.fechas_dia}
           />
         }
         { this.state.show_fechas_dia_Modal &&
@@ -271,10 +272,10 @@ export default class CustomCalendar extends React.Component {
               handleGuardar={() => this.mostrar_guardar_calendario()}
             />
         </Col>
-        <Col xs="auto" md={7} style={{textAlign:'center'}} >
+        <Col xs="auto" md={7} >
           <h4 >Calendario: {this.state.nombre_calendario} - {this.state.periodo===1 ? "Otoño": "Primavera"}  {this.state.año} </h4>
-          <div > 
-          <Table className="calendar" size="sm" responsive style={{display: 'block',maxHeight:"400px",maxWidth:"800px",overflowY:'scroll'}}>
+          <div style={{textAlign:'center'}} > 
+          <Table className="calendar" size="sm" responsive style={{display: 'block',maxHeight:"350px",maxWidth:"800px",overflowY:'scroll'}}>
              <thead>
                 <tr>
                 <th><h6>Mes</h6></th>
@@ -296,22 +297,24 @@ export default class CustomCalendar extends React.Component {
                 {week.map((day, di ) => {
                     const fechas_del_dia=this.state.fechas_especiales.filter(fecha => (fecha.inicio <= day && fecha.fin >= day ))
                     const hay_fecha= fechas_del_dia.length
-                    if(hay_fecha>0){
-                      return (<td className="sortable"  key={di} id={day} style={{fontWeight:"600",color: "red"}} onClick={this.mostrar_fechas_dia.bind(this,fechas_del_dia ,day,di,i+1,"#46A5A7")}>{day.split("-")[2] || "\u00a0" }  </td>)
-                    }
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha === day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
-                    if(cantidad_evaluaciones_dia===1){
-                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#FDBC5F"}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#FDBC5F")}> {day.split("-")[2] || "\u00a0" }  </td>)
+
+                    if(hay_fecha>0 && cantidad_evaluaciones_dia==0){
+                      return (<td className="sortable"  key={di} id={day} style={{fontWeight:"600",color: "red"}} onClick={this.mostrar_fechas_dia.bind(this,fechas_del_dia ,day,di,i+1,"#46A5A7")}>{day.split("-")[2] || "\u00a0" }  </td>)
+                    }
+                   
+                    else if(cantidad_evaluaciones_dia===1){
+                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#FDBC5F"}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#FDBC5F")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     }
                     else if(cantidad_evaluaciones_dia===2){
-                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di, i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
+                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di, i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
                     } 
                     else if(cantidad_evaluaciones_dia===3){
-                      return (<td className="sortable" key={di} id={day} style={{backgroundColor: "#FF0000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td className="sortable" key={di} id={day} style={{backgroundColor: "#FF0000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else if(cantidad_evaluaciones_dia>3){
-                      return (<td  className="sortable" key={di} id={day} style={{backgroundColor: "#800000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,day,di,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td  className="sortable" key={di} id={day} style={{backgroundColor: "#800000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else{
                       return <td key={di} id={day}> {day.split("-")[2] || "\u00a0" } </td>
@@ -325,6 +328,15 @@ export default class CustomCalendar extends React.Component {
             </tbody>
           </Table>
           </div>  
+        
+            <Alert variant="secondary" >
+              <h5>Cursos Seleccionados</h5>
+              <ul>{
+                console.log(this.state.selectedCourses)
+              }
+              {this.state.selectedCourses.map( (course, i) => (<li>{course.ramo}-{course.seccion} {course.nombre}</li>))}
+              </ul>
+            </Alert>
           </Col>
           <Col xs="auto" md={2} lg={2}>
           <Table responsive style={{textAlign:'center'}}> 
@@ -353,18 +365,7 @@ export default class CustomCalendar extends React.Component {
             </Table>
             </Col>         
         </Row>
-        <Row>
-          <Col>
-            <Alert variant="secondary" >
-              <h5>Cursos Seleccionados</h5>
-              <ul>{
-                console.log(this.state.selectedCourses)
-              }
-              {this.state.selectedCourses.map( (course, i) => (<li>{course.ramo}-{course.seccion} {course.nombre}</li>))}
-              </ul>
-            </Alert>
-          </Col>
-        </Row>
+        
       </Container>
     );
   }
