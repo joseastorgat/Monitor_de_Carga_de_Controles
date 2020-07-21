@@ -125,11 +125,11 @@ export class editar_semestre extends React.Component {
             isValid = false
         }
         if(inicio === ""){
-            errores["inicio"] = "Debe ingresar una fecha de inicio_fecha"
+            errores["inicio"] = "Debe ingresar una fecha de inicio"
             isValid = false
         }
         if(fin === ""){
-            errores["fin"] = "Debe ingresar una fecha de fin_fecha"
+            errores["fin"] = "Debe ingresar una fecha de fin"
             isValid = false
         }
 
@@ -137,7 +137,7 @@ export class editar_semestre extends React.Component {
             let inicio_fecha = new Date(inicio)
             let fin_fecha = new Date(fin)
             if(fin_fecha - inicio_fecha <= 0){
-                errores["fin"] = "Debe ingresar una fecha fin_fecha posterior a la fecha de inicio_fecha"
+                errores["fin"] = "Debe ingresar una fecha fin posterior a la fecha de inicio"
                 isValid = false
             }
         }
@@ -149,7 +149,7 @@ export class editar_semestre extends React.Component {
         else if(inicio !== ""){
             let inicio_fecha = new Date(inicio)
             if(inicio_fecha.getFullYear() != año){
-                errores["inicio"] = "El año de la fecha de inicio_fecha no coincide con el año del semestre"
+                errores["inicio"] = "El año de la fecha de inicio no coincide con el año del semestre"
                 isValid = false
             }
         }

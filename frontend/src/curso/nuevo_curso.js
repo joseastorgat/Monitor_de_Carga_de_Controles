@@ -134,7 +134,7 @@ export class nuevo_curso extends React.Component {
         //     errores["profesores_curso"] = "Debe seleccionar al menos un profesor"
         //     isValid = false
         // }
-        else{
+        if(profesores !== null && profesores !== "" && profesores.length > 0){
             profesores.forEach(p => {
                 if(!this.state.profesores.some(e => e.id === p.value)){
                     errores["profesor"] = "Profesor seleccionado no válido"
@@ -178,7 +178,8 @@ export class nuevo_curso extends React.Component {
             id=semestre.id
         ))
         var profesores=[]
-        this.state.profesor.map(profesor => profesores.push(profesor.value))
+        let profesor = this.state.profesor ? this.state.profesor : []
+        profesor.map(profesor => profesores.push(profesor.value))
         if (profesores==[]){
             profesores=null
         }

@@ -157,7 +157,7 @@ export class nuevafecha extends React.Component {
                 fecha_created: false,
 			  })
         }
-        const campos = ["nombre", "tipo", "inicio"]
+        const campos = ["nombre", "tipo", "inicio", "fin"]
         return (
             <Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
         <Modal.Header className="header-add" closeButton>
