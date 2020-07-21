@@ -45,6 +45,12 @@ class ProfesorSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SemanaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Semana
+        fields = '__all__'
+
+
 class CursoDetailSerializer(serializers.ModelSerializer):
     nombre = serializers.SerializerMethodField(read_only=True)
     semestre_malla = serializers.SerializerMethodField(read_only=True)

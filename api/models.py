@@ -40,6 +40,11 @@ class Semestre(models.Model):
 
     def save(self, *args, **kwargs):
         super(Semestre, self).save(*args, **kwargs)
+        if self.cantidad_semanas():
+            semanas_obj = Semana.objects.filter(semestre=self)
+            for s in semanas_obj:
+                print(f'eliminando semana {s}')
+                s.delete()
         semanas = {}
         one_day = datetime.timedelta(days=1)
         current = self.inicio
@@ -143,6 +148,9 @@ class Semana(models.Model):
 
     class Meta:
         unique_together = (("numero", "semestre"))
+
+    def __str__(self):
+        return f'semana {self.numero}, {self.semestre}'
 
     def validar(self):
         dias_lectivos = [0, 1, 2, 3, 4]
