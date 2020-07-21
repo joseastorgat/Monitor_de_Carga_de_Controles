@@ -48,4 +48,11 @@ STATIC_URL = '/static/'
 
 CSRF_COOKIE_SECURE = True
 
-SESSION_COOKIE_SECURE = True 
+SESSION_COOKIE_SECURE = True
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ["SMTP_HOST"]
+EMAIL_HOST_USER = os.environ["SMTP_USER"]
+EMAIL_HOST_PASSWORD = os.environ['SMTP_PASS']
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587

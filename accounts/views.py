@@ -47,7 +47,7 @@ class CustomPasswordResetView:
             'current_user': reset_password_token.user,
             'username': reset_password_token.user.username,
             'email': reset_password_token.user.email,
-            'reset_password_url': "{}?token={}".format(reverse('password_reset:reset-password-validate'), reset_password_token.key)
+            'reset_password_url': "{}?token={}".format("https://ucalendar.dcc.uchile.cl/login/reset/", reset_password_token.key)
         }
 
         print(f"[RESET PASSWORD REQUEST] { context['username'] } {context['email']} {context['current_user']}")
@@ -68,5 +68,3 @@ class CustomPasswordResetView:
         )
         # msg.attach_alternative(email_html_message, "text/html")
         msg.send()
-
-        
