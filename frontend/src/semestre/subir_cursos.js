@@ -39,8 +39,21 @@ export class SubirCursos extends React.Component {
         })
     }
 
-    subir_cursos(){
+    async subir_cursos(){
         
+        const res = await axios.get(process.env.REACT_APP_API_URL + `/semestres/?año=${this.state.año}&periodo=${this.state.periodo === "Otoño"? 1: 2}`);
+        
+        if (res.status !== 200 || res.data.length !== 1){
+            let errors = this.state.form_errors;
+            errors["semestre_not_found"] = "Error inesperado, porfavor recarga la página";
+            this.setState({
+                form_errors: errors
+            });
+        }
+
+        const sem = res.data[0].id
+
+
         if(!this.state.archivo_cargado){
             console.log("archivo no cargado");
             let errors ={}
@@ -53,7 +66,7 @@ export class SubirCursos extends React.Component {
         }
 
         this.setState({"archivo_procesando": true})
-        const url = process.env.REACT_APP_API_URL + "/semestres/from_xlsx3/";
+        const url = process.env.REACT_APP_API_URL + `/semestres/${sem}/from_xlsx3/`;
         const formData = new FormData();
         formData.append("file", this.state.archivo_archivo);
         
@@ -91,25 +104,33 @@ export class SubirCursos extends React.Component {
         })
         .catch( err => {
             console.log("ERROR cargando archivo");
-            let error_msg = "";
             console.log(err);
             console.log(err.response.status)
+
+            let errors = this.state.form_errors;
+
             if(err.response.status === 412){
-                error_msg = "El semestre que quieres cargar ya existe en el sistema";
+                errors["archivo_error"]  = "El semestre que quieres cargar ya existe en el sistema";
             }
             else if(err.response.status === 500 ) {
-                error_msg = "Problema no identificado"
+                errors["archivo_error"]  = "Problema no identificado"
             }
             else if(err.response.status === 406){
                 console.log(err.response.data);
-                error_msg ="Error en el formato del archivo:\n"
-                        
-                err.response.data.map( data => 
-                        error_msg += String(data.tipo) + " " + String(data.detalle)
-                )
+                
+                if(err.response.data["error"]){
+                    errors["archivo_error"] = "Datos de semestre en el excel no coinciden con el semestre al cual se desea cargar la información"
+                }
+
+                else{
+                    let error_msg ="Error en el formato del archivo:\n"
+                            
+                    err.response.data.map( data => 
+                            error_msg += String(data.tipo) + " " + String(data.detalle)
+                    )
+                    errors["archivo_error"] = error_msg;
+                }
             }
-            let errors = this.state.form_errors;
-            errors["archivo_error"] = error_msg
 
             this.setState({
                 archivo_procesando:false,
