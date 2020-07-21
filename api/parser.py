@@ -1,8 +1,8 @@
 import pandas as pd
-#import io
-#import csv
+# import io
+# import csv
 import datetime
-#from collections import defaultdict
+# from collections import defaultdict
 import math
 
 
@@ -25,6 +25,56 @@ def parse_date(date, errores, pos):
                         'detalle': f'{date} en posicion {pos}'})
         return 0  # error de formato
     return datetime.date(int(año), int(mes), int(dia))
+
+
+def parse_periodo(periodo, errores, pos):
+    # TODO: hacer el parse en busca de errores
+    return periodo
+
+
+def parse_curso(val, errores, pos):
+    return val.split(':')
+
+
+def parse_semestre_malla(val, errores, pos):
+    try:
+        if ('Electivo' in val) or 'electivo' in val:
+            return 15
+        val = val.strip()
+        if "°" in val:
+            return int(val.split("°")[0].replace('Â', ""))
+        else:
+            return int(val.split(" ")[0])
+    except Exception as e:
+        print(e)
+        pos = f'({chr(65+pos[1])}, {str(pos[0]+2)})'
+        errores.append({'tipo': 'Error de formato en nombre profesor',
+                        'detalle': f'{val} en posicion {pos}'})
+        return 0  # error de formato
+
+
+def parse_profesores(val, errores, pos):
+    try:
+        if type(val) is float:
+            return ['pendiente']
+        return val.split('/')
+    except Exception as e:
+        print(e)
+        pos = f'({chr(65+pos[1])}, {str(pos[0]+2)})'
+        errores.append({'tipo': 'Error de formato en nombre profesor',
+                        'detalle': f'{val} en posicion {pos}'})
+        return 0  # error de formato
+
+
+def parse_seccion(val, errores, pos):
+    try:
+        return int(val)
+    except Exception as e:
+        print(e)
+        pos = f'({chr(65+pos[1])}, {str(pos[0]+2)})'
+        errores.append({'tipo': 'Error de formato en sección',
+                        'detalle': f'{val} en posicion {pos}'})
+        return 0  # error de formato
 
 
 def parse_excel(file_stream):
@@ -68,7 +118,7 @@ def parse_excel(file_stream):
     xls = read_xls.to_numpy()
     n_filas = len(xls)
     año = int(read_xls.to_csv(index=False).split(',')[1])
-    periodo = xls[0][1]
+    periodo = parse_periodo(xls[0][1], errores, [0, 1])
     inicio = parse_date(xls[1][1], errores, [1, 1])
     fin = parse_date(xls[2][1], errores, [2, 1])
     keys = {}
@@ -81,22 +131,33 @@ def parse_excel(file_stream):
         curso = {'profesor': [], 'evaluaciones': []}
         for j, val in enumerate(xls[i]):
             if keys[j] == 'Curso':
-                codigo, nombre = val.split(':')
+                codigo, nombre = parse_curso(val, errores, [i, j])
                 curso['codigo'] = codigo.strip()
                 curso['nombre'] = nombre.strip()
                 ref_curso += val
             elif keys[j] == '# Sem.':
-                curso['semestre_malla'] = int(
-                    val.split("°")[0].replace('Â', ""))
+                sem_malla = parse_semestre_malla(val, errores, [i, j])
+                if sem_malla:
+                    curso['semestre_malla'] = sem_malla
             elif keys[j] == 'Prof':
-                profes = val.split('/')
-                for p in profes:
-                    curso['profesor'].append({'nombre':p})
+                profes = parse_profesores(val, errores, [i, j])
+                if profes:
+                    for p in profes:
+                        if p == 'pendiente':
+                            continue
+                        curso['profesor'].append({'nombre': p})
+                else:
+                    errores[-1]['accion'] = f'{ref_curso} quedará sin profesores'
             elif keys[j] == 'Secc.':
-                curso['seccion'] = val
-                ref_curso += f' seccion {val}'
+                seccion = parse_seccion(val, errores, [i, j])
+                if seccion:
+                    curso['seccion'] = seccion
+                    ref_curso += f' seccion {val}'
+                else:
+                    errores[-1]['accion'] = f'{ref_curso} queda sin sección. No se puede continuar sin esto!'
             else:
                 if type(val) is float:
+                    # Para identificar celdas vacias. Evaluaciones sin fecha.
                     if math.isnan(val):
                         pass
                 else:
