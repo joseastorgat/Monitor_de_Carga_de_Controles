@@ -123,6 +123,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
             else:
                 return serializer.errors, status.HTTP_400_BAD_REQUEST
         except Exception as e:
+            print(e)
             return {'Error no identificado':f'{e}'}, status.HTTP_500_INTERNAL_SERVER_ERROR
             
 

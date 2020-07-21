@@ -55,10 +55,9 @@ def parse_semestre_malla(val, errores, pos):
 
 def parse_profesores(val, errores, pos):
     try:
-        if val is str:
-            return val.split('/')
-        else:
-            return val[0].split('/')
+        if type(val) is float:
+            return ['pendiente']
+        return val.split('/')
     except Exception as e:
         print(e)
         pos = f'({chr(65+pos[1])}, {str(pos[0]+2)})'
@@ -141,9 +140,11 @@ def parse_excel(file_stream):
                 if sem_malla:
                     curso['semestre_malla'] = sem_malla
             elif keys[j] == 'Prof':
-                profes = parse_profesores(val.split('/'), errores, [i, j])
+                profes = parse_profesores(val, errores, [i, j])
                 if profes:
                     for p in profes:
+                        if p == 'pendiente':
+                            continue
                         curso['profesor'].append({'nombre': p})
                 else:
                     errores[-1]['accion'] = f'{ref_curso} quedará sin profesores'
