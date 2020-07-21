@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'frontend',
     'accounts.apps.AccountsConfig',
     'corsheaders',
-    'knox'
+    'knox',
+    'django_rest_passwordreset'
 ]
 
 REST_FRAMEWORK = {
@@ -145,6 +146,9 @@ CORS_ORIGIN_WHITELIST = [
     "https://ucalendar.dcc.uchile.cl"
 ]
 
+# mails
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 
 if "MCC" in os.environ and os.environ["MCC"] == "production":
     from .production_settings import *

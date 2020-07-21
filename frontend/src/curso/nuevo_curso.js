@@ -206,7 +206,11 @@ export class nuevo_curso extends React.Component {
                 {   
                     "curso_created": true,
                     "form_errors": {},
-                    "errors_checked": {}
+                    "errors_checked": {},
+                    ramo:"",
+                    codigo:"",
+                    profesor:[],
+                    seccion:"1"
                 });
                 this.state.sacar_pop_up();
 			})

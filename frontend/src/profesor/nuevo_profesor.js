@@ -94,7 +94,9 @@ export class nuevoprofesor extends React.Component {
 					{
 						"profesor_created": true,
 						"form_errors": {},
-						"errors_checked": {}
+						"errors_checked": {},
+						nombre: "",
+						apellido: "",
 					}
 				);
 				this.state.sacar_pop_up()

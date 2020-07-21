@@ -102,6 +102,8 @@ export class Nuevoramo extends React.Component {
           {
             "ramo_created": true,
             "form_errors": {},
+            "nombre":"",
+            "codigo":"",
             "errors_checked": {},
           });
         this.state.sacar_pop_up()

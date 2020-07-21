@@ -91,7 +91,8 @@ class Semestre(models.Model):
             fechas = Fechas_especiales.objects.filter(fin__gte=current)
             fechas = fechas.filter(inicio__lte=current)
             if len(fechas):
-                dias_lectivos.remove(dia_semana)
+                if (dia_semana<5):
+                    dias_lectivos.remove(dia_semana)
             current += one_day
         if dias_lectivos:
             return True

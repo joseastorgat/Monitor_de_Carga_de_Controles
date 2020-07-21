@@ -35,7 +35,7 @@
   "scripts": {
     "start": "react-scripts start",
     "dev": "webpack --mode development --env.REACT_APP_API_URL=http://localhost:8000/api ./src/index.js --output ./static/frontend/main.js",
-    "build": "webpack --mode production --env.REACT_APP_API_URL=http://ucalendar.dcc.uchile.cl/api ./src/index.js --output ./static/frontend/main.js"
+    "build": "webpack --mode production --env.REACT_APP_API_URL=https://ucalendar.dcc.uchile.cl/api ./src/index.js --output ./static/frontend/main.js"
   },
   "eslintConfig": {
     "extends": "react-app"
