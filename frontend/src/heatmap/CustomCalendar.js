@@ -34,9 +34,10 @@ export default class CustomCalendar extends React.Component {
       fechas_especiales:[],
       dias: [],
       dia_mostrar_modal:[],
-      dia_mostrar_modal_fecha:[]
+      dia_mostrar_modal_fecha:[],
+      semanas_oficiales_semestre:[],
     }
-    
+    this.contador_semanas=0
     this.weeks = [];
     this.handleChange.bind(this);
     this.mostrar_evaluaciones_dia.bind(this);
@@ -74,6 +75,7 @@ export default class CustomCalendar extends React.Component {
   async componentDidMount() {
   
     const {token} = this.state;
+    let sem
     let res = await axios.get(process.env.REACT_APP_API_URL + `/calendario/${token}/`);
     let selected_courses = []
     // let res = await axios.get(process.env.REACT_APP_API_URL + `/semestres/?año=${año}&periodo=${periodo}`);
@@ -84,7 +86,7 @@ export default class CustomCalendar extends React.Component {
 
     else{
 
-      let sem = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${res.data.semestre}/`);
+      sem = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${res.data.semestre}/`);
       if(res.status !== 200){
         this.setState( {"found": false });
       }
@@ -95,7 +97,8 @@ export default class CustomCalendar extends React.Component {
     }
 
     if(this.state.found){
-      
+      let semes = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${sem.data.id}/semanas/`);
+      this.setState({semanas_oficiales_semestre:semes.data})
       // generación de calendario
       const range = moment.range(this.state.inicio, this.state.fin);
       this.weeks = [];
@@ -223,8 +226,21 @@ export default class CustomCalendar extends React.Component {
   handleCancel_guardar() {
     this.setState({ show_guardar_calendario_Modal: false})
 }
+weeks_semester(week,i){
+  var contador=this.contador_semanas
+  if(this.state.semanas_oficiales_semestre!=[] && week!=[]){
+    if (contador<this.state.semanas_oficiales_semestre.length && week[0]===this.state.semanas_oficiales_semestre[contador].inicio){
+      var indice=contador+1
+      this.contador_semanas=indice;
+      return "S"+indice
+    }
+    else{
+     return ""
+    }
+  }
+}
   render() {
-    
+    this.contador_semanas=0
     const { courses } = this.state;
     
     if(!this.state.found){
@@ -293,28 +309,30 @@ export default class CustomCalendar extends React.Component {
             { this.weeks.map( (week, i) => (
               <tr>
               <td className="gris"><h6>{ this.encontrar_mes(week)}</h6></td>
-              <td  className="gris">S{i+1}</td>
+              <td  className="gris">{this.weeks_semester(week)}</td>
                 {week.map((day, di ) => {
                     const fechas_del_dia=this.state.fechas_especiales.filter(fecha => (fecha.inicio <= day && fecha.fin >= day ))
                     const hay_fecha= fechas_del_dia.length
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha === day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
+                    var color;
+                    hay_fecha==true? color="red": color="black"
 
                     if(hay_fecha>0 && cantidad_evaluaciones_dia==0){
-                      return (<td className="sortable"  key={di} id={day} style={{fontWeight:"600",color: "red"}} onClick={this.mostrar_fechas_dia.bind(this,fechas_del_dia ,day,di,i+1,"#46A5A7")}>{day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td className="sortable"  key={di} id={day} style={{fontWeight:"600",color: color}} onClick={this.mostrar_fechas_dia.bind(this,fechas_del_dia ,day,di,i+1,"#46A5A7")}>{day.split("-")[2] || "\u00a0" }  </td>)
                     }
                    
                     else if(cantidad_evaluaciones_dia===1){
-                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#FDBC5F"}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#FDBC5F")}> {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#FDBC5F",color: color}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#FDBC5F")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     }
                     else if(cantidad_evaluaciones_dia===2){
-                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di, i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
+                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A",color: color}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di, i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
                     } 
                     else if(cantidad_evaluaciones_dia===3){
-                      return (<td className="sortable" key={di} id={day} style={{backgroundColor: "#FF0000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td className="sortable" key={di} id={day} style={{backgroundColor: "#FF0000",color: color}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else if(cantidad_evaluaciones_dia>3){
-                      return (<td  className="sortable" key={di} id={day} style={{backgroundColor: "#800000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td  className="sortable" key={di} id={day} style={{backgroundColor: "#800000",color: color}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else{
                       return <td key={di} id={day}> {day.split("-")[2] || "\u00a0" } </td>
