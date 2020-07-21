@@ -102,14 +102,15 @@ export class editar_curso extends React.Component {
                 e.target.value
             })
         }
+        
         let errors_checked = this.state.errors_checked
         let form_errors = this.state.form_errors
         errors_checked[e.target.name] = false
         form_errors[e.target.name] = ""
         this.setState({
-        [e.target.name]: e.target.value,
-        errors_checked: errors_checked,
-        form_errors: form_errors
+            [e.target.name]: e.target.value,
+            errors_checked: errors_checked,
+            form_errors: form_errors
         })
     };
     onChangeSelected = e => {
@@ -146,7 +147,7 @@ export class editar_curso extends React.Component {
         //     errores["profesores_curso"] = "Debe seleccionar al menos un profesor"
         //     isValid = false
         // }
-        else{
+        if(profesores !== null && profesores !== "" && profesores.length > 0){
             profesores.forEach(p => {
                 if(!this.state.profesores.some(e => e.id === p.value)){
                     errores["profesor"] = "Profesor seleccionado no válido"
@@ -185,12 +186,13 @@ export class editar_curso extends React.Component {
         if(!this.validateForm()){
             return;
         }
-        console.log(this.state.ramo)
+
         // No pude encontrar otra forma de sacar el id, hay un problema con el formato del json
         // console.log(this.state.seccion)
         // console.log(this.state.profesor)
         var profesores=[]
-        this.state.profesor.map(profesor => profesores.push(profesor.value))
+        let profesor = this.state.profesor ? this.state.profesor : []
+        profesor.map(profesor => profesores.push(profesor.value))
 
         if (profesores==[]){
             profesores=null
