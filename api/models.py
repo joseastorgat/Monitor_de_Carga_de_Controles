@@ -60,14 +60,18 @@ class Semestre(models.Model):
                 week_counter += 1
             current += one_day
             counter += 1
+        semanas_fallidas = 0
         for s in semanas:
             if self.semana_valida(s):
                 print(f'semana {semanas[s]} es válida!')
                 inicio, fin = s
-                if Semana.objects.filter(numero=semanas[s], semestre=self):
+                numero_semana = semanas[s]-semanas_fallidas
+                if Semana.objects.filter(numero=numero_semana, semestre=self):
                     continue
                 Semana.objects.create(
-                    numero=semanas[s], semestre=self, inicio=inicio, fin=fin)
+                    numero=numero_semana, semestre=self, inicio=inicio, fin=fin)
+            else:
+                semanas_fallidas += 1
         print('guardando semestre! :D',
               f'{counter} días en semestre, dia inicio {dia_inicio}')
         print(semanas)
@@ -80,7 +84,9 @@ class Semestre(models.Model):
         current = dia_inicio
         one_day = datetime.timedelta(days=1)
         # ver bien el sgte ciclo
-        while current <= dia_inicio:
+        while current <= dia_fin:
+            if not dias_lectivos:
+                break
             dia_semana = current.weekday()
             fechas = Fechas_especiales.objects.filter(fin__gte=current)
             fechas = fechas.filter(inicio__lte=current)
@@ -90,8 +96,6 @@ class Semestre(models.Model):
         if dias_lectivos:
             return True
         return False
-
-    
 
 
 class Ramo(models.Model):
@@ -199,6 +203,15 @@ class Semana(models.Model):
         #         except Exception:
         #             pass
         #         print(dias_lectivos)
+
+    def save(self, *args, **kwargs):
+        super(Semana, self).save(*args, **kwargs)
+        dia_inicio, dia_fin = (self.inicio, self.fin)
+        fechas = Fechas_especiales.objects.filter(fin__gte=dia_inicio)
+        fechas = fechas.filter(inicio__lte=dia_fin)
+        for fecha in fechas:
+            self.fechas_especiales.add(fecha)
+            print(f'se agrega la fecha {fecha} en {self}')
 
 
 class Fechas_especiales(models.Model):
