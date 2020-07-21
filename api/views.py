@@ -2,16 +2,17 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.serializers import ValidationError
 
 import datetime
 
 from .models import Semestre, Ramo, Curso, Profesor, Calendario,\
-    Fechas_especiales, Evaluacion
+    Fechas_especiales, Evaluacion, Semana
 from api.serializers import SemestreSerializer, RamoSerializer,\
     CursoSerializer, ProfesorSerializer, CalendarioSerializer,\
     FechaSerializer, EvaluacionSerializer, CursoDetailSerializer,\
     SemestreFileSerializer, SemestreClonarSerializer,\
-    NuevoCalendarioSerializer
+    NuevoCalendarioSerializer, SemanaSerializer
 
 from rest_framework.views import APIView
 from django.http import Http404
@@ -19,7 +20,7 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.parsers import FormParser, MultiPartParser
 
-from api.parser import parse_excel
+from api.parser import parse_excel, validar_semestre_excel
 from api.utils import create_full_semester, add_courses_to_semester,\
     add_evals_to_semester, clonar_semestre
 
@@ -38,6 +39,15 @@ class SemestreViewSet(viewsets.ModelViewSet):
         # print(request.query_params)
         cursos = Curso.objects.filter(semestre=pk)
         serializer = CursoDetailSerializer(cursos, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'],
+            #permission_classes=[permissions.IsAuthenticatedOrReadOnly]
+            )
+    def semanas(self, request, pk=None):
+        # print(request.query_params)
+        semanas = Semana.objects.filter(semestre=pk)
+        serializer = SemanaSerializer(semanas, many=True)
         return Response(serializer.data)
 
     @action(detail=False, methods=['post'],
@@ -89,10 +99,16 @@ class SemestreViewSet(viewsets.ModelViewSet):
             model = model.filter(ftr)
         return model.filter()
 
-    def from_xlsx_std(self, func_creator, data):
+    def from_xlsx_std(self, func_creator, data, pk=None):
         serializer = SemestreFileSerializer(data=data)
         if serializer.is_valid():
             bin_file = data['file']
+            if pk:
+                sem = Semestre.objects.filter(pk=pk).get()
+                valid, errors = validar_semestre_excel(sem, bin_file)
+                if not valid:
+                    errors['error']= 'datos de semestre en el excel no coinciden con el semestre al cual se desea cargar la información.'
+                    return errors, status.HTTP_406_NOT_ACCEPTABLE
             parsed = parse_excel(bin_file)
             pars, errs = parsed
             if errs:
@@ -109,7 +125,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
     @action(detail=False,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
-            permission_classes=[],#[permissions.IsAuthenticatedOrReadOnly],
+            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
             )
     def from_xlsx(self, request, *args, **kwargs):
         '''
@@ -122,7 +138,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
     @action(detail=False,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
-            permission_classes=[],#[permissions.IsAuthenticatedOrReadOnly],
+            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
             )
     def from_xlsx2(self, request, *args, **kwargs):
         '''
@@ -132,17 +148,17 @@ class SemestreViewSet(viewsets.ModelViewSet):
             add_courses_to_semester, request.data)
         return Response(response, status=status)
 
-    @action(detail=False,
+    @action(detail=True,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
-            permission_classes=[],#[permissions.IsAuthenticatedOrReadOnly],
+            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
             )
-    def from_xlsx3(self, request, *args, **kwargs):
+    def from_xlsx3(self, request, pk, *args, **kwargs):
         '''
         Crear semestre mediante archivo excel xlsx
         '''
         response, status = self.from_xlsx_std(
-            add_evals_to_semester, request.data)
+            add_evals_to_semester, request.data, pk)
         return Response(response, status=status)
 
 
@@ -156,7 +172,13 @@ class EvaluationViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            if e.detail['non_field_errors'][0].code == 'unique':
+                return Response({'error': 'Ya hay una evaluación con este nombre'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(e.detail, e.status)
         data = serializer.validated_data
         if Fechas_especiales.sin_feriado(data['fecha']):
             self.perform_create(serializer)
@@ -168,15 +190,14 @@ class EvaluationViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         if Fechas_especiales.sin_feriado(data['fecha']):
             self.perform_update(serializer)
 
             if getattr(instance, '_prefetched_objects_cache', None):
-                # If 'prefetch_related' has been applied to a queryset, we need to
-                # forcibly invalidate the prefetch cache on the instance.
                 instance._prefetched_objects_cache = {}
 
             return Response(serializer.data)
