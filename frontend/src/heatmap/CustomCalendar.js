@@ -34,9 +34,10 @@ export default class CustomCalendar extends React.Component {
       fechas_especiales:[],
       dias: [],
       dia_mostrar_modal:[],
-      dia_mostrar_modal_fecha:[]
+      dia_mostrar_modal_fecha:[],
+      semanas_oficiales_semestre:[],
     }
-    
+    this.contador_semanas=0
     this.weeks = [];
     this.handleChange.bind(this);
     this.mostrar_evaluaciones_dia.bind(this);
@@ -74,6 +75,7 @@ export default class CustomCalendar extends React.Component {
   async componentDidMount() {
   
     const {token} = this.state;
+    let sem
     let res = await axios.get(process.env.REACT_APP_API_URL + `/calendario/${token}/`);
     let selected_courses = []
     // let res = await axios.get(process.env.REACT_APP_API_URL + `/semestres/?año=${año}&periodo=${periodo}`);
@@ -84,7 +86,7 @@ export default class CustomCalendar extends React.Component {
 
     else{
 
-      let sem = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${res.data.semestre}/`);
+      sem = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${res.data.semestre}/`);
       if(res.status !== 200){
         this.setState( {"found": false });
       }
@@ -95,7 +97,8 @@ export default class CustomCalendar extends React.Component {
     }
 
     if(this.state.found){
-      
+      let semes = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${sem.data.id}/semanas/`);
+      this.setState({semanas_oficiales_semestre:semes.data})
       // generación de calendario
       const range = moment.range(this.state.inicio, this.state.fin);
       this.weeks = [];
@@ -223,8 +226,21 @@ export default class CustomCalendar extends React.Component {
   handleCancel_guardar() {
     this.setState({ show_guardar_calendario_Modal: false})
 }
+weeks_semester(week,i){
+  var contador=this.contador_semanas
+  if(this.state.semanas_oficiales_semestre!=[] && week!=[]){
+    if (contador<this.state.semanas_oficiales_semestre.length && week[0]===this.state.semanas_oficiales_semestre[contador].inicio){
+      var indice=contador+1
+      this.contador_semanas=indice;
+      return "S"+indice
+    }
+    else{
+     return ""
+    }
+  }
+}
   render() {
-    
+    this.contador_semanas=0
     const { courses } = this.state;
     
     if(!this.state.found){
@@ -293,7 +309,7 @@ export default class CustomCalendar extends React.Component {
             { this.weeks.map( (week, i) => (
               <tr>
               <td className="gris"><h6>{ this.encontrar_mes(week)}</h6></td>
-              <td  className="gris">S{i+1}</td>
+              <td  className="gris">{this.weeks_semester(week)}</td>
                 {week.map((day, di ) => {
                     const fechas_del_dia=this.state.fechas_especiales.filter(fecha => (fecha.inicio <= day && fecha.fin >= day ))
                     const hay_fecha= fechas_del_dia.length
