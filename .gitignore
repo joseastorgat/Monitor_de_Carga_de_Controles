@@ -11,7 +11,7 @@ db.sqlite3
 */__pycache__/
 /.vscode/
 *.code-workspace
-api/migrations/0001_initial.py
+*/migrations/*
 /csv_data/
 
 # coverage result
@@ -57,3 +57,5 @@ tmp_email/
 #pycache
 /MCC/__pycache__/
 /api/__pycache__/
+
+sent_emails/

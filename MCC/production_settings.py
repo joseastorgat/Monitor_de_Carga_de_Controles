@@ -29,7 +29,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "https://ucalendar.dcc.uchile.cl"
+    "   ucalendar.dcc.uchile.cl"
 ]
 
 CORS_ORIGIN_WHITELIST = [
@@ -46,6 +46,24 @@ STATIC_URL = '/static/'
     # os.path.join(BASE_DIR, 'frontend/build/static')
 # ]
 
+PREPEND_WWW = False
+
 CSRF_COOKIE_SECURE = True
 
 SESSION_COOKIE_SECURE = True 
+SECURE_HSTS_SECONDS = 60
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+#SECURE_CONTENT_TYPE_NOSNIFF = True
+#SECURE_BROWSER_XSS_FILTER = True
+#SECURE_SSL_REDIRECT = True
+#X_FRAME_OPTIONS = 'DENY'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ["SMTP_HOST"]
+EMAIL_HOST_USER = os.environ["SMTP_USER"]
+EMAIL_HOST_PASSWORD = os.environ['SMTP_PASS']
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_PORT = 587
