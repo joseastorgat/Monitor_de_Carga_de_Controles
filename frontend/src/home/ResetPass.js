@@ -37,7 +37,7 @@ export class ResetPass extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
-    axios.post( process.env.REACT_APP_API_URL +"/api/auth/password_reset/",
+    axios.post( process.env.REACT_APP_API_URL +"/auth/password_reset/",
       { email: this.state.email},
       { headers: {'Content-Type': 'application/json'}})
     .then( (res) => this.setState({
@@ -48,7 +48,7 @@ export class ResetPass extends React.Component {
 
   onChangePasswordSubmit = e => {
     e.preventDefault();
-    axios.post(process.env.REACT_APP_API_URL + "/api/auth/password_reset/confirm/",
+    axios.post(process.env.REACT_APP_API_URL + "/auth/password_reset/confirm/",
     { password: this.state.pass,
       token: this.state.token,
     },
@@ -63,7 +63,7 @@ export class ResetPass extends React.Component {
 
   componentDidMount(){
     if(this.state.checking_token){
-      axios.post(process.env.REACT_APP_API_URL + "/api/auth/password_reset/validate_token/",
+      axios.post(process.env.REACT_APP_API_URL + "/auth/password_reset/validate_token/",
       { token: this.state.token},
       { headers: {'Content-Type': 'application/json'},
       })
