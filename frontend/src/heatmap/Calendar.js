@@ -194,7 +194,7 @@ export default class Calendar extends React.Component {
   weeks_semester(week,i){
     var contador=this.contador_semanas
     if(this.state.semanas_oficiales_semestre!=[] && week!=[]){
-      if (contador<this.state.semanas_oficiales_semestre.length && week[0]===this.state.semanas_oficiales_semestre[contador].inicio){
+      if (contador<this.state.semanas_oficiales_semestre.length && (week.includes(this.state.semanas_oficiales_semestre[contador].inicio )  )){
         var indice=contador+1
         this.contador_semanas=indice;
         return "S"+indice
@@ -288,7 +288,9 @@ export default class Calendar extends React.Component {
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha === day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
                     var color;
-                    hay_fecha==true? color="red": color="black"
+                    console.log(day)
+                    console.log(hay_fecha)
+                    hay_fecha>0? color="red": color="black"
                    
 
                     if(hay_fecha>0 && cantidad_evaluaciones_dia==0){
@@ -417,7 +419,7 @@ export class EvaluacionDiaModal extends React.Component {
     const dia = fecha.split("-")[2];
     const mes = fecha.split("-")[1];
     const dia_nombre = dias[info[1]];
-    console.log(fechas)
+    // console.log(fechas)
 
     return (
       <Modal transparent={true} size="sm" centered show={show} onHide={() => handleCancel()} className="modal_calendar">
