@@ -124,6 +124,9 @@ export class nuevafecha extends React.Component {
                     "nombre": "",
                     "form_errors": {},
                     "errors_checked": {},
+                    inicio: "",
+                    fin:"",
+                    nombre:""
                 }
             );
             this.state.sacar_pop_up()

@@ -45,13 +45,11 @@ export class nuevosemestre extends React.Component {
     }; 
 
     resetState(){
-
         this.setState({
-
             año: "",
             periodo_semestre: "1",
-            inicio_semestre: "",
-            fin_semestre:"",
+            inicio: "",
+            fin:"",
             estado_semestre:"1",
             forma_creacion_semestre: 0,
 

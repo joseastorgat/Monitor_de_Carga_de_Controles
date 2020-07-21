@@ -299,22 +299,24 @@ export default class CustomCalendar extends React.Component {
                     const hay_fecha= fechas_del_dia.length
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha === day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
+                    var color;
+                    hay_fecha==true? color="red": color="black"
 
                     if(hay_fecha>0 && cantidad_evaluaciones_dia==0){
-                      return (<td className="sortable"  key={di} id={day} style={{fontWeight:"600",color: "red"}} onClick={this.mostrar_fechas_dia.bind(this,fechas_del_dia ,day,di,i+1,"#46A5A7")}>{day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td className="sortable"  key={di} id={day} style={{fontWeight:"600",color: color}} onClick={this.mostrar_fechas_dia.bind(this,fechas_del_dia ,day,di,i+1,"#46A5A7")}>{day.split("-")[2] || "\u00a0" }  </td>)
                     }
                    
                     else if(cantidad_evaluaciones_dia===1){
-                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#FDBC5F"}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#FDBC5F")}> {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#FDBC5F",color: color}}  onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#FDBC5F")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     }
                     else if(cantidad_evaluaciones_dia===2){
-                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di, i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
+                      return (<td className="sortable"  key={di} id={day} style={{backgroundColor: "#F9680A",color: color}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di, i+1,"#F9680A")}> {day.split("-")[2] || "\u00a0" } </td>)
                     } 
                     else if(cantidad_evaluaciones_dia===3){
-                      return (<td className="sortable" key={di} id={day} style={{backgroundColor: "#FF0000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td className="sortable" key={di} id={day} style={{backgroundColor: "#FF0000",color: color}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#FF0000")} > {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else if(cantidad_evaluaciones_dia>3){
-                      return (<td  className="sortable" key={di} id={day} style={{backgroundColor: "#800000"}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
+                      return (<td  className="sortable" key={di} id={day} style={{backgroundColor: "#800000",color: color}} onClick={this.mostrar_evaluaciones_dia.bind(this, evaluaciones_del_dia,fechas_del_dia,day,di,i+1,"#800000")}> {day.split("-")[2] || "\u00a0" }  </td>)
                     } 
                     else{
                       return <td key={di} id={day}> {day.split("-")[2] || "\u00a0" } </td>
