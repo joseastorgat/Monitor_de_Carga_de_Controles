@@ -42,7 +42,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=['get'],
-            #permission_classes=[permissions.IsAuthenticatedOrReadOnly]
+            # permission_classes=[permissions.IsAuthenticatedOrReadOnly]
             )
     def semanas(self, request, pk=None):
         # print(request.query_params)
@@ -100,27 +100,31 @@ class SemestreViewSet(viewsets.ModelViewSet):
         return model.filter()
 
     def from_xlsx_std(self, func_creator, data, pk=None):
-        serializer = SemestreFileSerializer(data=data)
-        if serializer.is_valid():
-            bin_file = data['file']
-            if pk:
-                sem = Semestre.objects.filter(pk=pk).get()
-                valid, errors = validar_semestre_excel(sem, bin_file)
-                if not valid:
-                    errors['error']= 'datos de semestre en el excel no coinciden con el semestre al cual se desea cargar la información.'
-                    return errors, status.HTTP_406_NOT_ACCEPTABLE
-            parsed = parse_excel(bin_file)
-            pars, errs = parsed
-            if errs:
-                return errs, status.HTTP_406_NOT_ACCEPTABLE
-            response = func_creator(parsed)
-            if response['status_error']:
-                return response['status'], status.HTTP_500_INTERNAL_SERVER_ERROR
-            if response['status_warning']:
-                return response, status.HTTP_412_PRECONDITION_FAILED
-            return response, status.HTTP_201_CREATED
-        else:
-            return serializer.errors, status.HTTP_400_BAD_REQUEST
+        try:
+            serializer = SemestreFileSerializer(data=data)
+            if serializer.is_valid():
+                bin_file = data['file']
+                if pk:
+                    sem = Semestre.objects.filter(pk=pk).get()
+                    valid, errors = validar_semestre_excel(sem, bin_file)
+                    if not valid:
+                        errors['error'] = 'datos de semestre en el excel no coinciden con el semestre al cual se desea cargar la información.'
+                        return errors, status.HTTP_406_NOT_ACCEPTABLE
+                parsed = parse_excel(bin_file)
+                pars, errs = parsed
+                if errs:
+                    return errs, status.HTTP_406_NOT_ACCEPTABLE
+                response = func_creator(parsed)
+                if response['status_error']:
+                    return response['status'], status.HTTP_500_INTERNAL_SERVER_ERROR
+                if response['status_warning']:
+                    return response, status.HTTP_412_PRECONDITION_FAILED
+                return response, status.HTTP_201_CREATED
+            else:
+                return serializer.errors, status.HTTP_400_BAD_REQUEST
+        except Exception as e:
+            return {'Error no identificado':f'{e}'}, status.HTTP_500_INTERNAL_SERVER_ERROR
+            
 
     @action(detail=False,
             methods=['POST'],
