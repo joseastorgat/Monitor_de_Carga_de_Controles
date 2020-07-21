@@ -2,9 +2,10 @@ import React from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Modal,Col,Row} from "react-bootstrap";
-import { Link } from "react-router-dom";
+
+import { Modal, Col, Row, ModalBody} from "react-bootstrap";
 import Alert_2 from '@material-ui/lab/Alert';
+import EllipsisAnimation from "../common/EllipsisAnimation";
 
 export class nuevosemestre extends React.Component {
     state={
@@ -18,23 +19,77 @@ export class nuevosemestre extends React.Component {
         form_errors: {},
         errors_checked: {},
         semestre_created: false,
-        sacar_pop_up: this.props.handleAdd,
-
         required: "required",
-        subir_archivo: false,
-        clonar_semestre: false,
-        archivo: null,
-        archivo_cargado: false
+        
+        archivo: false,
+        archivo_archivo: null,
+        archivo_cargado: false,
+        archivo_procesando: false,
+        archivo_listo: false,
+        archivo_listo_msg: "",
+        archivo_error: false,
+        // archivo_error_msg: "",
+        
+        clonar: false,
+        clonar_id: -1,
+        clonar_procesando: false,
+        clonar_listo: false,
+        clonar_listo_msg: "",
+        clonar_error: false,
+        // clonar_error_msg: ""
     }
+
+
     static propTypes={
         auth: PropTypes.object.isRequired,
-    };
+    }; 
+
+    resetState(){
+        this.setState({
+            año: "",
+            periodo_semestre: "1",
+            inicio: "",
+            fin:"",
+            estado_semestre:"1",
+            forma_creacion_semestre: 0,
+
+            form_errors: {},
+            errors_checked: {},
+            semestre_created: false,
+            // sacar_pop_up: () => {this.props.handleAdd(); this.resetState()},
+
+            required: "required",
+            
+            archivo: false,
+            archivo_archivo: null,
+            archivo_cargado: false,
+            archivo_procesando: false,
+            archivo_listo: false,
+            archivo_listo_msg: "",
+            archivo_error: false,
+            // archivo_error_msg: "",
+            
+            clonar: false,
+            clonar_id: -1,
+            clonar_procesando: false,
+            clonar_listo: false,
+            clonar_listo_msg: "",
+            clonar_error: false,
+            // clonar_error_msg: ""
+        })
+    }
+
+    sacar_pop_up(){
+        this.props.handleAdd();
+        setTimeout(() => {this.resetState()}, 1000);
+    }
 
     onChange = e => {
         let errors_checked = this.state.errors_checked
         let form_errors = this.state.form_errors
         errors_checked[e.target.name] = false
         form_errors[e.target.name] = ""
+        
         this.setState({
           [e.target.name]: e.target.value,
           errors_checked: errors_checked,
@@ -43,32 +98,31 @@ export class nuevosemestre extends React.Component {
     };
 
     onSelect = e => {
-        const {clonar_semestre, subir_archivo} = this.state;
-        console.log(clonar_semestre, subir_archivo);
+        // const {clonar, archivo} = this.state;
         if(e === "clonar"){
             this.setState({
-                clonar_semestre: !clonar_semestre,
-                subir_archivo: false,
-                required: clonar_semestre? "required" : ""
+                clonar: !this.state.clonar,
+                archivo: false,
+                required: this.state.clonar? "required" : ""
             })
         }
         else{
             this.setState({
-                subir_archivo: !subir_archivo,
-                clonar_semestre: false,
-                required: subir_archivo? "required" : "",
-                form_errors: {},
-                errors_checked: {},
+                archivo: !this.state.archivo,
+                clonar: false,
+                clonar_id: -1,
+                required: this.state.archivo? "required" : "",
             })
         }
+
     };
 
     onFile = e => {
         this.setState({
-          archivo: e.target.files[0],
-          subir_archivo: true, 
+          archivo: true, 
+          archivo_archivo: e.target.files[0],
           archivo_cargado: true,
-          clonar_semestre: false,
+          clonar: false,
           required: "",
         })
     };
@@ -150,12 +204,12 @@ export class nuevosemestre extends React.Component {
         let url = "";
         let data = {};
         let options = {};
-       
-        if(!this.state.subir_archivo){
+
+       if(!this.state.archivo){
+        
             if(!this.validateForm()){
                 return;
             }
-            url = process.env.REACT_APP_API_URL + "/semestres/";
 
             data = {
                 "año": parseInt(this.state.año),
@@ -164,7 +218,10 @@ export class nuevosemestre extends React.Component {
                 "inicio":this.state.inicio,
                 "fin": this.state.fin
             }
-            options = {
+            
+              url = process.env.REACT_APP_API_URL + "/semestres/";
+              
+              options = {
                 method: 'POST',
                 url: url,
                 headers: {
@@ -174,36 +231,91 @@ export class nuevosemestre extends React.Component {
                 data: data
               }
               
-              axios(options)
-              .then( (res) => {
-                console.log("create semestre");
-                this.setState(
-                    {
-                        "semestre_created": true,
-                        inicio: "",
-                        fin:"",
-                        año:"",
-                        "form_errors": {},
-                        "errors_checked": {},
-                    }
-                );
-                this.state.sacar_pop_up()
-              })
-              .catch( (err) => {
-                console.log("cant create semestre");
-                let errors = this.state.form_errors
-                for (let [key, value] of Object.entries(err.response.data)){
-                errors[key] = value[0]
-                }
-                this.setState({
-                form_errors:errors
-                })
-              });
+              if(this.state.clonar){
+                
+                const sem = this.props.semestres[this.state.clonar_id];
+                console.log(sem.año, sem.periodo);
+                options.data = {...data, 
+                    "from_año": sem.año,
+                    "from_periodo": sem.periodo
+                    };
 
+                options.url = process.env.REACT_APP_API_URL + "/semestres/clonar/";
+                this.setState({clonar_procesando: true});
+                  
+                axios(options)
+                .then( (res) => {
+                    console.log(res);
+
+                    if (res.status === 206){
+                        let errors = this.state.form_errors;
+                        errors["clonar"] = res.data[0]
+                        
+                        this.setState({
+                            clonar_error: true,
+                            form_errors: errors,
+                            // clonar_error_msg: clonar_msg,
+                            clonar_procesando: false
+                        });
+                        return;
+                    }
+
+                    this.setState({
+                        clonar_listo: true,
+                        clonar_listo_msg: String(res.data[0]),
+                        clonar_procesando: false,
+                        form_errors: {},
+                        errors_checked: {}
+                    });
+                })
+                .catch( (err) =>{
+                    console.log("No se pudo clonar semestre");
+                    console.log(err);
+
+                    let errors = this.state.form_errors;
+                    // errors["clonar"] = res.data[0]
+                    errors["clonar"] = "Error no identificado";
+
+                    this.setState({
+                        clonar_error: true,
+                        // clonar_error_msg: "Error desconocido",
+                        form_errors: errors,
+                        clonar_procesando: false
+                    }); 
+                  })
+                
+                return;
+              }
+
+            else{
+                axios(options)
+                .then((res) => {
+
+                    console.log("create semestre");
+                    this.setState(
+                        {
+                            "semestre_created": true,
+                            "form_errors": {},
+                            "errors_checked": {},
+                        }
+                    );
+                    this.sacar_pop_up()
+                })
+                .catch( (err) => {
+                    let errors = this.state.form_errors;
+                    console.log(err.response.data)
+                    for (let [key, value] of Object.entries(err.response.data)){
+                        errors[key] = value[0]
+                    }
+                    
+                    this.setState({
+                        form_errors: errors
+                    })
+                    });
+            }
         }
         else{
             if(!this.state.archivo_cargado){
-                // alert("Debes cargar un archivo primero");
                 let errors ={}
                 errors["archivo_excel"] = "Debes cargar un archivo primero"
                 this.setState({
@@ -212,163 +324,312 @@ export class nuevosemestre extends React.Component {
                 })
                 return;
             }
+
+            this.setState({"archivo_procesando": true})
             url = process.env.REACT_APP_API_URL + "/semestres/from_xlsx/";
             const formData = new FormData();
-            formData.append("file", this.state.archivo);
-            return axios.post(url, formData, {
+            formData.append("file", this.state.archivo_archivo);
+            
+            axios.post(url, formData, {
                 headers: {Authorization: `Token ${this.props.auth.token}`}
             })
-            .then( e => {
-                this.setState({"semestre_created": true})
-                this.state.sacar_pop_up()
+            .then( res => {
+
+                console.log(res);
+                let warnings = "";
+
+                if( res.data.status_warning !== 0 ){
+                    warnings = (<div>
+                        <h5>Alertas:</h5>
+                        <ul> { res.data.warnings.map( warning => <li> {warning} </li> )} </ul>
+                        </div>
+                    );
+                }
+
+                let listo_msg = (
+                    <div>
+                        {warnings}
+                        <h5> Cursos Creados </h5>
+                        <ul> { res.data['curso status'].map( curso => <li> {curso} </li> )} </ul>
+                    </div>
+                );
+
+                this.setState({
+                    archivo_procesando:false,
+                    archivo_listo: true,
+                    archivo_listo_msg: listo_msg,
+                    form_errors: {},
+                    errors_checked: {},
+                });
             })
-            .catch( e=> {
-                console.log(e)
-                this.state.sacar_pop_up()
+            .catch( err => {
+                console.log("ERROR cargando archivo");
+                let error_msg = "";
+                console.log(err);
+                // console.log(err.respons.estatus)
+                if(err.response.status === 412){
+                    error_msg = "El semestre que quieres cargar ya existe en el sistema";
+                }
+                else if(err.response.status === 500 ) {
+                    error_msg = "Problema no identificado"
+                }
+                else if(err.response.status === 406){
+                    console.log(err.response.data);
+                    error_msg ="Error en el formato del archivo:\n"
+                            
+                    err.response.data.map( data => 
+                            error_msg += String(data.tipo) + " " + String(data.detalle)
+                    )
+                }
+                let errors = this.state.form_errors;
+                errors["archivo_error"] = error_msg
+
+                this.setState({
+                    archivo_procesando:false,
+                    archivo_error: true, 
+                    // archivo_error_msg: archivo_error_msg
+                    form_errors: errors
+                });
             })
         }
       }
+ 
+    shouldComponentUpdate(prevProps, prevState){
+        if( 
+            prevState.año !== this.state.año &&
+            prevState.periodo !== this.state.periodo &&
+            prevState.inicio !== this.state.inicio &&
+            prevState.fin !== this.state.fin 
+        ){
+        return false;}
+        return true;
+    }
+
     render() {
-        const { show_form, handleCancel} = this.props;
-        let resetState = () =>{
-            this.setState({
-                año: "",
-                periodo: "1",
-                inicio: "",
-                fin:"",
-                estado_semestre:"1",
-                forma_creacion_semestre:0,
+        const { show_form, handleCancel, semestres} = this.props;
+
+        let body;
+        if(this.state.archivo_listo){
+            body = (
+                <div>
         
-                form_errors: {},
-                errors_checked: {},
-                semestre_created: false,
-                sacar_pop_up: this.props.handleAdd,
-        
-                required: "required",
-                subir_archivo: false,
-                clonar_semestre: false,
-                archivo: null,
-                archivo_cargado: false,
-            })
+                <Row><Col/><Col md="auto">
+                    <h5> Semestre cargado exitosamente</h5>        
+                </Col><Col/></Row>
+                
+                <h4> Resumen: </h4>
+                {this.state.archivo_listo_msg}
+                
+                <div className="form-group" style={{'marginTop':"4rem"}}>
+                    <button className="btn btn-success" type="button" onClick={() => {this.sacar_pop_up()}}>Ok</button>
+                </div>
+                </div>
+            );
         }
-        const campos = ["año", "periodo", "inicio", "fin"]
+
+        else if(this.state.archivo_procesando || this.state.clonar_procesando){
+            body = (
+                <div>
+                <Row> 
+                <Col/><Col md="auto">
+                    <h5>{ 
+                    this.state.archivo_procesando?
+                    "Estamos procesando tu archivo, espera un poco porfavor":
+                    "Estamos clonando tu archivo, espera un poco porfavor"}</h5>
+                </Col><Col/>
+                </Row>
+                <Row>
+                <Col/><Col md="auto">
+                <h1>
+                <EllipsisAnimation/>
+                </h1>
+                </Col><Col/>
+                </Row>
+                </div>
+            );
+        }
+
+        // else if(this.state.archivo_error){
+        //     body = (
+        //         <div>
+        //             <Row><Col/><Col md="auto">
+        //             <h4> Hubo un error al procesar tu archivo</h4>
+        //             {this.state.archivo_error_msg} 
+        //             </Col><Col></Col></Row>
+
+        //         <div className="form-group" style={{'marginTop':"4rem"}}>
+        //             <span style={{marginRight:'30px'}}></span> 
+        //             <button className="btn btn-danger" type="button" onClick={() => {this.sacar_pop_up()}}>Ok</button>
+        //             <span style={{marginRight:'30px'}}></span> 
+        //             <button className="btn btn-primary" type="button" onClick={() => {this.setState({archivo_error: false});}}>Probar denuevo</button>
+        //         </div>
+        //         </div>
+        //     );
+        // }
+
+        else if(this.state.clonar_listo){
+
+            body = (
+                <div>
+                <Row><Col/><Col md="auto">
+                <h5> Semestre Clonado exitosamente</h5>
+                </Col><Col></Col></Row>
+
+                {this.state.clonar_listo_msg}
+
+                <div className="form-group" style={{'marginTop':"4rem"}}>
+                    <button className="btn btn-success" type="button" onClick={() => {this.sacar_pop_up()}}>Ok</button>
+                </div>
+                </div>
+            );
+        }
+
+        else{
+        
+            const campos = ["año", "periodo", "inicio", "fin", "clonar_id"];
+
+            body = ( 
+
+                <div>
+                { 
+				    Object.keys(this.state.form_errors).map(k => {
+				    if(!(campos.includes(k))){
+					    return (
+                            <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
+					    )
+				    }})
+				}
+                
+                <form className="has-warning" name="form" onSubmit={this.handleSubmit}>
+                    <div>
+                        <Row>
+                            <Col xs="1"></Col>
+                            <Col lg={5} >
+                                <Row>
+                                    <Col xs={2}>
+                                        <label >Año<span style={{color:"red"}}>*</span></label>
+                                    </Col>
+                                    <Col lg={8} xs={11}>
+                                        <input value={this.state.año} type="number" min="2019" max="2030" step="1" className={this.state.form_errors["año"] ? "form-control is-invalid" : this.state.errors_checked["año"] ? "form-control is-valid" : "form-control"} placeholder="Ej.: 2020" name="año" onChange={this.onChange} disabled={this.state.archivo} />
+                                        <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["año"]}</span>
+                                    </Col>
+                                </Row>
+                            </Col>  
+
+                            <Col lg={6} >
+                                <Row>
+                                    <Col xs={2}>
+                                        <label>Tipo<span style={{color:"red"}}>*</span></label>
+                                    </Col>
+                                    <Col lg={8} xs={11}>
+                                        <div  className="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="otoño" name="periodo" value="1" onChange={this.onChange} className={this.state.form_errors["periodo"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo)===1} disabled={this.state.archivo} />
+                                            <label className="custom-control-label" htmlFor="otoño" >Otoño</label>
+                                        </div>
+                                        <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
+                                            <input type="radio" id="primavera" name="periodo" value="2" onChange={this.onChange} className={this.state.form_errors["periodo"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo)===2} disabled={this.state.archivo}/>
+                                            <label className="custom-control-label" htmlFor="primavera">Primavera</label>
+                                        </div>
+                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["periodo"]}</span>
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col xs="1"></Col>
+                            <Col lg={5} >
+                                <Row>
+                                    <Col xs={2}>
+                                    <label >Inicio<span style={{color:"red"}}>*</span></label>
+                                    </Col>
+                                    <Col lg={8} xs={11}>
+                                    <input value={this.state.inicio} type="date" className={this.state.form_errors["inicio"] ? "form-control is-invalid" : this.state.errors_checked["inicio"] ? "form-control is-valid" : "form-control"} name="inicio" onChange={this.onChange} disabled={this.state.archivo}/>
+                                    <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["inicio"]}</span>
+                                    </Col>
+                                </Row>
+                            </Col>
+                            <Col lg={5} >
+                                <Row>
+                                    <Col xs={2}>
+                                        <label >Fin<span style={{color:"red"}}>*</span></label>
+                                    </Col>
+                                    <Col lg={8} xs={11}>
+                                        <input value={this.state.fin} type="date" className={this.state.form_errors["fin"] ? "form-control is-invalid" : this.state.errors_checked["fin"] ? "form-control is-valid" : "form-control"} name="fin" onChange={this.onChange} disabled={this.state.archivo} />
+                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["fin"]}</span>
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
+
+                    </div> 
+                    <Row></Row><Row></Row>
+                    <Row>
+                    <Col xs="1"></Col>
+                        <div className="cuadrado-form">
+                        <Col>
+                        <div style={{textAlignLast:'center', textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
+                            <input type="radio" id="replicar_semestre" name="clonar" className="custom-control-input" checked={this.state.clonar} onClick={e => this.onSelect("clonar")}/>
+                            <label className="custom-control-label" htmlFor="replicar_semestre" >Clonar Semestre</label>
+                            
+                            {/* <div className="col-sm-10" >
+                                <input type="text" className="form-control" name="semestre_replicado" placeholder="Primavera 2020" />
+                            </div> */}
+
+                            <div className="col-sm-10" >
+                                <select className={this.state.form_errors["clonar_id"] ? "form-control center is-invalid" : this.state.errors_checked["clonar_id"] ? "form-control center is-valid" : "form-control center"}
+                                    name="clonar_id" 
+                                    style={{textAlignLast:'center',textAlign:'center'}}
+                                    disabled={!this.state.clonar}
+                                    onChange={this.onChange} >
+                                        <option value="" selected disabled hidden> Semestre a clonar ...</option>
+                                    {   semestres.map((semestre, i) => (
+                                        <option  value={i} selected={this.state.clonar_id==i} >{semestre.año} - {semestre.periodo === 1? "Otoño" : "Primavera"}</option>
+                                    ))}
+                                </select>
+                                <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["ramo"]}</span>            
+                            </div>
+                        </div>                                         
+                    
+                        </Col>
+                        <Col>
+                            <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
+                                <input type="radio" id="archivo_excel" name="archivo" className="custom-control-input" checked={this.state.archivo} onClick={e => this.onSelect("archivo")} />
+                                <label className="custom-control-label" htmlFor="archivo_excel" >Subir desde archivo</label>
+                                
+                                <div className="col-sm-10" >
+                                    <input type="file" className="form-control" name="archivo_excel" onChange={this.onFile }/>
+                                    <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["archivo_excel"]}</span>
+                                    <a href={process.env.PUBLIC_URL + '/static/template.xlsx'} download="template.xlsx" target="_blank" >Descargar Template</a>
+                                </div>
+                            </div>
+                        </Col>
+                        </div>
+                    </Row>
+
+                    <div className="form-group" style={{'marginTop':"4rem"}}>
+                        <button className="btn btn-success" type="submit">Guardar Semestre</button>
+                    </div>
+                </form>
+                </div>
+                 );
+        }
+
         return (
-            <Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); resetState()}}>
+            <Modal size="lg" centered show={show_form} onHide={() => {handleCancel(); this.resetState()}}>
             <Modal.Header className="header-add" closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
                 Agregar nuevo semestre
               </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                { 
-				Object.keys(this.state.form_errors).map(k => {
-				if(!(campos.includes(k))){
-					return (
-                        <Alert_2  severity="error">{this.state.form_errors[k]}</Alert_2>
-					)
-				}
-				})
-				}
-                    <form className="has-warning" name="form" onSubmit={this.handleSubmit}>
-                        <div>
-                            <Row>
-                                <Col xs="1"></Col>
-                                <Col lg={5} >
-                                    <Row>
-                                        <Col xs={2}>
-                                            <label >Año<span style={{color:"red"}}>*</span></label>
-                                        </Col>
-                                        <Col lg={8} xs={11}>
-                                            <input type="number" min="2019" max="2030" step="1" className={this.state.form_errors["año"] ? "form-control is-invalid" : this.state.errors_checked["año"] ? "form-control is-valid" : "form-control"} placeholder="Ej.: 2020" name="año" onChange={this.onChange}  />
-                                            <span style={{color: "red", fontSize:"13px"}}>{this.state.form_errors["año"]}</span>
-                                        </Col>
-                                    </Row>
-                                </Col>  
-
-                                <Col lg={6} >
-                                    <Row>
-                                        <Col xs={2}>
-                                            <label>Tipo<span style={{color:"red"}}>*</span></label>
-                                        </Col>
-                                        <Col lg={8} xs={11}>
-                                            <div  className="custom-control custom-radio custom-control-inline">
-                                                <input type="radio" id="otoño" name="periodo" value="1" onChange={this.onChange} className={this.state.form_errors["periodo"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo)===1} />
-                                                <label className="custom-control-label" htmlFor="otoño" >Otoño</label>
-                                            </div>
-                                            <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
-                                                <input type="radio" id="primavera" name="periodo" value="2" onChange={this.onChange} className={this.state.form_errors["periodo"] ? "custom-control-input is-invalid" : this.state.errors_checked["periodo"] ? "custom-control-input is-valid" : "custom-control-input"} checked={parseInt(this.state.periodo)===2}/>
-                                                <label className="custom-control-label" htmlFor="primavera">Primavera</label>
-                                            </div>
-                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["periodo"]}</span>
-                                        </Col>
-                                    </Row>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col xs="1"></Col>
-                                <Col lg={5} >
-                                    <Row>
-                                        <Col xs={2}>
-                                        <label >Inicio<span style={{color:"red"}}>*</span></label>
-                                        </Col>
-                                        <Col lg={8} xs={11}>
-                                        <input type="date" className={this.state.form_errors["inicio"] ? "form-control is-invalid" : this.state.errors_checked["inicio"] ? "form-control is-valid" : "form-control"} name="inicio" onChange={this.onChange} />
-                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["inicio"]}</span>
-                                        </Col>
-                                    </Row>
-                                </Col>
-                                <Col lg={5} >
-                                    <Row>
-                                        <Col xs={2}>
-                                            <label >Fin<span style={{color:"red"}}>*</span></label>
-                                        </Col>
-                                        <Col lg={8} xs={11}>
-                                            <input type="date" className={this.state.form_errors["fin"] ? "form-control is-invalid" : this.state.errors_checked["fin"] ? "form-control is-valid" : "form-control"} name="fin" onChange={this.onChange} />
-                                            <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["fin"]}</span>
-                                        </Col>
-                                    </Row>
-                                </Col>
-                            </Row>
-
-                       </div> 
-                       <Row></Row><Row></Row>
-                        <Row>
-                        <Col xs="1"></Col>
-                        <div className="cuadrado-form">
-                            <Col>
-                            <div style={{textAlignLast:'center', textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
-                                <input type="radio" id="replicar_semestre" name="clonar_semestre" className="custom-control-input" checked={this.state.clonar_semestre} onClick={e => this.onSelect("clonar")}/>
-                                    <label className="custom-control-label" htmlFor="replicar_semestre" >Clonar Semestre</label>
-                                <div className="col-sm-10" >
-                                    <input type="text" className="form-control" name="semestre_replicado" placeholder="Primavera 2020" />
-                                </div>
-                                </div>                                         
-                           
-                            </Col>
-                            <Col>
-                                <div style={{textAlign:'center'}} className="custom-control custom-radio custom-control-inline" >
-                                    <input type="radio" id="archivo_excel" name="subir_archivo" className="custom-control-input" checked={this.state.subir_archivo} onClick={e => this.onSelect("subir")} />
-                                    <label className="custom-control-label" htmlFor="archivo_excel" >Subir desde archivo</label>
-                                    <div className="col-sm-10" >
-                                        <input type="file" className="form-control" name="archivo_excel" onChange={this.onFile } />
-                                        <span style={{color: "red", fontSize:"14px"}}>{this.state.form_errors["archivo_excel"]}</span>
-                                        <a href={process.env.PUBLIC_URL + '/template.xlsx'} download="template.xlsx" target="_blank" >Descargar Template</a>
-                                    </div>
-                                </div>
-                            </Col>
-                            </div>
-                        </Row>
-
-                        <div className="form-group" style={{'marginTop':"4rem"}}>
-                            <button className="btn btn-success" type="submit">Guardar Semestre</button>
-                        </div>
-                    </form>
-                    </Modal.Body>
-                </Modal>
+            <ModalBody>
+                {body}
+            </ModalBody>
+            </Modal>
         );
       } 
 }
+
 const mapStateToProps = (state) => ({
     auth: state.auth
 });

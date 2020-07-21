@@ -150,6 +150,7 @@ export class lista_semestre extends React.Component {
           show_form={this.state.showModalAdd} 
           handleCancel={() => this.handleCancelAdd()}
           handleAdd={() => this.handleAdd()}
+          semestres={this.state.semestres}
           />
           
           {this.state.showModalEdit &&
@@ -177,7 +178,7 @@ export class lista_semestre extends React.Component {
                 </Form>
               </Col>
               <Col md={3}>
-                  <Button href={process.env.PUBLIC_URL + '/template.xlsx'} download="template.xlsx" target="_blank" >Descargar Template Excel</Button>
+                  <Button href={process.env.PUBLIC_URL + '/static/template.xlsx'} download="template.xlsx" target="_blank" >Descargar Template Excel</Button>
               </Col>
               <Col>
                   <Button className="btn btn-primary float-right" onClick={() => this.showModalAdd()}>Nuevo Semestre</Button>
