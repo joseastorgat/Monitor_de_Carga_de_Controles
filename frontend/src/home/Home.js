@@ -30,9 +30,8 @@ class Bloque_Calendario extends React.Component {
     console.log("Fetching...")
     await fetch(process.env.REACT_APP_API_URL + '/semestres/')
     .then(response => response.json())
-    .then(semestres =>
-        this.setState({
-        semestres: semestres.sort((a, b) => {
+    .then(semestres =>{
+        var sems=semestres.sort((a, b) => {
           if (a.año < b.año)
             return 1;
           if (a.año > b.año)
@@ -43,9 +42,16 @@ class Bloque_Calendario extends React.Component {
             return -1;
 
           return 0;
-        }),
-        MostrarSemestres: semestres,
+        })
+        if (sems.length>5){
+            sems=sems.slice(0, 5);
+          }
+
+        this.setState({
+        semestres:sems ,
+        MostrarSemestres: sems,
       })
+    }
     )
   }
   async componentDidMount() {
