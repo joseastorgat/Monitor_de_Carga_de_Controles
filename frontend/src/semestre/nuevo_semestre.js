@@ -180,6 +180,9 @@ export class nuevosemestre extends React.Component {
                 this.setState(
                     {
                         "semestre_created": true,
+                        inicio: "",
+                        fin:"",
+                        año:"",
                         "form_errors": {},
                         "errors_checked": {},
                     }
