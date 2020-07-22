@@ -263,7 +263,7 @@ export class evaluaciones extends React.Component {
                     if(err.response.status===400)
                         errors[key] = value
                     else
-                        errors[key] = value
+                        errors[key] = value[0]
                 }
                 this.setState({
                     form_errors:errors
@@ -377,7 +377,7 @@ export class evaluaciones extends React.Component {
                 if(err.response.status===400)
                     errors[key] = value
                 else
-                    errors[key] = value
+                    errors[key] = value[0]
             }
             this.setState({
                 form_errors:errors
