@@ -76,18 +76,17 @@ export default class CustomCalendar extends React.Component {
   
     const {token} = this.state;
     let sem
-    let res = await axios.get(process.env.REACT_APP_API_URL + `/calendario/${token}/`);
+    let res = await axios.get(process.env.REACT_APP_API_URL + `/calendario/${token}/`)
+      .catch(this.setState( {"found": false }));
     let selected_courses = []
     // let res = await axios.get(process.env.REACT_APP_API_URL + `/semestres/?año=${año}&periodo=${periodo}`);
-
-    if(res.status !== 200 || !res.data.token === token){
+    if(res.status !== 200 || res.data.token !== token){
       this.setState( {"found": false });
     }
-
     else{
-
-      sem = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${res.data.semestre}/`);
-      if(res.status !== 200){
+      sem = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${res.data.semestre}/`)
+        .catch(this.setState( {"found": false }));
+      if(sem.status !== 200){
         this.setState( {"found": false });
       }
       else{
@@ -95,9 +94,9 @@ export default class CustomCalendar extends React.Component {
         selected_courses = res.data.cursos
       }
     }
-
     if(this.state.found){
       let semes = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${sem.data.id}/semanas/`);
+
       this.setState({semanas_oficiales_semestre:semes.data})
       // generación de calendario
       const range = moment.range(this.state.inicio, this.state.fin);
@@ -316,7 +315,6 @@ weeks_semester(week,i){
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha === day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
                     var color;
-                    console.log(hay_fecha)
                     hay_fecha>0? color="red": color="black"
 
                     if(hay_fecha>0 && cantidad_evaluaciones_dia==0){

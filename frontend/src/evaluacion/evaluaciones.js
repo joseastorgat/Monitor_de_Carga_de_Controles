@@ -260,7 +260,10 @@ export class evaluaciones extends React.Component {
                 console.log("cant update evaluacion");
                 let errors = this.state.form_errors
                 for (let [key, value] of Object.entries(err.response.data)){
-                    errors[key] = value[0]
+                    if(err.response.status===400)
+                        errors[key] = value
+                    else
+                        errors[key] = value[0]
                 }
                 this.setState({
                     form_errors:errors
@@ -371,7 +374,10 @@ export class evaluaciones extends React.Component {
             console.log(err);
             let errors = this.state.form_errors
             for (let [key, value] of Object.entries(err.response.data)){
-                errors[key] = value[0]
+                if(Array.isArray(err.response.data[key]))
+                    errors[key] = value[0]
+                else if(typeof(err.response.data[key] === "string"))
+                    errors[key] = value
             }
             this.setState({
                 form_errors:errors

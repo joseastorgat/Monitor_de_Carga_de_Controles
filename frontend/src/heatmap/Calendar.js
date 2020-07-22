@@ -255,7 +255,7 @@ export default class Calendar extends React.Component {
             />
         </Col>
         <Col xs="auto" md={7}  >
-          <h4 >Heatmap Semestre {this.state.periodo===1 ? "Otoño": "Primavera"}  {this.state.año} </h4>
+          <h4 >Heatmap Semestre {parseInt(this.state.periodo) ===1 ? "Otoño": "Primavera"}  {this.state.año} </h4>
           <Container style={{textAlign:'center'}} > 
           <Table className="calendar" size="sm" responsive>
              <thead>
@@ -288,8 +288,6 @@ export default class Calendar extends React.Component {
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha === day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
                     var color;
-                    console.log(day)
-                    console.log(hay_fecha)
                     hay_fecha>0? color="red": color="black"
                    
 

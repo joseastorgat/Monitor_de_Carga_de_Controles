@@ -123,12 +123,12 @@ export class SubirCursos extends React.Component {
                 }
 
                 else{
-                    // console.log(err.response.data);
                     const error_msg ="Error en el formato del archivo:\n"
                             
                     err.response.data.map( (data, i) => 
                             errors[`archivo_error_${i}`] = error_msg + " " + String(data.tipo) + " " + String(data.detalle)
                     )}
+
             }
 
             this.setState({
