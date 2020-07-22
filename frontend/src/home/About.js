@@ -1,7 +1,6 @@
 import React from "react";
 import { Container} from "react-bootstrap";
 import ViewTitle from "../common/ViewTitle";
-import style from '../members.module.css';
 import {Card} from "react-bootstrap";
 
 
@@ -12,7 +11,7 @@ export default class About extends React.Component {
           <Container >
            <ViewTitle>Acerca de </ViewTitle>
            <div>
-            <Card bg="primary" className={style.version}>
+            <Card bg="primary" className="version">
             <Card.Title>Versión 1.0</Card.Title>
             </Card>
             <Container >
@@ -83,11 +82,11 @@ export default class About extends React.Component {
   }
     render(){
       return(
-        <Card border="dark" bg="secondary" className={style.member}>
+        <Card border="dark" bg="secondary" className="member">
             {/* <img className={style.image} src={this.state.img} alt="" /> */}
-            <h6 className={style.nombre}>{this.state.nombre}</h6>
-            <i className={style.letra}> {this.state.cargo} </i>
-            <i className={style.letra}> {this.state.correo} </i>     
+            <h6 className="nombre">{this.state.nombre}</h6>
+            <i className="letra"> {this.state.cargo} </i>
+            <i className="letra"> {this.state.correo} </i>     
         </Card>
     )}
 }
