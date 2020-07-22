@@ -77,7 +77,7 @@ export default class CustomCalendar extends React.Component {
     const {token} = this.state;
     let sem
     let res = await axios.get(process.env.REACT_APP_API_URL + `/calendario/${token}/`)
-      .catch(this.setState( {"found": false }));
+      .catch(e => this.setState( {"found": false }))
     let selected_courses = []
     // let res = await axios.get(process.env.REACT_APP_API_URL + `/semestres/?año=${año}&periodo=${periodo}`);
     if(res.status !== 200 || res.data.token !== token){
@@ -85,7 +85,7 @@ export default class CustomCalendar extends React.Component {
     }
     else{
       sem = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${res.data.semestre}/`)
-        .catch(this.setState( {"found": false }));
+        .catch(e => this.setState( {"found": false }));
       if(sem.status !== 200){
         this.setState( {"found": false });
       }
