@@ -31,7 +31,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
     """
     queryset = Semestre.objects.all()
     serializer_class = SemestreSerializer
-    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @action(detail=True, methods=['get'],
             permission_classes=[permissions.IsAuthenticatedOrReadOnly])
@@ -42,7 +42,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=['get'],
-            # permission_classes=[permissions.IsAuthenticatedOrReadOnly]
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly]
             )
     def semanas(self, request, pk=None):
         # print(request.query_params)
@@ -130,7 +130,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
     @action(detail=False,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
-            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly],
             )
     def from_xlsx(self, request, *args, **kwargs):
         '''
@@ -143,7 +143,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
     @action(detail=False,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
-            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly],
             )
     def from_xlsx2(self, request, *args, **kwargs):
         '''
@@ -156,7 +156,7 @@ class SemestreViewSet(viewsets.ModelViewSet):
     @action(detail=True,
             methods=['POST'],
             serializer_class=SemestreFileSerializer,
-            permission_classes=[],  # [permissions.IsAuthenticatedOrReadOnly],
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly],
             )
     def from_xlsx3(self, request, pk, *args, **kwargs):
         '''
