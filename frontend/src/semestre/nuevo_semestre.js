@@ -364,25 +364,24 @@ export class nuevosemestre extends React.Component {
             })
             .catch( err => {
                 console.log("ERROR cargando archivo");
-                let error_msg = "";
-                console.log(err);
-                // console.log(err.respons.estatus)
+                
+                let errors = this.state.form_errors;
+
                 if(err.response.status === 412){
-                    error_msg = "El semestre que quieres cargar ya existe en el sistema";
+                    errors['archivo_error'] = "El semestre que quieres cargar ya existe en el sistema";
                 }
                 else if(err.response.status === 500 ) {
-                    error_msg = "Problema no identificado"
+                    errors['archivo_error'] = "Problema no identificado"
                 }
                 else if(err.response.status === 406){
                     console.log(err.response.data);
-                    error_msg ="Error en el formato del archivo:\n"
+                    const error_msg ="Error en el formato del archivo:\n"
                             
-                    err.response.data.map( data => 
-                            error_msg += String(data.tipo) + " " + String(data.detalle)
+                    err.response.data.map( (data, i) => 
+                            errors[`archivo_error_${i}`] = error_msg + " " + String(data.tipo) + " " + String(data.detalle)
                     )
                 }
-                let errors = this.state.form_errors;
-                errors["archivo_error"] = error_msg
+                // errors["archivo_error"] = error_msg
 
                 this.setState({
                     archivo_procesando:false,
