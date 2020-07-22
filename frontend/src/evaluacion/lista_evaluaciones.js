@@ -109,7 +109,17 @@ export class lista_evaluaciones extends React.Component {
       .then(response => response.json())
       .then(semestres =>
         this.setState({
-          semestres: semestres,
+          semestres: semestres.sort((a, b) => {
+            if (a.año < b.año)
+              return 1;
+            if (a.año> b.año)
+              return -1;
+            if (a.periodo < b.periodo)
+              return 1;
+            if (a.periodo > b.periodo)
+              return -1;
+            return 0;
+          }),
           MostrarSemestres: semestres
         })
       )    
