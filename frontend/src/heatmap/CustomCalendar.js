@@ -78,22 +78,21 @@ export default class CustomCalendar extends React.Component {
     let sem
     let res = await axios.get(process.env.REACT_APP_API_URL + `/calendario/${token}/`)
       .catch(e => this.setState( {"found": false }))
+    if(typeof(res) === "undefined"){
+      return;
+    }
     let selected_courses = []
     // let res = await axios.get(process.env.REACT_APP_API_URL + `/semestres/?año=${año}&periodo=${periodo}`);
-    if(res.status !== 200 || res.data.token !== token){
-      this.setState( {"found": false });
-    }
-    else{
-      sem = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${res.data.semestre}/`)
-        .catch(e => this.setState( {"found": false }));
-      if(sem.status !== 200){
-        this.setState( {"found": false });
+    // if(res.status !== 200 || res.data.token !== token){
+    //   this.setState( {"found": false });
+    // }
+    sem = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${res.data.semestre}/`)
+      .catch(e => this.setState( {"found": false }));
+      if(typeof(sem) === "undefined"){
+        return;
       }
-      else{
-        this.setState({"inicio": sem.data.inicio, "fin": sem.data.fin,"año": sem.data.año, "periodo": sem.data.periodo, "semestre_id": sem.data.id, "nombre_calendario": res.data.nombre})
-        selected_courses = res.data.cursos
-      }
-    }
+    this.setState({"inicio": sem.data.inicio, "fin": sem.data.fin,"año": sem.data.año, "periodo": sem.data.periodo, "semestre_id": sem.data.id, "nombre_calendario": res.data.nombre})
+    selected_courses = res.data.cursos
     if(this.state.found){
       let semes = await axios.get(process.env.REACT_APP_API_URL + `/semestres/${sem.data.id}/semanas/`);
 
