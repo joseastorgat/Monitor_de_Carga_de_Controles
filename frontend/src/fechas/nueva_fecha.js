@@ -136,7 +136,10 @@ export class nuevafecha extends React.Component {
             console.log("cant create fecha");
             let errors = this.state.form_errors
             for (let [key, value] of Object.entries(err.response.data)){
-                errors[key] = value[0]
+                if(Array.isArray(errors[key]))
+                    errors[key] = value[0]
+                else if(typeof(errors[key] === "string"))
+                    errors[key] = value
             }
             this.setState({
                 form_errors:errors

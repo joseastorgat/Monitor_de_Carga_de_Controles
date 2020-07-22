@@ -105,7 +105,10 @@ export class editar_ramo extends React.Component {
         console.log("cant update ramo");
         let errors = this.state.form_errors
         for (let [key, value] of Object.entries(err.response.data)){
-          errors[key] = value[0]
+          if(Array.isArray(err.response.data[key]))
+              errors[key] = value[0]
+          else if(typeof(err.response.data[key] === "string"))
+              errors[key] = value
         }
         this.setState({
           form_errors:errors

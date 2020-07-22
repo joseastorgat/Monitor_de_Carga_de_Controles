@@ -274,8 +274,12 @@ export class nuevosemestre extends React.Component {
 
                     let errors = this.state.form_errors;
                     // errors["clonar"] = res.data[0]
-                    errors["clonar"] = "Error no identificado";
-
+                    for (let [key, value] of Object.entries(err.response.data)){
+                        if(Array.isArray(err.response.data[key]))
+                            errors["clonar"] = value[0]
+                        else if(typeof(err.response.data[key] === "string"))
+                            errors["clonar"] = value
+                    }
                     this.setState({
                         clonar_error: true,
                         // clonar_error_msg: "Error desconocido",
@@ -305,7 +309,10 @@ export class nuevosemestre extends React.Component {
                     let errors = this.state.form_errors;
                     console.log(err.response.data)
                     for (let [key, value] of Object.entries(err.response.data)){
-                        errors[key] = value[0]
+                        if(Array.isArray(err.response.data[key]))
+                            errors[key] = value[0]
+                        else if(typeof(err.response.data[key] === "string"))
+                            errors[key] = value
                     }
                     
                     this.setState({
