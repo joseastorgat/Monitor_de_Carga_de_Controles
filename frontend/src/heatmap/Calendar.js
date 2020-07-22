@@ -255,7 +255,7 @@ export default class Calendar extends React.Component {
             />
         </Col>
         <Col xs="auto" md={7}  >
-          <h4 >Heatmap Semestre {this.state.periodo===1 ? "Otoño": "Primavera"}  {this.state.año} </h4>
+          <h4 >Heatmap Semestre {parseInt(this.state.periodo) ===1 ? "Otoño": "Primavera"}  {this.state.año} </h4>
           <Container style={{textAlign:'center'}} > 
           <Table className="calendar" size="sm" responsive>
              <thead>
