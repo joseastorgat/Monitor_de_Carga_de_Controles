@@ -455,23 +455,6 @@ export class nuevosemestre extends React.Component {
             );
         }
 
-        // else if(this.state.archivo_error){
-        //     body = (
-        //         <div>
-        //             <Row><Col/><Col md="auto">
-        //             <h4> Hubo un error al procesar tu archivo</h4>
-        //             {this.state.archivo_error_msg} 
-        //             </Col><Col></Col></Row>
-
-        //         <div className="form-group" style={{'marginTop':"4rem"}}>
-        //             <span style={{marginRight:'30px'}}></span> 
-        //             <button className="btn btn-danger" type="button" onClick={() => {this.sacar_pop_up()}}>Ok</button>
-        //             <span style={{marginRight:'30px'}}></span> 
-        //             <button className="btn btn-primary" type="button" onClick={() => {this.setState({archivo_error: false});}}>Probar denuevo</button>
-        //         </div>
-        //         </div>
-        //     );
-        // }
 
         else if(this.state.clonar_listo){
 
@@ -481,7 +464,7 @@ export class nuevosemestre extends React.Component {
                 <h5> Semestre Clonado exitosamente</h5>
                 </Col><Col></Col></Row>
 
-                {this.state.clonar_listo_msg}
+                {/* {this.state.clonar_listo_msg} */}
 
                 <div className="form-group" style={{'marginTop':"4rem"}}>
                     <button className="btn btn-success" type="button" onClick={() => {this.sacar_pop_up()}}>Ok</button>
