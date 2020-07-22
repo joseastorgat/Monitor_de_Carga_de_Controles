@@ -195,6 +195,7 @@ export class lista_evaluaciones extends React.Component {
     }
 
     render() {
+      
       return (
         <main>
           <Container>
@@ -276,8 +277,9 @@ export class lista_evaluaciones extends React.Component {
                 <Row></Row>
                 
                 {this.state.MostrarEvaluaciones.map((s,i)=>
-                  <div>
-                  <h5>Semana {s[0]}</h5>
+        
+                <div>
+                  <h5> {s[0] === "null" ? "Warning: Evaluaciones sin Semana": "Semana " + String(s[0])}</h5>
                   {s[1].map(evaluacion=> 
                   <EvaluacionItem
                     key={evaluacion.id}
