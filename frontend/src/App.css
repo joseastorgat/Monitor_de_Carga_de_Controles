@@ -40,9 +40,8 @@ div.row {
 .botones_hacia_abajo{
     font-size: x-large;
     display: block;
-    padding: 15px 32px;
-    max-width: 60vh;
-    min-width: 45vh;
+    max-width: 18rem;
+    min-width: 18rem;
     height: 2.3rem;
     margin: auto;
     margin-bottom: 1rem;

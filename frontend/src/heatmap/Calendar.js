@@ -288,8 +288,6 @@ export default class Calendar extends React.Component {
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha === day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
                     var color;
-                    console.log(day)
-                    console.log(hay_fecha)
                     hay_fecha>0? color="red": color="black"
                    
 
