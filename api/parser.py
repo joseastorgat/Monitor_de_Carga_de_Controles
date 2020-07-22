@@ -48,8 +48,8 @@ def parse_semestre_malla(val, errores, pos):
     except Exception as e:
         print(e)
         pos = f'({chr(65+pos[1])}, {str(pos[0]+2)})'
-        errores.append({'tipo': 'Error de formato en nombre profesor',
-                        'detalle': f'{val} en posicion {pos}'})
+        errores.append({'tipo': 'Error de formato en numero de semestre malla.',
+                        'detalle': f'{val} en posicion {pos}, siga el formato numero°Sem'})
         return 0  # error de formato
 
 
