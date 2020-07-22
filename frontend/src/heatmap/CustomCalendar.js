@@ -316,7 +316,6 @@ weeks_semester(week,i){
                     const evaluaciones_del_dia=this.state.evaluaciones_a_mostrar.filter(evaluacion => evaluacion.fecha === day)
                     const cantidad_evaluaciones_dia= evaluaciones_del_dia.length
                     var color;
-                    console.log(hay_fecha)
                     hay_fecha>0? color="red": color="black"
 
                     if(hay_fecha>0 && cantidad_evaluaciones_dia==0){
