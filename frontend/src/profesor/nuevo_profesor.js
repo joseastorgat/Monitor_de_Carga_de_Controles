@@ -94,9 +94,7 @@ export class nuevoprofesor extends React.Component {
 					{
 						"profesor_created": true,
 						"form_errors": {},
-						"errors_checked": {},
-						nombre: "",
-						apellido: "",
+						"errors_checked": {}
 					}
 				);
 				this.state.sacar_pop_up()
@@ -107,12 +105,14 @@ export class nuevoprofesor extends React.Component {
 				let errors = this.state.form_errors
 				let i = 0
 				for (let [key, value] of Object.entries(err.response.data)){
-
-					errors[key + i.toString()] = value[0]
+					if(Array.isArray(errors[key]))
+						errors[key + i.toString()] = value[0]
+					else if(typeof(errors[key] === "string"))
+						errors[key + i.toString()] = value
 					i++
 				}
 				this.setState({
-				form_errors:errors
+					form_errors:errors
 				})
 			});
 	}

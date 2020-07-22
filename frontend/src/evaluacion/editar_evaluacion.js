@@ -139,10 +139,10 @@ export class EditarEvaluacion extends React.Component {
                     console.log("cant update evaluacion");
                     let errors = this.state.form_errors
                     for (let [key, value] of Object.entries(err.response.data)){
-                        if(err.response.status===400)
-                            errors[key] = value
-                        else
+                        if(Array.isArray(err.response.data[key]))
                             errors[key] = value[0]
+                        else if(typeof(err.response.data[key] === "string"))
+                            errors[key] = value
                     }
                     this.setState({
                         form_errors:errors
