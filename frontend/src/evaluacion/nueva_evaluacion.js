@@ -154,7 +154,10 @@ export class NuevaEvaluacion extends React.Component {
                     console.log("cant create evaluacion");
                     let errors = this.state.form_errors
                     for (let [key, value] of Object.entries(err.response.data)){
-                        errors[key] = value[0]
+                        if(err.response.status===400)
+                            errors[key] = value
+                        else
+                            errors[key] = value[0]
                     }
                     this.setState({
                         form_errors:errors
